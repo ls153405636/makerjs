@@ -10,5 +10,5 @@ export class BaseWidget {
       debugger
       new Movie().addEle(this.sprite)
     }
-    
+  }
 }
