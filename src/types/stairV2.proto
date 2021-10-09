@@ -57,7 +57,7 @@ enum WallType {
 
 //墙
 message Wall {
-  Vector3 p1 = 1; //起点 
+  Vector3 p1 = 1; //起点，中线上起点的坐标 
   Vector3 p2 = 2; //终点
   WallType type = 3; //类型
   float  startExtend = 4; //起点延伸

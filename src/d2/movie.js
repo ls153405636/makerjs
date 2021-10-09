@@ -36,4 +36,12 @@ export class Movie {
   bootstrap() {
     document.querySelector("#canvas").appendChild(this.app.view);
   }
+
+  addEle (vEle) {
+    this.app.stage.addChild (vEle)
+  }
+
+  delete () {
+    
+  }
 }

@@ -6,7 +6,10 @@ import { Movie } from './movie'
  * @param {Types.Project} vPB 
  */
 export function importProject (vPB) {
-  new Hole(vPB.hole)
+  new Hole(vPB.hole).addToStage()
+  vPB.walls.forEach(w => {
+    new Wall(w).addToStage()
+  })
 }
 
 export function initD2 () {

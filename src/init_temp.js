@@ -28,6 +28,7 @@
 //   return proj
 // }
 
+import d2_action from "./d2/d2_action";
 import { Types } from "./types/stairV2";
 
 export function initProj() {
@@ -55,5 +56,6 @@ export function initProj() {
     type: Types.EdgeType.estraight
   }))
   proj.hole.edges = edges
-  return proj
+  d2_action.importProject(proj)
+  //return proj
 }

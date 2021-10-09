@@ -1,13 +1,17 @@
 // import * as PIXI from 'pixi.js'
 
 import { initProj } from '../init_temp'
+import { BaseWidget } from './base'
+import { Movie } from './movie'
+import * as from 'pixi.js'
 
-export class Hole {
-  constructor(params) {
+export class Hole extends BaseWidget {
+  constructor(vPB) {
     this.draw()
   }
 
   draw () {
+    this.sprite = new PIXI.Sprite()
     // // 简化
     // const Application = PIXI.Application,
     // Container = PIXI.Container,
