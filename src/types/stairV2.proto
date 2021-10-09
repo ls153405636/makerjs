@@ -42,7 +42,7 @@ message Stair {
 
 //洞
 message Hole {
-  repeated Edge edges = 1; //围成洞的边
+  repeated Edge edges = 1; //围成洞的边,边一定按顺序首尾相连
   float    floorHeight = 2; //层高
 }
 
