@@ -1,5 +1,7 @@
 import Types from '../types/stairV2'
 import { Movie } from './movie'
+import { Hole } from './hole'
+import { Wall } from './wall'
 
 /**
  * 

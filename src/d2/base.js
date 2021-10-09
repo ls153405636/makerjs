@@ -1,12 +1,13 @@
-import { Movie } from "./movie";
+import { Movie } from './movie.js'
 
 export class BaseWidget {
   constructor() {
-    this.sprint = null
+    this.sprite = null
   }
 
   addToStage() {
     if (this.sprite) {
+      debugger
       new Movie().addEle(this.sprite)
     }
     

@@ -9,7 +9,7 @@ export class Movie {
         antialias            : true,
         preserveDrawingBuffer: true,
       });
-
+      
       globalThis.mv = this
 
       app.stage.cursor             = 'pointer'
@@ -17,31 +17,45 @@ export class Movie {
       app.stage.buttonMode         = true
       app.stage.sortableChildren   = true
       app.renderer.backgroundColor = 0xDFDFDF
-
+      
       app.ticker.maxFPS = 60
-
+      
       app.renderer.autoResize = true
       app.renderer.resize(window.screen.availWidth, window.screen.availHeight)
-
+      
       this.app = app
-
+      
       this.scale = 1
-
-      RunContext.context = this
+      
       Movie.instance = this
+      
     }
     return Movie.instance
   }
-
+  
   bootstrap() {
+    
     document.querySelector("#canvas").appendChild(this.app.view);
+    
+    // let container = new PIXI.Container()
+
+    // const graphics = new PIXI.Graphics();
+    // const path = [0, 0, 500, 0, 500, 500, 0, 500, 0, 0];
+    // graphics.lineStyle(10, 0x000000);
+    // graphics.beginFill(0x3500FA, 1);
+    // graphics.position.set(50, 50)
+    // graphics.drawPolygon(path);
+    // graphics.endFill();
+
+    // this.app.stage.addChild(container);
+    // container.addChild(graphics)
   }
 
   addEle (vEle) {
-    this.app.stage.addChild (vEle)
-  }
-
-  delete () {
-    
+    this.app.stage.addChild(vEle)
   }
 }
+
+let movie = new Movie()
+
+export default movie
