@@ -3,19 +3,16 @@
 </template>
 
 <script>
-//import movie from "/src/d2/movie";
-
-import init_temp from "../../init_temp";
-import d2_action from "/src/d2/d2_action";
-
+import { Command } from '../../common/command'
+import { Core } from '../../common/core'
+import { experiment } from '../../_experiment/start'
 
 export default {
-  name: "App",
-  components: {
-  },
+  name: 'App',
   mounted() {
-    d2_action.initD2()  
-    init_temp.initProj()
+    new Core().execute(new Command(new Core().cmds.BootCmd))
+
+    experiment()
   },
-};
+}
 </script>

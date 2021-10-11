@@ -3,3 +3,9 @@ node_modules
 dist
 dist-ssr
 *.local
+
+dependency.json
+yarn-error.log
+
+src/_experiment/*
+!src/_experiment/start.js
