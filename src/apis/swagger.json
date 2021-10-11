@@ -1,0 +1,2592 @@
+{
+  "definitions": {
+    "Address": {
+      "description": "地址",
+      "properties": {
+        "City": {
+          "type": "string"
+        },
+        "Detail": {
+          "type": "string"
+        },
+        "District": {
+          "type": "string"
+        },
+        "Province": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "D2ModelCreateRequest": {
+      "properties": {
+        "Items": {
+          "description": "`binding:\"dive\"`",
+          "items": {
+            "properties": {
+              "Name": {
+                "description": "名称. 可以自动取文件名称, 但需要去掉扩展文件名\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Path": {
+                "description": "上传到OSS的路径, 不要保留域名\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Payload": {
+                "description": "截面序列化后的字符串\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Preview": {
+                "description": "预览图\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Tags": {
+                "description": "标签\n`binding:\"required\"`"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "D2ModelDeleteRequest": {
+      "properties": {
+        "Ids": {
+          "description": "`binding:\"min=1\"`",
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "D2ModelQueryRequest": {
+      "properties": {
+        "Name": {
+          "description": "名称. 模糊查询\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "Tags": {
+          "description": "标签.\n`binding:\"omitempty\"`"
+        }
+      },
+      "type": "object"
+    },
+    "D2ModelUpdateRequest": {
+      "properties": {
+        "ID": {
+          "description": "截面ID",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "名称. 可以自动取文件名称, 但需要去掉扩展文件名",
+          "type": "string"
+        },
+        "Tags": {
+          "description": "标签"
+        }
+      },
+      "type": "object"
+    },
+    "D3ModelCreateRequest": {
+      "properties": {
+        "Items": {
+          "description": "`binding:\"min=1,dive\"`",
+          "items": {
+            "properties": {
+              "Name": {
+                "description": "名称\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Path": {
+                "description": "模型文件上传到OSS后的路径\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Tags": {
+                "description": "标签\n`binding:\"required\"`"
+              },
+              "Type": {
+                "description": "模型类型\n`binding:\"required\"`",
+                "enum": [
+                  "column_small",
+                  "column_large"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "D3ModelDeleteRequest": {
+      "properties": {
+        "Ids": {
+          "description": "`binding:\"min=1\"`",
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "D3ModelQueryRequest": {
+      "properties": {
+        "Name": {
+          "description": "名称. 模糊查询\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "Status": {
+          "description": "渲染状态\n`binding:\"omitempty\"`",
+          "items": {
+            "enum": [
+              "waiting",
+              "success",
+              "failed",
+              "created",
+              "rendering",
+              "cancel"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "Tags": {
+          "description": "标签.\n`binding:\"omitempty\"`"
+        },
+        "Type": {
+          "description": "模型类型\n`binding:\"omitempty\"`",
+          "enum": [
+            "column_small",
+            "column_large"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "D3ModelUpdateRequest": {
+      "properties": {
+        "ID": {
+          "description": "模型ID",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "名称. 可以自动取文件名称, 但需要去掉扩展文件名",
+          "type": "string"
+        },
+        "Tags": {
+          "description": "标签"
+        },
+        "Type": {
+          "description": "模型类型",
+          "enum": [
+            "column_small",
+            "column_large"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MaterialCreateRequest": {
+      "properties": {
+        "Items": {
+          "description": "`binding:\"dive\"`",
+          "items": {
+            "properties": {
+              "Height": {
+                "description": "高\n`binding:\"required\"`",
+                "format": "int64",
+                "type": "integer"
+              },
+              "Name": {
+                "description": "名称. 可以自动取文件名称, 但需要去掉扩展文件名\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Path": {
+                "description": "上传到OSS的路径, 不要保留域名\n`binding:\"required\"`",
+                "type": "string"
+              },
+              "Tags": {
+                "description": "标签\n`binding:\"required\"`"
+              },
+              "Width": {
+                "description": "宽\n`binding:\"required\"`",
+                "format": "int64",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MaterialDeleteRequest": {
+      "properties": {
+        "Ids": {
+          "description": "`binding:\"min=1\"`",
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MaterialListByNameRequest": {
+      "properties": {
+        "Names": {
+          "description": "名称\n`binding:\"min=1\"`",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MaterialQueryRequest": {
+      "properties": {
+        "Name": {
+          "description": "名称. 模糊查询\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "Tags": {
+          "description": "标签.\n`binding:\"omitempty\"`"
+        }
+      },
+      "type": "object"
+    },
+    "MaterialUpdateRequest": {
+      "properties": {
+        "Height": {
+          "description": "高",
+          "format": "int64",
+          "type": "integer"
+        },
+        "ID": {
+          "description": "材质UD",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "名称. 可以自动取文件名称, 但需要去掉扩展文件名",
+          "type": "string"
+        },
+        "Tags": {
+          "description": "标签"
+        },
+        "Width": {
+          "description": "宽",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "MemberCardCreateRequest": {
+      "properties": {
+        "Discount": {
+          "description": "折扣\n`binding:\"max=1\"`",
+          "format": "double",
+          "type": "number"
+        },
+        "GiftAmount": {
+          "description": "赠送金额\n`binding:\"omitempty\"`",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "Interval": {
+          "description": "有效期",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "名称",
+          "type": "string"
+        },
+        "Price": {
+          "description": "价格",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "Unit": {
+          "description": "有效期单位",
+          "enum": [
+            "D",
+            "W",
+            "M",
+            "Y"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MemberCardDeleteRequest": {
+      "properties": {
+        "ID": {
+          "description": "会员卡ID",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "MemberCardQueryRequest": {
+      "properties": {
+        "SalesStatus": {
+          "description": "`binding:\"omitempty\"`",
+          "enum": [
+            "下架",
+            "上架"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MemberCardUpdateRequest": {
+      "properties": {
+        "Discount": {
+          "description": "折扣\n`binding:\"max=1\"`",
+          "format": "double",
+          "type": "number"
+        },
+        "GiftAmount": {
+          "description": "赠送金额\n`binding:\"omitempty\"`",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "ID": {
+          "description": "会员卡ID",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Interval": {
+          "description": "有效期",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "名称",
+          "type": "string"
+        },
+        "Price": {
+          "description": "价格",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "Unit": {
+          "description": "有效期单位",
+          "enum": [
+            "D",
+            "W",
+            "M",
+            "Y"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MemberCardUpdateSalesStatusRequest": {
+      "properties": {
+        "ID": {
+          "description": "会员卡ID",
+          "format": "int64",
+          "type": "integer"
+        },
+        "SalesStatus": {
+          "description": "销售状态",
+          "enum": [
+            "下架",
+            "上架"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MemberQueryRequest": {
+      "properties": {
+        "EndTime": {
+          "description": "结束时间. 指注册\n`binding:\"omitempty\"`",
+          "format": "int64",
+          "type": "integer"
+        },
+        "NickName": {
+          "description": "昵称. 模糊查询\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "Phone": {
+          "description": "电话. 模糊查询\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "StartTime": {
+          "description": "开始时间. 指注册\n`binding:\"omitempty\"`",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ModuleCreateRequest": {
+      "properties": {
+        "Name": {
+          "description": "名称",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ModuleDeleteRequest": {
+      "properties": {
+        "ID": {
+          "description": "模块ID",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ModuleQueryRequest": {
+      "type": "object"
+    },
+    "ModuleTagsUpdateRequest": {
+      "properties": {
+        "Add": {
+          "description": "添加\n`binding:\"omitempty\"`",
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "Del": {
+          "description": "删除\n`binding:\"omitempty\"`",
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "ID": {
+          "description": "模块ID",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ModuleUpdateRequest": {
+      "properties": {
+        "ID": {
+          "description": "模块ID",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "名称",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "OrderCreateRequest": {
+      "properties": {
+        "Amount": {
+          "description": "充值金额. 仅当 type 是充值类型时有效\n`binding:\"omitempty\"`",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "MemberCardID": {
+          "description": "套餐(会员)类型. 仅当 type 是会员类型时有效\n`binding:\"omitempty\"`",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Type": {
+          "description": "交易类型",
+          "enum": [
+            "会员",
+            "充值"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "OrderDeleteRequest": {
+      "properties": {
+        "Ids": {
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "OrderListRequest": {
+      "properties": {
+        "EndTime": {
+          "description": "结束时间\n`binding:\"omitempty\"`",
+          "format": "int64",
+          "type": "integer"
+        },
+        "StartTime": {
+          "description": "开始时间\n`binding:\"omitempty\"`",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Status": {
+          "description": "交易状态\n`binding:\"omitempty\"`",
+          "enum": [
+            "待支付",
+            "交易成功",
+            "交易失败"
+          ],
+          "type": "string"
+        },
+        "Type": {
+          "description": "交易类型\n`binding:\"omitempty\"`",
+          "enum": [
+            "会员",
+            "充值"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "OrderQueryRequest": {
+      "properties": {
+        "TradeNo": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "OrderUpdateRequest": {
+      "properties": {
+        "ID": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "Remark": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ProjectQueryRequest": {
+      "properties": {
+        "CreatedAtE": {
+          "description": "方案创建时间, 区间的结束",
+          "format": "int64",
+          "type": "integer"
+        },
+        "CreatedAtS": {
+          "description": "方案创建时间, 区间的开始",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Limit": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "方案名称",
+          "type": "string"
+        },
+        "Offset": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "Phone": {
+          "description": "用户电话. 模糊查询, 仅工厂端可用",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteMaterialCreateRequest": {
+      "properties": {
+        "Material": {
+          "description": "材质",
+          "type": "string"
+        },
+        "Model": {
+          "description": "型号",
+          "type": "string"
+        },
+        "Spec": {
+          "description": "规格",
+          "type": "string"
+        },
+        "UnitPrice": {
+          "description": "单价",
+          "format": "uint64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteMaterialDeleteRequest": {
+      "properties": {
+        "Items": {
+          "items": {
+            "properties": {
+              "Material": {
+                "type": "string"
+              },
+              "Model": {
+                "type": "string"
+              },
+              "Spec": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteMaterialUpdateRequest": {
+      "properties": {
+        "Material": {
+          "description": "材质",
+          "type": "string"
+        },
+        "Model": {
+          "description": "型号",
+          "type": "string"
+        },
+        "NewMaterial": {
+          "description": "新的材质",
+          "type": "string"
+        },
+        "NewUnitPrice": {
+          "description": "新的单价",
+          "format": "uint64",
+          "type": "integer"
+        },
+        "Spec": {
+          "description": "规格",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteModelCreateRequest": {
+      "properties": {
+        "Model": {
+          "description": "型号",
+          "type": "string"
+        },
+        "Type": {
+          "description": "计价类型",
+          "enum": [
+            "小柱",
+            "弯子",
+            "顶方",
+            "踏板",
+            "整体",
+            "配件"
+          ],
+          "type": "string"
+        },
+        "Unit": {
+          "description": "计价单位",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteModelDeleteRequest": {
+      "properties": {
+        "Models": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteModelUpdateRequest": {
+      "properties": {
+        "Model": {
+          "description": "型号",
+          "type": "string"
+        },
+        "NewModel": {
+          "description": "新的型号",
+          "type": "string"
+        },
+        "Type": {
+          "description": "计价类型",
+          "enum": [
+            "小柱",
+            "弯子",
+            "顶方",
+            "踏板",
+            "整体",
+            "配件"
+          ],
+          "type": "string"
+        },
+        "Unit": {
+          "description": "计价单位",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteQueryRequest": {
+      "properties": {
+        "Model": {
+          "description": "产品型号\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "Spec": {
+          "description": "产品规格\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "Type": {
+          "enum": [
+            "小柱",
+            "弯子",
+            "顶方",
+            "踏板",
+            "整体",
+            "配件"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteSpecCreateRequest": {
+      "properties": {
+        "Model": {
+          "description": "型号",
+          "type": "string"
+        },
+        "Spec": {
+          "description": "规格",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteSpecDeleteRequest": {
+      "properties": {
+        "Items": {
+          "items": {
+            "properties": {
+              "Model": {
+                "type": "string"
+              },
+              "Spec": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "QuoteSpecUpdateRequest": {
+      "properties": {
+        "Model": {
+          "description": "型号",
+          "type": "string"
+        },
+        "NewSpec": {
+          "description": "新规格",
+          "type": "string"
+        },
+        "Spec": {
+          "description": "旧规格",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "StairCreateRequest": {
+      "properties": {
+        "Name": {
+          "description": "名称",
+          "type": "string"
+        },
+        "Payload": {
+          "description": "楼梯序列化后的字符串",
+          "type": "string"
+        },
+        "Preview": {
+          "description": "预览图",
+          "type": "string"
+        },
+        "Tags": {
+          "description": "标签"
+        }
+      },
+      "type": "object"
+    },
+    "StairDeleteRequest": {
+      "properties": {
+        "Ids": {
+          "description": "`binding:\"min=1\"`",
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "StairDetailRequest": {
+      "properties": {
+        "ID": {
+          "description": "楼梯ID",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "StairQueryRequest": {
+      "properties": {
+        "Name": {
+          "description": "名称. 模糊查询\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "Owner": {
+          "description": "所有者\n`binding:\"omitempty\"`",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Tags": {
+          "description": "标签.\n`binding:\"omitempty\"`"
+        }
+      },
+      "type": "object"
+    },
+    "StairUpdateRequest": {
+      "properties": {
+        "ID": {
+          "description": "楼梯ID",
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "description": "名称",
+          "type": "string"
+        },
+        "Payload": {
+          "description": "楼梯序列化后的字符串",
+          "type": "string"
+        },
+        "Preview": {
+          "description": "预览图",
+          "type": "string"
+        },
+        "Tags": {
+          "description": "标签"
+        }
+      },
+      "type": "object"
+    },
+    "TagCreateRequest": {
+      "properties": {
+        "Name": {
+          "description": "名称",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "TagDeleteRequest": {
+      "properties": {
+        "ID": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "TagItemCreateRequest": {
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "TagID": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "TagItemDeleteRequest": {
+      "properties": {
+        "ID": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "TagItemDragSortRequest": {
+      "properties": {
+        "Sorted": {
+          "items": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "TagID": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "TagItemUpdateRequest": {
+      "properties": {
+        "ID": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "TagQueryRequest": {
+      "type": "object"
+    },
+    "TagUpdateRequest": {
+      "properties": {
+        "ID": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "Name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserDesignTokenRequest": {
+      "type": "object"
+    },
+    "UserRegisterRequest": {
+      "properties": {
+        "Captcha": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        },
+        "Phone": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserResetPasswordRequest": {
+      "properties": {
+        "Captcha": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        },
+        "Phone": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserSendCaptchaRequest": {
+      "properties": {
+        "Phone": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserUpdateProfileRequest": {
+      "properties": {
+        "Address": {
+          "$ref": "#/definitions/Address"
+        },
+        "Avatar": {
+          "description": "头像\n`binding:\"omitempty\"`",
+          "type": "string"
+        },
+        "NickName": {
+          "description": "昵称\n`binding:\"omitempty\"`",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserUploadCredentialRequest": {
+      "type": "object"
+    },
+    "login": {
+      "properties": {
+        "captcha": {
+          "type": "string"
+        },
+        "login_type": {
+          "enum": [
+            "密码",
+            "短信"
+          ],
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "host": "192.168.1.79:8888",
+  "info": {
+    "description": "🪜项目的API",
+    "title": "🪜",
+    "version": "3.1.4"
+  },
+  "paths": {
+    "/v1/d2_model/create": {
+      "post": {
+        "description": "批量添加截面",
+        "operationId": "D2ModelCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D2ModelCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "批量添加截面",
+        "tags": [
+          "截面"
+        ]
+      }
+    },
+    "/v1/d2_model/delete": {
+      "post": {
+        "description": "删除截面",
+        "operationId": "D2ModelDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D2ModelDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除截面",
+        "tags": [
+          "截面"
+        ]
+      }
+    },
+    "/v1/d2_model/query": {
+      "post": {
+        "description": "查询截面",
+        "operationId": "D2ModelQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D2ModelQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询截面",
+        "tags": [
+          "截面"
+        ]
+      }
+    },
+    "/v1/d2_model/update": {
+      "post": {
+        "description": "更新截面",
+        "operationId": "D2ModelUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D2ModelUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新截面",
+        "tags": [
+          "截面"
+        ]
+      }
+    },
+    "/v1/d3_model/create": {
+      "post": {
+        "description": "批量添加3D模型",
+        "operationId": "D3ModelCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D3ModelCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "批量添加3D模型",
+        "tags": [
+          "模型"
+        ]
+      }
+    },
+    "/v1/d3_model/delete": {
+      "post": {
+        "description": "删除3D模型",
+        "operationId": "D3ModelDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D3ModelDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除3D模型",
+        "tags": [
+          "模型"
+        ]
+      }
+    },
+    "/v1/d3_model/query": {
+      "post": {
+        "description": "查询3D模型",
+        "operationId": "D3ModelQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D3ModelQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询3D模型",
+        "tags": [
+          "模型"
+        ]
+      }
+    },
+    "/v1/d3_model/update": {
+      "post": {
+        "description": "更新3D模型",
+        "operationId": "D3ModelUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/D3ModelUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新3D模型",
+        "tags": [
+          "模型"
+        ]
+      }
+    },
+    "/v1/material/create": {
+      "post": {
+        "description": "批量添加材质",
+        "operationId": "MaterialCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MaterialCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "批量添加材质",
+        "tags": [
+          "材质"
+        ]
+      }
+    },
+    "/v1/material/delete": {
+      "post": {
+        "description": "删除材质",
+        "operationId": "MaterialDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MaterialDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除材质",
+        "tags": [
+          "材质"
+        ]
+      }
+    },
+    "/v1/material/list_by_name": {
+      "post": {
+        "description": "根据名称列表查询材质",
+        "operationId": "MaterialListByName",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MaterialListByNameRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "根据名称列表查询材质",
+        "tags": [
+          "材质"
+        ]
+      }
+    },
+    "/v1/material/query": {
+      "post": {
+        "description": "查询材质",
+        "operationId": "MaterialQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MaterialQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询材质",
+        "tags": [
+          "材质"
+        ]
+      }
+    },
+    "/v1/material/update": {
+      "post": {
+        "description": "更新材质",
+        "operationId": "MaterialUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MaterialUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新材质",
+        "tags": [
+          "材质"
+        ]
+      }
+    },
+    "/v1/member/query": {
+      "post": {
+        "description": "会员查询",
+        "operationId": "MemberQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MemberQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "会员查询",
+        "tags": [
+          "会员"
+        ]
+      }
+    },
+    "/v1/member_card/create": {
+      "post": {
+        "description": "新建会员卡",
+        "operationId": "MemberCardCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MemberCardCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新建会员卡",
+        "tags": [
+          "会员卡"
+        ]
+      }
+    },
+    "/v1/member_card/delete": {
+      "post": {
+        "description": "删除会员卡",
+        "operationId": "MemberCardDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MemberCardDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除会员卡",
+        "tags": [
+          "会员卡"
+        ]
+      }
+    },
+    "/v1/member_card/query": {
+      "post": {
+        "description": "查询会员卡信息",
+        "operationId": "MemberCardQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MemberCardQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询会员卡信息",
+        "tags": [
+          "会员卡"
+        ]
+      }
+    },
+    "/v1/member_card/update": {
+      "post": {
+        "description": "更新会员卡",
+        "operationId": "MemberCardUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MemberCardUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新会员卡",
+        "tags": [
+          "会员卡"
+        ]
+      }
+    },
+    "/v1/member_card/update_sales_status": {
+      "post": {
+        "description": "更新会员卡销售状态",
+        "operationId": "MemberCardUpdateSalesStatus",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MemberCardUpdateSalesStatusRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新会员卡销售状态",
+        "tags": [
+          "会员卡"
+        ]
+      }
+    },
+    "/v1/module/create": {
+      "post": {
+        "description": "新建模块",
+        "operationId": "ModuleCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ModuleCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新建模块",
+        "tags": [
+          "模块"
+        ]
+      }
+    },
+    "/v1/module/delete": {
+      "post": {
+        "description": "删除模块",
+        "operationId": "ModuleDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ModuleDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除模块",
+        "tags": [
+          "模块"
+        ]
+      }
+    },
+    "/v1/module/query": {
+      "post": {
+        "description": "查询模块",
+        "operationId": "ModuleQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ModuleQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询模块",
+        "tags": [
+          "模块"
+        ]
+      }
+    },
+    "/v1/module/tags/update": {
+      "post": {
+        "description": "更新模块的标签",
+        "operationId": "ModuleTagsUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ModuleTagsUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新模块的标签",
+        "tags": [
+          "模块"
+        ]
+      }
+    },
+    "/v1/module/update": {
+      "post": {
+        "description": "更新模块",
+        "operationId": "ModuleUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ModuleUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新模块",
+        "tags": [
+          "模块"
+        ]
+      }
+    },
+    "/v1/order/create": {
+      "post": {
+        "description": "新建订单",
+        "operationId": "OrderCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrderCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新建订单",
+        "tags": [
+          "订单"
+        ]
+      }
+    },
+    "/v1/order/delete": {
+      "post": {
+        "description": "删除订单",
+        "operationId": "OrderDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrderDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除订单",
+        "tags": [
+          "订单"
+        ]
+      }
+    },
+    "/v1/order/list": {
+      "post": {
+        "description": "订单列表",
+        "operationId": "OrderList",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrderListRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "订单列表",
+        "tags": [
+          "订单"
+        ]
+      }
+    },
+    "/v1/order/query": {
+      "post": {
+        "description": "查询单个订单. `用于支付后查询订单状态`",
+        "operationId": "OrderQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrderQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询单个订单. `用于支付后查询订单状态`",
+        "tags": [
+          "订单"
+        ]
+      }
+    },
+    "/v1/order/update": {
+      "post": {
+        "description": "更新订单, `当前仅支持管理员添加备注`",
+        "operationId": "OrderUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrderUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新订单, `当前仅支持管理员添加备注`",
+        "tags": [
+          "订单"
+        ]
+      }
+    },
+    "/v1/project/query": {
+      "post": {
+        "description": "方案查询",
+        "operationId": "ProjectQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ProjectQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "方案查询",
+        "tags": [
+          "方案"
+        ]
+      }
+    },
+    "/v1/quote/material_create": {
+      "post": {
+        "description": "新增产品材质报价",
+        "operationId": "QuoteMaterialCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteMaterialCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新增产品材质报价",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/material_delete": {
+      "post": {
+        "description": "删除产品材质报价",
+        "operationId": "QuoteMaterialDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteMaterialDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除产品材质报价",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/material_update": {
+      "post": {
+        "description": "修改产品材质报价",
+        "operationId": "QuoteMaterialUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteMaterialUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "修改产品材质报价",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/model_create": {
+      "post": {
+        "description": "新增产品型号",
+        "operationId": "QuoteModelCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteModelCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新增产品型号",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/model_delete": {
+      "post": {
+        "description": "删除产品型号",
+        "operationId": "QuoteModelDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteModelDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除产品型号",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/model_update": {
+      "post": {
+        "description": "修改产品型号",
+        "operationId": "QuoteModelUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteModelUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "修改产品型号",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/query": {
+      "post": {
+        "description": "报价查询",
+        "operationId": "QuoteQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "报价查询",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/spec_create": {
+      "post": {
+        "description": "新增产品规格",
+        "operationId": "QuoteSpecCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteSpecCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新增产品规格",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/spec_delete": {
+      "post": {
+        "description": "删除产品规格",
+        "operationId": "QuoteSpecDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteSpecDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除产品规格",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/quote/spec_update": {
+      "post": {
+        "description": "修改产品规格",
+        "operationId": "QuoteSpecUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/QuoteSpecUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "修改产品规格",
+        "tags": [
+          "报价"
+        ]
+      }
+    },
+    "/v1/stair/create": {
+      "post": {
+        "description": "新建楼梯",
+        "operationId": "StairCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/StairCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新建楼梯",
+        "tags": [
+          "楼梯"
+        ]
+      }
+    },
+    "/v1/stair/delete": {
+      "post": {
+        "description": "删除楼梯",
+        "operationId": "StairDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/StairDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除楼梯",
+        "tags": [
+          "楼梯"
+        ]
+      }
+    },
+    "/v1/stair/detail": {
+      "post": {
+        "description": "楼梯详情",
+        "operationId": "StairDetail",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/StairDetailRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "楼梯详情",
+        "tags": [
+          "楼梯"
+        ]
+      }
+    },
+    "/v1/stair/query": {
+      "post": {
+        "description": "查询楼梯",
+        "operationId": "StairQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/StairQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询楼梯",
+        "tags": [
+          "楼梯"
+        ]
+      }
+    },
+    "/v1/stair/update": {
+      "post": {
+        "description": "更新楼梯",
+        "operationId": "StairUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/StairUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新楼梯",
+        "tags": [
+          "楼梯"
+        ]
+      }
+    },
+    "/v1/tag/create": {
+      "post": {
+        "description": "新建标签",
+        "operationId": "TagCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "新建标签",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/tag/delete": {
+      "post": {
+        "description": "删除标签",
+        "operationId": "TagDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "删除标签",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/tag/item/create": {
+      "post": {
+        "description": "标签项-添加",
+        "operationId": "TagItemCreate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagItemCreateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "标签项-添加",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/tag/item/delete": {
+      "post": {
+        "description": "标签项-删除",
+        "operationId": "TagItemDelete",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagItemDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "标签项-删除",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/tag/item/drag_sort": {
+      "post": {
+        "description": "! `使用了 PostgreSQL 专有的语法, 不支持测试环境`\ntag_id: 标签ID\nsorted: 排好序的标签项ID数组, 如 [1326156906414215168, 1326179034668732416, 1326178972534312960]",
+        "operationId": "TagItemDragSort",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagItemDragSortRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "标签项-拖拽排序",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/tag/item/update": {
+      "post": {
+        "description": "标签项-编辑",
+        "operationId": "TagItemUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagItemUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "标签项-编辑",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/tag/query": {
+      "post": {
+        "description": "查询标签",
+        "operationId": "TagQuery",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagQueryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "查询标签",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/tag/update": {
+      "post": {
+        "description": "更新标签",
+        "operationId": "TagUpdate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/TagUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新标签",
+        "tags": [
+          "标签"
+        ]
+      }
+    },
+    "/v1/user/design_token": {
+      "post": {
+        "description": "跳转到设计工具自动登录需要的信息",
+        "operationId": "UserDesignToken",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserDesignTokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "跳转到设计工具自动登录需要的信息",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/login": {
+      "post": {
+        "description": "登录",
+        "operationId": "UserLogin",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Body",
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "登录",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/logout": {
+      "post": {
+        "description": "退出登录",
+        "operationId": "UserLogout",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "退出登录",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/refresh_token": {
+      "post": {
+        "description": "刷新Token",
+        "operationId": "UserRefreshToken",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "刷新Token",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/register": {
+      "post": {
+        "description": "注册",
+        "operationId": "UserRegister",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserRegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "注册",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/reset_password": {
+      "post": {
+        "description": "重置密码",
+        "operationId": "UserResetPassword",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserResetPasswordRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "重置密码",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/send_sms": {
+      "post": {
+        "description": "发送验证码",
+        "operationId": "UserSendCaptcha",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserSendCaptchaRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "发送验证码",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/update_profile": {
+      "post": {
+        "description": "更新用户信息",
+        "operationId": "UserUpdateProfile",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserUpdateProfileRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "更新用户信息",
+        "tags": [
+          "用户"
+        ]
+      }
+    },
+    "/v1/user/upload_credential": {
+      "post": {
+        "description": "经销商的上传路径为 `/user/${uid}/*`\n管理员的上传路径为 `/static/*` 和 `/user/${uid}/*`",
+        "operationId": "UserUploadCredential",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserUploadCredentialRequest"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "summary": "获取用于前端直传获取服务端签名或临时密钥",
+        "tags": [
+          "用户"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey"
+    }
+  },
+  "swagger": "2.0"
+}
