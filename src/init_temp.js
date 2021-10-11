@@ -37,6 +37,7 @@ export function initProj() {
     type: Types.EdgeType.estraight
   }))
   proj.hole.edges = edges;
+
   edges.forEach(e => {
     proj.walls.push(new Types.Wall({
       p1: e.p1,

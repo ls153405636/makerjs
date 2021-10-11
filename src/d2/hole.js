@@ -16,7 +16,6 @@ export class Hole extends BaseWidget {
 
   draw () {
     let container = new PIXI.Container()
-    container.position.set(Config.CANVAS_WIDTH / 2, Config.CANVAS_HEIGHT / 2)
     
     let path = []
     for (let i = 0; i < this.edges.length; i++) {
@@ -33,6 +32,5 @@ export class Hole extends BaseWidget {
 
     container.addChild(graphics)
     this.sprite = container
-    //let container = new PIXI.Container();
   }
 }

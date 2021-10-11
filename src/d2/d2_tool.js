@@ -9,6 +9,7 @@ function translateCoord (vRealCoord) {
   let screenCoord = new Types.Vector3()
   screenCoord.x = vRealCoord.x / Config.SCREEN_RATE
   screenCoord.y = vRealCoord.y / Config.SCREEN_RATE
+  return screenCoord
 }
 
 function translateValue (vValue) {
