@@ -1,18 +1,18 @@
-const { Types } = require("../types/stair_v2");
-const { Config } = require("./config");
+import { Types } from "../types/stair_v2"
+import { Config } from "./config"
 
 /**
  * 
  * @param {Types.Vector3} vRealCoord 
  */
 function translateCoord (vRealCoord) {
-  let screeCoord = new Types.Vector3()
-  screeCoord.x = vRealCoord.x / Config.SCREEM_RATE
-  screeCoord.y = vRealCoord.y / Config.SCREEM_RATE
+  let screenCoord = new Types.Vector3()
+  screenCoord.x = vRealCoord.x / Config.SCREEN_RATE
+  screenCoord.y = vRealCoord.y / Config.SCREEN_RATE
 }
 
 function translateValue (vValue) {
-  return vValue / Config.SCREEM_RATE
+  return vValue / Config.SCREEN_RATE
 }
 
 export default {

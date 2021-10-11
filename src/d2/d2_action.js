@@ -7,7 +7,7 @@ import { Wall } from './wall'
  * @param {Types.Project} vPB 
  */
 export function importProject (vPB) {
-  //new Hole(vPB.hole).addToStage()
+  new Hole(vPB.hole).addToStage()
   vPB.walls.forEach(w => {
     new Wall(w).addToStage()
   })

@@ -1,6 +1,7 @@
 import { initProj } from '../init_temp'
 import { Types } from '../types/stair_v2'
 import { BaseWidget } from './base_widget'
+import { Config } from './config'
 
 export class Hole extends BaseWidget {
   /**
@@ -15,17 +16,17 @@ export class Hole extends BaseWidget {
 
   draw () {
     let container = new PIXI.Container()
+    container.position.set(Config.CANVAS_WIDTH / 2, Config.CANVAS_HEIGHT / 2)
     
     let path = []
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
-      path.push(e.p1.x, e.p1.y)
+      path.push(e.p1.x / Config.SCREEN_RATE, e.p1.y / Config.SCREEN_RATE)
     }
     const graphics = new PIXI.Graphics();
     //const path = [0, 0, 500, 0, 500, 500, 0, 500, 0, 0];
-    graphics.lineStyle(10, 0x000000);
+    // graphics.lineStyle(10, 0x000000);
     graphics.beginFill(0x3500FA, 1);
-    graphics.position.set(50, 50)
     graphics.drawPolygon(path);
     graphics.endFill();
 
