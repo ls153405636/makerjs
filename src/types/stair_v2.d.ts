@@ -549,6 +549,12 @@ export namespace Types {
         /** Wall p2 */
         p2?: (Types.IVector3|null);
 
+        /** Wall outP1 */
+        outP1?: (Types.IVector3|null);
+
+        /** Wall outP2 */
+        outP2?: (Types.IVector3|null);
+
         /** Wall type */
         type?: (Types.WallType|null);
 
@@ -579,6 +585,12 @@ export namespace Types {
 
         /** Wall p2. */
         public p2?: (Types.IVector3|null);
+
+        /** Wall outP1. */
+        public outP1?: (Types.IVector3|null);
+
+        /** Wall outP2. */
+        public outP2?: (Types.IVector3|null);
 
         /** Wall type. */
         public type: Types.WallType;
