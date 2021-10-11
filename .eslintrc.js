@@ -22,7 +22,8 @@ module.exports = {
     },
     plugins: [
         "react-hooks",
-        "unused-imports"
+        "unused-imports",
+        "unicorn",
     ],
     extends: [
         "eslint:recommended",
@@ -44,6 +45,13 @@ module.exports = {
                 "args": "after-used",
                 "argsIgnorePattern": "^_"
             }
-        ]
+        ],
+        "unicorn/filename-case": [
+            "error",
+            {
+                "case": "snakeCase",
+                "ignore": []
+            }
+        ],
     }
 }
