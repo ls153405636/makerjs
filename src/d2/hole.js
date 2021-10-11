@@ -18,7 +18,15 @@ export class Hole extends BaseWidget {
     graphics.drawPolygon(path);
     graphics.endFill();
 
-    container.addChild(graphics)
+    const graphics1 = new PIXI.Graphics();
+    const path1 = [0, 0, 500, 0, 500, 500, 0, 500, 0, 0];
+    graphics1.lineStyle(10, 0x000000);
+    graphics1.beginFill(0x3500FA, 1);
+    graphics1.position.set(500, 50)
+    graphics1.drawPolygon(path1);
+    graphics1.endFill();
+
+    container.addChild(graphics,graphics1)
     this.sprite = container
   }
   

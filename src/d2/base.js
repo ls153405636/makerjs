@@ -7,7 +7,7 @@ export class BaseWidget {
 
   addToStage() {
     if (this.sprite) {
-      debugger
+      // debugger
       new Movie().addEle(this.sprite)
     }
   }

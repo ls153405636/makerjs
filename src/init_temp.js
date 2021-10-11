@@ -25,10 +25,10 @@ export function initProj() {
     p2: new Types.Vector3({x: 0, y: 0}),
     type: Types.EdgeType.estraight
   }))
-  proj.hole.edges = edges
+  proj.hole.edges = edges;
   console.log('pb:', proj)
   d2_action.importProject(proj)
-  //return proj
+  return proj
 }
 
 export default {
