@@ -1,9 +1,11 @@
+import { Config } from "./config";
+
 export class Movie {
   constructor() {
     if (!Movie.instance) {
       let app = new PIXI.Application({
-        width                : 860,
-        height               : 480,
+        width                : Config.CANVAS_WIDTH,
+        height               : Config.CANVAS_HEIGHT,
         transparent          : false,
         resolution           : 1,
         antialias            : true,

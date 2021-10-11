@@ -5,14 +5,15 @@
 <script>
 import { Command } from '../../common/command'
 import { Core } from '../../common/core'
-import { experiment } from '../../_experiment/start'
+import { initProj } from '../../init_temp'
+
 
 export default {
   name: 'App',
   mounted() {
     new Core().execute(new Command(new Core().cmds.BootCmd))
 
-    experiment()
+    initProj()
   },
 }
 </script>
