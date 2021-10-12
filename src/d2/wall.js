@@ -36,11 +36,14 @@ export class Wall extends BaseWidget{
   addEvent () {
     this.sprite.interactive = true;
     this.sprite
-    .on("mouseover", () => {
-      console.log("1")
+    .on("pointerentercapture", () => {
+      this.sprite.tint = 0x555555
     })
-    .on("mouseout", () => {
-      
-    });
+    // .on("mouseout", () => {
+    //   this.sprite.tint = 0xffffff
+    // })
+    // .on("mousedown", () => {
+    //   this.sprite.tint = 0x555555
+    // })
   }
 }
