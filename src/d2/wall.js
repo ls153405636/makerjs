@@ -12,11 +12,11 @@ export class Wall extends BaseWidget{
    */
   constructor(vPB) {
     super()
-    this.p1 = d2_tool.translateCoord(vPB.p1)
-    this.p2 = d2_tool.translateCoord(vPB.p2)
+    this.p1 = d2_tool.translateCoord(vPB.edge.p1)
+    this.p2 = d2_tool.translateCoord(vPB.edge.p2)
     // console.log(this.p1,this.p2)
-    this.outP1 = d2_tool.translateCoord(vPB.outP1)
-    this.outP2 = d2_tool.translateCoord(vPB.outP2)
+    this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
+    this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
     this.draw()
     this.addEvent()

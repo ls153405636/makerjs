@@ -438,6 +438,9 @@ export namespace Types {
     /** Properties of a Hole. */
     interface IHole {
 
+        /** Hole uuid */
+        uuid?: (string|null);
+
         /** Hole edges */
         edges?: (Types.IEdge[]|null);
 
@@ -453,6 +456,9 @@ export namespace Types {
          * @param [properties] Properties to set
          */
         constructor(properties?: Types.IHole);
+
+        /** Hole uuid. */
+        public uuid: string;
 
         /** Hole edges. */
         public edges: Types.IEdge[];
@@ -543,17 +549,14 @@ export namespace Types {
     /** Properties of a Wall. */
     interface IWall {
 
-        /** Wall p1 */
-        p1?: (Types.IVector3|null);
+        /** Wall uuid */
+        uuid?: (string|null);
 
-        /** Wall p2 */
-        p2?: (Types.IVector3|null);
+        /** Wall edge */
+        edge?: (Types.IEdge|null);
 
-        /** Wall outP1 */
-        outP1?: (Types.IVector3|null);
-
-        /** Wall outP2 */
-        outP2?: (Types.IVector3|null);
+        /** Wall outEdge */
+        outEdge?: (Types.IEdge|null);
 
         /** Wall type */
         type?: (Types.WallType|null);
@@ -580,17 +583,14 @@ export namespace Types {
          */
         constructor(properties?: Types.IWall);
 
-        /** Wall p1. */
-        public p1?: (Types.IVector3|null);
+        /** Wall uuid. */
+        public uuid: string;
 
-        /** Wall p2. */
-        public p2?: (Types.IVector3|null);
+        /** Wall edge. */
+        public edge?: (Types.IEdge|null);
 
-        /** Wall outP1. */
-        public outP1?: (Types.IVector3|null);
-
-        /** Wall outP2. */
-        public outP2?: (Types.IVector3|null);
+        /** Wall outEdge. */
+        public outEdge?: (Types.IEdge|null);
 
         /** Wall type. */
         public type: Types.WallType;

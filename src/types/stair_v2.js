@@ -1091,6 +1091,7 @@ export const Types = $root.Types = (() => {
          * Properties of a Hole.
          * @memberof Types
          * @interface IHole
+         * @property {string|null} [uuid] Hole uuid
          * @property {Array.<Types.IEdge>|null} [edges] Hole edges
          * @property {number|null} [floorHeight] Hole floorHeight
          */
@@ -1110,6 +1111,14 @@ export const Types = $root.Types = (() => {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * Hole uuid.
+         * @member {string} uuid
+         * @memberof Types.Hole
+         * @instance
+         */
+        Hole.prototype.uuid = "";
 
         /**
          * Hole edges.
@@ -1151,11 +1160,13 @@ export const Types = $root.Types = (() => {
         Hole.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
             if (message.edges != null && message.edges.length)
                 for (let i = 0; i < message.edges.length; ++i)
-                    $root.Types.Edge.encode(message.edges[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    $root.Types.Edge.encode(message.edges[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             if (message.floorHeight != null && Object.hasOwnProperty.call(message, "floorHeight"))
-                writer.uint32(/* id 2, wireType 5 =*/21).float(message.floorHeight);
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.floorHeight);
             return writer;
         };
 
@@ -1191,11 +1202,14 @@ export const Types = $root.Types = (() => {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
                     if (!(message.edges && message.edges.length))
                         message.edges = [];
                     message.edges.push($root.Types.Edge.decode(reader, reader.uint32()));
                     break;
-                case 2:
+                case 3:
                     message.floorHeight = reader.float();
                     break;
                 default:
@@ -1233,6 +1247,9 @@ export const Types = $root.Types = (() => {
         Hole.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
             if (message.edges != null && message.hasOwnProperty("edges")) {
                 if (!Array.isArray(message.edges))
                     return "edges: array expected";
@@ -1260,6 +1277,8 @@ export const Types = $root.Types = (() => {
             if (object instanceof $root.Types.Hole)
                 return object;
             let message = new $root.Types.Hole();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
             if (object.edges) {
                 if (!Array.isArray(object.edges))
                     throw TypeError(".Types.Hole.edges: array expected");
@@ -1290,8 +1309,12 @@ export const Types = $root.Types = (() => {
             let object = {};
             if (options.arrays || options.defaults)
                 object.edges = [];
-            if (options.defaults)
+            if (options.defaults) {
+                object.uuid = "";
                 object.floorHeight = 0;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
             if (message.edges && message.edges.length) {
                 object.edges = [];
                 for (let j = 0; j < message.edges.length; ++j)
@@ -1342,10 +1365,9 @@ export const Types = $root.Types = (() => {
          * Properties of a Wall.
          * @memberof Types
          * @interface IWall
-         * @property {Types.IVector3|null} [p1] Wall p1
-         * @property {Types.IVector3|null} [p2] Wall p2
-         * @property {Types.IVector3|null} [outP1] Wall outP1
-         * @property {Types.IVector3|null} [outP2] Wall outP2
+         * @property {string|null} [uuid] Wall uuid
+         * @property {Types.IEdge|null} [edge] Wall edge
+         * @property {Types.IEdge|null} [outEdge] Wall outEdge
          * @property {Types.WallType|null} [type] Wall type
          * @property {number|null} [startExtend] Wall startExtend
          * @property {number|null} [endExtend] Wall endExtend
@@ -1369,36 +1391,28 @@ export const Types = $root.Types = (() => {
         }
 
         /**
-         * Wall p1.
-         * @member {Types.IVector3|null|undefined} p1
+         * Wall uuid.
+         * @member {string} uuid
          * @memberof Types.Wall
          * @instance
          */
-        Wall.prototype.p1 = null;
+        Wall.prototype.uuid = "";
 
         /**
-         * Wall p2.
-         * @member {Types.IVector3|null|undefined} p2
+         * Wall edge.
+         * @member {Types.IEdge|null|undefined} edge
          * @memberof Types.Wall
          * @instance
          */
-        Wall.prototype.p2 = null;
+        Wall.prototype.edge = null;
 
         /**
-         * Wall outP1.
-         * @member {Types.IVector3|null|undefined} outP1
+         * Wall outEdge.
+         * @member {Types.IEdge|null|undefined} outEdge
          * @memberof Types.Wall
          * @instance
          */
-        Wall.prototype.outP1 = null;
-
-        /**
-         * Wall outP2.
-         * @member {Types.IVector3|null|undefined} outP2
-         * @memberof Types.Wall
-         * @instance
-         */
-        Wall.prototype.outP2 = null;
+        Wall.prototype.outEdge = null;
 
         /**
          * Wall type.
@@ -1464,24 +1478,22 @@ export const Types = $root.Types = (() => {
         Wall.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.p1 != null && Object.hasOwnProperty.call(message, "p1"))
-                $root.Types.Vector3.encode(message.p1, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.p2 != null && Object.hasOwnProperty.call(message, "p2"))
-                $root.Types.Vector3.encode(message.p2, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.outP1 != null && Object.hasOwnProperty.call(message, "outP1"))
-                $root.Types.Vector3.encode(message.outP1, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.outP2 != null && Object.hasOwnProperty.call(message, "outP2"))
-                $root.Types.Vector3.encode(message.outP2, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.edge != null && Object.hasOwnProperty.call(message, "edge"))
+                $root.Types.Edge.encode(message.edge, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.outEdge != null && Object.hasOwnProperty.call(message, "outEdge"))
+                $root.Types.Edge.encode(message.outEdge, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             if (message.type != null && Object.hasOwnProperty.call(message, "type"))
-                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.type);
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.type);
             if (message.startExtend != null && Object.hasOwnProperty.call(message, "startExtend"))
-                writer.uint32(/* id 6, wireType 5 =*/53).float(message.startExtend);
+                writer.uint32(/* id 5, wireType 5 =*/45).float(message.startExtend);
             if (message.endExtend != null && Object.hasOwnProperty.call(message, "endExtend"))
-                writer.uint32(/* id 7, wireType 5 =*/61).float(message.endExtend);
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.endExtend);
             if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
-                writer.uint32(/* id 8, wireType 5 =*/69).float(message.depth);
+                writer.uint32(/* id 7, wireType 5 =*/61).float(message.depth);
             if (message.height != null && Object.hasOwnProperty.call(message, "height"))
-                writer.uint32(/* id 9, wireType 5 =*/77).float(message.height);
+                writer.uint32(/* id 8, wireType 5 =*/69).float(message.height);
             return writer;
         };
 
@@ -1517,30 +1529,27 @@ export const Types = $root.Types = (() => {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
-                    message.p1 = $root.Types.Vector3.decode(reader, reader.uint32());
+                    message.uuid = reader.string();
                     break;
                 case 2:
-                    message.p2 = $root.Types.Vector3.decode(reader, reader.uint32());
+                    message.edge = $root.Types.Edge.decode(reader, reader.uint32());
                     break;
                 case 3:
-                    message.outP1 = $root.Types.Vector3.decode(reader, reader.uint32());
+                    message.outEdge = $root.Types.Edge.decode(reader, reader.uint32());
                     break;
                 case 4:
-                    message.outP2 = $root.Types.Vector3.decode(reader, reader.uint32());
-                    break;
-                case 5:
                     message.type = reader.int32();
                     break;
-                case 6:
+                case 5:
                     message.startExtend = reader.float();
                     break;
-                case 7:
+                case 6:
                     message.endExtend = reader.float();
                     break;
-                case 8:
+                case 7:
                     message.depth = reader.float();
                     break;
-                case 9:
+                case 8:
                     message.height = reader.float();
                     break;
                 default:
@@ -1578,25 +1587,18 @@ export const Types = $root.Types = (() => {
         Wall.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.p1 != null && message.hasOwnProperty("p1")) {
-                let error = $root.Types.Vector3.verify(message.p1);
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.edge != null && message.hasOwnProperty("edge")) {
+                let error = $root.Types.Edge.verify(message.edge);
                 if (error)
-                    return "p1." + error;
+                    return "edge." + error;
             }
-            if (message.p2 != null && message.hasOwnProperty("p2")) {
-                let error = $root.Types.Vector3.verify(message.p2);
+            if (message.outEdge != null && message.hasOwnProperty("outEdge")) {
+                let error = $root.Types.Edge.verify(message.outEdge);
                 if (error)
-                    return "p2." + error;
-            }
-            if (message.outP1 != null && message.hasOwnProperty("outP1")) {
-                let error = $root.Types.Vector3.verify(message.outP1);
-                if (error)
-                    return "outP1." + error;
-            }
-            if (message.outP2 != null && message.hasOwnProperty("outP2")) {
-                let error = $root.Types.Vector3.verify(message.outP2);
-                if (error)
-                    return "outP2." + error;
+                    return "outEdge." + error;
             }
             if (message.type != null && message.hasOwnProperty("type"))
                 switch (message.type) {
@@ -1636,25 +1638,17 @@ export const Types = $root.Types = (() => {
             if (object instanceof $root.Types.Wall)
                 return object;
             let message = new $root.Types.Wall();
-            if (object.p1 != null) {
-                if (typeof object.p1 !== "object")
-                    throw TypeError(".Types.Wall.p1: object expected");
-                message.p1 = $root.Types.Vector3.fromObject(object.p1);
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            if (object.edge != null) {
+                if (typeof object.edge !== "object")
+                    throw TypeError(".Types.Wall.edge: object expected");
+                message.edge = $root.Types.Edge.fromObject(object.edge);
             }
-            if (object.p2 != null) {
-                if (typeof object.p2 !== "object")
-                    throw TypeError(".Types.Wall.p2: object expected");
-                message.p2 = $root.Types.Vector3.fromObject(object.p2);
-            }
-            if (object.outP1 != null) {
-                if (typeof object.outP1 !== "object")
-                    throw TypeError(".Types.Wall.outP1: object expected");
-                message.outP1 = $root.Types.Vector3.fromObject(object.outP1);
-            }
-            if (object.outP2 != null) {
-                if (typeof object.outP2 !== "object")
-                    throw TypeError(".Types.Wall.outP2: object expected");
-                message.outP2 = $root.Types.Vector3.fromObject(object.outP2);
+            if (object.outEdge != null) {
+                if (typeof object.outEdge !== "object")
+                    throw TypeError(".Types.Wall.outEdge: object expected");
+                message.outEdge = $root.Types.Edge.fromObject(object.outEdge);
             }
             switch (object.type) {
             case "wph":
@@ -1703,24 +1697,21 @@ export const Types = $root.Types = (() => {
                 options = {};
             let object = {};
             if (options.defaults) {
-                object.p1 = null;
-                object.p2 = null;
-                object.outP1 = null;
-                object.outP2 = null;
+                object.uuid = "";
+                object.edge = null;
+                object.outEdge = null;
                 object.type = options.enums === String ? "wph" : 0;
                 object.startExtend = 0;
                 object.endExtend = 0;
                 object.depth = 0;
                 object.height = 0;
             }
-            if (message.p1 != null && message.hasOwnProperty("p1"))
-                object.p1 = $root.Types.Vector3.toObject(message.p1, options);
-            if (message.p2 != null && message.hasOwnProperty("p2"))
-                object.p2 = $root.Types.Vector3.toObject(message.p2, options);
-            if (message.outP1 != null && message.hasOwnProperty("outP1"))
-                object.outP1 = $root.Types.Vector3.toObject(message.outP1, options);
-            if (message.outP2 != null && message.hasOwnProperty("outP2"))
-                object.outP2 = $root.Types.Vector3.toObject(message.outP2, options);
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.edge != null && message.hasOwnProperty("edge"))
+                object.edge = $root.Types.Edge.toObject(message.edge, options);
+            if (message.outEdge != null && message.hasOwnProperty("outEdge"))
+                object.outEdge = $root.Types.Edge.toObject(message.outEdge, options);
             if (message.type != null && message.hasOwnProperty("type"))
                 object.type = options.enums === String ? $root.Types.WallType[message.type] : message.type;
             if (message.startExtend != null && message.hasOwnProperty("startExtend"))
