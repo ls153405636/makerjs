@@ -1,5 +1,6 @@
+// 比例换算
 import { Types } from "../types/stair_v2"
-import { Config } from "./config"
+import { D2Config } from "./config"
 
 /**
  * 
@@ -7,13 +8,13 @@ import { Config } from "./config"
  */
 function translateCoord (vRealCoord) {
   let screenCoord = new Types.Vector3()
-  screenCoord.x = vRealCoord.x / Config.SCREEN_RATE
-  screenCoord.y = vRealCoord.y / Config.SCREEN_RATE
+  screenCoord.x = vRealCoord.x / D2Config.SCREEN_RATE
+  screenCoord.y = vRealCoord.y / D2Config.SCREEN_RATE
   return screenCoord
 }
 
 function translateValue (vValue) {
-  return vValue / Config.SCREEN_RATE
+  return vValue / D2Config.SCREEN_RATE
 }
 
 export default {

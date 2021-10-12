@@ -1,3 +1,4 @@
+// 初始化项目
 import d2_action from "./d2/d2_action";
 import { Structure } from "./structure/structure";
 import { Types } from "./types/stair_v2";
@@ -37,11 +38,12 @@ export function initProj() {
   //   }))
   // })
   // console.log('pb:', proj)
-  // d2_action.importProject(proj)
-  // return proj
+  
 
   let proj = new Structure().createProject()
   console.log('proj:', proj)
+  d2_action.importProject(proj)
+  return proj
 }
 
 export default {

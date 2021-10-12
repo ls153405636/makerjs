@@ -1,11 +1,11 @@
-import { Config } from "./config";
+import { D2Config } from "./config";
 
 export class Movie {
   constructor() {
     if (!Movie.instance) {
       let app = new PIXI.Application({
-        width                : Config.CANVAS_WIDTH,
-        height               : Config.CANVAS_HEIGHT,
+        width                : D2Config.CANVAS_WIDTH,
+        height               : D2Config.CANVAS_HEIGHT,
         transparent          : false,
         resolution           : 1,
         antialias            : true,
@@ -23,7 +23,7 @@ export class Movie {
       app.ticker.maxFPS = 60
       
       app.renderer.autoResize = true
-      app.renderer.resize(window.screen.availWidth, window.screen.availHeight)
+      // app.renderer.resize(window.screen.availWidth, window.screen.availHeight)
       
       this.app = app
       

@@ -1,7 +1,8 @@
+// 绘制洞口
 import { initProj } from '../init_temp'
 import { Types } from '../types/stair_v2'
 import { BaseWidget } from './base_widget'
-import { Config } from './config'
+import { D2Config } from './config'
 
 export class Hole extends BaseWidget {
   /**
@@ -20,7 +21,7 @@ export class Hole extends BaseWidget {
     let path = []
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
-      path.push(e.p1.x / Config.SCREEN_RATE, e.p1.y / Config.SCREEN_RATE)
+      path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
     }
     const graphics = new PIXI.Graphics();
     //const path = [0, 0, 500, 0, 500, 500, 0, 500, 0, 0];

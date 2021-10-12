@@ -1,3 +1,4 @@
+import { D2Config } from "../d2/config"
 import { Types } from "../types/stair_v2"
 import { StructConfig } from "./config"
 
@@ -12,13 +13,13 @@ export class Structure {
 
   createProject () {
     let proj = new Types.Project()
-    proj.hole = this.createHole()
+    proj.hole = this.createRectHole()
     proj.walls = this.createWalls(proj.hole)
     return proj
   }
 
-  createHole () {
-    let center = new THREE.Vector2(860 * 5, 480 * 5)
+  createRectHole () {
+    let center = new THREE.Vector2(D2Config.CANVAS_WIDTH * D2Config.SCREEN_RATE / 2, D2Config.CANVAS_HEIGHT * D2Config.SCREEN_RATE / 2)
     let edges = []
     let l = StructConfig.INIT_HOLE_LENGTH
     let w = StructConfig.INIT_HOLE_WIDTH
@@ -48,6 +49,14 @@ export class Structure {
     return hole
   }
 
+  createxxxxHole() {
+
+  }
+
+  createxxxxHole() {
+    
+  }
+
   /**
    * 
    * @param {Types.Hole} vHole 
@@ -59,7 +68,7 @@ export class Structure {
       let p1 = new THREE.Vector2(e.p1.x, e.p1.y)
       let p2 = new THREE.Vector2(e.p2.x, e.p2.y)
       let vec = new THREE.Vector2().subVectors(p2, p1).normalize()
-      let norVec = vec.clone().rotateAround(center, Math.PI/2).normalize()
+      let norVec = vec.clone().rotateAround(center, -Math.PI/2).normalize()
       let outP1 = new THREE.Vector2().addVectors(p1, norVec.clone().multiplyScalar(StructConfig.INIT_WALL_DEPTH))
       let outP2 = new THREE.Vector2().addVectors(p2, norVec.clone().multiplyScalar(StructConfig.INIT_WALL_DEPTH))
       walls.push(new Types.Wall({
