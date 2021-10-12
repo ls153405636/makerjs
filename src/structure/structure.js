@@ -6,6 +6,7 @@ export class Structure {
   constructor () {
     if (!Structure.instance) {
       Structure.instance = this
+      this.proj = null
     }
     return Structure.instance
   }
@@ -15,6 +16,7 @@ export class Structure {
     let proj = new Types.Project()
     proj.hole = this.createRectHole()
     proj.walls = this.createWalls(proj.hole)
+    this.proj = proj
     return proj
   }
 
@@ -82,5 +84,7 @@ export class Structure {
     }
     return walls
   }
+
+  
 
 }
