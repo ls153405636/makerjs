@@ -30,10 +30,10 @@ message Edge {
 
 //一个项目
 message Project {
-  string   uuid       = 1; //项目id
-  Hole     hole       = 2; //洞
-  repeated Wall walls = 3; //墙体数组
-  Stair    stair      = 4; //楼梯
+  string   uuid       = 1;  //项目id
+  Hole     hole       = 2;  //洞
+  repeated Wall walls = 3;  //墙体数组
+  Stair    stair      = 4;  //楼梯
 }
 
 message Stair {
@@ -42,27 +42,29 @@ message Stair {
 
 //洞
 message Hole {
-  repeated Edge edges = 1; //围成洞的边,边一定按顺序首尾相连
-  float    floorHeight = 2; //层高
+  repeated Edge edges  = 1;  //围成洞的边,边一定按顺序首尾相连
+  float    floorHeight = 2;  //层高
 }
 
 //墙体类型
 enum WallType {
-  wph     = 0; //占位
-  wfirst  = 1; //一层有二层无
-  wsecond = 2; //二层有一层无
-  wboth   = 3; //一二层皆有
-  wnone   = 4; //一二层皆无
+  wph     = 0;  //占位
+  wfirst  = 1;  //一层有二层无
+  wsecond = 2;  //二层有一层无
+  wboth   = 3;  //一二层皆有
+  wnone   = 4;  //一二层皆无
 }
 
 //墙
 message Wall {
-  Vector3 p1 = 1; //起点，中线上起点的坐标 
-  Vector3 p2 = 2; //终点
-  WallType type = 3; //类型
-  float  startExtend = 4; //起点延伸
-  float  endExtend = 5; //终点延伸
-  float  depth = 6; //厚度
-  float  height = 7; //高度
+  Vector3  p1          = 1;  //起点，中线上起点的坐标 
+  Vector3  p2          = 2;  //终点
+  Vector3  outP1       = 3;
+  Vector3  outP2       = 4;
+  WallType type        = 5;  //类型
+  float    startExtend = 6;  //起点延伸
+  float    endExtend   = 7;  //终点延伸
+  float    depth       = 8;  //厚度
+  float    height      = 9;  //高度
 }
 

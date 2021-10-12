@@ -74,259 +74,6 @@
   resolved "https://registry.npmmirror.com/@babel/parser/download/@babel/parser-7.15.8.tgz?cache=0&sync_timestamp=1633555998762&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40babel%2Fparser%2Fdownload%2F%40babel%2Fparser-7.15.8.tgz"
   integrity "sha1-e6zcvnG9w/+TbVEMFdzqfPC5kBY= sha512-BRYa3wcQnjS/nqI8Ac94pYYpJfojHVvVXJ97+IDCImX4Jc8W8Xv1+47enbruk+q1etOpsQNwnfFcNGw+gtPGxA=="
 
-"@pixi/accessibility@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/accessibility/download/@pixi/accessibility-6.1.3.tgz"
-  integrity sha1-OfzNY4qcj7p+YK4l0azOV+bUnsw=
-
-"@pixi/app@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/app/download/@pixi/app-6.1.3.tgz"
-  integrity sha1-OjxQeItlMX7i85QjH4TvyRQocOA=
-
-"@pixi/compressed-textures@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/compressed-textures/download/@pixi/compressed-textures-6.1.3.tgz"
-  integrity sha1-GjZT3s8agmszJgHA+T993CotX6I=
-
-"@pixi/constants@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/constants/download/@pixi/constants-6.1.3.tgz"
-  integrity sha1-DedVuGFqXikKf29hB0r758qegyM=
-
-"@pixi/core@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/core/download/@pixi/core-6.1.3.tgz"
-  integrity sha1-SpQXjyEfG2bVRLcXQGPFRog8gjQ=
-
-"@pixi/display@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/display/download/@pixi/display-6.1.3.tgz"
-  integrity sha1-VBy+t9ZKUlOh1byPh4+nM1wEP0A=
-
-"@pixi/extract@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/extract/download/@pixi/extract-6.1.3.tgz"
-  integrity sha1-6OKiSizIe1KmPHkXRdLicqihNSA=
-
-"@pixi/filter-alpha@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/filter-alpha/download/@pixi/filter-alpha-6.1.3.tgz"
-  integrity sha1-Ta+++4MJOGrkLXMwwVIcrvFcapY=
-
-"@pixi/filter-blur@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.npmmirror.com/@pixi/filter-blur/download/@pixi/filter-blur-6.1.3.tgz"
-  integrity sha1-xQ449RjdhcX8JNj1IHd8wqgNdxQ=
-
-"@pixi/filter-color-matrix@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/filter-color-matrix/download/@pixi/filter-color-matrix-6.1.3.tgz"
-  integrity sha1-oE8QWt+vlij0Ei/NAaWvKVvZjKs=
-
-"@pixi/filter-displacement@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/filter-displacement/download/@pixi/filter-displacement-6.1.3.tgz"
-  integrity sha1-qAb1mCmIUtUWXnoaIPC4sMxBoSE=
-
-"@pixi/filter-fxaa@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/filter-fxaa/download/@pixi/filter-fxaa-6.1.3.tgz"
-  integrity sha1-3CYh4KCtTnAyyn26jZBM8/EnK1I=
-
-"@pixi/filter-noise@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/filter-noise/download/@pixi/filter-noise-6.1.3.tgz"
-  integrity sha1-42mzkCAvS5MMse7ogPykp/cdAB4=
-
-"@pixi/graphics@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/graphics/download/@pixi/graphics-6.1.3.tgz"
-  integrity sha1-rrbJrMCbAjJ1rFvAjAhAJyWI+jU=
-
-"@pixi/interaction@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/interaction/download/@pixi/interaction-6.1.3.tgz"
-  integrity sha1-EqMhfvocUYHVDJfCqHAM01u1mzI=
-
-"@pixi/loaders@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/loaders/download/@pixi/loaders-6.1.3.tgz"
-  integrity sha1-0vaxOxaJhjjWwjY5/6pdy8CuA0Q=
-
-"@pixi/math@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/math/download/@pixi/math-6.1.3.tgz"
-  integrity sha1-oQ6K544z7gXPMP60/NhHSpouTRI=
-
-"@pixi/mesh-extras@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/mesh-extras/download/@pixi/mesh-extras-6.1.3.tgz"
-  integrity sha1-lRrTzMhlKfMEpUNOtbgmN4F30GE=
-
-"@pixi/mesh@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/mesh/download/@pixi/mesh-6.1.3.tgz"
-  integrity sha1-p+EkZD6t41eYZfg9+k9ZTxV4Jp0=
-
-"@pixi/mixin-cache-as-bitmap@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/mixin-cache-as-bitmap/download/@pixi/mixin-cache-as-bitmap-6.1.3.tgz"
-  integrity sha1-LdpNM/cmJmEHWoyMpB/Bc+NoeDI=
-
-"@pixi/mixin-get-child-by-name@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/mixin-get-child-by-name/download/@pixi/mixin-get-child-by-name-6.1.3.tgz"
-  integrity sha1-ED3WxOlINlEqDOYPWvjpsj4/mww=
-
-"@pixi/mixin-get-global-position@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/mixin-get-global-position/download/@pixi/mixin-get-global-position-6.1.3.tgz"
-  integrity sha1-qIUpHuERkz645/HgBkyk7BMRBlE=
-
-"@pixi/particle-container@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/particle-container/download/@pixi/particle-container-6.1.3.tgz"
-  integrity sha1-TC0199pK0AAGL/XMn9oJ4ytABjI=
-
-"@pixi/polyfill@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/polyfill/download/@pixi/polyfill-6.1.3.tgz"
-  integrity sha1-O7ECXeLJjFaoauRigShuOKQwDwE=
-  dependencies:
-    object-assign "^4.1.1"
-    promise-polyfill "^8.2.0"
-
-"@pixi/prepare@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/prepare/download/@pixi/prepare-6.1.3.tgz"
-  integrity sha1-IctOjyr4Qa7odxxK65K39nKHBvE=
-
-"@pixi/runner@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/runner/download/@pixi/runner-6.1.3.tgz"
-  integrity sha1-YD7JGHlGoW5+F/22xz6hNLFhB3A=
-
-"@pixi/settings@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/settings/download/@pixi/settings-6.1.3.tgz"
-  integrity sha1-vRxjTAKmF1ZXAJJ5s2p7H3PkBWU=
-  dependencies:
-    ismobilejs "^1.1.0"
-
-"@pixi/sprite-animated@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/sprite-animated/download/@pixi/sprite-animated-6.1.3.tgz"
-  integrity sha1-6YVsaMQhoaDVnHuj39+JRPpyZdQ=
-
-"@pixi/sprite-tiling@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/sprite-tiling/download/@pixi/sprite-tiling-6.1.3.tgz"
-  integrity sha1-4SHRCY9V/oMHBozhMCldYpgqRAs=
-
-"@pixi/sprite@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/sprite/download/@pixi/sprite-6.1.3.tgz"
-  integrity sha1-PTrfN6v8vfNhZgedZkDu/t5stKU=
-
-"@pixi/spritesheet@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/spritesheet/download/@pixi/spritesheet-6.1.3.tgz"
-  integrity sha1-T/0m/VI+zPfBVkhZMSG0rYUflT4=
-
-"@pixi/text-bitmap@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/text-bitmap/download/@pixi/text-bitmap-6.1.3.tgz"
-  integrity sha1-1PdablAjbrbjbS6ivguGZTpb8Nw=
-
-"@pixi/text@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/text/download/@pixi/text-6.1.3.tgz"
-  integrity sha1-GZ2r7naTv95Q2jl60UnEA7BAk04=
-
-"@pixi/ticker@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/ticker/download/@pixi/ticker-6.1.3.tgz"
-  integrity sha1-y/7RBr7UBnc0ljkmPfxWYgRKyxg=
-
-"@pixi/utils@6.1.3":
-  version "6.1.3"
-  resolved "https://registry.nlark.com/@pixi/utils/download/@pixi/utils-6.1.3.tgz"
-  integrity sha1-MiNB7TFLcAVdVr8emJjumaWP9SU=
-  dependencies:
-    "@types/earcut" "^2.1.0"
-    earcut "^2.2.2"
-    eventemitter3 "^3.1.0"
-    url "^0.11.0"
-
-"@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.nlark.com/@protobufjs/aspromise/download/@protobufjs/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
-  integrity sha1-m4sMxmPWaafY9vXQiToU00jzD78=
-
-"@protobufjs/base64@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.nlark.com/@protobufjs/base64/download/@protobufjs/base64-1.1.2.tgz#4c85730e59b9a1f1f349047dbf24296034bb2735"
-  integrity sha1-TIVzDlm5ofHzSQR9vyQpYDS7JzU=
-
-"@protobufjs/codegen@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.nlark.com/@protobufjs/codegen/download/@protobufjs/codegen-2.0.4.tgz#7ef37f0d010fb028ad1ad59722e506d9262815cb"
-  integrity sha1-fvN/DQEPsCitGtWXIuUG2SYoFcs=
-
-"@protobufjs/eventemitter@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.nlark.com/@protobufjs/eventemitter/download/@protobufjs/eventemitter-1.1.0.tgz#355cbc98bafad5978f9ed095f397621f1d066b70"
-  integrity sha1-NVy8mLr61ZePntCV85diHx0Ga3A=
-
-"@protobufjs/fetch@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.nlark.com/@protobufjs/fetch/download/@protobufjs/fetch-1.1.0.tgz#ba99fb598614af65700c1619ff06d454b0d84c45"
-  integrity sha1-upn7WYYUr2VwDBYZ/wbUVLDYTEU=
-  dependencies:
-    "@protobufjs/aspromise" "^1.1.1"
-    "@protobufjs/inquire" "^1.1.0"
-
-"@protobufjs/float@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.nlark.com/@protobufjs/float/download/@protobufjs/float-1.0.2.tgz#5e9e1abdcb73fc0a7cb8b291df78c8cbd97b87d1"
-  integrity sha1-Xp4avctz/Ap8uLKR33jIy9l7h9E=
-
-"@protobufjs/inquire@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.nlark.com/@protobufjs/inquire/download/@protobufjs/inquire-1.1.0.tgz#ff200e3e7cf2429e2dcafc1140828e8cc638f089"
-  integrity sha1-/yAOPnzyQp4tyvwRQIKOjMY48Ik=
-
-"@protobufjs/path@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.nlark.com/@protobufjs/path/download/@protobufjs/path-1.1.2.tgz#6cc2b20c5c9ad6ad0dccfd21ca7673d8d7fbf68d"
-  integrity sha1-bMKyDFya1q0NzP0hynZz2Nf79o0=
-
-"@protobufjs/pool@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.nlark.com/@protobufjs/pool/download/@protobufjs/pool-1.1.0.tgz#09fd15f2d6d3abfa9b65bc366506d6ad7846ff54"
-  integrity sha1-Cf0V8tbTq/qbZbw2ZQbWrXhG/1Q=
-
-"@protobufjs/utf8@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.nlark.com/@protobufjs/utf8/download/@protobufjs/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
-  integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
-
-"@types/earcut@^2.1.0":
-  version "2.1.1"
-  resolved "https://registry.nlark.com/@types/earcut/download/@types/earcut-2.1.1.tgz"
-  integrity sha1-VzoK9gnxcAXHUfb0/+xJz+NY6lE=
-
-"@types/long@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.nlark.com/@types/long/download/@types/long-4.0.1.tgz?cache=0&sync_timestamp=1629708364799&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Flong%2Fdownload%2F%40types%2Flong-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
-  integrity sha1-RZxl+hhn2v5qjzIsTFFpVmPMVek=
-
-"@types/node@>=13.7.0":
-  version "16.10.3"
-  resolved "https://registry.npmmirror.com/@types/node/download/@types/node-16.10.3.tgz#7a8f2838603ea314d1d22bb3171d899e15c57bd5"
-  integrity sha1-eo8oOGA+oxTR0iuzFx2JnhXFe9U=
-
 "@babel/template@^7.15.4":
   version "7.15.4"
   resolved "https://registry.npmjs.org/@babel/template/-/template-7.15.4.tgz#51898d35dcf3faa670c4ee6afcfd517ee139f194"
@@ -1065,11 +812,6 @@ csstype@^2.6.8:
   resolved "https://registry.nlark.com/csstype/download/csstype-2.6.18.tgz?cache=0&sync_timestamp=1631540658518&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcsstype%2Fdownload%2Fcsstype-2.6.18.tgz"
   integrity "sha1-mAqLUwhfNK8xNBCvBk8r0kF4Qhg= sha512-RSU6Hyeg14am3Ah4VZEmeX8H7kLwEEirXe6aU2IPfKNvhXwTflK5HQRDNI0ypQXoqmm+QPyG2IaPuQE5zMwSIQ=="
 
-earcut@^2.2.2:
-  version "2.2.3"
-  resolved "https://registry.nlark.com/earcut/download/earcut-2.2.3.tgz?cache=0&sync_timestamp=1625748354595&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fearcut%2Fdownload%2Fearcut-2.2.3.tgz"
-  integrity sha1-1EztL/WhiFlWjjJ92cfUaxb1XPQ=
-
 debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   version "4.3.2"
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
@@ -1473,11 +1215,6 @@ estree-walker@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npm.taobao.org/estree-walker/download/estree-walker-2.0.2.tgz"
   integrity "sha1-UvAQF4wqTBF6d1fP6UKtt9LaTKw= sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w=="
-
-eventemitter3@^3.1.0:
-  version "3.1.2"
-  resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-3.1.2.tgz"
-  integrity sha1-LT1I+cNGaY/Og6hdfWZOmFNd9uc=
 
 esutils@^2.0.2:
   version "2.0.3"
@@ -2274,47 +2011,6 @@ picocolors@^0.2.1:
 
 pixi.js@^6.1.3:
   version "6.1.3"
-  resolved "https://registry.nlark.com/pixi.js/download/pixi.js-6.1.3.tgz"
-  integrity sha1-uP96c0jawd74OefLlwx+/jKD4P0=
-  dependencies:
-    "@pixi/accessibility" "6.1.3"
-    "@pixi/app" "6.1.3"
-    "@pixi/compressed-textures" "6.1.3"
-    "@pixi/constants" "6.1.3"
-    "@pixi/core" "6.1.3"
-    "@pixi/display" "6.1.3"
-    "@pixi/extract" "6.1.3"
-    "@pixi/filter-alpha" "6.1.3"
-    "@pixi/filter-blur" "6.1.3"
-    "@pixi/filter-color-matrix" "6.1.3"
-    "@pixi/filter-displacement" "6.1.3"
-    "@pixi/filter-fxaa" "6.1.3"
-    "@pixi/filter-noise" "6.1.3"
-    "@pixi/graphics" "6.1.3"
-    "@pixi/interaction" "6.1.3"
-    "@pixi/loaders" "6.1.3"
-    "@pixi/math" "6.1.3"
-    "@pixi/mesh" "6.1.3"
-    "@pixi/mesh-extras" "6.1.3"
-    "@pixi/mixin-cache-as-bitmap" "6.1.3"
-    "@pixi/mixin-get-child-by-name" "6.1.3"
-    "@pixi/mixin-get-global-position" "6.1.3"
-    "@pixi/particle-container" "6.1.3"
-    "@pixi/polyfill" "6.1.3"
-    "@pixi/prepare" "6.1.3"
-    "@pixi/runner" "6.1.3"
-    "@pixi/settings" "6.1.3"
-    "@pixi/sprite" "6.1.3"
-    "@pixi/sprite-animated" "6.1.3"
-    "@pixi/sprite-tiling" "6.1.3"
-    "@pixi/spritesheet" "6.1.3"
-    "@pixi/text" "6.1.3"
-    "@pixi/text-bitmap" "6.1.3"
-    "@pixi/ticker" "6.1.3"
-    "@pixi/utils" "6.1.3"
-
-pixi.js@^6.1.3:
-  version "6.1.3"
   resolved "https://registry.npmjs.org/pixi.js/-/pixi.js-6.1.3.tgz#b8ff7a7348dac1def839e7cb970c7efe3283e0fd"
   integrity sha512-h8Y/YVgP4CSPoUQvXaQvQf5GyQxi0b1NtVD38bZQsrX4CQ3r85jBU+zPyHN0fAcvhCB+nNvdD2sEwhhqkNsuSw==
   dependencies:
@@ -2678,14 +2374,6 @@ sourcemap-codec@^1.4.4:
   resolved "https://registry.nlark.com/sourcemap-codec/download/sourcemap-codec-1.4.8.tgz"
   integrity "sha1-6oBL2UhXQC5pktBaOO8a41qatMQ= sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA=="
 
-url@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.nlark.com/url/download/url-0.11.0.tgz"
-  integrity sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE=
-  dependencies:
-    punycode "1.3.2"
-    querystring "0.2.0"
-
 spawn-sync@^1.0.15:
   version "1.0.15"
   resolved "https://registry.npmjs.org/spawn-sync/-/spawn-sync-1.0.15.tgz#b00799557eb7fb0c8376c29d44e8a1ea67e57476"
@@ -2814,6 +2502,11 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+three@^0.133.1:
+  version "0.133.1"
+  resolved "https://registry.npmmirror.com/three/download/three-0.133.1.tgz#5606f4817d67a09d9212d4ccbd6826564774f8f4"
+  integrity sha1-Vgb0gX1noJ2SEtTMvWgmVkd0+PQ=
 
 through@^2.3.6:
   version "2.3.8"
