@@ -42,8 +42,9 @@ message Stair {
 
 //洞
 message Hole {
-  repeated Edge edges  = 1;  //围成洞的边,边一定按顺序首尾相连
-  float    floorHeight = 2;  //层高
+  string   uuid  = 1;
+  repeated Edge edges  = 2;  //围成洞的边,边一定按顺序首尾相连
+  float    floorHeight = 3;  //层高
 }
 
 //墙体类型
@@ -57,14 +58,13 @@ enum WallType {
 
 //墙
 message Wall {
-  Vector3  p1          = 1;  //起点，中线上起点的坐标 
-  Vector3  p2          = 2;  //终点
-  Vector3  outP1       = 3;
-  Vector3  outP2       = 4;
-  WallType type        = 5;  //类型
-  float    startExtend = 6;  //起点延伸
-  float    endExtend   = 7;  //终点延伸
-  float    depth       = 8;  //厚度
-  float    height      = 9;  //高度
+  string   uuid        = 1;
+  Edge     edge        = 2;  //墙体对应的边
+  Edge     outEdge     = 3;  //墙体的外边
+  WallType type        = 4;  //类型
+  float    startExtend = 5;  //起点延伸
+  float    endExtend   = 6;  //终点延伸
+  float    depth       = 7;  //厚度
+  float    height      = 8;  //高度
 }
 
