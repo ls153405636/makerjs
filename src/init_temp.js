@@ -1,7 +1,6 @@
 // 初始化项目
-import d2_action from "./d2/d2_action";
-import { Structure } from "./structure/structure";
-import { Types } from "./types/stair_v2";
+import d2_action from './d2/d2_action'
+import { Structure } from './structure/structure'
 
 export function initProj() {
   // let proj = new Types.Project()
@@ -38,7 +37,6 @@ export function initProj() {
   //   }))
   // })
   // console.log('pb:', proj)
-  
 
   let proj = new Structure().createProject()
   console.log('proj:', proj)
@@ -47,5 +45,5 @@ export function initProj() {
 }
 
 export default {
-  initProj
+  initProj,
 }

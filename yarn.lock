@@ -2616,6 +2616,11 @@ v8-compile-cache@^2.0.3:
   resolved "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
   integrity sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==
 
+victor@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/victor/download/victor-1.1.0.tgz#de3cc77b15589b1b0c7b22c3dad297034ab002ba"
+  integrity sha1-3jzHexVYmxsMeyLD2tKXA0qwAro=
+
 vite@^2.6.4:
   version "2.6.5"
   resolved "https://registry.npmmirror.com/vite/download/vite-2.6.5.tgz"

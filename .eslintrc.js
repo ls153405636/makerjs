@@ -13,6 +13,7 @@ module.exports = {
     globals: {
         "$": true,
         "PIXI": true,
+        "THREE": true,
         "globalThis": false
     },
     parser: "babel-eslint",
