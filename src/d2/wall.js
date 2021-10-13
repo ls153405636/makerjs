@@ -3,7 +3,7 @@
 // import { Types } from "../types/stair_v2";
 import { BaseWidget } from './base_widget'
 import d2_tool from './d2_tool'
-// import catUrl from "../assets/cat.png";
+import catUrl from '../assets/cat.png'
 import Victor from 'victor'
 
 export class Wall extends BaseWidget {
@@ -13,6 +13,7 @@ export class Wall extends BaseWidget {
    */
   constructor(vPB) {
     super()
+    this.iSeleted = false
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
     // console.log(this.p1,this.p2)
@@ -20,7 +21,7 @@ export class Wall extends BaseWidget {
     this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
     this.draw()
-    // this.addEvent()
+    this.addEvent()
   }
 
   // 求旋转
@@ -59,6 +60,7 @@ export class Wall extends BaseWidget {
     let wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x000000)
     wall.beginFill(0xffffff, 1)
+    wall.alpha = 1
     const path = [
       this.p1.x,
       this.p1.y,
@@ -73,63 +75,38 @@ export class Wall extends BaseWidget {
     wall.endFill()
 
     //创建纹理
-    // var texture = PIXI.Texture.from(catUrl);
-    // var tilingSprite = new PIXI.TilingSprite(
-    //   texture,
-    //   this.width,
-    //   this.depth
-    // );
+    var texture = PIXI.Texture.from(catUrl)
+    var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
 
-    // tilingSprite.anchor.set(0.5, 0.5)
-    // tilingSprite.rotation = this.rotation;
-    // tilingSprite.position.set(this.position.x, this.position.y)
-    // wall.addChild(tilingSprite);
+    tilingSprite.anchor.set(0.5, 0.5)
+    tilingSprite.rotation = this.rotation
+    tilingSprite.position.set(this.position.x, this.position.y)
+    wall.addChild(tilingSprite)
 
-    wall.interactive = true
-
-    var iSeleted = true
-    wall.mousedown = function () {
-      if (iSeleted) {
-        this.tint = 0xff88ff
-        this.alpha = 1
-        iSeleted = false
-      } else {
-        this.tint = 0xffffff
-        iSeleted = true
-      }
-    }
-    wall.mouseover = function () {
-      if (iSeleted) {
-        this.tint = 0xff88ff
-        this.alpha = 1
-      } else {
-        this.tint = 0xff88ff
-        this.alpha = 0.5
-      }
-    }
-    wall.mouseout = function () {
-      if (iSeleted) {
-        this.tint = 0xff88ff
-        this.alpha = 1
-      } else {
-        this.tint = 0xffffff
-        this.alpha = 1
-      }
-    }
     this.sprite = wall
   }
   // 绑定事件
-  // addEvent () {
-  //   this.sprite.interactive = true;
-  //   this.sprite
-  //   .on("mouseover", () => {
-  //     this.sprite.tint = 0x888888
-  //   })
-  //   .on("mouseout", () => {
-  //     this.sprite.tint = 0xffffff
-  //   })
-  //   .on("click", () => {
-  //     this.sprite.tint = 0xff88ff
-  //   })
-  // }
+  addEvent() {
+    this.sprite.interactive = true
+    this.sprite
+      .on('mouseover', () => {
+        if (this.iSeleted) {
+          this.sprite.alpha = 1
+        } else {
+          this.sprite.alpha = 0.5
+        }
+      })
+      .on('mouseout', () => {
+        this.sprite.alpha = 1
+      })
+      .on('mousedown', () => {
+        if (!this.iSeleted) {
+          this.sprite.tint = 0xff88ff
+          this.iSeleted = true
+        } else {
+          this.sprite.tint = 0xffffff
+          this.iSeleted = false
+        }
+      })
+  }
 }
