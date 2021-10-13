@@ -94,23 +94,22 @@ export class Wall extends BaseWidget {
   addEvent() {
     this.sprite.interactive = true
     this.sprite
-      .on('mouseover', () => {
+      .on('mousedown', () => {
         if (this.iSeleted) {
-          this.sprite.alpha = 1
+          this.sprite.tint = 0xffffff
+          this.iSeleted = false
         } else {
-          this.sprite.alpha = 0.5
+          this.sprite.tint = 0x6e9aff
+          this.iSeleted = true
         }
       })
       .on('mouseout', () => {
         this.sprite.alpha = 1
       })
-      .on('mousedown', () => {
-        if (!this.iSeleted) {
-          this.sprite.tint = 0x6e9aff
-          this.iSeleted = true
-        } else {
-          this.sprite.tint = 0xffffff
-          this.iSeleted = false
+      .on('mouseover', () => {
+        this.sprite.alpha = 0.5
+        if (this.iSeleted) {
+          this.sprite.alpha = 1
         }
       })
   }
