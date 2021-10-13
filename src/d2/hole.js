@@ -19,14 +19,17 @@ export class Hole extends BaseWidget {
 
   draw() {
     let hole = new PIXI.Graphics()
+    // 绘制多边形
     let path = []
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
     }
-    hole.beginFill(0xffffff, 0.1)
+    hole.beginFill(0xffff55, 1)
     hole.drawPolygon(path)
     hole.endFill()
+
+    // 绘制圆形
 
     this.sprite = hole
   }

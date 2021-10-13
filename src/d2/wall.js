@@ -16,7 +16,7 @@ export class Wall extends BaseWidget {
     this.iSeleted = false
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
-    // console.log(this.p1,this.p2)
+
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
     this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
@@ -57,7 +57,11 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
-    let wall = new PIXI.Graphics()
+    // this.movie.app.interactive = true
+    // this.movie.app.on('click', () => {
+    //   console.log(1)
+    // })
+    const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x000000)
     wall.beginFill(0xffffff, 1)
     wall.alpha = 1
@@ -79,6 +83,7 @@ export class Wall extends BaseWidget {
     var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
 
     tilingSprite.anchor.set(0.5, 0.5)
+    tilingSprite.tileScale.set(0.55)
     tilingSprite.rotation = this.rotation
     tilingSprite.position.set(this.position.x, this.position.y)
     wall.addChild(tilingSprite)
@@ -101,7 +106,7 @@ export class Wall extends BaseWidget {
       })
       .on('mousedown', () => {
         if (!this.iSeleted) {
-          this.sprite.tint = 0xff88ff
+          this.sprite.tint = 0x6e9aff
           this.iSeleted = true
         } else {
           this.sprite.tint = 0xffffff

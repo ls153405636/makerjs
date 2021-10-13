@@ -13,12 +13,13 @@ export class Structure {
 
   createProject() {
     let proj = new Types.Project()
-    proj.hole = this.createRectHole()
+    proj.hole = this.createRectLHole()
     proj.walls = this.createWalls(proj.hole)
     this.proj = proj
     return proj
   }
 
+  // 矩形洞口
   createRectHole() {
     let center = new THREE.Vector2(
       (D2Config.CANVAS_WIDTH * D2Config.SCREEN_RATE) / 2,
@@ -61,7 +62,106 @@ export class Structure {
     return hole
   }
 
-  createxxxxHole() {}
+  // 圆型洞口
+  createRectCHole() {
+    let center = new THREE.Vector2(
+      (D2Config.CANVAS_WIDTH * D2Config.SCREEN_RATE) / 2,
+      (D2Config.CANVAS_HEIGHT * D2Config.SCREEN_RATE) / 2
+    )
+    let edges = []
+    let l = StructConfig.INIT_HOLE_LENGTH
+    let w = StructConfig.INIT_HOLE_WIDTH
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x - l / 2, y: center.y - w / 2 }),
+        p2: new Types.Vector3({ x: center.x + l / 2, y: center.y - w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x + l / 2, y: center.y - w / 2 }),
+        p2: new Types.Vector3({ x: center.x + l / 2, y: center.y + w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x + l / 2, y: center.y + w / 2 }),
+        p2: new Types.Vector3({ x: center.x - l / 2, y: center.y + w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x - l / 2, y: center.y + w / 2 }),
+        p2: new Types.Vector3({ x: center.x - l / 2, y: center.y - w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    let hole = new Types.Hole({
+      edges: edges,
+    })
+    return hole
+  }
+
+  // L型洞口
+  createRectLHole() {
+    let center = new THREE.Vector2(
+      (D2Config.CANVAS_WIDTH * D2Config.SCREEN_RATE) / 2, //1920*10
+      (D2Config.CANVAS_HEIGHT * D2Config.SCREEN_RATE) / 2 //937*10
+    )
+    let edges = []
+    let l = StructConfig.INIT_HOLE_LENGTH // 4000
+    let w = StructConfig.INIT_HOLE_WIDTH // 3000
+    edges.push(
+      new Types.Edge({
+        // center.x = 9600 center.y 4685
+        p1: new Types.Vector3({ x: center.x - l / 2, y: center.y - w / 2 }),
+        p2: new Types.Vector3({ x: center.x + l / 2, y: center.y - w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x + l / 2, y: center.y - w / 2 }),
+        p2: new Types.Vector3({ x: center.x + l / 2, y: center.y }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x + l / 2, y: center.y }),
+        p2: new Types.Vector3({ x: center.x, y: center.y }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x, y: center.y }),
+        p2: new Types.Vector3({ x: center.x, y: center.y + w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x, y: center.y + w / 2 }),
+        p2: new Types.Vector3({ x: center.x - l / 2, y: center.y + w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x - l / 2, y: center.y + w / 2 }),
+        p2: new Types.Vector3({ x: center.x - l / 2, y: center.y - w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    let hole = new Types.Hole({
+      edges: edges,
+    })
+    return hole
+  }
 
   /**
    *
