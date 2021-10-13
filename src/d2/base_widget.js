@@ -34,4 +34,6 @@ export class BaseWidget {
     /* eslint-disable */
     return this
   }
+
+  cancelSelected() {}
 }

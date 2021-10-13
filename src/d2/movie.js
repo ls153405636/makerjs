@@ -136,8 +136,20 @@ export class Movie {
   addEle(vEle) {
     this.app.stage.addChild(vEle)
   }
+
+  // addEvent() {
+  //   this.movie.app.stage.interactive = true;
+  //   window.app = this.movie.app;
+  //   app.renderer.plugins.interaction.on('pointerdown', onPointerDown);
+  //   // console.log(this.movie.app)
+  //   function onPointerDown() {
+  //     console.log(11)
+  //   }
+  // }
 }
 
 let movie = new Movie()
+
+window.mv = mo
 
 export default movie

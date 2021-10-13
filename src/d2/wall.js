@@ -5,6 +5,8 @@ import { BaseWidget } from './base_widget'
 import d2_tool from './d2_tool'
 import catUrl from '../assets/cat.png'
 import Victor from 'victor'
+import { Movie } from './movie'
+import { D2Config } from './config'
 
 export class Wall extends BaseWidget {
   /**
@@ -14,6 +16,8 @@ export class Wall extends BaseWidget {
   constructor(vPB) {
     super()
     this.iSeleted = false
+    this.movie = new Movie()
+    // console.log(this.movie.app.stage)
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
 
@@ -22,6 +26,7 @@ export class Wall extends BaseWidget {
     this.depth = d2_tool.translateValue(vPB.depth)
     this.draw()
     this.addEvent()
+    // this.delEvent()
   }
 
   // 求旋转
@@ -90,18 +95,26 @@ export class Wall extends BaseWidget {
 
     this.sprite = wall
   }
+
+  cancelSelected(vIsSelected) {
+    this.sprite.tint = 0xffffff
+    this.iSeleted = false
+  }
+
   // 绑定事件
   addEvent() {
     this.sprite.interactive = true
     this.sprite
       .on('mousedown', () => {
         if (this.iSeleted) {
-          this.sprite.tint = 0xffffff
-          this.iSeleted = false
-        } else {
-          this.sprite.tint = 0x6e9aff
-          this.iSeleted = true
+          return
         }
+        this.sprite.tint = 0x6e9aff
+        this.iSeleted = true
+        if (D2Config.SELECTED) {
+          D2Config.SELECTED.cancelSelected()
+        }
+        D2Config.SELECTED = this
       })
       .on('mouseout', () => {
         this.sprite.alpha = 1
@@ -113,4 +126,22 @@ export class Wall extends BaseWidget {
         }
       })
   }
+
+  // delEvent() {
+  //   // console.log(this.movie)
+  //   this.sprite.interactive = true
+  //   this.movie.app.stage.interactive = true;
+  //   window.app = this.movie.app;
+  //   app.renderer.plugins.interaction.on('mousedown', (e) => {
+  //     // if (!this.iSeleted) {
+  //     //   this.sprite.tint = 0xffffff
+
+  //     // }
+
+  //     // console.log(111)
+  //     console.log(D2Config.SELECTED)
+  //     // D2Config.SELECTED = null
+  //     // console.log(this.sprite)
+  //   });
+  // }
 }
