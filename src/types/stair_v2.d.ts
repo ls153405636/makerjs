@@ -2,6 +2,51 @@ import * as $protobuf from "protobufjs";
 /** Namespace Types. */
 export namespace Types {
 
+    /** EdgeType enum. */
+    enum EdgeType {
+        eph = 0,
+        estraight = 1,
+        earc = 2
+    }
+
+    /** WallType enum. */
+    enum WallType {
+        wph = 0,
+        wfirst = 1,
+        wsecond = 2,
+        wboth = 3,
+        wnone = 4
+    }
+
+    /** AgainstWallType enum. */
+    enum AgainstWallType {
+        aw_ph = 0,
+        aw_no = 1,
+        aw_left = 2,
+        aw_right = 3
+    }
+
+    /** StairType enum. */
+    enum StairType {
+        sph = 0,
+        sstright = 1
+    }
+
+    /** StepNumRule enum. */
+    enum StepNumRule {
+        snr_ph = 0,
+        snr_n = 1,
+        snr_n_add_1 = 2
+    }
+
+    /** NossingType enum. */
+    enum NossingType {
+        nph = 0,
+        nno = 1,
+        ncommon = 2,
+        nluxury = 3
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 
@@ -102,13 +147,6 @@ export namespace Types {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
-    }
-
-    /** EdgeType enum. */
-    enum EdgeType {
-        eph = 0,
-        estraight = 1,
-        earc = 2
     }
 
     /** Properties of an Edge. */
@@ -243,6 +281,96 @@ export namespace Types {
         public toJSON(): { [k: string]: any };
     }
 
+    /** Properties of an Outline. */
+    interface IOutline {
+
+        /** Outline edges */
+        edges?: (Types.IEdge[]|null);
+    }
+
+    /** Represents an Outline. */
+    class Outline implements IOutline {
+
+        /**
+         * Constructs a new Outline.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IOutline);
+
+        /** Outline edges. */
+        public edges: Types.IEdge[];
+
+        /**
+         * Creates a new Outline instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Outline instance
+         */
+        public static create(properties?: Types.IOutline): Types.Outline;
+
+        /**
+         * Encodes the specified Outline message. Does not implicitly {@link Types.Outline.verify|verify} messages.
+         * @param message Outline message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IOutline, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Outline message, length delimited. Does not implicitly {@link Types.Outline.verify|verify} messages.
+         * @param message Outline message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IOutline, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes an Outline message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Outline
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Outline;
+
+        /**
+         * Decodes an Outline message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Outline
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Outline;
+
+        /**
+         * Verifies an Outline message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates an Outline message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Outline
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Outline;
+
+        /**
+         * Creates a plain object from an Outline message. Also converts values to other types if specified.
+         * @param message Outline
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Outline, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Outline to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
     /** Properties of a Project. */
     interface IProject {
 
@@ -351,90 +479,6 @@ export namespace Types {
         public toJSON(): { [k: string]: any };
     }
 
-    /** Properties of a Stair. */
-    interface IStair {
-    }
-
-    /** Represents a Stair. */
-    class Stair implements IStair {
-
-        /**
-         * Constructs a new Stair.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: Types.IStair);
-
-        /**
-         * Creates a new Stair instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns Stair instance
-         */
-        public static create(properties?: Types.IStair): Types.Stair;
-
-        /**
-         * Encodes the specified Stair message. Does not implicitly {@link Types.Stair.verify|verify} messages.
-         * @param message Stair message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: Types.IStair, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified Stair message, length delimited. Does not implicitly {@link Types.Stair.verify|verify} messages.
-         * @param message Stair message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: Types.IStair, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a Stair message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns Stair
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Stair;
-
-        /**
-         * Decodes a Stair message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns Stair
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Stair;
-
-        /**
-         * Verifies a Stair message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a Stair message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns Stair
-         */
-        public static fromObject(object: { [k: string]: any }): Types.Stair;
-
-        /**
-         * Creates a plain object from a Stair message. Also converts values to other types if specified.
-         * @param message Stair
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: Types.Stair, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this Stair to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-    }
-
     /** Properties of a Hole. */
     interface IHole {
 
@@ -535,15 +579,6 @@ export namespace Types {
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
-    }
-
-    /** WallType enum. */
-    enum WallType {
-        wph = 0,
-        wfirst = 1,
-        wsecond = 2,
-        wboth = 3,
-        wnone = 4
     }
 
     /** Properties of a Wall. */
@@ -673,6 +708,822 @@ export namespace Types {
 
         /**
          * Converts this Wall to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of an Inlay. */
+    interface IInlay {
+    }
+
+    /** Represents an Inlay. */
+    class Inlay implements IInlay {
+
+        /**
+         * Constructs a new Inlay.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IInlay);
+
+        /**
+         * Creates a new Inlay instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Inlay instance
+         */
+        public static create(properties?: Types.IInlay): Types.Inlay;
+
+        /**
+         * Encodes the specified Inlay message. Does not implicitly {@link Types.Inlay.verify|verify} messages.
+         * @param message Inlay message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IInlay, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Inlay message, length delimited. Does not implicitly {@link Types.Inlay.verify|verify} messages.
+         * @param message Inlay message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IInlay, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes an Inlay message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Inlay
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Inlay;
+
+        /**
+         * Decodes an Inlay message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Inlay
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Inlay;
+
+        /**
+         * Verifies an Inlay message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates an Inlay message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Inlay
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Inlay;
+
+        /**
+         * Creates a plain object from an Inlay message. Also converts values to other types if specified.
+         * @param message Inlay
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Inlay, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Inlay to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Material. */
+    interface IMaterial {
+    }
+
+    /** Represents a Material. */
+    class Material implements IMaterial {
+
+        /**
+         * Constructs a new Material.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IMaterial);
+
+        /**
+         * Creates a new Material instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Material instance
+         */
+        public static create(properties?: Types.IMaterial): Types.Material;
+
+        /**
+         * Encodes the specified Material message. Does not implicitly {@link Types.Material.verify|verify} messages.
+         * @param message Material message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IMaterial, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Material message, length delimited. Does not implicitly {@link Types.Material.verify|verify} messages.
+         * @param message Material message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IMaterial, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Material message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Material
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Material;
+
+        /**
+         * Decodes a Material message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Material
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Material;
+
+        /**
+         * Verifies a Material message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Material message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Material
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Material;
+
+        /**
+         * Creates a plain object from a Material message. Also converts values to other types if specified.
+         * @param message Material
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Material, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Material to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Stair. */
+    interface IStair {
+
+        /** Stair uuid */
+        uuid?: (string|null);
+
+        /** Stair startBeamDepth */
+        startBeamDepth?: (number|null);
+
+        /** Stair exitBeamDepth */
+        exitBeamDepth?: (number|null);
+
+        /** Stair type */
+        type?: (Types.StairType|null);
+
+        /** Stair againstWallType */
+        againstWallType?: (Types.AgainstWallType|null);
+
+        /** Stair treadParameters */
+        treadParameters?: (Types.ITreadParameters|null);
+
+        /** Stair riserParameters */
+        riserParameters?: (Types.IRiserParameters|null);
+
+        /** Stair flights */
+        flights?: (Types.IFlight[]|null);
+    }
+
+    /** Represents a Stair. */
+    class Stair implements IStair {
+
+        /**
+         * Constructs a new Stair.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IStair);
+
+        /** Stair uuid. */
+        public uuid: string;
+
+        /** Stair startBeamDepth. */
+        public startBeamDepth: number;
+
+        /** Stair exitBeamDepth. */
+        public exitBeamDepth: number;
+
+        /** Stair type. */
+        public type: Types.StairType;
+
+        /** Stair againstWallType. */
+        public againstWallType: Types.AgainstWallType;
+
+        /** Stair treadParameters. */
+        public treadParameters?: (Types.ITreadParameters|null);
+
+        /** Stair riserParameters. */
+        public riserParameters?: (Types.IRiserParameters|null);
+
+        /** Stair flights. */
+        public flights: Types.IFlight[];
+
+        /**
+         * Creates a new Stair instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Stair instance
+         */
+        public static create(properties?: Types.IStair): Types.Stair;
+
+        /**
+         * Encodes the specified Stair message. Does not implicitly {@link Types.Stair.verify|verify} messages.
+         * @param message Stair message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IStair, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Stair message, length delimited. Does not implicitly {@link Types.Stair.verify|verify} messages.
+         * @param message Stair message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IStair, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Stair message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Stair
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Stair;
+
+        /**
+         * Decodes a Stair message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Stair
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Stair;
+
+        /**
+         * Verifies a Stair message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Stair message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Stair
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Stair;
+
+        /**
+         * Creates a plain object from a Stair message. Also converts values to other types if specified.
+         * @param message Stair
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Stair, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Stair to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Flight. */
+    interface IFlight {
+
+        /** Flight uuid */
+        uuid?: (string|null);
+
+        /** Flight stepLength */
+        stepLength?: (number|null);
+
+        /** Flight stepWidth */
+        stepWidth?: (number|null);
+
+        /** Flight stepHeight */
+        stepHeight?: (number|null);
+
+        /** Flight stepNumRule */
+        stepNumRule?: (Types.StepNumRule|null);
+
+        /** Flight stepNum */
+        stepNum?: (number|null);
+
+        /** Flight treads */
+        treads?: (Types.ITread[]|null);
+
+        /** Flight risers */
+        risers?: (Types.IRiser[]|null);
+    }
+
+    /** Represents a Flight. */
+    class Flight implements IFlight {
+
+        /**
+         * Constructs a new Flight.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IFlight);
+
+        /** Flight uuid. */
+        public uuid: string;
+
+        /** Flight stepLength. */
+        public stepLength: number;
+
+        /** Flight stepWidth. */
+        public stepWidth: number;
+
+        /** Flight stepHeight. */
+        public stepHeight: number;
+
+        /** Flight stepNumRule. */
+        public stepNumRule: Types.StepNumRule;
+
+        /** Flight stepNum. */
+        public stepNum: number;
+
+        /** Flight treads. */
+        public treads: Types.ITread[];
+
+        /** Flight risers. */
+        public risers: Types.IRiser[];
+
+        /**
+         * Creates a new Flight instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Flight instance
+         */
+        public static create(properties?: Types.IFlight): Types.Flight;
+
+        /**
+         * Encodes the specified Flight message. Does not implicitly {@link Types.Flight.verify|verify} messages.
+         * @param message Flight message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IFlight, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Flight message, length delimited. Does not implicitly {@link Types.Flight.verify|verify} messages.
+         * @param message Flight message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IFlight, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Flight message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Flight
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Flight;
+
+        /**
+         * Decodes a Flight message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Flight
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Flight;
+
+        /**
+         * Verifies a Flight message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Flight message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Flight
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Flight;
+
+        /**
+         * Creates a plain object from a Flight message. Also converts values to other types if specified.
+         * @param message Flight
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Flight, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Flight to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Tread. */
+    interface ITread {
+
+        /** Tread uuid */
+        uuid?: (string|null);
+
+        /** Tread stepOutline */
+        stepOutline?: (Types.IOutline|null);
+    }
+
+    /** Represents a Tread. */
+    class Tread implements ITread {
+
+        /**
+         * Constructs a new Tread.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ITread);
+
+        /** Tread uuid. */
+        public uuid: string;
+
+        /** Tread stepOutline. */
+        public stepOutline?: (Types.IOutline|null);
+
+        /**
+         * Creates a new Tread instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Tread instance
+         */
+        public static create(properties?: Types.ITread): Types.Tread;
+
+        /**
+         * Encodes the specified Tread message. Does not implicitly {@link Types.Tread.verify|verify} messages.
+         * @param message Tread message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ITread, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Tread message, length delimited. Does not implicitly {@link Types.Tread.verify|verify} messages.
+         * @param message Tread message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ITread, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Tread message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Tread
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Tread;
+
+        /**
+         * Decodes a Tread message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Tread
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Tread;
+
+        /**
+         * Verifies a Tread message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Tread message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Tread
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Tread;
+
+        /**
+         * Creates a plain object from a Tread message. Also converts values to other types if specified.
+         * @param message Tread
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Tread, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Tread to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a TreadParameters. */
+    interface ITreadParameters {
+
+        /** TreadParameters depth */
+        depth?: (number|null);
+
+        /** TreadParameters material */
+        material?: (Types.IMaterial|null);
+
+        /** TreadParameters doubleFaceMaterial */
+        doubleFaceMaterial?: (boolean|null);
+
+        /** TreadParameters nossingType */
+        nossingType?: (Types.NossingType|null);
+
+        /** TreadParameters nossing */
+        nossing?: (number|null);
+    }
+
+    /** Represents a TreadParameters. */
+    class TreadParameters implements ITreadParameters {
+
+        /**
+         * Constructs a new TreadParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ITreadParameters);
+
+        /** TreadParameters depth. */
+        public depth: number;
+
+        /** TreadParameters material. */
+        public material?: (Types.IMaterial|null);
+
+        /** TreadParameters doubleFaceMaterial. */
+        public doubleFaceMaterial: boolean;
+
+        /** TreadParameters nossingType. */
+        public nossingType: Types.NossingType;
+
+        /** TreadParameters nossing. */
+        public nossing: number;
+
+        /**
+         * Creates a new TreadParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns TreadParameters instance
+         */
+        public static create(properties?: Types.ITreadParameters): Types.TreadParameters;
+
+        /**
+         * Encodes the specified TreadParameters message. Does not implicitly {@link Types.TreadParameters.verify|verify} messages.
+         * @param message TreadParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ITreadParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified TreadParameters message, length delimited. Does not implicitly {@link Types.TreadParameters.verify|verify} messages.
+         * @param message TreadParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ITreadParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a TreadParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns TreadParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.TreadParameters;
+
+        /**
+         * Decodes a TreadParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns TreadParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.TreadParameters;
+
+        /**
+         * Verifies a TreadParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a TreadParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns TreadParameters
+         */
+        public static fromObject(object: { [k: string]: any }): Types.TreadParameters;
+
+        /**
+         * Creates a plain object from a TreadParameters message. Also converts values to other types if specified.
+         * @param message TreadParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.TreadParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this TreadParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Riser. */
+    interface IRiser {
+
+        /** Riser uuid */
+        uuid?: (string|null);
+    }
+
+    /** Represents a Riser. */
+    class Riser implements IRiser {
+
+        /**
+         * Constructs a new Riser.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IRiser);
+
+        /** Riser uuid. */
+        public uuid: string;
+
+        /**
+         * Creates a new Riser instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Riser instance
+         */
+        public static create(properties?: Types.IRiser): Types.Riser;
+
+        /**
+         * Encodes the specified Riser message. Does not implicitly {@link Types.Riser.verify|verify} messages.
+         * @param message Riser message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IRiser, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Riser message, length delimited. Does not implicitly {@link Types.Riser.verify|verify} messages.
+         * @param message Riser message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IRiser, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Riser message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Riser
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Riser;
+
+        /**
+         * Decodes a Riser message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Riser
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Riser;
+
+        /**
+         * Verifies a Riser message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Riser message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Riser
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Riser;
+
+        /**
+         * Creates a plain object from a Riser message. Also converts values to other types if specified.
+         * @param message Riser
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Riser, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Riser to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a RiserParameters. */
+    interface IRiserParameters {
+    }
+
+    /** Represents a RiserParameters. */
+    class RiserParameters implements IRiserParameters {
+
+        /**
+         * Constructs a new RiserParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IRiserParameters);
+
+        /**
+         * Creates a new RiserParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns RiserParameters instance
+         */
+        public static create(properties?: Types.IRiserParameters): Types.RiserParameters;
+
+        /**
+         * Encodes the specified RiserParameters message. Does not implicitly {@link Types.RiserParameters.verify|verify} messages.
+         * @param message RiserParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IRiserParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified RiserParameters message, length delimited. Does not implicitly {@link Types.RiserParameters.verify|verify} messages.
+         * @param message RiserParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IRiserParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a RiserParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns RiserParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.RiserParameters;
+
+        /**
+         * Decodes a RiserParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns RiserParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.RiserParameters;
+
+        /**
+         * Verifies a RiserParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a RiserParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns RiserParameters
+         */
+        public static fromObject(object: { [k: string]: any }): Types.RiserParameters;
+
+        /**
+         * Creates a plain object from a RiserParameters message. Also converts values to other types if specified.
+         * @param message RiserParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.RiserParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this RiserParameters to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };

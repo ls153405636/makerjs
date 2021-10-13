@@ -1,19 +1,56 @@
 syntax = "proto3";
 package Types;
 
+//边的类型
+enum EdgeType {
+  eph       = 0;
+  estraight = 1;
+  earc      = 2;
+}
+
+//墙体类型
+enum WallType {
+  wph     = 0;  //占位
+  wfirst  = 1;  //一层有二层无
+  wsecond = 2;  //二层有一层无
+  wboth   = 3;  //一二层皆有
+  wnone   = 4;  //一二层皆无
+}
+
+//靠墙类型
+enum AgainstWallType {
+  aw_ph = 0;
+  aw_no = 1;
+  aw_left = 2;
+  aw_right = 3;
+}
+
+//楼梯类型
+enum StairType {
+  sph = 0;
+  sstright = 1; //直梯
+}
+
+//步数规则
+enum StepNumRule {
+  snr_ph = 0;
+  snr_n = 1;
+  snr_n_add_1 = 2;
+} 
+
+//加边类型
+enum NossingType {
+  nph = 0;
+  nno = 1;
+  ncommon = 2;
+  nluxury = 3;
+}
 
 //三维向量
 message Vector3{
 	float x = 1;
 	float y = 2;
 	float z = 3;
-}
-
-//边的类型
-enum EdgeType {
-  eph       = 0;
-  estraight = 1;
-  earc      = 2;
 }
 
 //构成轮廓的边
@@ -28,6 +65,10 @@ message Edge {
   bool     is_clockwise = 8;  // 是否为顺时针
 }
 
+message Outline {
+  repeated Edge edges = 1;
+}
+
 //一个项目
 message Project {
   string   uuid       = 1;  //项目id
@@ -36,24 +77,11 @@ message Project {
   Stair    stair      = 4;  //楼梯
 }
 
-message Stair {
-
-}
-
 //洞
 message Hole {
   string   uuid  = 1;
   repeated Edge edges  = 2;  //围成洞的边,边一定按顺序首尾相连
   float    floorHeight = 3;  //层高
-}
-
-//墙体类型
-enum WallType {
-  wph     = 0;  //占位
-  wfirst  = 1;  //一层有二层无
-  wsecond = 2;  //二层有一层无
-  wboth   = 3;  //一二层皆有
-  wnone   = 4;  //一二层皆无
 }
 
 //墙
@@ -67,4 +95,57 @@ message Wall {
   float    depth       = 7;  //厚度
   float    height      = 8;  //高度
 }
+
+message Inlay {
+
+}
+
+message Material {
+
+}
+
+message Stair {
+  string uuid   = 1;
+  float  startBeamDepth = 2;
+  float  exitBeamDepth = 3;
+  StairType type = 4;
+  AgainstWallType againstWallType = 5;
+  TreadParameters treadParameters = 6;
+  RiserParameters riserParameters = 7;
+  repeated Flight flights = 15;
+}
+
+message Flight {
+  string uuid = 1;
+  float  stepLength = 2;
+  float  stepWidth  = 3;
+  float  stepHeight = 4;
+  StepNumRule stepNumRule = 5;
+  float  stepNum = 6;
+  repeated Tread treads = 7;
+  repeated Riser risers = 8;
+}
+
+message Tread {
+  string uuid = 1;
+  Outline stepOutline = 2;
+}
+
+message TreadParameters {
+  float depth = 1;
+  Material material = 2;
+  bool  doubleFaceMaterial = 3;
+  NossingType nossingType = 4;
+  float nossing = 5;
+}
+
+message Riser {
+  string uuid = 1;
+}
+
+message RiserParameters {
+
+}
+
+
 
