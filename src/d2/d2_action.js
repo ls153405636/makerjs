@@ -1,6 +1,7 @@
 import { Movie } from './movie'
 import { Hole } from './hole'
 import { Wall } from './wall'
+import { Stair } from './stair'
 
 /**
  *
@@ -11,6 +12,7 @@ export function importProject(vPB) {
   vPB.walls.forEach((w) => {
     new Wall(w).addToStage()
   })
+  new Stair(vPB.stair)
 }
 
 export function initD2() {

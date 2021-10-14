@@ -6,6 +6,7 @@ import { interpret } from 'xstate'
 import { stuff_machine } from './fsm/stuff'
 import { events } from './fsm/state_event'
 import { RunContext } from './fsm/context'
+import { Wall } from './wall'
 
 export class Movie {
   constructor() {
@@ -45,7 +46,7 @@ export class Movie {
   bootstrap() {
     document.querySelector('#canvas').appendChild(this.app.view)
 
-    console.log('movie bootstrap')
+    // console.log('movie bootstrap')
 
     this.initialize_interaction_manager()
     this.start()
@@ -87,10 +88,19 @@ export class Movie {
         // ! 为什么不能出发 click 事件
         this.service.send({ type: events.CLICK, data: event })
       })
-      // .on('mousedown', (/** @type {PIXI.interaction.InteractionEvent} */ event) => {
-      //   // console.error('-->', event.type)
-      //   this.service.send({type: events.MOUSE_DOWN, data: event})
-      // })
+      .on('mousedown', (
+        /** @type {PIXI.interaction.InteractionEvent} */ event
+      ) => {
+        if (event.stopped) {
+          return
+        }
+
+        if (D2Config.SELECTED) {
+          D2Config.SELECTED.cancelSelected()
+        }
+        // console.error('-->', event.type)
+        //this.service.send({type: events.MOUSE_DOWN, data: event})
+      })
       // .on('mouseup', (/** @type {PIXI.interaction.InteractionEvent} */ event) => {
       //   // console.error('-->', event.type)
       //   this.service.send({type: events.MOUSE_UP, data: event})
@@ -125,7 +135,6 @@ export class Movie {
   }
   start() {
     let grid = new D2Grid(1, 6840, 6840, 10, 240)
-    // console.log(grid)
     grid.position.set(
       D2Config.CANVAS_WIDTH / 2 - grid.width / 2,
       D2Config.CANVAS_HEIGHT / 2 - grid.height / 2
@@ -136,20 +145,8 @@ export class Movie {
   addEle(vEle) {
     this.app.stage.addChild(vEle)
   }
-
-  // addEvent() {
-  //   this.movie.app.stage.interactive = true;
-  //   window.app = this.movie.app;
-  //   app.renderer.plugins.interaction.on('pointerdown', onPointerDown);
-  //   // console.log(this.movie.app)
-  //   function onPointerDown() {
-  //     console.log(11)
-  //   }
-  // }
 }
 
 let movie = new Movie()
-
-window.mv = mo
 
 export default movie

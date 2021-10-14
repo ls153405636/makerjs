@@ -15,7 +15,7 @@ export class Wall extends BaseWidget {
    */
   constructor(vPB) {
     super()
-    this.iSeleted = false
+    this.iSelected = false
     this.movie = new Movie()
     // console.log(this.movie.app.stage)
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
@@ -26,7 +26,6 @@ export class Wall extends BaseWidget {
     this.depth = d2_tool.translateValue(vPB.depth)
     this.draw()
     this.addEvent()
-    // this.delEvent()
   }
 
   // 求旋转
@@ -62,10 +61,6 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
-    // this.movie.app.interactive = true
-    // this.movie.app.on('click', () => {
-    //   console.log(1)
-    // })
     const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x000000)
     wall.beginFill(0xffffff, 1)
@@ -96,52 +91,53 @@ export class Wall extends BaseWidget {
     this.sprite = wall
   }
 
-  cancelSelected(vIsSelected) {
+  // 取消墙体选中效果
+  cancelSelected() {
     this.sprite.tint = 0xffffff
-    this.iSeleted = false
+    this.iSelected = false
+  }
+
+  setSelected() {
+    this.sprite.tint = 0x6e9aff
+    this.sprite.alpha = 1
+    this.iSelected = true
+  }
+
+  setHover() {
+    if (!this.iSelected) {
+      this.sprite.tint = 0x6e8aff
+      this.sprite.alpha = 0.5
+    }
+  }
+
+  cancelHover() {
+    if (!this.iSelected) {
+      this.sprite.tint = 0xffffff
+      this.sprite.alpha = 1
+    }
   }
 
   // 绑定事件
   addEvent() {
     this.sprite.interactive = true
+    let _this = this
     this.sprite
-      .on('mousedown', () => {
-        if (this.iSeleted) {
+      .on('mousedown', (event) => {
+        event.stopPropagation()
+        if (this.iSelected) {
           return
         }
-        this.sprite.tint = 0x6e9aff
-        this.iSeleted = true
         if (D2Config.SELECTED) {
           D2Config.SELECTED.cancelSelected()
         }
+        _this.setSelected()
         D2Config.SELECTED = this
       })
       .on('mouseout', () => {
-        this.sprite.alpha = 1
+        _this.cancelHover()
       })
       .on('mouseover', () => {
-        this.sprite.alpha = 0.5
-        if (this.iSeleted) {
-          this.sprite.alpha = 1
-        }
+        _this.setHover()
       })
   }
-
-  // delEvent() {
-  //   // console.log(this.movie)
-  //   this.sprite.interactive = true
-  //   this.movie.app.stage.interactive = true;
-  //   window.app = this.movie.app;
-  //   app.renderer.plugins.interaction.on('mousedown', (e) => {
-  //     // if (!this.iSeleted) {
-  //     //   this.sprite.tint = 0xffffff
-
-  //     // }
-
-  //     // console.log(111)
-  //     console.log(D2Config.SELECTED)
-  //     // D2Config.SELECTED = null
-  //     // console.log(this.sprite)
-  //   });
-  // }
 }

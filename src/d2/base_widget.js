@@ -36,4 +36,10 @@ export class BaseWidget {
   }
 
   cancelSelected() {}
+
+  setSelected() {}
+
+  setHover() {}
+
+  cancelHover() {}
 }

@@ -4,7 +4,7 @@ import { StructConfig } from './config'
 
 // const tempPages = {
 //   hole: {
-//     length: 
+//     length:
 //   }
 // }
 
@@ -15,7 +15,10 @@ export class Structure {
     if (!Structure.instance) {
       Structure.instance = this
       this.proj = null
-      this.center = new THREE.Vector2(D2Config.CANVAS_WIDTH * D2Config.SCREEN_RATE / 2, D2Config.CANVAS_HEIGHT * D2Config.SCREEN_RATE / 2)
+      this.center = new THREE.Vector2(
+        (D2Config.CANVAS_WIDTH * D2Config.SCREEN_RATE) / 2,
+        (D2Config.CANVAS_HEIGHT * D2Config.SCREEN_RATE) / 2
+      )
     }
     return Structure.instance
   }
@@ -29,7 +32,8 @@ export class Structure {
     return proj
   }
 
-  createRectHole () {
+  // 矩形洞口
+  createRectHole() {
     let center = this.center
     let edges = []
     let l = StructConfig.INIT_HOLE_LENGTH
@@ -64,7 +68,48 @@ export class Structure {
     )
     let hole = new Types.Hole({
       edges: edges,
-      floorHeight: FloorHeight
+      floorHeight: FloorHeight,
+    })
+    return hole
+  }
+
+  // 梯形洞口
+  createRectTHole() {
+    let center = this.center
+    let edges = []
+    let l = StructConfig.INIT_HOLE_LENGTH
+    let w = StructConfig.INIT_HOLE_WIDTH
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x - l / 2, y: center.y - w / 2 }),
+        p2: new Types.Vector3({ x: center.x, y: center.y - w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x, y: center.y - w / 2 }),
+        p2: new Types.Vector3({ x: center.x + l / 2, y: center.y + w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x + l / 2, y: center.y + w / 2 }),
+        p2: new Types.Vector3({ x: center.x - l / 2, y: center.y + w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    edges.push(
+      new Types.Edge({
+        p1: new Types.Vector3({ x: center.x - l / 2, y: center.y + w / 2 }),
+        p2: new Types.Vector3({ x: center.x - l / 2, y: center.y - w / 2 }),
+        type: Types.EdgeType.estraight,
+      })
+    )
+    let hole = new Types.Hole({
+      edges: edges,
+      floorHeight: FloorHeight,
     })
     return hole
   }
@@ -216,31 +261,33 @@ export class Structure {
     return walls
   }
 
-  createStair (vArgs) {
+  createStair(vArgs) {
     this.proj.stair = new Types.Stair({
       exitBeamDepth: 580,
       type: Types.StairType.sstright,
       againstWallType: Types.AgainstWallType.aw_no,
       treadParameters: new Types.TreadParameters({
         depth: 40,
-        nossingType: Types.NossingType.nno
+        nossingType: Types.NossingType.nno,
       }),
     })
     this.createFlight()
   }
 
-  createFlight (vArgs) {
+  createFlight(vArgs) {
     let flight = new Types.Flight({
       stepLength: 770,
       stepWidth: 240,
       stepNumRule: Types.StepNumRule.snr_n_add_1,
-      stepNum: 14
+      stepNum: 14,
     })
     let hole = this.proj.hole
     let step_num = flight.stepNum + 1
-    flight.step_height = Math.ceil(hole.floorHeight / step_num) 
-    let x_min = hole.edges[0].p1.x, x_max = hole.edges[0].p1.x ,y_min = hole.edges[0].p1.y
-    hole.edges.forEach(e => {
+    flight.step_height = Math.ceil(hole.floorHeight / step_num)
+    let x_min = hole.edges[0].p1.x,
+      x_max = hole.edges[0].p1.x,
+      y_min = hole.edges[0].p1.y
+    hole.edges.forEach((e) => {
       x_min = Math.min(x_min, e.p1.x, e.p2.x)
       y_min = Math.min(y_min, e.p1.y, e.p2.y)
       x_max = Math.max(x_max, e.p1.x, e.p2.x)
@@ -248,35 +295,63 @@ export class Structure {
 
     if (this.proj.stair.againstWallType === Types.AgainstWallType.aw_no) {
       x_min = this.center.x - flight.stepLength / 2
-    } else if (this.proj.stair.againstWallType === Types.AgainstWallType.aw_right) {
+    } else if (
+      this.proj.stair.againstWallType === Types.AgainstWallType.aw_right
+    ) {
       x_min = x_max - flight.stepLength
     }
 
     for (let i = 0; i < flight.stepNum; i++) {
       let tread = new Types.Tread({})
       let edges = []
-      edges.push(new Types.Edge({
-        p1: new Types.Vector3({x: x_min, y: y_min + flight.stepWidth * i}),
-        p2: new Types.Vector3({x: x_min + flight.stepLength, y: y_min + flight.stepWidth * i}),
-        type: Types.EdgeType.estraight
-      }))
-      edges.push(new Types.Edge({
-        p1: new Types.Vector3({x: x_min + flight.stepLength, y: y_min + flight.stepWidth * i}),
-        p2: new Types.Vector3({x: x_min + flight.stepLength, y: y_min + flight.stepWidth * (i+1)}),
-        type: Types.EdgeType.estraight
-      }))
-      edges.push(new Types.Edge({
-        p1: new Types.Vector3({x: x_min + flight.stepLength, y: y_min + flight.stepWidth * (i+1)}),
-        p2: new Types.Vector3({x: x_min, y: y_min + flight.stepWidth * (i+1)}),
-        type: Types.EdgeType.estraight
-      }))
-      edges.push(new Types.Edge({
-        p1: new Types.Vector3({x: x_min, y: y_min + flight.stepWidth * (i+1)}),
-        p2: new Types.Vector3({x: x_min, y: y_min + flight.stepWidth * i}),
-        type: Types.EdgeType.estraight
-      }))
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({ x: x_min, y: y_min + flight.stepWidth * i }),
+          p2: new Types.Vector3({
+            x: x_min + flight.stepLength,
+            y: y_min + flight.stepWidth * i,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: x_min + flight.stepLength,
+            y: y_min + flight.stepWidth * i,
+          }),
+          p2: new Types.Vector3({
+            x: x_min + flight.stepLength,
+            y: y_min + flight.stepWidth * (i + 1),
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: x_min + flight.stepLength,
+            y: y_min + flight.stepWidth * (i + 1),
+          }),
+          p2: new Types.Vector3({
+            x: x_min,
+            y: y_min + flight.stepWidth * (i + 1),
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: x_min,
+            y: y_min + flight.stepWidth * (i + 1),
+          }),
+          p2: new Types.Vector3({ x: x_min, y: y_min + flight.stepWidth * i }),
+          type: Types.EdgeType.estraight,
+        })
+      )
       tread.stepOutline = new Types.Outline({
-        edges: edges
+        edges: edges,
       })
       flight.treads.push(tread)
     }
@@ -284,5 +359,4 @@ export class Structure {
     flight.treads.reverse()
     this.proj.stair.flights.push(flight)
   }
-
 }

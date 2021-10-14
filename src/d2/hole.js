@@ -13,6 +13,7 @@ export class Hole extends BaseWidget {
   constructor(vPB) {
     super()
     this.edges = vPB.edges
+    // console.log(this.edges)
     this.draw()
     this.addEvent()
   }
@@ -25,7 +26,7 @@ export class Hole extends BaseWidget {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
     }
-    hole.beginFill(0xffff55, 1)
+    // hole.beginFill(0xffff55, 1)
     hole.drawPolygon(path)
     hole.endFill()
 
