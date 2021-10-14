@@ -19,29 +19,29 @@ enum WallType {
 
 //靠墙类型
 enum AgainstWallType {
-  aw_ph = 0;
-  aw_no = 1;
-  aw_left = 2;
+  aw_ph    = 0;
+  aw_no    = 1;
+  aw_left  = 2;
   aw_right = 3;
 }
 
 //楼梯类型
 enum StairType {
-  sph = 0;
-  sstright = 1; //直梯
+  sph      = 0;
+  sstright = 1;  //直梯
 }
 
 //步数规则
 enum StepNumRule {
-  snr_ph = 0;
-  snr_n = 1;
+  snr_ph      = 0;
+  snr_n       = 1;
   snr_n_add_1 = 2;
 } 
 
 //加边类型
 enum NossingType {
-  nph = 0;
-  nno = 1;
+  nph     = 0;
+  nno     = 1;
   ncommon = 2;
   nluxury = 3;
 }
@@ -79,7 +79,7 @@ message Project {
 
 //洞
 message Hole {
-  string   uuid  = 1;
+  string   uuid        = 1;
   repeated Edge edges  = 2;  //围成洞的边,边一定按顺序首尾相连
   float    floorHeight = 3;  //层高
 }
@@ -104,39 +104,43 @@ message Material {
 
 }
 
+//一套楼梯
 message Stair {
-  string uuid   = 1;
-  float  startBeamDepth = 2;
-  float  exitBeamDepth = 3;
-  StairType type = 4;
-  AgainstWallType againstWallType = 5;
-  TreadParameters treadParameters = 6;
-  RiserParameters riserParameters = 7;
-  repeated Flight flights = 15;
+  string          uuid            = 1;
+  float           startBeamDepth  = 2;   //起步梁厚度
+  float           exitBeamDepth   = 3;   //出口梁厚度
+  StairType       type            = 4;   //类型
+  AgainstWallType againstWallType = 5;   //靠墙类型
+  TreadParameters treadParameters = 6;   //踏板参数
+  RiserParameters riserParameters = 7;   //立板参数
+  repeated        Flight flights  = 15;  //楼梯段集合
 }
 
+//一段楼梯
 message Flight {
-  string uuid = 1;
-  float  stepLength = 2;
-  float  stepWidth  = 3;
-  float  stepHeight = 4;
-  StepNumRule stepNumRule = 5;
-  float  stepNum = 6;
-  repeated Tread treads = 7;
-  repeated Riser risers = 8;
+  string      uuid         = 1;
+  float       stepLength   = 2;  //步长
+  float       stepWidth    = 3;  //步宽
+  float       stepHeight   = 4;  //步高
+  StepNumRule stepNumRule  = 5;  //步数规则
+  float       stepNum      = 6;  //步数
+  repeated    Tread treads = 7;  //踏板集合
+  repeated    Riser risers = 8;  //立板集合
 }
 
+//踏板
 message Tread {
-  string uuid = 1;
-  Outline stepOutline = 2;
+  string  uuid        = 1;
+  Outline stepOutline = 2;  //踏板边缘轮廓
 }
 
+//踏板参数
 message TreadParameters {
-  float depth = 1;
-  Material material = 2;
-  bool  doubleFaceMaterial = 3;
-  NossingType nossingType = 4;
-  float nossing = 5;
+  float       depth              = 1;  //厚度
+  Material    material           = 2;  //材质
+  bool        doubleFaceMaterial = 3;  //是否双面漆
+  NossingType nossingType        = 4;  //加边类型
+  float       nossing            = 5;  //加边厚度
 }
 
 message Riser {
