@@ -1,14 +1,14 @@
 // import { Graphics } from "../../public/pixi/pixi";
 // import { initProj } from '../init_temp'
-import { Types } from "../types/stair_v2"
+import { Types } from '../types/stair_v2'
 import { BaseWidget } from './base_widget'
 import d2_tool from './d2_tool'
 import catUrl from '../assets/cat.png'
 import Victor from 'victor'
 import { Movie } from './movie'
 import { D2Config } from './config'
-import { Inlay } from "./component/inlay";
-import { CementComp } from "./component/cement_comp";
+import { Inlay } from './component/inlay'
+import { CementComp } from './component/cement_comp'
 
 export class Wall extends BaseWidget {
   /**
@@ -26,6 +26,7 @@ export class Wall extends BaseWidget {
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
     this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
+    this.normal = vPB.normal
     this.components = []
     this.createComponents(vPB.components)
     this.draw()
@@ -65,42 +66,77 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
-    // 标注线偏移计算
-    const { p1, p2, outP1, outP2, depth } = this
-    const offset = new Victor(depth * 2, depth * 2)
-    const newP1 = new Victor(p1.x, p1.y)
-    const newP2 = new Victor(p2.x, p2.y)
-    const newOutP1 = new Victor(outP1.x, outP1.y)
-    const newOouP2 = new Victor(outP2.x, outP2.y)
-    if (p1.x - p2.x < 0) {
-      newP1.subtractY(offset)
-      newP2.subtractY(offset)
-    } else if (p1.y - p2.y < 0) {
-      newP1.addX(offset)
-      newP2.addX(offset)
-    } else if (p1.x - p2.x > 0) {
-      newP1.addY(offset)
-      newP2.addY(offset)
-    } else if (p1.y - p2.y > 0) {
-      newP1.subtractX(offset)
-      newP2.subtractX(offset)
-    }
-    console.log(newP1, newP2)
-
-    // 标注文字添加nihao
-    const lineText = new PIXI.Text('你好', { fontSize: 50 })
-
-    // 标注线绘制
-    const line = new PIXI.Graphics()
-    const lPath = [newP1.x, newP1.y, newP2.x, newP2.y]
-    line.lineStyle(1, 0x000000)
-    line.position.set()
-    line.drawPolygon(lPath)
-
     const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x000000)
     wall.beginFill(0xffffff, 1)
     wall.alpha = 1
+    // 标注线偏移计算
+    const { p1, p2, outP1, outP2, depth, normal } = this
+    const newNormal = new Victor(normal.x, normal.y)
+    const offset = new Victor(depth * 1.5, depth * 1.5)
+    newNormal.multiply(offset)
+    const newP1 = new Victor(p1.x, p1.y)
+    const newP2 = new Victor(p2.x, p2.y)
+    const newOutP1 = new Victor(outP1.x, outP1.y)
+    const newOouP2 = new Victor(outP2.x, outP2.y)
+
+    if (p1.x - p2.x < 0) {
+      newP1.addY(newNormal)
+      newP2.addY(newNormal)
+      newOutP1.addY(newNormal)
+      newOouP2.addY(newNormal)
+      if (p1.y - p2.y < 0) {
+        newP1.addX(newNormal)
+        newP2.addX(newNormal)
+        newOutP1.addX(newNormal)
+        newOouP2.addX(newNormal)
+      }
+    } else if (p1.y - p2.y < 0) {
+      newP1.addX(newNormal)
+      newP2.addX(newNormal)
+      newOutP1.addX(newNormal)
+      newOouP2.addX(newNormal)
+    } else if (p1.x - p2.x > 0) {
+      newP1.addY(newNormal)
+      newP2.addY(newNormal)
+      newOutP1.addY(newNormal)
+      newOouP2.addY(newNormal)
+      if (p1.y - p2.y > 0) {
+        newP1.subtractX(newNormal)
+        newP2.subtractX(newNormal)
+        newOutP1.subtractX(newNormal)
+        newOouP2.subtractX(newNormal)
+      }
+    } else if (p1.y - p2.y > 0) {
+      newP1.addX(newNormal)
+      newP2.addX(newNormal)
+      newOutP1.addX(newNormal)
+      newOouP2.addX(newNormal)
+    }
+
+    // 获取标注线长度
+    const linelength = Math.hypot(newP1.x - newP2.x, newP1.y - newP2.y) * 10
+
+    // 计算标注线中心位置
+    const innerlineCenter = {
+      x: (newP1.x + newP2.x) / 2,
+      y: (newP1.y + newP2.y) / 2,
+    }
+    const outterlineCenter = {
+      x: (newOutP1.x + newOouP2.x) / 2,
+      y: (newOutP1.y + newOouP2.y) / 2,
+    }
+    const linePos = {
+      x: (innerlineCenter.x + outterlineCenter.x) / 2,
+      y: (innerlineCenter.y + outterlineCenter.y) / 2,
+    }
+
+    // 标注线绘制
+    const line = new PIXI.Graphics()
+    const lPath = [newP1.x, newP1.y, newP2.x, newP2.y]
+    line.lineStyle(1, 0x333333, 1)
+    line.position.set()
+    line.drawPolygon(lPath)
     const path = [
       this.p1.x,
       this.p1.y,
@@ -119,10 +155,17 @@ export class Wall extends BaseWidget {
     var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
 
     tilingSprite.anchor.set(0.5, 0.5)
-    tilingSprite.tileScale.set(0.55)
+    tilingSprite.tileScale.set(0.55) // 纹理缩放
     tilingSprite.rotation = this.rotation
     tilingSprite.position.set(this.position.x, this.position.y)
     wall.addChild(tilingSprite)
+
+    // 标注文字添加
+    const lineText = new PIXI.Text(linelength, { fontSize: 12, fill: 0x333333 })
+    lineText.position.set(
+      linePos.x - lineText.width / 2,
+      linePos.y - lineText.height / 2
+    )
 
     this.sprite = wall
     this.lineSprite = line
@@ -159,23 +202,31 @@ export class Wall extends BaseWidget {
    * 重写父类的添加函数
    * 将墙体添加到画布上时，同时需将墙体附属的结构部件添加到画布上
    */
-  addToStage () {
+  addToStage() {
     super.addToStage()
-    this.components.forEach(c => {
+    this.components.forEach((c) => {
       c.addToStage()
     })
   }
 
   /**
    * 创建隶属于本墙的结构部件
-   * @param {Array<Types.Component>} vCompArr 
+   * @param {Array<Types.Component>} vCompArr
    */
-  createComponents (vCompArr) {
+  createComponents(vCompArr) {
     let _this = this
-    vCompArr.forEach(c => {
-      if ([Types.ComponentType.cdoor, Types.ComponentType.cwindow, Types.ComponentType.cdoor_hole].includes(c.type)) {
+    vCompArr.forEach((c) => {
+      if (
+        [
+          Types.ComponentType.cdoor,
+          Types.ComponentType.cwindow,
+          Types.ComponentType.cdoor_hole,
+        ].includes(c.type)
+      ) {
         _this.components.push(new Inlay(c))
-      } else if ([Types.ComponentType.cpillar, Types.ComponentType.cbeam].includes(c)) {
+      } else if (
+        [Types.ComponentType.cpillar, Types.ComponentType.cbeam].includes(c)
+      ) {
         _this.components.push(new CementComp(c))
       }
     })
