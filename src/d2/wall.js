@@ -1,12 +1,14 @@
 // import { Graphics } from "../../public/pixi/pixi";
 // import { initProj } from '../init_temp'
-// import { Types } from "../types/stair_v2";
+import { Types } from "../types/stair_v2"
 import { BaseWidget } from './base_widget'
 import d2_tool from './d2_tool'
 import catUrl from '../assets/cat.png'
 import Victor from 'victor'
 import { Movie } from './movie'
 import { D2Config } from './config'
+import { Inlay } from "./component/inlay";
+import { CementComp } from "./component/cement_comp";
 
 export class Wall extends BaseWidget {
   /**
@@ -24,6 +26,8 @@ export class Wall extends BaseWidget {
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
     this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
+    this.components = []
+    this.createComponents(vPB.components)
     this.draw()
     this.addEvent()
 
@@ -153,6 +157,32 @@ export class Wall extends BaseWidget {
       this.sprite.tint = 0xffffff
       this.sprite.alpha = 1
     }
+  }
+
+  /**
+   * 重写父类的添加函数
+   * 将墙体添加到画布上时，同时需将墙体附属的结构部件添加到画布上
+   */
+  addToStage () {
+    super.addToStage()
+    this.components.forEach(c => {
+      c.addToStage()
+    })
+  }
+
+  /**
+   * 创建隶属于本墙的结构部件
+   * @param {Array<Types.Component>} vCompArr 
+   */
+  createComponents (vCompArr) {
+    let _this = this
+    vCompArr.forEach(c => {
+      if ([Types.ComponentType.cdoor, Types.ComponentType.cwindow, Types.ComponentType.cdoor_hole].includes(c.type)) {
+        _this.components.push(new Inlay(c))
+      } else if ([Types.ComponentType.cpillar, Types.ComponentType.cbeam].includes(c)) {
+        _this.components.push(new CementComp(c))
+      }
+    })
   }
 
   // 绑定事件

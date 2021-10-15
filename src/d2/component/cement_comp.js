@@ -12,13 +12,14 @@ export class CementComp extends BaseWidget {
   constructor (vPB) {
     super()
     this.type = vPB.type
+    this.draw()
   }
 
   /**
    * 建议方法，根据宽深属性绘制矩形，然后设置位置和角度
    */
   draw () {
-
+    console.log('画梁和水泥柱')
   }
 
   addEvent () {
