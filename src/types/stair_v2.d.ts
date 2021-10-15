@@ -47,6 +47,16 @@ export namespace Types {
         nluxury = 3
     }
 
+    /** ComponentType enum. */
+    enum ComponentType {
+        cph = 0,
+        cdoor = 1,
+        cwindow = 2,
+        cdoor_hole = 3,
+        cbeam = 4,
+        cpillar = 5
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 
@@ -607,6 +617,15 @@ export namespace Types {
 
         /** Wall height */
         height?: (number|null);
+
+        /** Wall components */
+        components?: (Types.IComponent[]|null);
+
+        /** Wall holeEdge */
+        holeEdge?: (Types.IEdge|null);
+
+        /** Wall normal */
+        normal?: (Types.IVector3|null);
     }
 
     /** Represents a Wall. */
@@ -641,6 +660,15 @@ export namespace Types {
 
         /** Wall height. */
         public height: number;
+
+        /** Wall components. */
+        public components: Types.IComponent[];
+
+        /** Wall holeEdge. */
+        public holeEdge?: (Types.IEdge|null);
+
+        /** Wall normal. */
+        public normal?: (Types.IVector3|null);
 
         /**
          * Creates a new Wall instance using the specified properties.
@@ -713,85 +741,145 @@ export namespace Types {
         public toJSON(): { [k: string]: any };
     }
 
-    /** Properties of an Inlay. */
-    interface IInlay {
+    /** Properties of a Component. */
+    interface IComponent {
+
+        /** Component uuid */
+        uuid?: (string|null);
+
+        /** Component type */
+        type?: (Types.ComponentType|null);
+
+        /** Component width */
+        width?: (number|null);
+
+        /** Component height */
+        height?: (number|null);
+
+        /** Component depth */
+        depth?: (number|null);
+
+        /** Component offGround */
+        offGround?: (number|null);
+
+        /** Component disToStart */
+        disToStart?: (number|null);
+
+        /** Component interval */
+        interval?: (number|null);
+
+        /** Component position */
+        position?: (Types.IVector3|null);
+
+        /** Component rotation */
+        rotation?: (Types.IVector3|null);
     }
 
-    /** Represents an Inlay. */
-    class Inlay implements IInlay {
+    /** Represents a Component. */
+    class Component implements IComponent {
 
         /**
-         * Constructs a new Inlay.
+         * Constructs a new Component.
          * @param [properties] Properties to set
          */
-        constructor(properties?: Types.IInlay);
+        constructor(properties?: Types.IComponent);
+
+        /** Component uuid. */
+        public uuid: string;
+
+        /** Component type. */
+        public type: Types.ComponentType;
+
+        /** Component width. */
+        public width: number;
+
+        /** Component height. */
+        public height: number;
+
+        /** Component depth. */
+        public depth: number;
+
+        /** Component offGround. */
+        public offGround: number;
+
+        /** Component disToStart. */
+        public disToStart: number;
+
+        /** Component interval. */
+        public interval: number;
+
+        /** Component position. */
+        public position?: (Types.IVector3|null);
+
+        /** Component rotation. */
+        public rotation?: (Types.IVector3|null);
 
         /**
-         * Creates a new Inlay instance using the specified properties.
+         * Creates a new Component instance using the specified properties.
          * @param [properties] Properties to set
-         * @returns Inlay instance
+         * @returns Component instance
          */
-        public static create(properties?: Types.IInlay): Types.Inlay;
+        public static create(properties?: Types.IComponent): Types.Component;
 
         /**
-         * Encodes the specified Inlay message. Does not implicitly {@link Types.Inlay.verify|verify} messages.
-         * @param message Inlay message or plain object to encode
+         * Encodes the specified Component message. Does not implicitly {@link Types.Component.verify|verify} messages.
+         * @param message Component message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encode(message: Types.IInlay, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encode(message: Types.IComponent, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Encodes the specified Inlay message, length delimited. Does not implicitly {@link Types.Inlay.verify|verify} messages.
-         * @param message Inlay message or plain object to encode
+         * Encodes the specified Component message, length delimited. Does not implicitly {@link Types.Component.verify|verify} messages.
+         * @param message Component message or plain object to encode
          * @param [writer] Writer to encode to
          * @returns Writer
          */
-        public static encodeDelimited(message: Types.IInlay, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: Types.IComponent, writer?: $protobuf.Writer): $protobuf.Writer;
 
         /**
-         * Decodes an Inlay message from the specified reader or buffer.
+         * Decodes a Component message from the specified reader or buffer.
          * @param reader Reader or buffer to decode from
          * @param [length] Message length if known beforehand
-         * @returns Inlay
+         * @returns Component
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Inlay;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Component;
 
         /**
-         * Decodes an Inlay message from the specified reader or buffer, length delimited.
+         * Decodes a Component message from the specified reader or buffer, length delimited.
          * @param reader Reader or buffer to decode from
-         * @returns Inlay
+         * @returns Component
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Inlay;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Component;
 
         /**
-         * Verifies an Inlay message.
+         * Verifies a Component message.
          * @param message Plain object to verify
          * @returns `null` if valid, otherwise the reason why it is not
          */
         public static verify(message: { [k: string]: any }): (string|null);
 
         /**
-         * Creates an Inlay message from a plain object. Also converts values to their respective internal types.
+         * Creates a Component message from a plain object. Also converts values to their respective internal types.
          * @param object Plain object
-         * @returns Inlay
+         * @returns Component
          */
-        public static fromObject(object: { [k: string]: any }): Types.Inlay;
+        public static fromObject(object: { [k: string]: any }): Types.Component;
 
         /**
-         * Creates a plain object from an Inlay message. Also converts values to other types if specified.
-         * @param message Inlay
+         * Creates a plain object from a Component message. Also converts values to other types if specified.
+         * @param message Component
          * @param [options] Conversion options
          * @returns Plain object
          */
-        public static toObject(message: Types.Inlay, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public static toObject(message: Types.Component, options?: $protobuf.IConversionOptions): { [k: string]: any };
 
         /**
-         * Converts this Inlay to JSON.
+         * Converts this Component to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };

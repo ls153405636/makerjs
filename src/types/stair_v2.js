@@ -118,6 +118,28 @@ export const Types = $root.Types = (() => {
         return values;
     })();
 
+    /**
+     * ComponentType enum.
+     * @name Types.ComponentType
+     * @enum {number}
+     * @property {number} cph=0 cph value
+     * @property {number} cdoor=1 cdoor value
+     * @property {number} cwindow=2 cwindow value
+     * @property {number} cdoor_hole=3 cdoor_hole value
+     * @property {number} cbeam=4 cbeam value
+     * @property {number} cpillar=5 cpillar value
+     */
+    Types.ComponentType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "cph"] = 0;
+        values[valuesById[1] = "cdoor"] = 1;
+        values[valuesById[2] = "cwindow"] = 2;
+        values[valuesById[3] = "cdoor_hole"] = 3;
+        values[valuesById[4] = "cbeam"] = 4;
+        values[valuesById[5] = "cpillar"] = 5;
+        return values;
+    })();
+
     Types.Vector3 = (function() {
 
         /**
@@ -1487,6 +1509,9 @@ export const Types = $root.Types = (() => {
          * @property {number|null} [endExtend] Wall endExtend
          * @property {number|null} [depth] Wall depth
          * @property {number|null} [height] Wall height
+         * @property {Array.<Types.IComponent>|null} [components] Wall components
+         * @property {Types.IEdge|null} [holeEdge] Wall holeEdge
+         * @property {Types.IVector3|null} [normal] Wall normal
          */
 
         /**
@@ -1498,6 +1523,7 @@ export const Types = $root.Types = (() => {
          * @param {Types.IWall=} [properties] Properties to set
          */
         function Wall(properties) {
+            this.components = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -1569,6 +1595,30 @@ export const Types = $root.Types = (() => {
         Wall.prototype.height = 0;
 
         /**
+         * Wall components.
+         * @member {Array.<Types.IComponent>} components
+         * @memberof Types.Wall
+         * @instance
+         */
+        Wall.prototype.components = $util.emptyArray;
+
+        /**
+         * Wall holeEdge.
+         * @member {Types.IEdge|null|undefined} holeEdge
+         * @memberof Types.Wall
+         * @instance
+         */
+        Wall.prototype.holeEdge = null;
+
+        /**
+         * Wall normal.
+         * @member {Types.IVector3|null|undefined} normal
+         * @memberof Types.Wall
+         * @instance
+         */
+        Wall.prototype.normal = null;
+
+        /**
          * Creates a new Wall instance using the specified properties.
          * @function create
          * @memberof Types.Wall
@@ -1608,6 +1658,13 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 7, wireType 5 =*/61).float(message.depth);
             if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 writer.uint32(/* id 8, wireType 5 =*/69).float(message.height);
+            if (message.components != null && message.components.length)
+                for (let i = 0; i < message.components.length; ++i)
+                    $root.Types.Component.encode(message.components[i], writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+            if (message.holeEdge != null && Object.hasOwnProperty.call(message, "holeEdge"))
+                $root.Types.Edge.encode(message.holeEdge, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+            if (message.normal != null && Object.hasOwnProperty.call(message, "normal"))
+                $root.Types.Vector3.encode(message.normal, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
             return writer;
         };
 
@@ -1665,6 +1722,17 @@ export const Types = $root.Types = (() => {
                     break;
                 case 8:
                     message.height = reader.float();
+                    break;
+                case 9:
+                    if (!(message.components && message.components.length))
+                        message.components = [];
+                    message.components.push($root.Types.Component.decode(reader, reader.uint32()));
+                    break;
+                case 10:
+                    message.holeEdge = $root.Types.Edge.decode(reader, reader.uint32());
+                    break;
+                case 11:
+                    message.normal = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -1737,6 +1805,25 @@ export const Types = $root.Types = (() => {
             if (message.height != null && message.hasOwnProperty("height"))
                 if (typeof message.height !== "number")
                     return "height: number expected";
+            if (message.components != null && message.hasOwnProperty("components")) {
+                if (!Array.isArray(message.components))
+                    return "components: array expected";
+                for (let i = 0; i < message.components.length; ++i) {
+                    let error = $root.Types.Component.verify(message.components[i]);
+                    if (error)
+                        return "components." + error;
+                }
+            }
+            if (message.holeEdge != null && message.hasOwnProperty("holeEdge")) {
+                let error = $root.Types.Edge.verify(message.holeEdge);
+                if (error)
+                    return "holeEdge." + error;
+            }
+            if (message.normal != null && message.hasOwnProperty("normal")) {
+                let error = $root.Types.Vector3.verify(message.normal);
+                if (error)
+                    return "normal." + error;
+            }
             return null;
         };
 
@@ -1794,6 +1881,26 @@ export const Types = $root.Types = (() => {
                 message.depth = Number(object.depth);
             if (object.height != null)
                 message.height = Number(object.height);
+            if (object.components) {
+                if (!Array.isArray(object.components))
+                    throw TypeError(".Types.Wall.components: array expected");
+                message.components = [];
+                for (let i = 0; i < object.components.length; ++i) {
+                    if (typeof object.components[i] !== "object")
+                        throw TypeError(".Types.Wall.components: object expected");
+                    message.components[i] = $root.Types.Component.fromObject(object.components[i]);
+                }
+            }
+            if (object.holeEdge != null) {
+                if (typeof object.holeEdge !== "object")
+                    throw TypeError(".Types.Wall.holeEdge: object expected");
+                message.holeEdge = $root.Types.Edge.fromObject(object.holeEdge);
+            }
+            if (object.normal != null) {
+                if (typeof object.normal !== "object")
+                    throw TypeError(".Types.Wall.normal: object expected");
+                message.normal = $root.Types.Vector3.fromObject(object.normal);
+            }
             return message;
         };
 
@@ -1810,6 +1917,8 @@ export const Types = $root.Types = (() => {
             if (!options)
                 options = {};
             let object = {};
+            if (options.arrays || options.defaults)
+                object.components = [];
             if (options.defaults) {
                 object.uuid = "";
                 object.edge = null;
@@ -1819,6 +1928,8 @@ export const Types = $root.Types = (() => {
                 object.endExtend = 0;
                 object.depth = 0;
                 object.height = 0;
+                object.holeEdge = null;
+                object.normal = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -1836,6 +1947,15 @@ export const Types = $root.Types = (() => {
                 object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
             if (message.height != null && message.hasOwnProperty("height"))
                 object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
+            if (message.components && message.components.length) {
+                object.components = [];
+                for (let j = 0; j < message.components.length; ++j)
+                    object.components[j] = $root.Types.Component.toObject(message.components[j], options);
+            }
+            if (message.holeEdge != null && message.hasOwnProperty("holeEdge"))
+                object.holeEdge = $root.Types.Edge.toObject(message.holeEdge, options);
+            if (message.normal != null && message.hasOwnProperty("normal"))
+                object.normal = $root.Types.Vector3.toObject(message.normal, options);
             return object;
         };
 
@@ -1853,23 +1973,33 @@ export const Types = $root.Types = (() => {
         return Wall;
     })();
 
-    Types.Inlay = (function() {
+    Types.Component = (function() {
 
         /**
-         * Properties of an Inlay.
+         * Properties of a Component.
          * @memberof Types
-         * @interface IInlay
+         * @interface IComponent
+         * @property {string|null} [uuid] Component uuid
+         * @property {Types.ComponentType|null} [type] Component type
+         * @property {number|null} [width] Component width
+         * @property {number|null} [height] Component height
+         * @property {number|null} [depth] Component depth
+         * @property {number|null} [offGround] Component offGround
+         * @property {number|null} [disToStart] Component disToStart
+         * @property {number|null} [interval] Component interval
+         * @property {Types.IVector3|null} [position] Component position
+         * @property {Types.IVector3|null} [rotation] Component rotation
          */
 
         /**
-         * Constructs a new Inlay.
+         * Constructs a new Component.
          * @memberof Types
-         * @classdesc Represents an Inlay.
-         * @implements IInlay
+         * @classdesc Represents a Component.
+         * @implements IComponent
          * @constructor
-         * @param {Types.IInlay=} [properties] Properties to set
+         * @param {Types.IComponent=} [properties] Properties to set
          */
-        function Inlay(properties) {
+        function Component(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -1877,63 +2007,193 @@ export const Types = $root.Types = (() => {
         }
 
         /**
-         * Creates a new Inlay instance using the specified properties.
-         * @function create
-         * @memberof Types.Inlay
-         * @static
-         * @param {Types.IInlay=} [properties] Properties to set
-         * @returns {Types.Inlay} Inlay instance
+         * Component uuid.
+         * @member {string} uuid
+         * @memberof Types.Component
+         * @instance
          */
-        Inlay.create = function create(properties) {
-            return new Inlay(properties);
+        Component.prototype.uuid = "";
+
+        /**
+         * Component type.
+         * @member {Types.ComponentType} type
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.type = 0;
+
+        /**
+         * Component width.
+         * @member {number} width
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.width = 0;
+
+        /**
+         * Component height.
+         * @member {number} height
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.height = 0;
+
+        /**
+         * Component depth.
+         * @member {number} depth
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.depth = 0;
+
+        /**
+         * Component offGround.
+         * @member {number} offGround
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.offGround = 0;
+
+        /**
+         * Component disToStart.
+         * @member {number} disToStart
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.disToStart = 0;
+
+        /**
+         * Component interval.
+         * @member {number} interval
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.interval = 0;
+
+        /**
+         * Component position.
+         * @member {Types.IVector3|null|undefined} position
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.position = null;
+
+        /**
+         * Component rotation.
+         * @member {Types.IVector3|null|undefined} rotation
+         * @memberof Types.Component
+         * @instance
+         */
+        Component.prototype.rotation = null;
+
+        /**
+         * Creates a new Component instance using the specified properties.
+         * @function create
+         * @memberof Types.Component
+         * @static
+         * @param {Types.IComponent=} [properties] Properties to set
+         * @returns {Types.Component} Component instance
+         */
+        Component.create = function create(properties) {
+            return new Component(properties);
         };
 
         /**
-         * Encodes the specified Inlay message. Does not implicitly {@link Types.Inlay.verify|verify} messages.
+         * Encodes the specified Component message. Does not implicitly {@link Types.Component.verify|verify} messages.
          * @function encode
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @static
-         * @param {Types.IInlay} message Inlay message or plain object to encode
+         * @param {Types.IComponent} message Component message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        Inlay.encode = function encode(message, writer) {
+        Component.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.type);
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.width);
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
+                writer.uint32(/* id 4, wireType 5 =*/37).float(message.height);
+            if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
+                writer.uint32(/* id 5, wireType 5 =*/45).float(message.depth);
+            if (message.offGround != null && Object.hasOwnProperty.call(message, "offGround"))
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.offGround);
+            if (message.disToStart != null && Object.hasOwnProperty.call(message, "disToStart"))
+                writer.uint32(/* id 7, wireType 5 =*/61).float(message.disToStart);
+            if (message.interval != null && Object.hasOwnProperty.call(message, "interval"))
+                writer.uint32(/* id 8, wireType 5 =*/69).float(message.interval);
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
+                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+            if (message.rotation != null && Object.hasOwnProperty.call(message, "rotation"))
+                $root.Types.Vector3.encode(message.rotation, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
             return writer;
         };
 
         /**
-         * Encodes the specified Inlay message, length delimited. Does not implicitly {@link Types.Inlay.verify|verify} messages.
+         * Encodes the specified Component message, length delimited. Does not implicitly {@link Types.Component.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @static
-         * @param {Types.IInlay} message Inlay message or plain object to encode
+         * @param {Types.IComponent} message Component message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        Inlay.encodeDelimited = function encodeDelimited(message, writer) {
+        Component.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes an Inlay message from the specified reader or buffer.
+         * Decodes a Component message from the specified reader or buffer.
          * @function decode
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {Types.Inlay} Inlay
+         * @returns {Types.Component} Component
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        Inlay.decode = function decode(reader, length) {
+        Component.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.Inlay();
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.Component();
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
+                    message.type = reader.int32();
+                    break;
+                case 3:
+                    message.width = reader.float();
+                    break;
+                case 4:
+                    message.height = reader.float();
+                    break;
+                case 5:
+                    message.depth = reader.float();
+                    break;
+                case 6:
+                    message.offGround = reader.float();
+                    break;
+                case 7:
+                    message.disToStart = reader.float();
+                    break;
+                case 8:
+                    message.interval = reader.float();
+                    break;
+                case 9:
+                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 10:
+                    message.rotation = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -1943,74 +2203,203 @@ export const Types = $root.Types = (() => {
         };
 
         /**
-         * Decodes an Inlay message from the specified reader or buffer, length delimited.
+         * Decodes a Component message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {Types.Inlay} Inlay
+         * @returns {Types.Component} Component
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        Inlay.decodeDelimited = function decodeDelimited(reader) {
+        Component.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies an Inlay message.
+         * Verifies a Component message.
          * @function verify
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        Inlay.verify = function verify(message) {
+        Component.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.type != null && message.hasOwnProperty("type"))
+                switch (message.type) {
+                default:
+                    return "type: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    break;
+                }
+            if (message.width != null && message.hasOwnProperty("width"))
+                if (typeof message.width !== "number")
+                    return "width: number expected";
+            if (message.height != null && message.hasOwnProperty("height"))
+                if (typeof message.height !== "number")
+                    return "height: number expected";
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                if (typeof message.depth !== "number")
+                    return "depth: number expected";
+            if (message.offGround != null && message.hasOwnProperty("offGround"))
+                if (typeof message.offGround !== "number")
+                    return "offGround: number expected";
+            if (message.disToStart != null && message.hasOwnProperty("disToStart"))
+                if (typeof message.disToStart !== "number")
+                    return "disToStart: number expected";
+            if (message.interval != null && message.hasOwnProperty("interval"))
+                if (typeof message.interval !== "number")
+                    return "interval: number expected";
+            if (message.position != null && message.hasOwnProperty("position")) {
+                let error = $root.Types.Vector3.verify(message.position);
+                if (error)
+                    return "position." + error;
+            }
+            if (message.rotation != null && message.hasOwnProperty("rotation")) {
+                let error = $root.Types.Vector3.verify(message.rotation);
+                if (error)
+                    return "rotation." + error;
+            }
             return null;
         };
 
         /**
-         * Creates an Inlay message from a plain object. Also converts values to their respective internal types.
+         * Creates a Component message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {Types.Inlay} Inlay
+         * @returns {Types.Component} Component
          */
-        Inlay.fromObject = function fromObject(object) {
-            if (object instanceof $root.Types.Inlay)
+        Component.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.Component)
                 return object;
-            return new $root.Types.Inlay();
+            let message = new $root.Types.Component();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            switch (object.type) {
+            case "cph":
+            case 0:
+                message.type = 0;
+                break;
+            case "cdoor":
+            case 1:
+                message.type = 1;
+                break;
+            case "cwindow":
+            case 2:
+                message.type = 2;
+                break;
+            case "cdoor_hole":
+            case 3:
+                message.type = 3;
+                break;
+            case "cbeam":
+            case 4:
+                message.type = 4;
+                break;
+            case "cpillar":
+            case 5:
+                message.type = 5;
+                break;
+            }
+            if (object.width != null)
+                message.width = Number(object.width);
+            if (object.height != null)
+                message.height = Number(object.height);
+            if (object.depth != null)
+                message.depth = Number(object.depth);
+            if (object.offGround != null)
+                message.offGround = Number(object.offGround);
+            if (object.disToStart != null)
+                message.disToStart = Number(object.disToStart);
+            if (object.interval != null)
+                message.interval = Number(object.interval);
+            if (object.position != null) {
+                if (typeof object.position !== "object")
+                    throw TypeError(".Types.Component.position: object expected");
+                message.position = $root.Types.Vector3.fromObject(object.position);
+            }
+            if (object.rotation != null) {
+                if (typeof object.rotation !== "object")
+                    throw TypeError(".Types.Component.rotation: object expected");
+                message.rotation = $root.Types.Vector3.fromObject(object.rotation);
+            }
+            return message;
         };
 
         /**
-         * Creates a plain object from an Inlay message. Also converts values to other types if specified.
+         * Creates a plain object from a Component message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @static
-         * @param {Types.Inlay} message Inlay
+         * @param {Types.Component} message Component
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        Inlay.toObject = function toObject() {
-            return {};
+        Component.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.uuid = "";
+                object.type = options.enums === String ? "cph" : 0;
+                object.width = 0;
+                object.height = 0;
+                object.depth = 0;
+                object.offGround = 0;
+                object.disToStart = 0;
+                object.interval = 0;
+                object.position = null;
+                object.rotation = null;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.type != null && message.hasOwnProperty("type"))
+                object.type = options.enums === String ? $root.Types.ComponentType[message.type] : message.type;
+            if (message.width != null && message.hasOwnProperty("width"))
+                object.width = options.json && !isFinite(message.width) ? String(message.width) : message.width;
+            if (message.height != null && message.hasOwnProperty("height"))
+                object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
+            if (message.offGround != null && message.hasOwnProperty("offGround"))
+                object.offGround = options.json && !isFinite(message.offGround) ? String(message.offGround) : message.offGround;
+            if (message.disToStart != null && message.hasOwnProperty("disToStart"))
+                object.disToStart = options.json && !isFinite(message.disToStart) ? String(message.disToStart) : message.disToStart;
+            if (message.interval != null && message.hasOwnProperty("interval"))
+                object.interval = options.json && !isFinite(message.interval) ? String(message.interval) : message.interval;
+            if (message.position != null && message.hasOwnProperty("position"))
+                object.position = $root.Types.Vector3.toObject(message.position, options);
+            if (message.rotation != null && message.hasOwnProperty("rotation"))
+                object.rotation = $root.Types.Vector3.toObject(message.rotation, options);
+            return object;
         };
 
         /**
-         * Converts this Inlay to JSON.
+         * Converts this Component to JSON.
          * @function toJSON
-         * @memberof Types.Inlay
+         * @memberof Types.Component
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        Inlay.prototype.toJSON = function toJSON() {
+        Component.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
-        return Inlay;
+        return Component;
     })();
 
     Types.Material = (function() {
