@@ -94,6 +94,7 @@ message Wall {
   float    endExtend   = 6;  //终点延伸
   float    depth       = 7;  //厚度
   float    height      = 8;  //高度
+  Vector3  normal      
 }
 
 message Inlay {

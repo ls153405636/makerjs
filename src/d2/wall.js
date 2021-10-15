@@ -26,6 +26,28 @@ export class Wall extends BaseWidget {
     this.depth = d2_tool.translateValue(vPB.depth)
     this.draw()
     this.addEvent()
+
+    const offset = new Victor(30, 30)
+    const newP1 = new Victor(this.p1.x, this.p1.y)
+    const newP2 = new Victor(this.p2.x, this.p2.y)
+    const newOutP1 = new Victor(this.outP1.x, this.outP1.y)
+    const newOouP2 = new Victor(this.outP2.x, this.outP2.y)
+    if (this.p1.x - this.p2.x < 0) {
+      newP1.subtracyY(offset)
+      newP2.subtracyY(offset)
+    } else if (this.p1.y - this.p2.y < 0) {
+      newP1.addX(offset)
+      newP2.addX(offset)
+    } else if (this.p1.x - this.p2.x > 0) {
+      newP1.addY(offset)
+      newP2.addY(offset)
+    } else if (this.p1.y - this.p2.y > 0) {
+      newP1.subtracyX(offset)
+      newP2.subtracyX(offset)
+    }
+    // const lineRight = new Victor(this.p2, this.outP2)
+    // lineLeft.add(new Victor(this.depth,this.depth)).toString()
+    // lineRight.add(new Victor(this.depth,this.depth)).toString()
   }
 
   // 求旋转
@@ -34,6 +56,14 @@ export class Wall extends BaseWidget {
     const orientation = new Victor(p1.x - p2.x, p1.y - p2.y)
     return orientation.angle()
   }
+
+  // var vec1 = new Victor(100, 200);
+  // var vec2 = new Victor(3, 4);
+
+  // vec1
+  //   .multiplyX(vec2)
+  //   .toString();
+  // // => x:300, y:200
 
   // 求墙体中心位置
   get position() {
@@ -61,6 +91,13 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
+    // 标注线绘制
+    const line = new PIXI.Graphics()
+    const lPath = [this.p1.x, this.p1.y, this.p2.x, this.p2.y]
+    line.lineStyle(10, 0x6e9eff)
+    line.position.set()
+    line.drawPolygon(lPath)
+
     const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x000000)
     wall.beginFill(0xffffff, 1)
@@ -89,6 +126,7 @@ export class Wall extends BaseWidget {
     wall.addChild(tilingSprite)
 
     this.sprite = wall
+    this.lineSprite = line
   }
 
   // 取消墙体选中效果

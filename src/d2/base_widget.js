@@ -27,6 +27,10 @@ export class BaseWidget {
       // debugger
       new Movie().addEle(this.sprite)
     }
+    if (this.lineSprite) {
+      // debugger
+      new Movie().addEle(this.lineSprite)
+    }
   }
 
   addEvent() {
