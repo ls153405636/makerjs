@@ -26,28 +26,6 @@ export class Wall extends BaseWidget {
     this.depth = d2_tool.translateValue(vPB.depth)
     this.draw()
     this.addEvent()
-
-    const offset = new Victor(30, 30)
-    const newP1 = new Victor(this.p1.x, this.p1.y)
-    const newP2 = new Victor(this.p2.x, this.p2.y)
-    const newOutP1 = new Victor(this.outP1.x, this.outP1.y)
-    const newOouP2 = new Victor(this.outP2.x, this.outP2.y)
-    if (this.p1.x - this.p2.x < 0) {
-      newP1.subtracyY(offset)
-      newP2.subtracyY(offset)
-    } else if (this.p1.y - this.p2.y < 0) {
-      newP1.addX(offset)
-      newP2.addX(offset)
-    } else if (this.p1.x - this.p2.x > 0) {
-      newP1.addY(offset)
-      newP2.addY(offset)
-    } else if (this.p1.y - this.p2.y > 0) {
-      newP1.subtracyX(offset)
-      newP2.subtracyX(offset)
-    }
-    // const lineRight = new Victor(this.p2, this.outP2)
-    // lineLeft.add(new Victor(this.depth,this.depth)).toString()
-    // lineRight.add(new Victor(this.depth,this.depth)).toString()
   }
 
   // 求旋转
@@ -56,14 +34,6 @@ export class Wall extends BaseWidget {
     const orientation = new Victor(p1.x - p2.x, p1.y - p2.y)
     return orientation.angle()
   }
-
-  // var vec1 = new Victor(100, 200);
-  // var vec2 = new Victor(3, 4);
-
-  // vec1
-  //   .multiplyX(vec2)
-  //   .toString();
-  // // => x:300, y:200
 
   // 求墙体中心位置
   get position() {
@@ -91,10 +61,35 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
+    // 标注线偏移计算
+    const { p1, p2, outP1, outP2, depth } = this
+    const offset = new Victor(depth * 2, depth * 2)
+    const newP1 = new Victor(p1.x, p1.y)
+    const newP2 = new Victor(p2.x, p2.y)
+    const newOutP1 = new Victor(outP1.x, outP1.y)
+    const newOouP2 = new Victor(outP2.x, outP2.y)
+    if (p1.x - p2.x < 0) {
+      newP1.subtractY(offset)
+      newP2.subtractY(offset)
+    } else if (p1.y - p2.y < 0) {
+      newP1.addX(offset)
+      newP2.addX(offset)
+    } else if (p1.x - p2.x > 0) {
+      newP1.addY(offset)
+      newP2.addY(offset)
+    } else if (p1.y - p2.y > 0) {
+      newP1.subtractX(offset)
+      newP2.subtractX(offset)
+    }
+    console.log(newP1, newP2)
+
+    // 标注文字添加nihao
+    const lineText = new PIXI.Text('你好', { fontSize: 50 })
+
     // 标注线绘制
     const line = new PIXI.Graphics()
-    const lPath = [this.p1.x, this.p1.y, this.p2.x, this.p2.y]
-    line.lineStyle(10, 0x6e9eff)
+    const lPath = [newP1.x, newP1.y, newP2.x, newP2.y]
+    line.lineStyle(1, 0x000000)
     line.position.set()
     line.drawPolygon(lPath)
 
@@ -127,6 +122,7 @@ export class Wall extends BaseWidget {
 
     this.sprite = wall
     this.lineSprite = line
+    this.textSprite = lineText
   }
 
   // 取消墙体选中效果
