@@ -255,13 +255,63 @@ export class Structure {
           outEdge: outEdge,
           depth: StructConfig.INIT_WALL_DEPTH,
           type: Types.WallType.wboth,
+          normal: new Types.Vector3({x:norVec.x, y:norVec.y, z:norVec.z})
         })
       )
     }
+
+    for (let i = 1; i <= 4; i++) {
+      this.createComponent(walls[i-1], i+1)
+    }
+
     return walls
   }
 
-  createStair(vArgs) {
+  /**
+   * 
+   * @param {Types.Wall} vWall 
+   * @param {*} vType 
+   */
+  createComponent (vWall, vType) {
+    let p1 = new THREE.Vector2(vWall.edge.p1.x, vWall.edge.p1.y)
+    let p2 = new THREE.Vector2(vWall.edge.p2.x, vWall.edge.p2.y)
+    let vec = new THREE.Vector2().subVectors(p2, p1)
+    let nor = new THREE.Vector2(vWall.normal.x, vWall.normal.y)
+    let middle = new THREE.Vector2().addVectors(p1, p2).multiplyScalar(1/2)
+    let length = p1.distanceTo(p2)
+    let component = new Types.Component({
+      type: vType,
+    })
+    if ([Types.ComponentType.cdoor, Types.ComponentType.cdoor_hole, Types.ComponentType.cwindow].includes(vType)) {
+      component.width = 600
+      component.height = 2000
+      component.depth = vWall.depth
+      component.disToStart = (length - component.width) / 2
+      let position = middle.clone().addScaledVector(nor, vWall.depth / 2)
+      component.position = new Types.Vector3({x:position.x, y:position.y})
+    } else if (vType === Types.ComponentType.cbeam) {
+      component.width = length
+      component.height = 300
+      component.depth = 300
+      component.offGround = vWall - component.height
+      let position = middle.clone().addScaledVector(nor.clone().negate(), component.depth / 2)
+      component.position = new Types.Vector3({x:position.x, y:position.y})
+    } else if (vType === Types.ComponentType.cpillar) {
+      component.width = 300
+      component.depth = 300
+      component.height = vWall.height
+      component.disToStart = (length - component.width) / 2
+      let position = middle.clone().addScaledVector(nor.clone().negate(), component.depth / 2)
+      component.position = new Types.Vector3({x:position.x, y:position.y})
+    }
+    let angle = vec.angle()
+    component.rotation = new Types.Vector3({y: angle})
+    vWall.components.push(component)
+  }
+
+  
+
+  createStair (vArgs) {
     this.proj.stair = new Types.Stair({
       exitBeamDepth: 580,
       type: Types.StairType.sstright,

@@ -14,4 +14,16 @@ export class Flight extends BaseWidget {
       this.treads.push(new Tread(t))
     }
   }
+
+  draw () {
+    this.treads.forEach(t => {
+      t.draw()
+    })
+  }
+  
+  addToStage () {
+    this.treads.forEach(t => {
+      t.addToStage()
+    })
+  }
 }

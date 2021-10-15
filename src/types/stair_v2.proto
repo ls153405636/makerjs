@@ -46,6 +46,15 @@ enum NossingType {
   nluxury = 3;
 }
 
+enum ComponentType {
+  cph        = 0;
+  cdoor      = 1;  //门
+  cwindow    = 2;  //窗
+  cdoor_hole = 3;  //门洞
+  cbeam      = 4;  //梁
+  cpillar    = 5;  //柱
+}
+
 //三维向量
 message Vector3{
 	float x = 1;
@@ -86,19 +95,31 @@ message Hole {
 
 //墙
 message Wall {
-  string   uuid        = 1;
-  Edge     edge        = 2;  //墙体对应的边
-  Edge     outEdge     = 3;  //墙体的外边
-  WallType type        = 4;  //类型
-  float    startExtend = 5;  //起点延伸
-  float    endExtend   = 6;  //终点延伸
-  float    depth       = 7;  //厚度
-  float    height      = 8;  //高度
-  Vector3  normal      
+  string   uuid                 = 1;
+  Edge     edge                 = 2;  //墙体对应的边
+  Edge     outEdge              = 3;  //墙体的外边
+  WallType type                 = 4;  //类型
+  float    startExtend          = 5;  //起点延伸
+  float    endExtend            = 6;  //终点延伸
+  float    depth                = 7;  //厚度
+  float    height               = 8;  //高度
+  repeated Component components = 9;  //部件集合
+  Edge     holeEdge             = 10; //对应的洞口边
+  Vector3  normal               = 11; //法线向量
 }
 
-message Inlay {
-
+//门窗门洞梁柱等房间组件
+message Component {
+  string        uuid       = 1;
+  ComponentType type       = 2;  //类型
+  float         width      = 3;  //宽 旋转值为0时，x轴方向的尺寸为宽
+  float         height     = 4;  //高 
+  float         depth      = 5;  //深，旋转值为0时，y轴方向的尺寸为深，门窗门洞不可修改此属性
+  float         offGround  = 6;  //离地， 柱的离地默认为0，不可修改
+  float         disToStart = 7;  //距起点的距离，梁平行于墙，此处不可修改
+  float         interval   = 8;  //与墙之间的间隙，门窗门洞置于墙内，不可修改
+  Vector3       position   = 9;  //位置
+  Vector3       rotation   = 10; //旋转 范围是（0，2pai）
 }
 
 message Material {
