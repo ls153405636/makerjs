@@ -18,8 +18,6 @@ export class Wall extends BaseWidget {
   constructor(vPB) {
     super()
     this.iSelected = false
-    this.movie = new Movie()
-    // console.log(this.movie.app.stage)
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
 
@@ -70,10 +68,11 @@ export class Wall extends BaseWidget {
     wall.lineStyle(1, 0x000000)
     wall.beginFill(0xffffff, 1)
     wall.alpha = 1
+
     // 标注线偏移计算
     const { p1, p2, outP1, outP2, depth, normal } = this
     const newNormal = new Victor(normal.x, normal.y)
-    const offset = new Victor(depth * 1.5, depth * 1.5)
+    const offset = new Victor(depth * 2, depth * 2)
     newNormal.multiply(offset)
     const newP1 = new Victor(p1.x, p1.y)
     const newP2 = new Victor(p2.x, p2.y)
@@ -170,6 +169,8 @@ export class Wall extends BaseWidget {
     this.sprite = wall
     this.lineSprite = line
     this.textSprite = lineText
+
+    // // 绘制圆形
   }
 
   // 取消墙体选中效果

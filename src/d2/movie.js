@@ -35,6 +35,8 @@ export class Movie {
 
       this.app = app
 
+      window.stage = app.stage.children
+
       this.scale = 1
 
       RunContext.context = this
