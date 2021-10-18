@@ -30,8 +30,6 @@ export class Hole extends BaseWidget {
     hole.drawPolygon(path)
     hole.endFill()
 
-    // 绘制圆形
-
     this.sprite = hole
   }
 
