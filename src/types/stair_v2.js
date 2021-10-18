@@ -140,6 +140,40 @@ export const Types = $root.Types = (() => {
         return values;
     })();
 
+    /**
+     * BigColumnPosType enum.
+     * @name Types.BigColumnPosType
+     * @enum {number}
+     * @property {number} bcp_ph=0 bcp_ph value
+     * @property {number} bcp_floor=1 bcp_floor value
+     * @property {number} bcp_first=2 bcp_first value
+     * @property {number} bcp_second=3 bcp_second value
+     */
+    Types.BigColumnPosType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "bcp_ph"] = 0;
+        values[valuesById[1] = "bcp_floor"] = 1;
+        values[valuesById[2] = "bcp_first"] = 2;
+        values[valuesById[3] = "bcp_second"] = 3;
+        return values;
+    })();
+
+    /**
+     * ArrangeRule enum.
+     * @name Types.ArrangeRule
+     * @enum {number}
+     * @property {number} arph=0 arph value
+     * @property {number} arrFour=1 arrFour value
+     * @property {number} arrThree=2 arrThree value
+     */
+    Types.ArrangeRule = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "arph"] = 0;
+        values[valuesById[1] = "arrFour"] = 1;
+        values[valuesById[2] = "arrThree"] = 2;
+        return values;
+    })();
+
     Types.Vector3 = (function() {
 
         /**
@@ -2575,7 +2609,16 @@ export const Types = $root.Types = (() => {
          * @property {Types.AgainstWallType|null} [againstWallType] Stair againstWallType
          * @property {Types.ITreadParameters|null} [treadParameters] Stair treadParameters
          * @property {Types.IRiserParameters|null} [riserParameters] Stair riserParameters
+         * @property {Types.IStepParameters|null} [stepParameters] Stair stepParameters
+         * @property {Types.IBigColParameters|null} [bigColParameters] Stair bigColParameters
+         * @property {Types.ISmallColParameters|null} [smallColParameters] Stair smallColParameters
+         * @property {Types.IHandrailParameters|null} [handrailParameters] Stair handrailParameters
          * @property {Array.<Types.IFlight>|null} [flights] Stair flights
+         * @property {Array.<Types.ILanding>|null} [landings] Stair landings
+         * @property {Array.<Types.IBigColumn>|null} [bigColumns] Stair bigColumns
+         * @property {Array.<Types.ISmallColumn>|null} [smallColumns] Stair smallColumns
+         * @property {number|null} [stepHeight] Stair stepHeight
+         * @property {Types.IVector3|null} [position] Stair position
          */
 
         /**
@@ -2588,6 +2631,9 @@ export const Types = $root.Types = (() => {
          */
         function Stair(properties) {
             this.flights = [];
+            this.landings = [];
+            this.bigColumns = [];
+            this.smallColumns = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -2651,12 +2697,84 @@ export const Types = $root.Types = (() => {
         Stair.prototype.riserParameters = null;
 
         /**
+         * Stair stepParameters.
+         * @member {Types.IStepParameters|null|undefined} stepParameters
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.stepParameters = null;
+
+        /**
+         * Stair bigColParameters.
+         * @member {Types.IBigColParameters|null|undefined} bigColParameters
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.bigColParameters = null;
+
+        /**
+         * Stair smallColParameters.
+         * @member {Types.ISmallColParameters|null|undefined} smallColParameters
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.smallColParameters = null;
+
+        /**
+         * Stair handrailParameters.
+         * @member {Types.IHandrailParameters|null|undefined} handrailParameters
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.handrailParameters = null;
+
+        /**
          * Stair flights.
          * @member {Array.<Types.IFlight>} flights
          * @memberof Types.Stair
          * @instance
          */
         Stair.prototype.flights = $util.emptyArray;
+
+        /**
+         * Stair landings.
+         * @member {Array.<Types.ILanding>} landings
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.landings = $util.emptyArray;
+
+        /**
+         * Stair bigColumns.
+         * @member {Array.<Types.IBigColumn>} bigColumns
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.bigColumns = $util.emptyArray;
+
+        /**
+         * Stair smallColumns.
+         * @member {Array.<Types.ISmallColumn>} smallColumns
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.smallColumns = $util.emptyArray;
+
+        /**
+         * Stair stepHeight.
+         * @member {number} stepHeight
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.stepHeight = 0;
+
+        /**
+         * Stair position.
+         * @member {Types.IVector3|null|undefined} position
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.position = null;
 
         /**
          * Creates a new Stair instance using the specified properties.
@@ -2696,9 +2814,30 @@ export const Types = $root.Types = (() => {
                 $root.Types.TreadParameters.encode(message.treadParameters, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             if (message.riserParameters != null && Object.hasOwnProperty.call(message, "riserParameters"))
                 $root.Types.RiserParameters.encode(message.riserParameters, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+            if (message.stepParameters != null && Object.hasOwnProperty.call(message, "stepParameters"))
+                $root.Types.StepParameters.encode(message.stepParameters, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+            if (message.bigColParameters != null && Object.hasOwnProperty.call(message, "bigColParameters"))
+                $root.Types.BigColParameters.encode(message.bigColParameters, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+            if (message.smallColParameters != null && Object.hasOwnProperty.call(message, "smallColParameters"))
+                $root.Types.SmallColParameters.encode(message.smallColParameters, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+            if (message.handrailParameters != null && Object.hasOwnProperty.call(message, "handrailParameters"))
+                $root.Types.HandrailParameters.encode(message.handrailParameters, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
             if (message.flights != null && message.flights.length)
                 for (let i = 0; i < message.flights.length; ++i)
                     $root.Types.Flight.encode(message.flights[i], writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
+            if (message.landings != null && message.landings.length)
+                for (let i = 0; i < message.landings.length; ++i)
+                    $root.Types.Landing.encode(message.landings[i], writer.uint32(/* id 16, wireType 2 =*/130).fork()).ldelim();
+            if (message.bigColumns != null && message.bigColumns.length)
+                for (let i = 0; i < message.bigColumns.length; ++i)
+                    $root.Types.BigColumn.encode(message.bigColumns[i], writer.uint32(/* id 17, wireType 2 =*/138).fork()).ldelim();
+            if (message.smallColumns != null && message.smallColumns.length)
+                for (let i = 0; i < message.smallColumns.length; ++i)
+                    $root.Types.SmallColumn.encode(message.smallColumns[i], writer.uint32(/* id 18, wireType 2 =*/146).fork()).ldelim();
+            if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
+                writer.uint32(/* id 25, wireType 5 =*/205).float(message.stepHeight);
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
+                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 26, wireType 2 =*/210).fork()).ldelim();
             return writer;
         };
 
@@ -2754,10 +2893,43 @@ export const Types = $root.Types = (() => {
                 case 7:
                     message.riserParameters = $root.Types.RiserParameters.decode(reader, reader.uint32());
                     break;
+                case 8:
+                    message.stepParameters = $root.Types.StepParameters.decode(reader, reader.uint32());
+                    break;
+                case 9:
+                    message.bigColParameters = $root.Types.BigColParameters.decode(reader, reader.uint32());
+                    break;
+                case 10:
+                    message.smallColParameters = $root.Types.SmallColParameters.decode(reader, reader.uint32());
+                    break;
+                case 11:
+                    message.handrailParameters = $root.Types.HandrailParameters.decode(reader, reader.uint32());
+                    break;
                 case 15:
                     if (!(message.flights && message.flights.length))
                         message.flights = [];
                     message.flights.push($root.Types.Flight.decode(reader, reader.uint32()));
+                    break;
+                case 16:
+                    if (!(message.landings && message.landings.length))
+                        message.landings = [];
+                    message.landings.push($root.Types.Landing.decode(reader, reader.uint32()));
+                    break;
+                case 17:
+                    if (!(message.bigColumns && message.bigColumns.length))
+                        message.bigColumns = [];
+                    message.bigColumns.push($root.Types.BigColumn.decode(reader, reader.uint32()));
+                    break;
+                case 18:
+                    if (!(message.smallColumns && message.smallColumns.length))
+                        message.smallColumns = [];
+                    message.smallColumns.push($root.Types.SmallColumn.decode(reader, reader.uint32()));
+                    break;
+                case 25:
+                    message.stepHeight = reader.float();
+                    break;
+                case 26:
+                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -2831,6 +3003,26 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "riserParameters." + error;
             }
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters")) {
+                let error = $root.Types.StepParameters.verify(message.stepParameters);
+                if (error)
+                    return "stepParameters." + error;
+            }
+            if (message.bigColParameters != null && message.hasOwnProperty("bigColParameters")) {
+                let error = $root.Types.BigColParameters.verify(message.bigColParameters);
+                if (error)
+                    return "bigColParameters." + error;
+            }
+            if (message.smallColParameters != null && message.hasOwnProperty("smallColParameters")) {
+                let error = $root.Types.SmallColParameters.verify(message.smallColParameters);
+                if (error)
+                    return "smallColParameters." + error;
+            }
+            if (message.handrailParameters != null && message.hasOwnProperty("handrailParameters")) {
+                let error = $root.Types.HandrailParameters.verify(message.handrailParameters);
+                if (error)
+                    return "handrailParameters." + error;
+            }
             if (message.flights != null && message.hasOwnProperty("flights")) {
                 if (!Array.isArray(message.flights))
                     return "flights: array expected";
@@ -2839,6 +3031,41 @@ export const Types = $root.Types = (() => {
                     if (error)
                         return "flights." + error;
                 }
+            }
+            if (message.landings != null && message.hasOwnProperty("landings")) {
+                if (!Array.isArray(message.landings))
+                    return "landings: array expected";
+                for (let i = 0; i < message.landings.length; ++i) {
+                    let error = $root.Types.Landing.verify(message.landings[i]);
+                    if (error)
+                        return "landings." + error;
+                }
+            }
+            if (message.bigColumns != null && message.hasOwnProperty("bigColumns")) {
+                if (!Array.isArray(message.bigColumns))
+                    return "bigColumns: array expected";
+                for (let i = 0; i < message.bigColumns.length; ++i) {
+                    let error = $root.Types.BigColumn.verify(message.bigColumns[i]);
+                    if (error)
+                        return "bigColumns." + error;
+                }
+            }
+            if (message.smallColumns != null && message.hasOwnProperty("smallColumns")) {
+                if (!Array.isArray(message.smallColumns))
+                    return "smallColumns: array expected";
+                for (let i = 0; i < message.smallColumns.length; ++i) {
+                    let error = $root.Types.SmallColumn.verify(message.smallColumns[i]);
+                    if (error)
+                        return "smallColumns." + error;
+                }
+            }
+            if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
+                if (typeof message.stepHeight !== "number")
+                    return "stepHeight: number expected";
+            if (message.position != null && message.hasOwnProperty("position")) {
+                let error = $root.Types.Vector3.verify(message.position);
+                if (error)
+                    return "position." + error;
             }
             return null;
         };
@@ -2899,6 +3126,26 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Stair.riserParameters: object expected");
                 message.riserParameters = $root.Types.RiserParameters.fromObject(object.riserParameters);
             }
+            if (object.stepParameters != null) {
+                if (typeof object.stepParameters !== "object")
+                    throw TypeError(".Types.Stair.stepParameters: object expected");
+                message.stepParameters = $root.Types.StepParameters.fromObject(object.stepParameters);
+            }
+            if (object.bigColParameters != null) {
+                if (typeof object.bigColParameters !== "object")
+                    throw TypeError(".Types.Stair.bigColParameters: object expected");
+                message.bigColParameters = $root.Types.BigColParameters.fromObject(object.bigColParameters);
+            }
+            if (object.smallColParameters != null) {
+                if (typeof object.smallColParameters !== "object")
+                    throw TypeError(".Types.Stair.smallColParameters: object expected");
+                message.smallColParameters = $root.Types.SmallColParameters.fromObject(object.smallColParameters);
+            }
+            if (object.handrailParameters != null) {
+                if (typeof object.handrailParameters !== "object")
+                    throw TypeError(".Types.Stair.handrailParameters: object expected");
+                message.handrailParameters = $root.Types.HandrailParameters.fromObject(object.handrailParameters);
+            }
             if (object.flights) {
                 if (!Array.isArray(object.flights))
                     throw TypeError(".Types.Stair.flights: array expected");
@@ -2908,6 +3155,43 @@ export const Types = $root.Types = (() => {
                         throw TypeError(".Types.Stair.flights: object expected");
                     message.flights[i] = $root.Types.Flight.fromObject(object.flights[i]);
                 }
+            }
+            if (object.landings) {
+                if (!Array.isArray(object.landings))
+                    throw TypeError(".Types.Stair.landings: array expected");
+                message.landings = [];
+                for (let i = 0; i < object.landings.length; ++i) {
+                    if (typeof object.landings[i] !== "object")
+                        throw TypeError(".Types.Stair.landings: object expected");
+                    message.landings[i] = $root.Types.Landing.fromObject(object.landings[i]);
+                }
+            }
+            if (object.bigColumns) {
+                if (!Array.isArray(object.bigColumns))
+                    throw TypeError(".Types.Stair.bigColumns: array expected");
+                message.bigColumns = [];
+                for (let i = 0; i < object.bigColumns.length; ++i) {
+                    if (typeof object.bigColumns[i] !== "object")
+                        throw TypeError(".Types.Stair.bigColumns: object expected");
+                    message.bigColumns[i] = $root.Types.BigColumn.fromObject(object.bigColumns[i]);
+                }
+            }
+            if (object.smallColumns) {
+                if (!Array.isArray(object.smallColumns))
+                    throw TypeError(".Types.Stair.smallColumns: array expected");
+                message.smallColumns = [];
+                for (let i = 0; i < object.smallColumns.length; ++i) {
+                    if (typeof object.smallColumns[i] !== "object")
+                        throw TypeError(".Types.Stair.smallColumns: object expected");
+                    message.smallColumns[i] = $root.Types.SmallColumn.fromObject(object.smallColumns[i]);
+                }
+            }
+            if (object.stepHeight != null)
+                message.stepHeight = Number(object.stepHeight);
+            if (object.position != null) {
+                if (typeof object.position !== "object")
+                    throw TypeError(".Types.Stair.position: object expected");
+                message.position = $root.Types.Vector3.fromObject(object.position);
             }
             return message;
         };
@@ -2925,8 +3209,12 @@ export const Types = $root.Types = (() => {
             if (!options)
                 options = {};
             let object = {};
-            if (options.arrays || options.defaults)
+            if (options.arrays || options.defaults) {
                 object.flights = [];
+                object.landings = [];
+                object.bigColumns = [];
+                object.smallColumns = [];
+            }
             if (options.defaults) {
                 object.uuid = "";
                 object.startBeamDepth = 0;
@@ -2935,6 +3223,12 @@ export const Types = $root.Types = (() => {
                 object.againstWallType = options.enums === String ? "aw_ph" : 0;
                 object.treadParameters = null;
                 object.riserParameters = null;
+                object.stepParameters = null;
+                object.bigColParameters = null;
+                object.smallColParameters = null;
+                object.handrailParameters = null;
+                object.stepHeight = 0;
+                object.position = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -2950,11 +3244,38 @@ export const Types = $root.Types = (() => {
                 object.treadParameters = $root.Types.TreadParameters.toObject(message.treadParameters, options);
             if (message.riserParameters != null && message.hasOwnProperty("riserParameters"))
                 object.riserParameters = $root.Types.RiserParameters.toObject(message.riserParameters, options);
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters"))
+                object.stepParameters = $root.Types.StepParameters.toObject(message.stepParameters, options);
+            if (message.bigColParameters != null && message.hasOwnProperty("bigColParameters"))
+                object.bigColParameters = $root.Types.BigColParameters.toObject(message.bigColParameters, options);
+            if (message.smallColParameters != null && message.hasOwnProperty("smallColParameters"))
+                object.smallColParameters = $root.Types.SmallColParameters.toObject(message.smallColParameters, options);
+            if (message.handrailParameters != null && message.hasOwnProperty("handrailParameters"))
+                object.handrailParameters = $root.Types.HandrailParameters.toObject(message.handrailParameters, options);
             if (message.flights && message.flights.length) {
                 object.flights = [];
                 for (let j = 0; j < message.flights.length; ++j)
                     object.flights[j] = $root.Types.Flight.toObject(message.flights[j], options);
             }
+            if (message.landings && message.landings.length) {
+                object.landings = [];
+                for (let j = 0; j < message.landings.length; ++j)
+                    object.landings[j] = $root.Types.Landing.toObject(message.landings[j], options);
+            }
+            if (message.bigColumns && message.bigColumns.length) {
+                object.bigColumns = [];
+                for (let j = 0; j < message.bigColumns.length; ++j)
+                    object.bigColumns[j] = $root.Types.BigColumn.toObject(message.bigColumns[j], options);
+            }
+            if (message.smallColumns && message.smallColumns.length) {
+                object.smallColumns = [];
+                for (let j = 0; j < message.smallColumns.length; ++j)
+                    object.smallColumns[j] = $root.Types.SmallColumn.toObject(message.smallColumns[j], options);
+            }
+            if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
+                object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
+            if (message.position != null && message.hasOwnProperty("position"))
+                object.position = $root.Types.Vector3.toObject(message.position, options);
             return object;
         };
 
@@ -2979,11 +3300,8 @@ export const Types = $root.Types = (() => {
          * @memberof Types
          * @interface IFlight
          * @property {string|null} [uuid] Flight uuid
-         * @property {number|null} [stepLength] Flight stepLength
-         * @property {number|null} [stepWidth] Flight stepWidth
          * @property {number|null} [stepHeight] Flight stepHeight
-         * @property {Types.StepNumRule|null} [stepNumRule] Flight stepNumRule
-         * @property {number|null} [stepNum] Flight stepNum
+         * @property {Types.IStepParameters|null} [stepParameters] Flight stepParameters
          * @property {Array.<Types.ITread>|null} [treads] Flight treads
          * @property {Array.<Types.IRiser>|null} [risers] Flight risers
          */
@@ -3014,22 +3332,6 @@ export const Types = $root.Types = (() => {
         Flight.prototype.uuid = "";
 
         /**
-         * Flight stepLength.
-         * @member {number} stepLength
-         * @memberof Types.Flight
-         * @instance
-         */
-        Flight.prototype.stepLength = 0;
-
-        /**
-         * Flight stepWidth.
-         * @member {number} stepWidth
-         * @memberof Types.Flight
-         * @instance
-         */
-        Flight.prototype.stepWidth = 0;
-
-        /**
          * Flight stepHeight.
          * @member {number} stepHeight
          * @memberof Types.Flight
@@ -3038,20 +3340,12 @@ export const Types = $root.Types = (() => {
         Flight.prototype.stepHeight = 0;
 
         /**
-         * Flight stepNumRule.
-         * @member {Types.StepNumRule} stepNumRule
+         * Flight stepParameters.
+         * @member {Types.IStepParameters|null|undefined} stepParameters
          * @memberof Types.Flight
          * @instance
          */
-        Flight.prototype.stepNumRule = 0;
-
-        /**
-         * Flight stepNum.
-         * @member {number} stepNum
-         * @memberof Types.Flight
-         * @instance
-         */
-        Flight.prototype.stepNum = 0;
+        Flight.prototype.stepParameters = null;
 
         /**
          * Flight treads.
@@ -3095,16 +3389,10 @@ export const Types = $root.Types = (() => {
                 writer = $Writer.create();
             if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
-            if (message.stepLength != null && Object.hasOwnProperty.call(message, "stepLength"))
-                writer.uint32(/* id 2, wireType 5 =*/21).float(message.stepLength);
-            if (message.stepWidth != null && Object.hasOwnProperty.call(message, "stepWidth"))
-                writer.uint32(/* id 3, wireType 5 =*/29).float(message.stepWidth);
             if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
                 writer.uint32(/* id 4, wireType 5 =*/37).float(message.stepHeight);
-            if (message.stepNumRule != null && Object.hasOwnProperty.call(message, "stepNumRule"))
-                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.stepNumRule);
-            if (message.stepNum != null && Object.hasOwnProperty.call(message, "stepNum"))
-                writer.uint32(/* id 6, wireType 5 =*/53).float(message.stepNum);
+            if (message.stepParameters != null && Object.hasOwnProperty.call(message, "stepParameters"))
+                $root.Types.StepParameters.encode(message.stepParameters, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             if (message.treads != null && message.treads.length)
                 for (let i = 0; i < message.treads.length; ++i)
                     $root.Types.Tread.encode(message.treads[i], writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
@@ -3148,20 +3436,11 @@ export const Types = $root.Types = (() => {
                 case 1:
                     message.uuid = reader.string();
                     break;
-                case 2:
-                    message.stepLength = reader.float();
-                    break;
-                case 3:
-                    message.stepWidth = reader.float();
-                    break;
                 case 4:
                     message.stepHeight = reader.float();
                     break;
                 case 5:
-                    message.stepNumRule = reader.int32();
-                    break;
-                case 6:
-                    message.stepNum = reader.float();
+                    message.stepParameters = $root.Types.StepParameters.decode(reader, reader.uint32());
                     break;
                 case 7:
                     if (!(message.treads && message.treads.length))
@@ -3211,27 +3490,14 @@ export const Types = $root.Types = (() => {
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 if (!$util.isString(message.uuid))
                     return "uuid: string expected";
-            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
-                if (typeof message.stepLength !== "number")
-                    return "stepLength: number expected";
-            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
-                if (typeof message.stepWidth !== "number")
-                    return "stepWidth: number expected";
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
                 if (typeof message.stepHeight !== "number")
                     return "stepHeight: number expected";
-            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
-                switch (message.stepNumRule) {
-                default:
-                    return "stepNumRule: enum value expected";
-                case 0:
-                case 1:
-                case 2:
-                    break;
-                }
-            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
-                if (typeof message.stepNum !== "number")
-                    return "stepNum: number expected";
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters")) {
+                let error = $root.Types.StepParameters.verify(message.stepParameters);
+                if (error)
+                    return "stepParameters." + error;
+            }
             if (message.treads != null && message.hasOwnProperty("treads")) {
                 if (!Array.isArray(message.treads))
                     return "treads: array expected";
@@ -3267,28 +3533,13 @@ export const Types = $root.Types = (() => {
             let message = new $root.Types.Flight();
             if (object.uuid != null)
                 message.uuid = String(object.uuid);
-            if (object.stepLength != null)
-                message.stepLength = Number(object.stepLength);
-            if (object.stepWidth != null)
-                message.stepWidth = Number(object.stepWidth);
             if (object.stepHeight != null)
                 message.stepHeight = Number(object.stepHeight);
-            switch (object.stepNumRule) {
-            case "snr_ph":
-            case 0:
-                message.stepNumRule = 0;
-                break;
-            case "snr_n":
-            case 1:
-                message.stepNumRule = 1;
-                break;
-            case "snr_n_add_1":
-            case 2:
-                message.stepNumRule = 2;
-                break;
+            if (object.stepParameters != null) {
+                if (typeof object.stepParameters !== "object")
+                    throw TypeError(".Types.Flight.stepParameters: object expected");
+                message.stepParameters = $root.Types.StepParameters.fromObject(object.stepParameters);
             }
-            if (object.stepNum != null)
-                message.stepNum = Number(object.stepNum);
             if (object.treads) {
                 if (!Array.isArray(object.treads))
                     throw TypeError(".Types.Flight.treads: array expected");
@@ -3331,24 +3582,15 @@ export const Types = $root.Types = (() => {
             }
             if (options.defaults) {
                 object.uuid = "";
-                object.stepLength = 0;
-                object.stepWidth = 0;
                 object.stepHeight = 0;
-                object.stepNumRule = options.enums === String ? "snr_ph" : 0;
-                object.stepNum = 0;
+                object.stepParameters = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
-            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
-                object.stepLength = options.json && !isFinite(message.stepLength) ? String(message.stepLength) : message.stepLength;
-            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
-                object.stepWidth = options.json && !isFinite(message.stepWidth) ? String(message.stepWidth) : message.stepWidth;
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
                 object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
-            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
-                object.stepNumRule = options.enums === String ? $root.Types.StepNumRule[message.stepNumRule] : message.stepNumRule;
-            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
-                object.stepNum = options.json && !isFinite(message.stepNum) ? String(message.stepNum) : message.stepNum;
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters"))
+                object.stepParameters = $root.Types.StepParameters.toObject(message.stepParameters, options);
             if (message.treads && message.treads.length) {
                 object.treads = [];
                 for (let j = 0; j < message.treads.length; ++j)
@@ -3591,6 +3833,278 @@ export const Types = $root.Types = (() => {
         return Tread;
     })();
 
+    Types.StepParameters = (function() {
+
+        /**
+         * Properties of a StepParameters.
+         * @memberof Types
+         * @interface IStepParameters
+         * @property {number|null} [stepLength] StepParameters stepLength
+         * @property {number|null} [stepWidth] StepParameters stepWidth
+         * @property {Types.StepNumRule|null} [stepNumRule] StepParameters stepNumRule
+         * @property {number|null} [stepNum] StepParameters stepNum
+         */
+
+        /**
+         * Constructs a new StepParameters.
+         * @memberof Types
+         * @classdesc Represents a StepParameters.
+         * @implements IStepParameters
+         * @constructor
+         * @param {Types.IStepParameters=} [properties] Properties to set
+         */
+        function StepParameters(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * StepParameters stepLength.
+         * @member {number} stepLength
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepLength = 0;
+
+        /**
+         * StepParameters stepWidth.
+         * @member {number} stepWidth
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepWidth = 0;
+
+        /**
+         * StepParameters stepNumRule.
+         * @member {Types.StepNumRule} stepNumRule
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepNumRule = 0;
+
+        /**
+         * StepParameters stepNum.
+         * @member {number} stepNum
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepNum = 0;
+
+        /**
+         * Creates a new StepParameters instance using the specified properties.
+         * @function create
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.IStepParameters=} [properties] Properties to set
+         * @returns {Types.StepParameters} StepParameters instance
+         */
+        StepParameters.create = function create(properties) {
+            return new StepParameters(properties);
+        };
+
+        /**
+         * Encodes the specified StepParameters message. Does not implicitly {@link Types.StepParameters.verify|verify} messages.
+         * @function encode
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.IStepParameters} message StepParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        StepParameters.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.stepLength != null && Object.hasOwnProperty.call(message, "stepLength"))
+                writer.uint32(/* id 1, wireType 5 =*/13).float(message.stepLength);
+            if (message.stepWidth != null && Object.hasOwnProperty.call(message, "stepWidth"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.stepWidth);
+            if (message.stepNumRule != null && Object.hasOwnProperty.call(message, "stepNumRule"))
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.stepNumRule);
+            if (message.stepNum != null && Object.hasOwnProperty.call(message, "stepNum"))
+                writer.uint32(/* id 4, wireType 5 =*/37).float(message.stepNum);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified StepParameters message, length delimited. Does not implicitly {@link Types.StepParameters.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.IStepParameters} message StepParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        StepParameters.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a StepParameters message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.StepParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.StepParameters} StepParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        StepParameters.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.StepParameters();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.stepLength = reader.float();
+                    break;
+                case 2:
+                    message.stepWidth = reader.float();
+                    break;
+                case 3:
+                    message.stepNumRule = reader.int32();
+                    break;
+                case 4:
+                    message.stepNum = reader.float();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a StepParameters message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.StepParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.StepParameters} StepParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        StepParameters.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a StepParameters message.
+         * @function verify
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        StepParameters.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
+                if (typeof message.stepLength !== "number")
+                    return "stepLength: number expected";
+            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
+                if (typeof message.stepWidth !== "number")
+                    return "stepWidth: number expected";
+            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
+                switch (message.stepNumRule) {
+                default:
+                    return "stepNumRule: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
+                if (typeof message.stepNum !== "number")
+                    return "stepNum: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a StepParameters message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.StepParameters} StepParameters
+         */
+        StepParameters.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.StepParameters)
+                return object;
+            let message = new $root.Types.StepParameters();
+            if (object.stepLength != null)
+                message.stepLength = Number(object.stepLength);
+            if (object.stepWidth != null)
+                message.stepWidth = Number(object.stepWidth);
+            switch (object.stepNumRule) {
+            case "snr_ph":
+            case 0:
+                message.stepNumRule = 0;
+                break;
+            case "snr_n":
+            case 1:
+                message.stepNumRule = 1;
+                break;
+            case "snr_n_add_1":
+            case 2:
+                message.stepNumRule = 2;
+                break;
+            }
+            if (object.stepNum != null)
+                message.stepNum = Number(object.stepNum);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a StepParameters message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.StepParameters} message StepParameters
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        StepParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.stepLength = 0;
+                object.stepWidth = 0;
+                object.stepNumRule = options.enums === String ? "snr_ph" : 0;
+                object.stepNum = 0;
+            }
+            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
+                object.stepLength = options.json && !isFinite(message.stepLength) ? String(message.stepLength) : message.stepLength;
+            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
+                object.stepWidth = options.json && !isFinite(message.stepWidth) ? String(message.stepWidth) : message.stepWidth;
+            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
+                object.stepNumRule = options.enums === String ? $root.Types.StepNumRule[message.stepNumRule] : message.stepNumRule;
+            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
+                object.stepNum = options.json && !isFinite(message.stepNum) ? String(message.stepNum) : message.stepNum;
+            return object;
+        };
+
+        /**
+         * Converts this StepParameters to JSON.
+         * @function toJSON
+         * @memberof Types.StepParameters
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        StepParameters.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return StepParameters;
+    })();
+
     Types.TreadParameters = (function() {
 
         /**
@@ -3602,6 +4116,7 @@ export const Types = $root.Types = (() => {
          * @property {boolean|null} [doubleFaceMaterial] TreadParameters doubleFaceMaterial
          * @property {Types.NossingType|null} [nossingType] TreadParameters nossingType
          * @property {number|null} [nossing] TreadParameters nossing
+         * @property {number|null} [sideNossing] TreadParameters sideNossing
          */
 
         /**
@@ -3660,6 +4175,14 @@ export const Types = $root.Types = (() => {
         TreadParameters.prototype.nossing = 0;
 
         /**
+         * TreadParameters sideNossing.
+         * @member {number} sideNossing
+         * @memberof Types.TreadParameters
+         * @instance
+         */
+        TreadParameters.prototype.sideNossing = 0;
+
+        /**
          * Creates a new TreadParameters instance using the specified properties.
          * @function create
          * @memberof Types.TreadParameters
@@ -3693,6 +4216,8 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 4, wireType 0 =*/32).int32(message.nossingType);
             if (message.nossing != null && Object.hasOwnProperty.call(message, "nossing"))
                 writer.uint32(/* id 5, wireType 5 =*/45).float(message.nossing);
+            if (message.sideNossing != null && Object.hasOwnProperty.call(message, "sideNossing"))
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.sideNossing);
             return writer;
         };
 
@@ -3741,6 +4266,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 5:
                     message.nossing = reader.float();
+                    break;
+                case 6:
+                    message.sideNossing = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -3801,6 +4329,9 @@ export const Types = $root.Types = (() => {
             if (message.nossing != null && message.hasOwnProperty("nossing"))
                 if (typeof message.nossing !== "number")
                     return "nossing: number expected";
+            if (message.sideNossing != null && message.hasOwnProperty("sideNossing"))
+                if (typeof message.sideNossing !== "number")
+                    return "sideNossing: number expected";
             return null;
         };
 
@@ -3845,6 +4376,8 @@ export const Types = $root.Types = (() => {
             }
             if (object.nossing != null)
                 message.nossing = Number(object.nossing);
+            if (object.sideNossing != null)
+                message.sideNossing = Number(object.sideNossing);
             return message;
         };
 
@@ -3867,6 +4400,7 @@ export const Types = $root.Types = (() => {
                 object.doubleFaceMaterial = false;
                 object.nossingType = options.enums === String ? "nph" : 0;
                 object.nossing = 0;
+                object.sideNossing = 0;
             }
             if (message.depth != null && message.hasOwnProperty("depth"))
                 object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
@@ -3878,6 +4412,8 @@ export const Types = $root.Types = (() => {
                 object.nossingType = options.enums === String ? $root.Types.NossingType[message.nossingType] : message.nossingType;
             if (message.nossing != null && message.hasOwnProperty("nossing"))
                 object.nossing = options.json && !isFinite(message.nossing) ? String(message.nossing) : message.nossing;
+            if (message.sideNossing != null && message.hasOwnProperty("sideNossing"))
+                object.sideNossing = options.json && !isFinite(message.sideNossing) ? String(message.sideNossing) : message.sideNossing;
             return object;
         };
 
@@ -3893,6 +4429,166 @@ export const Types = $root.Types = (() => {
         };
 
         return TreadParameters;
+    })();
+
+    Types.Landing = (function() {
+
+        /**
+         * Properties of a Landing.
+         * @memberof Types
+         * @interface ILanding
+         */
+
+        /**
+         * Constructs a new Landing.
+         * @memberof Types
+         * @classdesc Represents a Landing.
+         * @implements ILanding
+         * @constructor
+         * @param {Types.ILanding=} [properties] Properties to set
+         */
+        function Landing(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Creates a new Landing instance using the specified properties.
+         * @function create
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.ILanding=} [properties] Properties to set
+         * @returns {Types.Landing} Landing instance
+         */
+        Landing.create = function create(properties) {
+            return new Landing(properties);
+        };
+
+        /**
+         * Encodes the specified Landing message. Does not implicitly {@link Types.Landing.verify|verify} messages.
+         * @function encode
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.ILanding} message Landing message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Landing.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Landing message, length delimited. Does not implicitly {@link Types.Landing.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.ILanding} message Landing message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Landing.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Landing message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.Landing
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.Landing} Landing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Landing.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.Landing();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Landing message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.Landing
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.Landing} Landing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Landing.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Landing message.
+         * @function verify
+         * @memberof Types.Landing
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Landing.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            return null;
+        };
+
+        /**
+         * Creates a Landing message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.Landing
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.Landing} Landing
+         */
+        Landing.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.Landing)
+                return object;
+            return new $root.Types.Landing();
+        };
+
+        /**
+         * Creates a plain object from a Landing message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.Landing} message Landing
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Landing.toObject = function toObject() {
+            return {};
+        };
+
+        /**
+         * Converts this Landing to JSON.
+         * @function toJSON
+         * @memberof Types.Landing
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Landing.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return Landing;
     })();
 
     Types.Riser = (function() {
@@ -4088,6 +4784,8 @@ export const Types = $root.Types = (() => {
          * Properties of a RiserParameters.
          * @memberof Types
          * @interface IRiserParameters
+         * @property {boolean|null} [riserExist] RiserParameters riserExist
+         * @property {number|null} [depth] RiserParameters depth
          */
 
         /**
@@ -4104,6 +4802,22 @@ export const Types = $root.Types = (() => {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * RiserParameters riserExist.
+         * @member {boolean} riserExist
+         * @memberof Types.RiserParameters
+         * @instance
+         */
+        RiserParameters.prototype.riserExist = false;
+
+        /**
+         * RiserParameters depth.
+         * @member {number} depth
+         * @memberof Types.RiserParameters
+         * @instance
+         */
+        RiserParameters.prototype.depth = 0;
 
         /**
          * Creates a new RiserParameters instance using the specified properties.
@@ -4129,6 +4843,10 @@ export const Types = $root.Types = (() => {
         RiserParameters.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.riserExist != null && Object.hasOwnProperty.call(message, "riserExist"))
+                writer.uint32(/* id 1, wireType 0 =*/8).bool(message.riserExist);
+            if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.depth);
             return writer;
         };
 
@@ -4163,6 +4881,12 @@ export const Types = $root.Types = (() => {
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 1:
+                    message.riserExist = reader.bool();
+                    break;
+                case 2:
+                    message.depth = reader.float();
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4198,6 +4922,12 @@ export const Types = $root.Types = (() => {
         RiserParameters.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.riserExist != null && message.hasOwnProperty("riserExist"))
+                if (typeof message.riserExist !== "boolean")
+                    return "riserExist: boolean expected";
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                if (typeof message.depth !== "number")
+                    return "depth: number expected";
             return null;
         };
 
@@ -4212,7 +4942,12 @@ export const Types = $root.Types = (() => {
         RiserParameters.fromObject = function fromObject(object) {
             if (object instanceof $root.Types.RiserParameters)
                 return object;
-            return new $root.Types.RiserParameters();
+            let message = new $root.Types.RiserParameters();
+            if (object.riserExist != null)
+                message.riserExist = Boolean(object.riserExist);
+            if (object.depth != null)
+                message.depth = Number(object.depth);
+            return message;
         };
 
         /**
@@ -4224,8 +4959,19 @@ export const Types = $root.Types = (() => {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        RiserParameters.toObject = function toObject() {
-            return {};
+        RiserParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.riserExist = false;
+                object.depth = 0;
+            }
+            if (message.riserExist != null && message.hasOwnProperty("riserExist"))
+                object.riserExist = message.riserExist;
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
+            return object;
         };
 
         /**
@@ -4240,6 +4986,2011 @@ export const Types = $root.Types = (() => {
         };
 
         return RiserParameters;
+    })();
+
+    Types.ObjData = (function() {
+
+        /**
+         * Properties of an ObjData.
+         * @memberof Types
+         * @interface IObjData
+         * @property {string|null} [model_path] ObjData model_path
+         * @property {string|null} [img_path] ObjData img_path
+         * @property {string|null} [max_path] ObjData max_path
+         */
+
+        /**
+         * Constructs a new ObjData.
+         * @memberof Types
+         * @classdesc Represents an ObjData.
+         * @implements IObjData
+         * @constructor
+         * @param {Types.IObjData=} [properties] Properties to set
+         */
+        function ObjData(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * ObjData model_path.
+         * @member {string} model_path
+         * @memberof Types.ObjData
+         * @instance
+         */
+        ObjData.prototype.model_path = "";
+
+        /**
+         * ObjData img_path.
+         * @member {string} img_path
+         * @memberof Types.ObjData
+         * @instance
+         */
+        ObjData.prototype.img_path = "";
+
+        /**
+         * ObjData max_path.
+         * @member {string} max_path
+         * @memberof Types.ObjData
+         * @instance
+         */
+        ObjData.prototype.max_path = "";
+
+        /**
+         * Creates a new ObjData instance using the specified properties.
+         * @function create
+         * @memberof Types.ObjData
+         * @static
+         * @param {Types.IObjData=} [properties] Properties to set
+         * @returns {Types.ObjData} ObjData instance
+         */
+        ObjData.create = function create(properties) {
+            return new ObjData(properties);
+        };
+
+        /**
+         * Encodes the specified ObjData message. Does not implicitly {@link Types.ObjData.verify|verify} messages.
+         * @function encode
+         * @memberof Types.ObjData
+         * @static
+         * @param {Types.IObjData} message ObjData message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        ObjData.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.model_path != null && Object.hasOwnProperty.call(message, "model_path"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.model_path);
+            if (message.img_path != null && Object.hasOwnProperty.call(message, "img_path"))
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.img_path);
+            if (message.max_path != null && Object.hasOwnProperty.call(message, "max_path"))
+                writer.uint32(/* id 3, wireType 2 =*/26).string(message.max_path);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified ObjData message, length delimited. Does not implicitly {@link Types.ObjData.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.ObjData
+         * @static
+         * @param {Types.IObjData} message ObjData message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        ObjData.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an ObjData message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.ObjData
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.ObjData} ObjData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        ObjData.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.ObjData();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.model_path = reader.string();
+                    break;
+                case 2:
+                    message.img_path = reader.string();
+                    break;
+                case 3:
+                    message.max_path = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an ObjData message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.ObjData
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.ObjData} ObjData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        ObjData.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an ObjData message.
+         * @function verify
+         * @memberof Types.ObjData
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        ObjData.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.model_path != null && message.hasOwnProperty("model_path"))
+                if (!$util.isString(message.model_path))
+                    return "model_path: string expected";
+            if (message.img_path != null && message.hasOwnProperty("img_path"))
+                if (!$util.isString(message.img_path))
+                    return "img_path: string expected";
+            if (message.max_path != null && message.hasOwnProperty("max_path"))
+                if (!$util.isString(message.max_path))
+                    return "max_path: string expected";
+            return null;
+        };
+
+        /**
+         * Creates an ObjData message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.ObjData
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.ObjData} ObjData
+         */
+        ObjData.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.ObjData)
+                return object;
+            let message = new $root.Types.ObjData();
+            if (object.model_path != null)
+                message.model_path = String(object.model_path);
+            if (object.img_path != null)
+                message.img_path = String(object.img_path);
+            if (object.max_path != null)
+                message.max_path = String(object.max_path);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an ObjData message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.ObjData
+         * @static
+         * @param {Types.ObjData} message ObjData
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        ObjData.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.model_path = "";
+                object.img_path = "";
+                object.max_path = "";
+            }
+            if (message.model_path != null && message.hasOwnProperty("model_path"))
+                object.model_path = message.model_path;
+            if (message.img_path != null && message.hasOwnProperty("img_path"))
+                object.img_path = message.img_path;
+            if (message.max_path != null && message.hasOwnProperty("max_path"))
+                object.max_path = message.max_path;
+            return object;
+        };
+
+        /**
+         * Converts this ObjData to JSON.
+         * @function toJSON
+         * @memberof Types.ObjData
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        ObjData.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return ObjData;
+    })();
+
+    Types.SmallColumn = (function() {
+
+        /**
+         * Properties of a SmallColumn.
+         * @memberof Types
+         * @interface ISmallColumn
+         * @property {string|null} [uuid] SmallColumn uuid
+         * @property {Types.IVector3|null} [size] SmallColumn size
+         * @property {Types.IVector3|null} [position] SmallColumn position
+         * @property {Types.IVector3|null} [rotation] SmallColumn rotation
+         */
+
+        /**
+         * Constructs a new SmallColumn.
+         * @memberof Types
+         * @classdesc Represents a SmallColumn.
+         * @implements ISmallColumn
+         * @constructor
+         * @param {Types.ISmallColumn=} [properties] Properties to set
+         */
+        function SmallColumn(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SmallColumn uuid.
+         * @member {string} uuid
+         * @memberof Types.SmallColumn
+         * @instance
+         */
+        SmallColumn.prototype.uuid = "";
+
+        /**
+         * SmallColumn size.
+         * @member {Types.IVector3|null|undefined} size
+         * @memberof Types.SmallColumn
+         * @instance
+         */
+        SmallColumn.prototype.size = null;
+
+        /**
+         * SmallColumn position.
+         * @member {Types.IVector3|null|undefined} position
+         * @memberof Types.SmallColumn
+         * @instance
+         */
+        SmallColumn.prototype.position = null;
+
+        /**
+         * SmallColumn rotation.
+         * @member {Types.IVector3|null|undefined} rotation
+         * @memberof Types.SmallColumn
+         * @instance
+         */
+        SmallColumn.prototype.rotation = null;
+
+        /**
+         * Creates a new SmallColumn instance using the specified properties.
+         * @function create
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {Types.ISmallColumn=} [properties] Properties to set
+         * @returns {Types.SmallColumn} SmallColumn instance
+         */
+        SmallColumn.create = function create(properties) {
+            return new SmallColumn(properties);
+        };
+
+        /**
+         * Encodes the specified SmallColumn message. Does not implicitly {@link Types.SmallColumn.verify|verify} messages.
+         * @function encode
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {Types.ISmallColumn} message SmallColumn message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SmallColumn.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.size != null && Object.hasOwnProperty.call(message, "size"))
+                $root.Types.Vector3.encode(message.size, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
+                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.rotation != null && Object.hasOwnProperty.call(message, "rotation"))
+                $root.Types.Vector3.encode(message.rotation, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SmallColumn message, length delimited. Does not implicitly {@link Types.SmallColumn.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {Types.ISmallColumn} message SmallColumn message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SmallColumn.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SmallColumn message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.SmallColumn} SmallColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SmallColumn.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.SmallColumn();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
+                    message.size = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.rotation = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a SmallColumn message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.SmallColumn} SmallColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SmallColumn.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SmallColumn message.
+         * @function verify
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SmallColumn.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.size != null && message.hasOwnProperty("size")) {
+                let error = $root.Types.Vector3.verify(message.size);
+                if (error)
+                    return "size." + error;
+            }
+            if (message.position != null && message.hasOwnProperty("position")) {
+                let error = $root.Types.Vector3.verify(message.position);
+                if (error)
+                    return "position." + error;
+            }
+            if (message.rotation != null && message.hasOwnProperty("rotation")) {
+                let error = $root.Types.Vector3.verify(message.rotation);
+                if (error)
+                    return "rotation." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a SmallColumn message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.SmallColumn} SmallColumn
+         */
+        SmallColumn.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.SmallColumn)
+                return object;
+            let message = new $root.Types.SmallColumn();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            if (object.size != null) {
+                if (typeof object.size !== "object")
+                    throw TypeError(".Types.SmallColumn.size: object expected");
+                message.size = $root.Types.Vector3.fromObject(object.size);
+            }
+            if (object.position != null) {
+                if (typeof object.position !== "object")
+                    throw TypeError(".Types.SmallColumn.position: object expected");
+                message.position = $root.Types.Vector3.fromObject(object.position);
+            }
+            if (object.rotation != null) {
+                if (typeof object.rotation !== "object")
+                    throw TypeError(".Types.SmallColumn.rotation: object expected");
+                message.rotation = $root.Types.Vector3.fromObject(object.rotation);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SmallColumn message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.SmallColumn
+         * @static
+         * @param {Types.SmallColumn} message SmallColumn
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SmallColumn.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.uuid = "";
+                object.size = null;
+                object.position = null;
+                object.rotation = null;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.size != null && message.hasOwnProperty("size"))
+                object.size = $root.Types.Vector3.toObject(message.size, options);
+            if (message.position != null && message.hasOwnProperty("position"))
+                object.position = $root.Types.Vector3.toObject(message.position, options);
+            if (message.rotation != null && message.hasOwnProperty("rotation"))
+                object.rotation = $root.Types.Vector3.toObject(message.rotation, options);
+            return object;
+        };
+
+        /**
+         * Converts this SmallColumn to JSON.
+         * @function toJSON
+         * @memberof Types.SmallColumn
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SmallColumn.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return SmallColumn;
+    })();
+
+    Types.SmallColParameters = (function() {
+
+        /**
+         * Properties of a SmallColParameters.
+         * @memberof Types
+         * @interface ISmallColParameters
+         * @property {Types.IObjData|null} [source] SmallColParameters source
+         * @property {Types.ArrangeRule|null} [arrange_rule] SmallColParameters arrange_rule
+         * @property {Types.IMaterial|null} [material] SmallColParameters material
+         * @property {string|null} [specification] SmallColParameters specification
+         */
+
+        /**
+         * Constructs a new SmallColParameters.
+         * @memberof Types
+         * @classdesc Represents a SmallColParameters.
+         * @implements ISmallColParameters
+         * @constructor
+         * @param {Types.ISmallColParameters=} [properties] Properties to set
+         */
+        function SmallColParameters(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SmallColParameters source.
+         * @member {Types.IObjData|null|undefined} source
+         * @memberof Types.SmallColParameters
+         * @instance
+         */
+        SmallColParameters.prototype.source = null;
+
+        /**
+         * SmallColParameters arrange_rule.
+         * @member {Types.ArrangeRule} arrange_rule
+         * @memberof Types.SmallColParameters
+         * @instance
+         */
+        SmallColParameters.prototype.arrange_rule = 0;
+
+        /**
+         * SmallColParameters material.
+         * @member {Types.IMaterial|null|undefined} material
+         * @memberof Types.SmallColParameters
+         * @instance
+         */
+        SmallColParameters.prototype.material = null;
+
+        /**
+         * SmallColParameters specification.
+         * @member {string} specification
+         * @memberof Types.SmallColParameters
+         * @instance
+         */
+        SmallColParameters.prototype.specification = "";
+
+        /**
+         * Creates a new SmallColParameters instance using the specified properties.
+         * @function create
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {Types.ISmallColParameters=} [properties] Properties to set
+         * @returns {Types.SmallColParameters} SmallColParameters instance
+         */
+        SmallColParameters.create = function create(properties) {
+            return new SmallColParameters(properties);
+        };
+
+        /**
+         * Encodes the specified SmallColParameters message. Does not implicitly {@link Types.SmallColParameters.verify|verify} messages.
+         * @function encode
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {Types.ISmallColParameters} message SmallColParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SmallColParameters.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.source != null && Object.hasOwnProperty.call(message, "source"))
+                $root.Types.ObjData.encode(message.source, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.arrange_rule != null && Object.hasOwnProperty.call(message, "arrange_rule"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.arrange_rule);
+            if (message.material != null && Object.hasOwnProperty.call(message, "material"))
+                $root.Types.Material.encode(message.material, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.specification != null && Object.hasOwnProperty.call(message, "specification"))
+                writer.uint32(/* id 4, wireType 2 =*/34).string(message.specification);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SmallColParameters message, length delimited. Does not implicitly {@link Types.SmallColParameters.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {Types.ISmallColParameters} message SmallColParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SmallColParameters.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SmallColParameters message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.SmallColParameters} SmallColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SmallColParameters.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.SmallColParameters();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.source = $root.Types.ObjData.decode(reader, reader.uint32());
+                    break;
+                case 2:
+                    message.arrange_rule = reader.int32();
+                    break;
+                case 3:
+                    message.material = $root.Types.Material.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.specification = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a SmallColParameters message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.SmallColParameters} SmallColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SmallColParameters.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SmallColParameters message.
+         * @function verify
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SmallColParameters.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.source != null && message.hasOwnProperty("source")) {
+                let error = $root.Types.ObjData.verify(message.source);
+                if (error)
+                    return "source." + error;
+            }
+            if (message.arrange_rule != null && message.hasOwnProperty("arrange_rule"))
+                switch (message.arrange_rule) {
+                default:
+                    return "arrange_rule: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            if (message.material != null && message.hasOwnProperty("material")) {
+                let error = $root.Types.Material.verify(message.material);
+                if (error)
+                    return "material." + error;
+            }
+            if (message.specification != null && message.hasOwnProperty("specification"))
+                if (!$util.isString(message.specification))
+                    return "specification: string expected";
+            return null;
+        };
+
+        /**
+         * Creates a SmallColParameters message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.SmallColParameters} SmallColParameters
+         */
+        SmallColParameters.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.SmallColParameters)
+                return object;
+            let message = new $root.Types.SmallColParameters();
+            if (object.source != null) {
+                if (typeof object.source !== "object")
+                    throw TypeError(".Types.SmallColParameters.source: object expected");
+                message.source = $root.Types.ObjData.fromObject(object.source);
+            }
+            switch (object.arrange_rule) {
+            case "arph":
+            case 0:
+                message.arrange_rule = 0;
+                break;
+            case "arrFour":
+            case 1:
+                message.arrange_rule = 1;
+                break;
+            case "arrThree":
+            case 2:
+                message.arrange_rule = 2;
+                break;
+            }
+            if (object.material != null) {
+                if (typeof object.material !== "object")
+                    throw TypeError(".Types.SmallColParameters.material: object expected");
+                message.material = $root.Types.Material.fromObject(object.material);
+            }
+            if (object.specification != null)
+                message.specification = String(object.specification);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SmallColParameters message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.SmallColParameters
+         * @static
+         * @param {Types.SmallColParameters} message SmallColParameters
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SmallColParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.source = null;
+                object.arrange_rule = options.enums === String ? "arph" : 0;
+                object.material = null;
+                object.specification = "";
+            }
+            if (message.source != null && message.hasOwnProperty("source"))
+                object.source = $root.Types.ObjData.toObject(message.source, options);
+            if (message.arrange_rule != null && message.hasOwnProperty("arrange_rule"))
+                object.arrange_rule = options.enums === String ? $root.Types.ArrangeRule[message.arrange_rule] : message.arrange_rule;
+            if (message.material != null && message.hasOwnProperty("material"))
+                object.material = $root.Types.Material.toObject(message.material, options);
+            if (message.specification != null && message.hasOwnProperty("specification"))
+                object.specification = message.specification;
+            return object;
+        };
+
+        /**
+         * Converts this SmallColParameters to JSON.
+         * @function toJSON
+         * @memberof Types.SmallColParameters
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SmallColParameters.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return SmallColParameters;
+    })();
+
+    Types.BigColumn = (function() {
+
+        /**
+         * Properties of a BigColumn.
+         * @memberof Types
+         * @interface IBigColumn
+         * @property {string|null} [uuid] BigColumn uuid
+         * @property {Types.IVector3|null} [position] BigColumn position
+         * @property {Types.IVector3|null} [size] BigColumn size
+         * @property {Types.IVector3|null} [rotation] BigColumn rotation
+         * @property {Types.IBigColParameters|null} [paras] BigColumn paras
+         */
+
+        /**
+         * Constructs a new BigColumn.
+         * @memberof Types
+         * @classdesc Represents a BigColumn.
+         * @implements IBigColumn
+         * @constructor
+         * @param {Types.IBigColumn=} [properties] Properties to set
+         */
+        function BigColumn(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * BigColumn uuid.
+         * @member {string} uuid
+         * @memberof Types.BigColumn
+         * @instance
+         */
+        BigColumn.prototype.uuid = "";
+
+        /**
+         * BigColumn position.
+         * @member {Types.IVector3|null|undefined} position
+         * @memberof Types.BigColumn
+         * @instance
+         */
+        BigColumn.prototype.position = null;
+
+        /**
+         * BigColumn size.
+         * @member {Types.IVector3|null|undefined} size
+         * @memberof Types.BigColumn
+         * @instance
+         */
+        BigColumn.prototype.size = null;
+
+        /**
+         * BigColumn rotation.
+         * @member {Types.IVector3|null|undefined} rotation
+         * @memberof Types.BigColumn
+         * @instance
+         */
+        BigColumn.prototype.rotation = null;
+
+        /**
+         * BigColumn paras.
+         * @member {Types.IBigColParameters|null|undefined} paras
+         * @memberof Types.BigColumn
+         * @instance
+         */
+        BigColumn.prototype.paras = null;
+
+        /**
+         * Creates a new BigColumn instance using the specified properties.
+         * @function create
+         * @memberof Types.BigColumn
+         * @static
+         * @param {Types.IBigColumn=} [properties] Properties to set
+         * @returns {Types.BigColumn} BigColumn instance
+         */
+        BigColumn.create = function create(properties) {
+            return new BigColumn(properties);
+        };
+
+        /**
+         * Encodes the specified BigColumn message. Does not implicitly {@link Types.BigColumn.verify|verify} messages.
+         * @function encode
+         * @memberof Types.BigColumn
+         * @static
+         * @param {Types.IBigColumn} message BigColumn message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        BigColumn.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
+                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.size != null && Object.hasOwnProperty.call(message, "size"))
+                $root.Types.Vector3.encode(message.size, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.rotation != null && Object.hasOwnProperty.call(message, "rotation"))
+                $root.Types.Vector3.encode(message.rotation, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.paras != null && Object.hasOwnProperty.call(message, "paras"))
+                $root.Types.BigColParameters.encode(message.paras, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified BigColumn message, length delimited. Does not implicitly {@link Types.BigColumn.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.BigColumn
+         * @static
+         * @param {Types.IBigColumn} message BigColumn message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        BigColumn.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a BigColumn message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.BigColumn
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.BigColumn} BigColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        BigColumn.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.BigColumn();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
+                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    message.size = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.rotation = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 5:
+                    message.paras = $root.Types.BigColParameters.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a BigColumn message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.BigColumn
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.BigColumn} BigColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        BigColumn.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a BigColumn message.
+         * @function verify
+         * @memberof Types.BigColumn
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        BigColumn.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.position != null && message.hasOwnProperty("position")) {
+                let error = $root.Types.Vector3.verify(message.position);
+                if (error)
+                    return "position." + error;
+            }
+            if (message.size != null && message.hasOwnProperty("size")) {
+                let error = $root.Types.Vector3.verify(message.size);
+                if (error)
+                    return "size." + error;
+            }
+            if (message.rotation != null && message.hasOwnProperty("rotation")) {
+                let error = $root.Types.Vector3.verify(message.rotation);
+                if (error)
+                    return "rotation." + error;
+            }
+            if (message.paras != null && message.hasOwnProperty("paras")) {
+                let error = $root.Types.BigColParameters.verify(message.paras);
+                if (error)
+                    return "paras." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a BigColumn message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.BigColumn
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.BigColumn} BigColumn
+         */
+        BigColumn.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.BigColumn)
+                return object;
+            let message = new $root.Types.BigColumn();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            if (object.position != null) {
+                if (typeof object.position !== "object")
+                    throw TypeError(".Types.BigColumn.position: object expected");
+                message.position = $root.Types.Vector3.fromObject(object.position);
+            }
+            if (object.size != null) {
+                if (typeof object.size !== "object")
+                    throw TypeError(".Types.BigColumn.size: object expected");
+                message.size = $root.Types.Vector3.fromObject(object.size);
+            }
+            if (object.rotation != null) {
+                if (typeof object.rotation !== "object")
+                    throw TypeError(".Types.BigColumn.rotation: object expected");
+                message.rotation = $root.Types.Vector3.fromObject(object.rotation);
+            }
+            if (object.paras != null) {
+                if (typeof object.paras !== "object")
+                    throw TypeError(".Types.BigColumn.paras: object expected");
+                message.paras = $root.Types.BigColParameters.fromObject(object.paras);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a BigColumn message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.BigColumn
+         * @static
+         * @param {Types.BigColumn} message BigColumn
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        BigColumn.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.uuid = "";
+                object.position = null;
+                object.size = null;
+                object.rotation = null;
+                object.paras = null;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.position != null && message.hasOwnProperty("position"))
+                object.position = $root.Types.Vector3.toObject(message.position, options);
+            if (message.size != null && message.hasOwnProperty("size"))
+                object.size = $root.Types.Vector3.toObject(message.size, options);
+            if (message.rotation != null && message.hasOwnProperty("rotation"))
+                object.rotation = $root.Types.Vector3.toObject(message.rotation, options);
+            if (message.paras != null && message.hasOwnProperty("paras"))
+                object.paras = $root.Types.BigColParameters.toObject(message.paras, options);
+            return object;
+        };
+
+        /**
+         * Converts this BigColumn to JSON.
+         * @function toJSON
+         * @memberof Types.BigColumn
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        BigColumn.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return BigColumn;
+    })();
+
+    Types.BigColParameters = (function() {
+
+        /**
+         * Properties of a BigColParameters.
+         * @memberof Types
+         * @interface IBigColParameters
+         * @property {Types.IObjData|null} [source] BigColParameters source
+         * @property {Types.BigColumnPosType|null} [posType] BigColParameters posType
+         * @property {Types.IMaterial|null} [material] BigColParameters material
+         * @property {string|null} [specification] BigColParameters specification
+         */
+
+        /**
+         * Constructs a new BigColParameters.
+         * @memberof Types
+         * @classdesc Represents a BigColParameters.
+         * @implements IBigColParameters
+         * @constructor
+         * @param {Types.IBigColParameters=} [properties] Properties to set
+         */
+        function BigColParameters(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * BigColParameters source.
+         * @member {Types.IObjData|null|undefined} source
+         * @memberof Types.BigColParameters
+         * @instance
+         */
+        BigColParameters.prototype.source = null;
+
+        /**
+         * BigColParameters posType.
+         * @member {Types.BigColumnPosType} posType
+         * @memberof Types.BigColParameters
+         * @instance
+         */
+        BigColParameters.prototype.posType = 0;
+
+        /**
+         * BigColParameters material.
+         * @member {Types.IMaterial|null|undefined} material
+         * @memberof Types.BigColParameters
+         * @instance
+         */
+        BigColParameters.prototype.material = null;
+
+        /**
+         * BigColParameters specification.
+         * @member {string} specification
+         * @memberof Types.BigColParameters
+         * @instance
+         */
+        BigColParameters.prototype.specification = "";
+
+        /**
+         * Creates a new BigColParameters instance using the specified properties.
+         * @function create
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {Types.IBigColParameters=} [properties] Properties to set
+         * @returns {Types.BigColParameters} BigColParameters instance
+         */
+        BigColParameters.create = function create(properties) {
+            return new BigColParameters(properties);
+        };
+
+        /**
+         * Encodes the specified BigColParameters message. Does not implicitly {@link Types.BigColParameters.verify|verify} messages.
+         * @function encode
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {Types.IBigColParameters} message BigColParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        BigColParameters.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.source != null && Object.hasOwnProperty.call(message, "source"))
+                $root.Types.ObjData.encode(message.source, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.posType != null && Object.hasOwnProperty.call(message, "posType"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.posType);
+            if (message.material != null && Object.hasOwnProperty.call(message, "material"))
+                $root.Types.Material.encode(message.material, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.specification != null && Object.hasOwnProperty.call(message, "specification"))
+                writer.uint32(/* id 4, wireType 2 =*/34).string(message.specification);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified BigColParameters message, length delimited. Does not implicitly {@link Types.BigColParameters.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {Types.IBigColParameters} message BigColParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        BigColParameters.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a BigColParameters message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.BigColParameters} BigColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        BigColParameters.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.BigColParameters();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.source = $root.Types.ObjData.decode(reader, reader.uint32());
+                    break;
+                case 2:
+                    message.posType = reader.int32();
+                    break;
+                case 3:
+                    message.material = $root.Types.Material.decode(reader, reader.uint32());
+                    break;
+                case 4:
+                    message.specification = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a BigColParameters message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.BigColParameters} BigColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        BigColParameters.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a BigColParameters message.
+         * @function verify
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        BigColParameters.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.source != null && message.hasOwnProperty("source")) {
+                let error = $root.Types.ObjData.verify(message.source);
+                if (error)
+                    return "source." + error;
+            }
+            if (message.posType != null && message.hasOwnProperty("posType"))
+                switch (message.posType) {
+                default:
+                    return "posType: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    break;
+                }
+            if (message.material != null && message.hasOwnProperty("material")) {
+                let error = $root.Types.Material.verify(message.material);
+                if (error)
+                    return "material." + error;
+            }
+            if (message.specification != null && message.hasOwnProperty("specification"))
+                if (!$util.isString(message.specification))
+                    return "specification: string expected";
+            return null;
+        };
+
+        /**
+         * Creates a BigColParameters message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.BigColParameters} BigColParameters
+         */
+        BigColParameters.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.BigColParameters)
+                return object;
+            let message = new $root.Types.BigColParameters();
+            if (object.source != null) {
+                if (typeof object.source !== "object")
+                    throw TypeError(".Types.BigColParameters.source: object expected");
+                message.source = $root.Types.ObjData.fromObject(object.source);
+            }
+            switch (object.posType) {
+            case "bcp_ph":
+            case 0:
+                message.posType = 0;
+                break;
+            case "bcp_floor":
+            case 1:
+                message.posType = 1;
+                break;
+            case "bcp_first":
+            case 2:
+                message.posType = 2;
+                break;
+            case "bcp_second":
+            case 3:
+                message.posType = 3;
+                break;
+            }
+            if (object.material != null) {
+                if (typeof object.material !== "object")
+                    throw TypeError(".Types.BigColParameters.material: object expected");
+                message.material = $root.Types.Material.fromObject(object.material);
+            }
+            if (object.specification != null)
+                message.specification = String(object.specification);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a BigColParameters message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.BigColParameters
+         * @static
+         * @param {Types.BigColParameters} message BigColParameters
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        BigColParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.source = null;
+                object.posType = options.enums === String ? "bcp_ph" : 0;
+                object.material = null;
+                object.specification = "";
+            }
+            if (message.source != null && message.hasOwnProperty("source"))
+                object.source = $root.Types.ObjData.toObject(message.source, options);
+            if (message.posType != null && message.hasOwnProperty("posType"))
+                object.posType = options.enums === String ? $root.Types.BigColumnPosType[message.posType] : message.posType;
+            if (message.material != null && message.hasOwnProperty("material"))
+                object.material = $root.Types.Material.toObject(message.material, options);
+            if (message.specification != null && message.hasOwnProperty("specification"))
+                object.specification = message.specification;
+            return object;
+        };
+
+        /**
+         * Converts this BigColParameters to JSON.
+         * @function toJSON
+         * @memberof Types.BigColParameters
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        BigColParameters.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return BigColParameters;
+    })();
+
+    Types.DxfData = (function() {
+
+        /**
+         * Properties of a DxfData.
+         * @memberof Types
+         * @interface IDxfData
+         */
+
+        /**
+         * Constructs a new DxfData.
+         * @memberof Types
+         * @classdesc Represents a DxfData.
+         * @implements IDxfData
+         * @constructor
+         * @param {Types.IDxfData=} [properties] Properties to set
+         */
+        function DxfData(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Creates a new DxfData instance using the specified properties.
+         * @function create
+         * @memberof Types.DxfData
+         * @static
+         * @param {Types.IDxfData=} [properties] Properties to set
+         * @returns {Types.DxfData} DxfData instance
+         */
+        DxfData.create = function create(properties) {
+            return new DxfData(properties);
+        };
+
+        /**
+         * Encodes the specified DxfData message. Does not implicitly {@link Types.DxfData.verify|verify} messages.
+         * @function encode
+         * @memberof Types.DxfData
+         * @static
+         * @param {Types.IDxfData} message DxfData message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        DxfData.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified DxfData message, length delimited. Does not implicitly {@link Types.DxfData.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.DxfData
+         * @static
+         * @param {Types.IDxfData} message DxfData message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        DxfData.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a DxfData message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.DxfData
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.DxfData} DxfData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        DxfData.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.DxfData();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a DxfData message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.DxfData
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.DxfData} DxfData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        DxfData.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a DxfData message.
+         * @function verify
+         * @memberof Types.DxfData
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        DxfData.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            return null;
+        };
+
+        /**
+         * Creates a DxfData message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.DxfData
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.DxfData} DxfData
+         */
+        DxfData.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.DxfData)
+                return object;
+            return new $root.Types.DxfData();
+        };
+
+        /**
+         * Creates a plain object from a DxfData message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.DxfData
+         * @static
+         * @param {Types.DxfData} message DxfData
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        DxfData.toObject = function toObject() {
+            return {};
+        };
+
+        /**
+         * Converts this DxfData to JSON.
+         * @function toJSON
+         * @memberof Types.DxfData
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        DxfData.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return DxfData;
+    })();
+
+    Types.Handrail = (function() {
+
+        /**
+         * Properties of a Handrail.
+         * @memberof Types
+         * @interface IHandrail
+         * @property {string|null} [uuid] Handrail uuid
+         * @property {Types.IOutline|null} [route] Handrail route
+         * @property {number|null} [width] Handrail width
+         */
+
+        /**
+         * Constructs a new Handrail.
+         * @memberof Types
+         * @classdesc Represents a Handrail.
+         * @implements IHandrail
+         * @constructor
+         * @param {Types.IHandrail=} [properties] Properties to set
+         */
+        function Handrail(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Handrail uuid.
+         * @member {string} uuid
+         * @memberof Types.Handrail
+         * @instance
+         */
+        Handrail.prototype.uuid = "";
+
+        /**
+         * Handrail route.
+         * @member {Types.IOutline|null|undefined} route
+         * @memberof Types.Handrail
+         * @instance
+         */
+        Handrail.prototype.route = null;
+
+        /**
+         * Handrail width.
+         * @member {number} width
+         * @memberof Types.Handrail
+         * @instance
+         */
+        Handrail.prototype.width = 0;
+
+        /**
+         * Creates a new Handrail instance using the specified properties.
+         * @function create
+         * @memberof Types.Handrail
+         * @static
+         * @param {Types.IHandrail=} [properties] Properties to set
+         * @returns {Types.Handrail} Handrail instance
+         */
+        Handrail.create = function create(properties) {
+            return new Handrail(properties);
+        };
+
+        /**
+         * Encodes the specified Handrail message. Does not implicitly {@link Types.Handrail.verify|verify} messages.
+         * @function encode
+         * @memberof Types.Handrail
+         * @static
+         * @param {Types.IHandrail} message Handrail message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Handrail.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.route != null && Object.hasOwnProperty.call(message, "route"))
+                $root.Types.Outline.encode(message.route, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.width);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Handrail message, length delimited. Does not implicitly {@link Types.Handrail.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.Handrail
+         * @static
+         * @param {Types.IHandrail} message Handrail message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Handrail.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Handrail message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.Handrail
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.Handrail} Handrail
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Handrail.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.Handrail();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
+                    message.route = $root.Types.Outline.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    message.width = reader.float();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Handrail message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.Handrail
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.Handrail} Handrail
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Handrail.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Handrail message.
+         * @function verify
+         * @memberof Types.Handrail
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Handrail.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.route != null && message.hasOwnProperty("route")) {
+                let error = $root.Types.Outline.verify(message.route);
+                if (error)
+                    return "route." + error;
+            }
+            if (message.width != null && message.hasOwnProperty("width"))
+                if (typeof message.width !== "number")
+                    return "width: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a Handrail message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.Handrail
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.Handrail} Handrail
+         */
+        Handrail.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.Handrail)
+                return object;
+            let message = new $root.Types.Handrail();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            if (object.route != null) {
+                if (typeof object.route !== "object")
+                    throw TypeError(".Types.Handrail.route: object expected");
+                message.route = $root.Types.Outline.fromObject(object.route);
+            }
+            if (object.width != null)
+                message.width = Number(object.width);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Handrail message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.Handrail
+         * @static
+         * @param {Types.Handrail} message Handrail
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Handrail.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.uuid = "";
+                object.route = null;
+                object.width = 0;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.route != null && message.hasOwnProperty("route"))
+                object.route = $root.Types.Outline.toObject(message.route, options);
+            if (message.width != null && message.hasOwnProperty("width"))
+                object.width = options.json && !isFinite(message.width) ? String(message.width) : message.width;
+            return object;
+        };
+
+        /**
+         * Converts this Handrail to JSON.
+         * @function toJSON
+         * @memberof Types.Handrail
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Handrail.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return Handrail;
+    })();
+
+    Types.HandrailParameters = (function() {
+
+        /**
+         * Properties of a HandrailParameters.
+         * @memberof Types
+         * @interface IHandrailParameters
+         * @property {number|null} [height] HandrailParameters height
+         * @property {Types.IDxfData|null} [source] HandrailParameters source
+         * @property {Types.IMaterial|null} [material] HandrailParameters material
+         */
+
+        /**
+         * Constructs a new HandrailParameters.
+         * @memberof Types
+         * @classdesc Represents a HandrailParameters.
+         * @implements IHandrailParameters
+         * @constructor
+         * @param {Types.IHandrailParameters=} [properties] Properties to set
+         */
+        function HandrailParameters(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * HandrailParameters height.
+         * @member {number} height
+         * @memberof Types.HandrailParameters
+         * @instance
+         */
+        HandrailParameters.prototype.height = 0;
+
+        /**
+         * HandrailParameters source.
+         * @member {Types.IDxfData|null|undefined} source
+         * @memberof Types.HandrailParameters
+         * @instance
+         */
+        HandrailParameters.prototype.source = null;
+
+        /**
+         * HandrailParameters material.
+         * @member {Types.IMaterial|null|undefined} material
+         * @memberof Types.HandrailParameters
+         * @instance
+         */
+        HandrailParameters.prototype.material = null;
+
+        /**
+         * Creates a new HandrailParameters instance using the specified properties.
+         * @function create
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {Types.IHandrailParameters=} [properties] Properties to set
+         * @returns {Types.HandrailParameters} HandrailParameters instance
+         */
+        HandrailParameters.create = function create(properties) {
+            return new HandrailParameters(properties);
+        };
+
+        /**
+         * Encodes the specified HandrailParameters message. Does not implicitly {@link Types.HandrailParameters.verify|verify} messages.
+         * @function encode
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {Types.IHandrailParameters} message HandrailParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HandrailParameters.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
+                writer.uint32(/* id 1, wireType 5 =*/13).float(message.height);
+            if (message.source != null && Object.hasOwnProperty.call(message, "source"))
+                $root.Types.DxfData.encode(message.source, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.material != null && Object.hasOwnProperty.call(message, "material"))
+                $root.Types.Material.encode(message.material, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified HandrailParameters message, length delimited. Does not implicitly {@link Types.HandrailParameters.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {Types.IHandrailParameters} message HandrailParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HandrailParameters.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a HandrailParameters message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.HandrailParameters} HandrailParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HandrailParameters.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.HandrailParameters();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.height = reader.float();
+                    break;
+                case 2:
+                    message.source = $root.Types.DxfData.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    message.material = $root.Types.Material.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a HandrailParameters message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.HandrailParameters} HandrailParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HandrailParameters.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a HandrailParameters message.
+         * @function verify
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        HandrailParameters.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.height != null && message.hasOwnProperty("height"))
+                if (typeof message.height !== "number")
+                    return "height: number expected";
+            if (message.source != null && message.hasOwnProperty("source")) {
+                let error = $root.Types.DxfData.verify(message.source);
+                if (error)
+                    return "source." + error;
+            }
+            if (message.material != null && message.hasOwnProperty("material")) {
+                let error = $root.Types.Material.verify(message.material);
+                if (error)
+                    return "material." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a HandrailParameters message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.HandrailParameters} HandrailParameters
+         */
+        HandrailParameters.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.HandrailParameters)
+                return object;
+            let message = new $root.Types.HandrailParameters();
+            if (object.height != null)
+                message.height = Number(object.height);
+            if (object.source != null) {
+                if (typeof object.source !== "object")
+                    throw TypeError(".Types.HandrailParameters.source: object expected");
+                message.source = $root.Types.DxfData.fromObject(object.source);
+            }
+            if (object.material != null) {
+                if (typeof object.material !== "object")
+                    throw TypeError(".Types.HandrailParameters.material: object expected");
+                message.material = $root.Types.Material.fromObject(object.material);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a HandrailParameters message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.HandrailParameters
+         * @static
+         * @param {Types.HandrailParameters} message HandrailParameters
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        HandrailParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.height = 0;
+                object.source = null;
+                object.material = null;
+            }
+            if (message.height != null && message.hasOwnProperty("height"))
+                object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
+            if (message.source != null && message.hasOwnProperty("source"))
+                object.source = $root.Types.DxfData.toObject(message.source, options);
+            if (message.material != null && message.hasOwnProperty("material"))
+                object.material = $root.Types.Material.toObject(message.material, options);
+            return object;
+        };
+
+        /**
+         * Converts this HandrailParameters to JSON.
+         * @function toJSON
+         * @memberof Types.HandrailParameters
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        HandrailParameters.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return HandrailParameters;
     })();
 
     return Types;

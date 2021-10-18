@@ -1,5 +1,6 @@
 import { Types } from "../../types/stair_v2";
 import { BaseWidget } from "../base_widget";
+import d2_tool from "../d2_tool";
 import { Flight } from "./flight";
 
 export class Stair extends BaseWidget {
@@ -13,18 +14,18 @@ export class Stair extends BaseWidget {
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f))
     }
+    this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
   }
 
   draw () {
-    this.flights.forEach(f => {
-      f.draw()
-    })
-  }
-
-  addToStage () {
-    this.flights.forEach(f => {
-      f.addToStage()
-    })
+    this.sprite = new PIXI.Container()
+    for (const f of this.flights) {
+      let flightSprite = f.getSprite()
+      if (flightSprite) {
+        this.sprite.addChild(flightSprite)
+      }
+    }
+    /** 需设置整体精灵图的位置*/
   }
 }
