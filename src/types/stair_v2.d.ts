@@ -993,8 +993,20 @@ export namespace Types {
         /** Stair riserParameters */
         riserParameters?: (Types.IRiserParameters|null);
 
+        /** Stair stepParameters */
+        stepParameters?: (Types.IStepParameters|null);
+
+        /** Stair stepHeight */
+        stepHeight?: (number|null);
+
         /** Stair flights */
         flights?: (Types.IFlight[]|null);
+
+        /** Stair landings */
+        landings?: (Types.ILanding[]|null);
+
+        /** Stair position */
+        position?: (Types.IVector3|null);
     }
 
     /** Represents a Stair. */
@@ -1027,8 +1039,20 @@ export namespace Types {
         /** Stair riserParameters. */
         public riserParameters?: (Types.IRiserParameters|null);
 
+        /** Stair stepParameters. */
+        public stepParameters?: (Types.IStepParameters|null);
+
+        /** Stair stepHeight. */
+        public stepHeight: number;
+
         /** Stair flights. */
         public flights: Types.IFlight[];
+
+        /** Stair landings. */
+        public landings: Types.ILanding[];
+
+        /** Stair position. */
+        public position?: (Types.IVector3|null);
 
         /**
          * Creates a new Stair instance using the specified properties.
@@ -1107,20 +1131,11 @@ export namespace Types {
         /** Flight uuid */
         uuid?: (string|null);
 
-        /** Flight stepLength */
-        stepLength?: (number|null);
-
-        /** Flight stepWidth */
-        stepWidth?: (number|null);
-
         /** Flight stepHeight */
         stepHeight?: (number|null);
 
-        /** Flight stepNumRule */
-        stepNumRule?: (Types.StepNumRule|null);
-
-        /** Flight stepNum */
-        stepNum?: (number|null);
+        /** Flight stepParameters */
+        stepParameters?: (Types.IStepParameters|null);
 
         /** Flight treads */
         treads?: (Types.ITread[]|null);
@@ -1141,20 +1156,11 @@ export namespace Types {
         /** Flight uuid. */
         public uuid: string;
 
-        /** Flight stepLength. */
-        public stepLength: number;
-
-        /** Flight stepWidth. */
-        public stepWidth: number;
-
         /** Flight stepHeight. */
         public stepHeight: number;
 
-        /** Flight stepNumRule. */
-        public stepNumRule: Types.StepNumRule;
-
-        /** Flight stepNum. */
-        public stepNum: number;
+        /** Flight stepParameters. */
+        public stepParameters?: (Types.IStepParameters|null);
 
         /** Flight treads. */
         public treads: Types.ITread[];
@@ -1329,6 +1335,114 @@ export namespace Types {
         public toJSON(): { [k: string]: any };
     }
 
+    /** Properties of a StepParameters. */
+    interface IStepParameters {
+
+        /** StepParameters stepLength */
+        stepLength?: (number|null);
+
+        /** StepParameters stepWidth */
+        stepWidth?: (number|null);
+
+        /** StepParameters stepNumRule */
+        stepNumRule?: (Types.StepNumRule|null);
+
+        /** StepParameters stepNum */
+        stepNum?: (number|null);
+    }
+
+    /** Represents a StepParameters. */
+    class StepParameters implements IStepParameters {
+
+        /**
+         * Constructs a new StepParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IStepParameters);
+
+        /** StepParameters stepLength. */
+        public stepLength: number;
+
+        /** StepParameters stepWidth. */
+        public stepWidth: number;
+
+        /** StepParameters stepNumRule. */
+        public stepNumRule: Types.StepNumRule;
+
+        /** StepParameters stepNum. */
+        public stepNum: number;
+
+        /**
+         * Creates a new StepParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns StepParameters instance
+         */
+        public static create(properties?: Types.IStepParameters): Types.StepParameters;
+
+        /**
+         * Encodes the specified StepParameters message. Does not implicitly {@link Types.StepParameters.verify|verify} messages.
+         * @param message StepParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IStepParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified StepParameters message, length delimited. Does not implicitly {@link Types.StepParameters.verify|verify} messages.
+         * @param message StepParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IStepParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a StepParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns StepParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.StepParameters;
+
+        /**
+         * Decodes a StepParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns StepParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.StepParameters;
+
+        /**
+         * Verifies a StepParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a StepParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns StepParameters
+         */
+        public static fromObject(object: { [k: string]: any }): Types.StepParameters;
+
+        /**
+         * Creates a plain object from a StepParameters message. Also converts values to other types if specified.
+         * @param message StepParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.StepParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this StepParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
     /** Properties of a TreadParameters. */
     interface ITreadParameters {
 
@@ -1346,6 +1460,9 @@ export namespace Types {
 
         /** TreadParameters nossing */
         nossing?: (number|null);
+
+        /** TreadParameters sideNossing */
+        sideNossing?: (number|null);
     }
 
     /** Represents a TreadParameters. */
@@ -1371,6 +1488,9 @@ export namespace Types {
 
         /** TreadParameters nossing. */
         public nossing: number;
+
+        /** TreadParameters sideNossing. */
+        public sideNossing: number;
 
         /**
          * Creates a new TreadParameters instance using the specified properties.
@@ -1438,6 +1558,90 @@ export namespace Types {
 
         /**
          * Converts this TreadParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Landing. */
+    interface ILanding {
+    }
+
+    /** Represents a Landing. */
+    class Landing implements ILanding {
+
+        /**
+         * Constructs a new Landing.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ILanding);
+
+        /**
+         * Creates a new Landing instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Landing instance
+         */
+        public static create(properties?: Types.ILanding): Types.Landing;
+
+        /**
+         * Encodes the specified Landing message. Does not implicitly {@link Types.Landing.verify|verify} messages.
+         * @param message Landing message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ILanding, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Landing message, length delimited. Does not implicitly {@link Types.Landing.verify|verify} messages.
+         * @param message Landing message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ILanding, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Landing message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Landing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Landing;
+
+        /**
+         * Decodes a Landing message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Landing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Landing;
+
+        /**
+         * Verifies a Landing message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Landing message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Landing
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Landing;
+
+        /**
+         * Creates a plain object from a Landing message. Also converts values to other types if specified.
+         * @param message Landing
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Landing, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Landing to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
@@ -1535,6 +1739,12 @@ export namespace Types {
 
     /** Properties of a RiserParameters. */
     interface IRiserParameters {
+
+        /** RiserParameters riserExist */
+        riserExist?: (boolean|null);
+
+        /** RiserParameters depth */
+        depth?: (number|null);
     }
 
     /** Represents a RiserParameters. */
@@ -1545,6 +1755,12 @@ export namespace Types {
          * @param [properties] Properties to set
          */
         constructor(properties?: Types.IRiserParameters);
+
+        /** RiserParameters riserExist. */
+        public riserExist: boolean;
+
+        /** RiserParameters depth. */
+        public depth: number;
 
         /**
          * Creates a new RiserParameters instance using the specified properties.

@@ -2575,7 +2575,11 @@ export const Types = $root.Types = (() => {
          * @property {Types.AgainstWallType|null} [againstWallType] Stair againstWallType
          * @property {Types.ITreadParameters|null} [treadParameters] Stair treadParameters
          * @property {Types.IRiserParameters|null} [riserParameters] Stair riserParameters
+         * @property {Types.IStepParameters|null} [stepParameters] Stair stepParameters
+         * @property {number|null} [stepHeight] Stair stepHeight
          * @property {Array.<Types.IFlight>|null} [flights] Stair flights
+         * @property {Array.<Types.ILanding>|null} [landings] Stair landings
+         * @property {Types.IVector3|null} [position] Stair position
          */
 
         /**
@@ -2588,6 +2592,7 @@ export const Types = $root.Types = (() => {
          */
         function Stair(properties) {
             this.flights = [];
+            this.landings = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -2651,12 +2656,44 @@ export const Types = $root.Types = (() => {
         Stair.prototype.riserParameters = null;
 
         /**
+         * Stair stepParameters.
+         * @member {Types.IStepParameters|null|undefined} stepParameters
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.stepParameters = null;
+
+        /**
+         * Stair stepHeight.
+         * @member {number} stepHeight
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.stepHeight = 0;
+
+        /**
          * Stair flights.
          * @member {Array.<Types.IFlight>} flights
          * @memberof Types.Stair
          * @instance
          */
         Stair.prototype.flights = $util.emptyArray;
+
+        /**
+         * Stair landings.
+         * @member {Array.<Types.ILanding>} landings
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.landings = $util.emptyArray;
+
+        /**
+         * Stair position.
+         * @member {Types.IVector3|null|undefined} position
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.position = null;
 
         /**
          * Creates a new Stair instance using the specified properties.
@@ -2696,9 +2733,18 @@ export const Types = $root.Types = (() => {
                 $root.Types.TreadParameters.encode(message.treadParameters, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             if (message.riserParameters != null && Object.hasOwnProperty.call(message, "riserParameters"))
                 $root.Types.RiserParameters.encode(message.riserParameters, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+            if (message.stepParameters != null && Object.hasOwnProperty.call(message, "stepParameters"))
+                $root.Types.StepParameters.encode(message.stepParameters, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+            if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
+                writer.uint32(/* id 9, wireType 5 =*/77).float(message.stepHeight);
             if (message.flights != null && message.flights.length)
                 for (let i = 0; i < message.flights.length; ++i)
                     $root.Types.Flight.encode(message.flights[i], writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
+            if (message.landings != null && message.landings.length)
+                for (let i = 0; i < message.landings.length; ++i)
+                    $root.Types.Landing.encode(message.landings[i], writer.uint32(/* id 16, wireType 2 =*/130).fork()).ldelim();
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
+                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 17, wireType 2 =*/138).fork()).ldelim();
             return writer;
         };
 
@@ -2754,10 +2800,24 @@ export const Types = $root.Types = (() => {
                 case 7:
                     message.riserParameters = $root.Types.RiserParameters.decode(reader, reader.uint32());
                     break;
+                case 8:
+                    message.stepParameters = $root.Types.StepParameters.decode(reader, reader.uint32());
+                    break;
+                case 9:
+                    message.stepHeight = reader.float();
+                    break;
                 case 15:
                     if (!(message.flights && message.flights.length))
                         message.flights = [];
                     message.flights.push($root.Types.Flight.decode(reader, reader.uint32()));
+                    break;
+                case 16:
+                    if (!(message.landings && message.landings.length))
+                        message.landings = [];
+                    message.landings.push($root.Types.Landing.decode(reader, reader.uint32()));
+                    break;
+                case 17:
+                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -2831,6 +2891,14 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "riserParameters." + error;
             }
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters")) {
+                let error = $root.Types.StepParameters.verify(message.stepParameters);
+                if (error)
+                    return "stepParameters." + error;
+            }
+            if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
+                if (typeof message.stepHeight !== "number")
+                    return "stepHeight: number expected";
             if (message.flights != null && message.hasOwnProperty("flights")) {
                 if (!Array.isArray(message.flights))
                     return "flights: array expected";
@@ -2839,6 +2907,20 @@ export const Types = $root.Types = (() => {
                     if (error)
                         return "flights." + error;
                 }
+            }
+            if (message.landings != null && message.hasOwnProperty("landings")) {
+                if (!Array.isArray(message.landings))
+                    return "landings: array expected";
+                for (let i = 0; i < message.landings.length; ++i) {
+                    let error = $root.Types.Landing.verify(message.landings[i]);
+                    if (error)
+                        return "landings." + error;
+                }
+            }
+            if (message.position != null && message.hasOwnProperty("position")) {
+                let error = $root.Types.Vector3.verify(message.position);
+                if (error)
+                    return "position." + error;
             }
             return null;
         };
@@ -2899,6 +2981,13 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Stair.riserParameters: object expected");
                 message.riserParameters = $root.Types.RiserParameters.fromObject(object.riserParameters);
             }
+            if (object.stepParameters != null) {
+                if (typeof object.stepParameters !== "object")
+                    throw TypeError(".Types.Stair.stepParameters: object expected");
+                message.stepParameters = $root.Types.StepParameters.fromObject(object.stepParameters);
+            }
+            if (object.stepHeight != null)
+                message.stepHeight = Number(object.stepHeight);
             if (object.flights) {
                 if (!Array.isArray(object.flights))
                     throw TypeError(".Types.Stair.flights: array expected");
@@ -2908,6 +2997,21 @@ export const Types = $root.Types = (() => {
                         throw TypeError(".Types.Stair.flights: object expected");
                     message.flights[i] = $root.Types.Flight.fromObject(object.flights[i]);
                 }
+            }
+            if (object.landings) {
+                if (!Array.isArray(object.landings))
+                    throw TypeError(".Types.Stair.landings: array expected");
+                message.landings = [];
+                for (let i = 0; i < object.landings.length; ++i) {
+                    if (typeof object.landings[i] !== "object")
+                        throw TypeError(".Types.Stair.landings: object expected");
+                    message.landings[i] = $root.Types.Landing.fromObject(object.landings[i]);
+                }
+            }
+            if (object.position != null) {
+                if (typeof object.position !== "object")
+                    throw TypeError(".Types.Stair.position: object expected");
+                message.position = $root.Types.Vector3.fromObject(object.position);
             }
             return message;
         };
@@ -2925,8 +3029,10 @@ export const Types = $root.Types = (() => {
             if (!options)
                 options = {};
             let object = {};
-            if (options.arrays || options.defaults)
+            if (options.arrays || options.defaults) {
                 object.flights = [];
+                object.landings = [];
+            }
             if (options.defaults) {
                 object.uuid = "";
                 object.startBeamDepth = 0;
@@ -2935,6 +3041,9 @@ export const Types = $root.Types = (() => {
                 object.againstWallType = options.enums === String ? "aw_ph" : 0;
                 object.treadParameters = null;
                 object.riserParameters = null;
+                object.stepParameters = null;
+                object.stepHeight = 0;
+                object.position = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -2950,11 +3059,22 @@ export const Types = $root.Types = (() => {
                 object.treadParameters = $root.Types.TreadParameters.toObject(message.treadParameters, options);
             if (message.riserParameters != null && message.hasOwnProperty("riserParameters"))
                 object.riserParameters = $root.Types.RiserParameters.toObject(message.riserParameters, options);
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters"))
+                object.stepParameters = $root.Types.StepParameters.toObject(message.stepParameters, options);
+            if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
+                object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
             if (message.flights && message.flights.length) {
                 object.flights = [];
                 for (let j = 0; j < message.flights.length; ++j)
                     object.flights[j] = $root.Types.Flight.toObject(message.flights[j], options);
             }
+            if (message.landings && message.landings.length) {
+                object.landings = [];
+                for (let j = 0; j < message.landings.length; ++j)
+                    object.landings[j] = $root.Types.Landing.toObject(message.landings[j], options);
+            }
+            if (message.position != null && message.hasOwnProperty("position"))
+                object.position = $root.Types.Vector3.toObject(message.position, options);
             return object;
         };
 
@@ -2979,11 +3099,8 @@ export const Types = $root.Types = (() => {
          * @memberof Types
          * @interface IFlight
          * @property {string|null} [uuid] Flight uuid
-         * @property {number|null} [stepLength] Flight stepLength
-         * @property {number|null} [stepWidth] Flight stepWidth
          * @property {number|null} [stepHeight] Flight stepHeight
-         * @property {Types.StepNumRule|null} [stepNumRule] Flight stepNumRule
-         * @property {number|null} [stepNum] Flight stepNum
+         * @property {Types.IStepParameters|null} [stepParameters] Flight stepParameters
          * @property {Array.<Types.ITread>|null} [treads] Flight treads
          * @property {Array.<Types.IRiser>|null} [risers] Flight risers
          */
@@ -3014,22 +3131,6 @@ export const Types = $root.Types = (() => {
         Flight.prototype.uuid = "";
 
         /**
-         * Flight stepLength.
-         * @member {number} stepLength
-         * @memberof Types.Flight
-         * @instance
-         */
-        Flight.prototype.stepLength = 0;
-
-        /**
-         * Flight stepWidth.
-         * @member {number} stepWidth
-         * @memberof Types.Flight
-         * @instance
-         */
-        Flight.prototype.stepWidth = 0;
-
-        /**
          * Flight stepHeight.
          * @member {number} stepHeight
          * @memberof Types.Flight
@@ -3038,20 +3139,12 @@ export const Types = $root.Types = (() => {
         Flight.prototype.stepHeight = 0;
 
         /**
-         * Flight stepNumRule.
-         * @member {Types.StepNumRule} stepNumRule
+         * Flight stepParameters.
+         * @member {Types.IStepParameters|null|undefined} stepParameters
          * @memberof Types.Flight
          * @instance
          */
-        Flight.prototype.stepNumRule = 0;
-
-        /**
-         * Flight stepNum.
-         * @member {number} stepNum
-         * @memberof Types.Flight
-         * @instance
-         */
-        Flight.prototype.stepNum = 0;
+        Flight.prototype.stepParameters = null;
 
         /**
          * Flight treads.
@@ -3095,16 +3188,10 @@ export const Types = $root.Types = (() => {
                 writer = $Writer.create();
             if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
-            if (message.stepLength != null && Object.hasOwnProperty.call(message, "stepLength"))
-                writer.uint32(/* id 2, wireType 5 =*/21).float(message.stepLength);
-            if (message.stepWidth != null && Object.hasOwnProperty.call(message, "stepWidth"))
-                writer.uint32(/* id 3, wireType 5 =*/29).float(message.stepWidth);
             if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
                 writer.uint32(/* id 4, wireType 5 =*/37).float(message.stepHeight);
-            if (message.stepNumRule != null && Object.hasOwnProperty.call(message, "stepNumRule"))
-                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.stepNumRule);
-            if (message.stepNum != null && Object.hasOwnProperty.call(message, "stepNum"))
-                writer.uint32(/* id 6, wireType 5 =*/53).float(message.stepNum);
+            if (message.stepParameters != null && Object.hasOwnProperty.call(message, "stepParameters"))
+                $root.Types.StepParameters.encode(message.stepParameters, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             if (message.treads != null && message.treads.length)
                 for (let i = 0; i < message.treads.length; ++i)
                     $root.Types.Tread.encode(message.treads[i], writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
@@ -3148,20 +3235,11 @@ export const Types = $root.Types = (() => {
                 case 1:
                     message.uuid = reader.string();
                     break;
-                case 2:
-                    message.stepLength = reader.float();
-                    break;
-                case 3:
-                    message.stepWidth = reader.float();
-                    break;
                 case 4:
                     message.stepHeight = reader.float();
                     break;
                 case 5:
-                    message.stepNumRule = reader.int32();
-                    break;
-                case 6:
-                    message.stepNum = reader.float();
+                    message.stepParameters = $root.Types.StepParameters.decode(reader, reader.uint32());
                     break;
                 case 7:
                     if (!(message.treads && message.treads.length))
@@ -3211,27 +3289,14 @@ export const Types = $root.Types = (() => {
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 if (!$util.isString(message.uuid))
                     return "uuid: string expected";
-            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
-                if (typeof message.stepLength !== "number")
-                    return "stepLength: number expected";
-            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
-                if (typeof message.stepWidth !== "number")
-                    return "stepWidth: number expected";
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
                 if (typeof message.stepHeight !== "number")
                     return "stepHeight: number expected";
-            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
-                switch (message.stepNumRule) {
-                default:
-                    return "stepNumRule: enum value expected";
-                case 0:
-                case 1:
-                case 2:
-                    break;
-                }
-            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
-                if (typeof message.stepNum !== "number")
-                    return "stepNum: number expected";
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters")) {
+                let error = $root.Types.StepParameters.verify(message.stepParameters);
+                if (error)
+                    return "stepParameters." + error;
+            }
             if (message.treads != null && message.hasOwnProperty("treads")) {
                 if (!Array.isArray(message.treads))
                     return "treads: array expected";
@@ -3267,28 +3332,13 @@ export const Types = $root.Types = (() => {
             let message = new $root.Types.Flight();
             if (object.uuid != null)
                 message.uuid = String(object.uuid);
-            if (object.stepLength != null)
-                message.stepLength = Number(object.stepLength);
-            if (object.stepWidth != null)
-                message.stepWidth = Number(object.stepWidth);
             if (object.stepHeight != null)
                 message.stepHeight = Number(object.stepHeight);
-            switch (object.stepNumRule) {
-            case "snr_ph":
-            case 0:
-                message.stepNumRule = 0;
-                break;
-            case "snr_n":
-            case 1:
-                message.stepNumRule = 1;
-                break;
-            case "snr_n_add_1":
-            case 2:
-                message.stepNumRule = 2;
-                break;
+            if (object.stepParameters != null) {
+                if (typeof object.stepParameters !== "object")
+                    throw TypeError(".Types.Flight.stepParameters: object expected");
+                message.stepParameters = $root.Types.StepParameters.fromObject(object.stepParameters);
             }
-            if (object.stepNum != null)
-                message.stepNum = Number(object.stepNum);
             if (object.treads) {
                 if (!Array.isArray(object.treads))
                     throw TypeError(".Types.Flight.treads: array expected");
@@ -3331,24 +3381,15 @@ export const Types = $root.Types = (() => {
             }
             if (options.defaults) {
                 object.uuid = "";
-                object.stepLength = 0;
-                object.stepWidth = 0;
                 object.stepHeight = 0;
-                object.stepNumRule = options.enums === String ? "snr_ph" : 0;
-                object.stepNum = 0;
+                object.stepParameters = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
-            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
-                object.stepLength = options.json && !isFinite(message.stepLength) ? String(message.stepLength) : message.stepLength;
-            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
-                object.stepWidth = options.json && !isFinite(message.stepWidth) ? String(message.stepWidth) : message.stepWidth;
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
                 object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
-            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
-                object.stepNumRule = options.enums === String ? $root.Types.StepNumRule[message.stepNumRule] : message.stepNumRule;
-            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
-                object.stepNum = options.json && !isFinite(message.stepNum) ? String(message.stepNum) : message.stepNum;
+            if (message.stepParameters != null && message.hasOwnProperty("stepParameters"))
+                object.stepParameters = $root.Types.StepParameters.toObject(message.stepParameters, options);
             if (message.treads && message.treads.length) {
                 object.treads = [];
                 for (let j = 0; j < message.treads.length; ++j)
@@ -3591,6 +3632,278 @@ export const Types = $root.Types = (() => {
         return Tread;
     })();
 
+    Types.StepParameters = (function() {
+
+        /**
+         * Properties of a StepParameters.
+         * @memberof Types
+         * @interface IStepParameters
+         * @property {number|null} [stepLength] StepParameters stepLength
+         * @property {number|null} [stepWidth] StepParameters stepWidth
+         * @property {Types.StepNumRule|null} [stepNumRule] StepParameters stepNumRule
+         * @property {number|null} [stepNum] StepParameters stepNum
+         */
+
+        /**
+         * Constructs a new StepParameters.
+         * @memberof Types
+         * @classdesc Represents a StepParameters.
+         * @implements IStepParameters
+         * @constructor
+         * @param {Types.IStepParameters=} [properties] Properties to set
+         */
+        function StepParameters(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * StepParameters stepLength.
+         * @member {number} stepLength
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepLength = 0;
+
+        /**
+         * StepParameters stepWidth.
+         * @member {number} stepWidth
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepWidth = 0;
+
+        /**
+         * StepParameters stepNumRule.
+         * @member {Types.StepNumRule} stepNumRule
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepNumRule = 0;
+
+        /**
+         * StepParameters stepNum.
+         * @member {number} stepNum
+         * @memberof Types.StepParameters
+         * @instance
+         */
+        StepParameters.prototype.stepNum = 0;
+
+        /**
+         * Creates a new StepParameters instance using the specified properties.
+         * @function create
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.IStepParameters=} [properties] Properties to set
+         * @returns {Types.StepParameters} StepParameters instance
+         */
+        StepParameters.create = function create(properties) {
+            return new StepParameters(properties);
+        };
+
+        /**
+         * Encodes the specified StepParameters message. Does not implicitly {@link Types.StepParameters.verify|verify} messages.
+         * @function encode
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.IStepParameters} message StepParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        StepParameters.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.stepLength != null && Object.hasOwnProperty.call(message, "stepLength"))
+                writer.uint32(/* id 1, wireType 5 =*/13).float(message.stepLength);
+            if (message.stepWidth != null && Object.hasOwnProperty.call(message, "stepWidth"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.stepWidth);
+            if (message.stepNumRule != null && Object.hasOwnProperty.call(message, "stepNumRule"))
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.stepNumRule);
+            if (message.stepNum != null && Object.hasOwnProperty.call(message, "stepNum"))
+                writer.uint32(/* id 4, wireType 5 =*/37).float(message.stepNum);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified StepParameters message, length delimited. Does not implicitly {@link Types.StepParameters.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.IStepParameters} message StepParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        StepParameters.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a StepParameters message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.StepParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.StepParameters} StepParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        StepParameters.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.StepParameters();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.stepLength = reader.float();
+                    break;
+                case 2:
+                    message.stepWidth = reader.float();
+                    break;
+                case 3:
+                    message.stepNumRule = reader.int32();
+                    break;
+                case 4:
+                    message.stepNum = reader.float();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a StepParameters message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.StepParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.StepParameters} StepParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        StepParameters.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a StepParameters message.
+         * @function verify
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        StepParameters.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
+                if (typeof message.stepLength !== "number")
+                    return "stepLength: number expected";
+            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
+                if (typeof message.stepWidth !== "number")
+                    return "stepWidth: number expected";
+            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
+                switch (message.stepNumRule) {
+                default:
+                    return "stepNumRule: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
+                if (typeof message.stepNum !== "number")
+                    return "stepNum: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a StepParameters message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.StepParameters} StepParameters
+         */
+        StepParameters.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.StepParameters)
+                return object;
+            let message = new $root.Types.StepParameters();
+            if (object.stepLength != null)
+                message.stepLength = Number(object.stepLength);
+            if (object.stepWidth != null)
+                message.stepWidth = Number(object.stepWidth);
+            switch (object.stepNumRule) {
+            case "snr_ph":
+            case 0:
+                message.stepNumRule = 0;
+                break;
+            case "snr_n":
+            case 1:
+                message.stepNumRule = 1;
+                break;
+            case "snr_n_add_1":
+            case 2:
+                message.stepNumRule = 2;
+                break;
+            }
+            if (object.stepNum != null)
+                message.stepNum = Number(object.stepNum);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a StepParameters message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.StepParameters
+         * @static
+         * @param {Types.StepParameters} message StepParameters
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        StepParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.stepLength = 0;
+                object.stepWidth = 0;
+                object.stepNumRule = options.enums === String ? "snr_ph" : 0;
+                object.stepNum = 0;
+            }
+            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
+                object.stepLength = options.json && !isFinite(message.stepLength) ? String(message.stepLength) : message.stepLength;
+            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
+                object.stepWidth = options.json && !isFinite(message.stepWidth) ? String(message.stepWidth) : message.stepWidth;
+            if (message.stepNumRule != null && message.hasOwnProperty("stepNumRule"))
+                object.stepNumRule = options.enums === String ? $root.Types.StepNumRule[message.stepNumRule] : message.stepNumRule;
+            if (message.stepNum != null && message.hasOwnProperty("stepNum"))
+                object.stepNum = options.json && !isFinite(message.stepNum) ? String(message.stepNum) : message.stepNum;
+            return object;
+        };
+
+        /**
+         * Converts this StepParameters to JSON.
+         * @function toJSON
+         * @memberof Types.StepParameters
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        StepParameters.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return StepParameters;
+    })();
+
     Types.TreadParameters = (function() {
 
         /**
@@ -3602,6 +3915,7 @@ export const Types = $root.Types = (() => {
          * @property {boolean|null} [doubleFaceMaterial] TreadParameters doubleFaceMaterial
          * @property {Types.NossingType|null} [nossingType] TreadParameters nossingType
          * @property {number|null} [nossing] TreadParameters nossing
+         * @property {number|null} [sideNossing] TreadParameters sideNossing
          */
 
         /**
@@ -3660,6 +3974,14 @@ export const Types = $root.Types = (() => {
         TreadParameters.prototype.nossing = 0;
 
         /**
+         * TreadParameters sideNossing.
+         * @member {number} sideNossing
+         * @memberof Types.TreadParameters
+         * @instance
+         */
+        TreadParameters.prototype.sideNossing = 0;
+
+        /**
          * Creates a new TreadParameters instance using the specified properties.
          * @function create
          * @memberof Types.TreadParameters
@@ -3693,6 +4015,8 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 4, wireType 0 =*/32).int32(message.nossingType);
             if (message.nossing != null && Object.hasOwnProperty.call(message, "nossing"))
                 writer.uint32(/* id 5, wireType 5 =*/45).float(message.nossing);
+            if (message.sideNossing != null && Object.hasOwnProperty.call(message, "sideNossing"))
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.sideNossing);
             return writer;
         };
 
@@ -3741,6 +4065,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 5:
                     message.nossing = reader.float();
+                    break;
+                case 6:
+                    message.sideNossing = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -3801,6 +4128,9 @@ export const Types = $root.Types = (() => {
             if (message.nossing != null && message.hasOwnProperty("nossing"))
                 if (typeof message.nossing !== "number")
                     return "nossing: number expected";
+            if (message.sideNossing != null && message.hasOwnProperty("sideNossing"))
+                if (typeof message.sideNossing !== "number")
+                    return "sideNossing: number expected";
             return null;
         };
 
@@ -3845,6 +4175,8 @@ export const Types = $root.Types = (() => {
             }
             if (object.nossing != null)
                 message.nossing = Number(object.nossing);
+            if (object.sideNossing != null)
+                message.sideNossing = Number(object.sideNossing);
             return message;
         };
 
@@ -3867,6 +4199,7 @@ export const Types = $root.Types = (() => {
                 object.doubleFaceMaterial = false;
                 object.nossingType = options.enums === String ? "nph" : 0;
                 object.nossing = 0;
+                object.sideNossing = 0;
             }
             if (message.depth != null && message.hasOwnProperty("depth"))
                 object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
@@ -3878,6 +4211,8 @@ export const Types = $root.Types = (() => {
                 object.nossingType = options.enums === String ? $root.Types.NossingType[message.nossingType] : message.nossingType;
             if (message.nossing != null && message.hasOwnProperty("nossing"))
                 object.nossing = options.json && !isFinite(message.nossing) ? String(message.nossing) : message.nossing;
+            if (message.sideNossing != null && message.hasOwnProperty("sideNossing"))
+                object.sideNossing = options.json && !isFinite(message.sideNossing) ? String(message.sideNossing) : message.sideNossing;
             return object;
         };
 
@@ -3893,6 +4228,166 @@ export const Types = $root.Types = (() => {
         };
 
         return TreadParameters;
+    })();
+
+    Types.Landing = (function() {
+
+        /**
+         * Properties of a Landing.
+         * @memberof Types
+         * @interface ILanding
+         */
+
+        /**
+         * Constructs a new Landing.
+         * @memberof Types
+         * @classdesc Represents a Landing.
+         * @implements ILanding
+         * @constructor
+         * @param {Types.ILanding=} [properties] Properties to set
+         */
+        function Landing(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Creates a new Landing instance using the specified properties.
+         * @function create
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.ILanding=} [properties] Properties to set
+         * @returns {Types.Landing} Landing instance
+         */
+        Landing.create = function create(properties) {
+            return new Landing(properties);
+        };
+
+        /**
+         * Encodes the specified Landing message. Does not implicitly {@link Types.Landing.verify|verify} messages.
+         * @function encode
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.ILanding} message Landing message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Landing.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Landing message, length delimited. Does not implicitly {@link Types.Landing.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.ILanding} message Landing message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Landing.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Landing message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.Landing
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.Landing} Landing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Landing.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.Landing();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Landing message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.Landing
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.Landing} Landing
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Landing.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Landing message.
+         * @function verify
+         * @memberof Types.Landing
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Landing.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            return null;
+        };
+
+        /**
+         * Creates a Landing message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.Landing
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.Landing} Landing
+         */
+        Landing.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.Landing)
+                return object;
+            return new $root.Types.Landing();
+        };
+
+        /**
+         * Creates a plain object from a Landing message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.Landing
+         * @static
+         * @param {Types.Landing} message Landing
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Landing.toObject = function toObject() {
+            return {};
+        };
+
+        /**
+         * Converts this Landing to JSON.
+         * @function toJSON
+         * @memberof Types.Landing
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Landing.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return Landing;
     })();
 
     Types.Riser = (function() {
@@ -4088,6 +4583,8 @@ export const Types = $root.Types = (() => {
          * Properties of a RiserParameters.
          * @memberof Types
          * @interface IRiserParameters
+         * @property {boolean|null} [riserExist] RiserParameters riserExist
+         * @property {number|null} [depth] RiserParameters depth
          */
 
         /**
@@ -4104,6 +4601,22 @@ export const Types = $root.Types = (() => {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * RiserParameters riserExist.
+         * @member {boolean} riserExist
+         * @memberof Types.RiserParameters
+         * @instance
+         */
+        RiserParameters.prototype.riserExist = false;
+
+        /**
+         * RiserParameters depth.
+         * @member {number} depth
+         * @memberof Types.RiserParameters
+         * @instance
+         */
+        RiserParameters.prototype.depth = 0;
 
         /**
          * Creates a new RiserParameters instance using the specified properties.
@@ -4129,6 +4642,10 @@ export const Types = $root.Types = (() => {
         RiserParameters.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.riserExist != null && Object.hasOwnProperty.call(message, "riserExist"))
+                writer.uint32(/* id 1, wireType 0 =*/8).bool(message.riserExist);
+            if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.depth);
             return writer;
         };
 
@@ -4163,6 +4680,12 @@ export const Types = $root.Types = (() => {
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 1:
+                    message.riserExist = reader.bool();
+                    break;
+                case 2:
+                    message.depth = reader.float();
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4198,6 +4721,12 @@ export const Types = $root.Types = (() => {
         RiserParameters.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.riserExist != null && message.hasOwnProperty("riserExist"))
+                if (typeof message.riserExist !== "boolean")
+                    return "riserExist: boolean expected";
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                if (typeof message.depth !== "number")
+                    return "depth: number expected";
             return null;
         };
 
@@ -4212,7 +4741,12 @@ export const Types = $root.Types = (() => {
         RiserParameters.fromObject = function fromObject(object) {
             if (object instanceof $root.Types.RiserParameters)
                 return object;
-            return new $root.Types.RiserParameters();
+            let message = new $root.Types.RiserParameters();
+            if (object.riserExist != null)
+                message.riserExist = Boolean(object.riserExist);
+            if (object.depth != null)
+                message.depth = Number(object.depth);
+            return message;
         };
 
         /**
@@ -4224,8 +4758,19 @@ export const Types = $root.Types = (() => {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        RiserParameters.toObject = function toObject() {
-            return {};
+        RiserParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.riserExist = false;
+                object.depth = 0;
+            }
+            if (message.riserExist != null && message.hasOwnProperty("riserExist"))
+                object.riserExist = message.riserExist;
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
+            return object;
         };
 
         /**
