@@ -55,6 +55,21 @@ enum ComponentType {
   cpillar    = 5;  //柱
 }
 
+//大柱位置的类型
+enum BigColumnPosType {
+  bcp_ph     = 0;
+  bcp_floor  = 1;  //地板
+  bcp_first  = 2;  //第一级踏步
+  bcp_second = 3;  //第二级踏步
+}
+
+//小柱排列规则
+enum ArrangeRule {
+  arph     = 0;  //占位
+  arrFour  = 1;  //两级四根
+  arrThree = 2;  //两级三根
+}
+
 //三维向量
 message Vector3{
 	float x = 1;
@@ -128,18 +143,23 @@ message Material {
 
 //一套楼梯
 message Stair {
-  string          uuid             = 1;
-  float           startBeamDepth   = 2;   //起步梁厚度
-  float           exitBeamDepth    = 3;   //出口梁厚度
-  StairType       type             = 4;   //类型
-  AgainstWallType againstWallType  = 5;   //靠墙类型
-  TreadParameters treadParameters  = 6;   //踏板参数
-  RiserParameters riserParameters  = 7;   //立板参数
-  StepParameters  stepParameters   = 8;   //踏步参数
-  float           stepHeight       = 9;   //步高
-  repeated        Flight flights   = 15;  //楼梯段集合
-  repeated        Landing landings = 16;  //休息平台合集
-  Vector3         position         = 17;  //为包围框左上角顶点的坐标
+  string             uuid                     = 1;
+  float              startBeamDepth           = 2;   //起步梁厚度
+  float              exitBeamDepth            = 3;   //出口梁厚度
+  StairType          type                     = 4;   //类型
+  AgainstWallType    againstWallType          = 5;   //靠墙类型
+  TreadParameters    treadParameters          = 6;   //踏板参数
+  RiserParameters    riserParameters          = 7;   //立板参数
+  StepParameters     stepParameters           = 8;   //踏步参数
+  BigColParameters   bigColParameters         = 9;   //大柱参数
+  SmallColParameters smallColParameters       = 10;  //小柱参数
+  HandrailParameters handrailParameters       = 11;  //扶手参数
+  repeated           Flight flights           = 15;  //楼梯段集合
+  repeated           Landing landings         = 16;  //休息平台合集
+  repeated           BigColumn bigColumns     = 17;  //大柱集合
+  repeated           SmallColumn smallColumns = 18;  //小柱集合
+  float              stepHeight               = 25;  //步高
+  Vector3            position                 = 26;  //为包围框左上角顶点的坐标
 }
 
 //一段楼梯
@@ -157,6 +177,7 @@ message Tread {
   Outline stepOutline = 2;  //踏板边缘轮廓
 }
 
+//踏步参数
 message StepParameters {
   float       stepLength  = 1;  //步长
   float       stepWidth   = 2;  //步宽
@@ -174,18 +195,76 @@ message TreadParameters {
   float       sideNossing        = 6;  //飘边长度
 }
 
+//休息平台
 message Landing {
 }
 
+//立板
 message Riser {
   string uuid = 1;
 }
 
+//立板参数
 message RiserParameters {
   bool  riserExist = 1;
   float depth      = 2;
+}
+
+//模型源信息
+message ObjData {
+  string model_path = 1;  // obj 模型网络文件路径（通常是gltf格式）
+  string img_path   = 2;  // 模型预览图路径
+  string max_path   = 3;  // obj 模型网络文件路径（max格式）
+}
+
+//小柱
+message SmallColumn {
+  string  uuid     = 1;
+  Vector3 size     = 2;  //尺寸
+  Vector3 position = 3;  //位置
+  Vector3 rotation = 4;  //旋转
+}
+
+//小柱参数
+message SmallColParameters {
+  ObjData     source        = 1;  //模型源信息
+  ArrangeRule arrange_rule  = 2;  //排列规则
+  Material    material      = 3;
+  string      specification = 4;  // 规格
+}
+
+//大柱
+message BigColumn {
+  string           uuid     = 1;
+  Vector3          position = 2;
+  Vector3          size     = 3;
+  Vector3          rotation = 4;
+  BigColParameters paras    = 5;
+}
+
+//大柱参数
+message BigColParameters {
+  ObjData          source        = 1;  //模型源信息
+  BigColumnPosType posType       = 2;  //位置类型
+  Material         material      = 3;
+  string           specification = 4;  // 规格
+}
+
+message DxfData {
 
 }
+
+message Handrail {
+  string  uuid  = 1;
+  Outline route = 2;
+  float   width = 3;
+}
+
+message HandrailParameters {
+  float    height   = 1;
+  DxfData  source   = 2;
+  Material material = 3;
+} 
 
 
 

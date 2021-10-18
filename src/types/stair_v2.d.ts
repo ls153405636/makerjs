@@ -57,6 +57,21 @@ export namespace Types {
         cpillar = 5
     }
 
+    /** BigColumnPosType enum. */
+    enum BigColumnPosType {
+        bcp_ph = 0,
+        bcp_floor = 1,
+        bcp_first = 2,
+        bcp_second = 3
+    }
+
+    /** ArrangeRule enum. */
+    enum ArrangeRule {
+        arph = 0,
+        arrFour = 1,
+        arrThree = 2
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 
@@ -996,14 +1011,29 @@ export namespace Types {
         /** Stair stepParameters */
         stepParameters?: (Types.IStepParameters|null);
 
-        /** Stair stepHeight */
-        stepHeight?: (number|null);
+        /** Stair bigColParameters */
+        bigColParameters?: (Types.IBigColParameters|null);
+
+        /** Stair smallColParameters */
+        smallColParameters?: (Types.ISmallColParameters|null);
+
+        /** Stair handrailParameters */
+        handrailParameters?: (Types.IHandrailParameters|null);
 
         /** Stair flights */
         flights?: (Types.IFlight[]|null);
 
         /** Stair landings */
         landings?: (Types.ILanding[]|null);
+
+        /** Stair bigColumns */
+        bigColumns?: (Types.IBigColumn[]|null);
+
+        /** Stair smallColumns */
+        smallColumns?: (Types.ISmallColumn[]|null);
+
+        /** Stair stepHeight */
+        stepHeight?: (number|null);
 
         /** Stair position */
         position?: (Types.IVector3|null);
@@ -1042,14 +1072,29 @@ export namespace Types {
         /** Stair stepParameters. */
         public stepParameters?: (Types.IStepParameters|null);
 
-        /** Stair stepHeight. */
-        public stepHeight: number;
+        /** Stair bigColParameters. */
+        public bigColParameters?: (Types.IBigColParameters|null);
+
+        /** Stair smallColParameters. */
+        public smallColParameters?: (Types.ISmallColParameters|null);
+
+        /** Stair handrailParameters. */
+        public handrailParameters?: (Types.IHandrailParameters|null);
 
         /** Stair flights. */
         public flights: Types.IFlight[];
 
         /** Stair landings. */
         public landings: Types.ILanding[];
+
+        /** Stair bigColumns. */
+        public bigColumns: Types.IBigColumn[];
+
+        /** Stair smallColumns. */
+        public smallColumns: Types.ISmallColumn[];
+
+        /** Stair stepHeight. */
+        public stepHeight: number;
 
         /** Stair position. */
         public position?: (Types.IVector3|null);
@@ -1828,6 +1873,834 @@ export namespace Types {
 
         /**
          * Converts this RiserParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of an ObjData. */
+    interface IObjData {
+
+        /** ObjData model_path */
+        model_path?: (string|null);
+
+        /** ObjData img_path */
+        img_path?: (string|null);
+
+        /** ObjData max_path */
+        max_path?: (string|null);
+    }
+
+    /** Represents an ObjData. */
+    class ObjData implements IObjData {
+
+        /**
+         * Constructs a new ObjData.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IObjData);
+
+        /** ObjData model_path. */
+        public model_path: string;
+
+        /** ObjData img_path. */
+        public img_path: string;
+
+        /** ObjData max_path. */
+        public max_path: string;
+
+        /**
+         * Creates a new ObjData instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns ObjData instance
+         */
+        public static create(properties?: Types.IObjData): Types.ObjData;
+
+        /**
+         * Encodes the specified ObjData message. Does not implicitly {@link Types.ObjData.verify|verify} messages.
+         * @param message ObjData message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IObjData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified ObjData message, length delimited. Does not implicitly {@link Types.ObjData.verify|verify} messages.
+         * @param message ObjData message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IObjData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes an ObjData message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns ObjData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.ObjData;
+
+        /**
+         * Decodes an ObjData message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns ObjData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.ObjData;
+
+        /**
+         * Verifies an ObjData message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates an ObjData message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns ObjData
+         */
+        public static fromObject(object: { [k: string]: any }): Types.ObjData;
+
+        /**
+         * Creates a plain object from an ObjData message. Also converts values to other types if specified.
+         * @param message ObjData
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.ObjData, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this ObjData to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a SmallColumn. */
+    interface ISmallColumn {
+
+        /** SmallColumn uuid */
+        uuid?: (string|null);
+
+        /** SmallColumn size */
+        size?: (Types.IVector3|null);
+
+        /** SmallColumn position */
+        position?: (Types.IVector3|null);
+
+        /** SmallColumn rotation */
+        rotation?: (Types.IVector3|null);
+    }
+
+    /** Represents a SmallColumn. */
+    class SmallColumn implements ISmallColumn {
+
+        /**
+         * Constructs a new SmallColumn.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ISmallColumn);
+
+        /** SmallColumn uuid. */
+        public uuid: string;
+
+        /** SmallColumn size. */
+        public size?: (Types.IVector3|null);
+
+        /** SmallColumn position. */
+        public position?: (Types.IVector3|null);
+
+        /** SmallColumn rotation. */
+        public rotation?: (Types.IVector3|null);
+
+        /**
+         * Creates a new SmallColumn instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SmallColumn instance
+         */
+        public static create(properties?: Types.ISmallColumn): Types.SmallColumn;
+
+        /**
+         * Encodes the specified SmallColumn message. Does not implicitly {@link Types.SmallColumn.verify|verify} messages.
+         * @param message SmallColumn message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ISmallColumn, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SmallColumn message, length delimited. Does not implicitly {@link Types.SmallColumn.verify|verify} messages.
+         * @param message SmallColumn message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ISmallColumn, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SmallColumn message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SmallColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.SmallColumn;
+
+        /**
+         * Decodes a SmallColumn message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SmallColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.SmallColumn;
+
+        /**
+         * Verifies a SmallColumn message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SmallColumn message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SmallColumn
+         */
+        public static fromObject(object: { [k: string]: any }): Types.SmallColumn;
+
+        /**
+         * Creates a plain object from a SmallColumn message. Also converts values to other types if specified.
+         * @param message SmallColumn
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.SmallColumn, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SmallColumn to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a SmallColParameters. */
+    interface ISmallColParameters {
+
+        /** SmallColParameters source */
+        source?: (Types.IObjData|null);
+
+        /** SmallColParameters arrange_rule */
+        arrange_rule?: (Types.ArrangeRule|null);
+
+        /** SmallColParameters material */
+        material?: (Types.IMaterial|null);
+
+        /** SmallColParameters specification */
+        specification?: (string|null);
+    }
+
+    /** Represents a SmallColParameters. */
+    class SmallColParameters implements ISmallColParameters {
+
+        /**
+         * Constructs a new SmallColParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ISmallColParameters);
+
+        /** SmallColParameters source. */
+        public source?: (Types.IObjData|null);
+
+        /** SmallColParameters arrange_rule. */
+        public arrange_rule: Types.ArrangeRule;
+
+        /** SmallColParameters material. */
+        public material?: (Types.IMaterial|null);
+
+        /** SmallColParameters specification. */
+        public specification: string;
+
+        /**
+         * Creates a new SmallColParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SmallColParameters instance
+         */
+        public static create(properties?: Types.ISmallColParameters): Types.SmallColParameters;
+
+        /**
+         * Encodes the specified SmallColParameters message. Does not implicitly {@link Types.SmallColParameters.verify|verify} messages.
+         * @param message SmallColParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ISmallColParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SmallColParameters message, length delimited. Does not implicitly {@link Types.SmallColParameters.verify|verify} messages.
+         * @param message SmallColParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ISmallColParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SmallColParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SmallColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.SmallColParameters;
+
+        /**
+         * Decodes a SmallColParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SmallColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.SmallColParameters;
+
+        /**
+         * Verifies a SmallColParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SmallColParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SmallColParameters
+         */
+        public static fromObject(object: { [k: string]: any }): Types.SmallColParameters;
+
+        /**
+         * Creates a plain object from a SmallColParameters message. Also converts values to other types if specified.
+         * @param message SmallColParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.SmallColParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SmallColParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a BigColumn. */
+    interface IBigColumn {
+
+        /** BigColumn uuid */
+        uuid?: (string|null);
+
+        /** BigColumn position */
+        position?: (Types.IVector3|null);
+
+        /** BigColumn size */
+        size?: (Types.IVector3|null);
+
+        /** BigColumn rotation */
+        rotation?: (Types.IVector3|null);
+
+        /** BigColumn paras */
+        paras?: (Types.IBigColParameters|null);
+    }
+
+    /** Represents a BigColumn. */
+    class BigColumn implements IBigColumn {
+
+        /**
+         * Constructs a new BigColumn.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IBigColumn);
+
+        /** BigColumn uuid. */
+        public uuid: string;
+
+        /** BigColumn position. */
+        public position?: (Types.IVector3|null);
+
+        /** BigColumn size. */
+        public size?: (Types.IVector3|null);
+
+        /** BigColumn rotation. */
+        public rotation?: (Types.IVector3|null);
+
+        /** BigColumn paras. */
+        public paras?: (Types.IBigColParameters|null);
+
+        /**
+         * Creates a new BigColumn instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns BigColumn instance
+         */
+        public static create(properties?: Types.IBigColumn): Types.BigColumn;
+
+        /**
+         * Encodes the specified BigColumn message. Does not implicitly {@link Types.BigColumn.verify|verify} messages.
+         * @param message BigColumn message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IBigColumn, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified BigColumn message, length delimited. Does not implicitly {@link Types.BigColumn.verify|verify} messages.
+         * @param message BigColumn message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IBigColumn, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a BigColumn message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns BigColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.BigColumn;
+
+        /**
+         * Decodes a BigColumn message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns BigColumn
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.BigColumn;
+
+        /**
+         * Verifies a BigColumn message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a BigColumn message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns BigColumn
+         */
+        public static fromObject(object: { [k: string]: any }): Types.BigColumn;
+
+        /**
+         * Creates a plain object from a BigColumn message. Also converts values to other types if specified.
+         * @param message BigColumn
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.BigColumn, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this BigColumn to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a BigColParameters. */
+    interface IBigColParameters {
+
+        /** BigColParameters source */
+        source?: (Types.IObjData|null);
+
+        /** BigColParameters posType */
+        posType?: (Types.BigColumnPosType|null);
+
+        /** BigColParameters material */
+        material?: (Types.IMaterial|null);
+
+        /** BigColParameters specification */
+        specification?: (string|null);
+    }
+
+    /** Represents a BigColParameters. */
+    class BigColParameters implements IBigColParameters {
+
+        /**
+         * Constructs a new BigColParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IBigColParameters);
+
+        /** BigColParameters source. */
+        public source?: (Types.IObjData|null);
+
+        /** BigColParameters posType. */
+        public posType: Types.BigColumnPosType;
+
+        /** BigColParameters material. */
+        public material?: (Types.IMaterial|null);
+
+        /** BigColParameters specification. */
+        public specification: string;
+
+        /**
+         * Creates a new BigColParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns BigColParameters instance
+         */
+        public static create(properties?: Types.IBigColParameters): Types.BigColParameters;
+
+        /**
+         * Encodes the specified BigColParameters message. Does not implicitly {@link Types.BigColParameters.verify|verify} messages.
+         * @param message BigColParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IBigColParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified BigColParameters message, length delimited. Does not implicitly {@link Types.BigColParameters.verify|verify} messages.
+         * @param message BigColParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IBigColParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a BigColParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns BigColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.BigColParameters;
+
+        /**
+         * Decodes a BigColParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns BigColParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.BigColParameters;
+
+        /**
+         * Verifies a BigColParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a BigColParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns BigColParameters
+         */
+        public static fromObject(object: { [k: string]: any }): Types.BigColParameters;
+
+        /**
+         * Creates a plain object from a BigColParameters message. Also converts values to other types if specified.
+         * @param message BigColParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.BigColParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this BigColParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a DxfData. */
+    interface IDxfData {
+    }
+
+    /** Represents a DxfData. */
+    class DxfData implements IDxfData {
+
+        /**
+         * Constructs a new DxfData.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IDxfData);
+
+        /**
+         * Creates a new DxfData instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns DxfData instance
+         */
+        public static create(properties?: Types.IDxfData): Types.DxfData;
+
+        /**
+         * Encodes the specified DxfData message. Does not implicitly {@link Types.DxfData.verify|verify} messages.
+         * @param message DxfData message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IDxfData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified DxfData message, length delimited. Does not implicitly {@link Types.DxfData.verify|verify} messages.
+         * @param message DxfData message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IDxfData, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a DxfData message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns DxfData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.DxfData;
+
+        /**
+         * Decodes a DxfData message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns DxfData
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.DxfData;
+
+        /**
+         * Verifies a DxfData message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a DxfData message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns DxfData
+         */
+        public static fromObject(object: { [k: string]: any }): Types.DxfData;
+
+        /**
+         * Creates a plain object from a DxfData message. Also converts values to other types if specified.
+         * @param message DxfData
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.DxfData, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this DxfData to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Handrail. */
+    interface IHandrail {
+
+        /** Handrail uuid */
+        uuid?: (string|null);
+
+        /** Handrail route */
+        route?: (Types.IOutline|null);
+
+        /** Handrail width */
+        width?: (number|null);
+    }
+
+    /** Represents a Handrail. */
+    class Handrail implements IHandrail {
+
+        /**
+         * Constructs a new Handrail.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IHandrail);
+
+        /** Handrail uuid. */
+        public uuid: string;
+
+        /** Handrail route. */
+        public route?: (Types.IOutline|null);
+
+        /** Handrail width. */
+        public width: number;
+
+        /**
+         * Creates a new Handrail instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Handrail instance
+         */
+        public static create(properties?: Types.IHandrail): Types.Handrail;
+
+        /**
+         * Encodes the specified Handrail message. Does not implicitly {@link Types.Handrail.verify|verify} messages.
+         * @param message Handrail message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IHandrail, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Handrail message, length delimited. Does not implicitly {@link Types.Handrail.verify|verify} messages.
+         * @param message Handrail message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IHandrail, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Handrail message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Handrail
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Handrail;
+
+        /**
+         * Decodes a Handrail message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Handrail
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Handrail;
+
+        /**
+         * Verifies a Handrail message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Handrail message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Handrail
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Handrail;
+
+        /**
+         * Creates a plain object from a Handrail message. Also converts values to other types if specified.
+         * @param message Handrail
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Handrail, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Handrail to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a HandrailParameters. */
+    interface IHandrailParameters {
+
+        /** HandrailParameters height */
+        height?: (number|null);
+
+        /** HandrailParameters source */
+        source?: (Types.IDxfData|null);
+
+        /** HandrailParameters material */
+        material?: (Types.IMaterial|null);
+    }
+
+    /** Represents a HandrailParameters. */
+    class HandrailParameters implements IHandrailParameters {
+
+        /**
+         * Constructs a new HandrailParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IHandrailParameters);
+
+        /** HandrailParameters height. */
+        public height: number;
+
+        /** HandrailParameters source. */
+        public source?: (Types.IDxfData|null);
+
+        /** HandrailParameters material. */
+        public material?: (Types.IMaterial|null);
+
+        /**
+         * Creates a new HandrailParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns HandrailParameters instance
+         */
+        public static create(properties?: Types.IHandrailParameters): Types.HandrailParameters;
+
+        /**
+         * Encodes the specified HandrailParameters message. Does not implicitly {@link Types.HandrailParameters.verify|verify} messages.
+         * @param message HandrailParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IHandrailParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified HandrailParameters message, length delimited. Does not implicitly {@link Types.HandrailParameters.verify|verify} messages.
+         * @param message HandrailParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IHandrailParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a HandrailParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns HandrailParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.HandrailParameters;
+
+        /**
+         * Decodes a HandrailParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns HandrailParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.HandrailParameters;
+
+        /**
+         * Verifies a HandrailParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a HandrailParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns HandrailParameters
+         */
+        public static fromObject(object: { [k: string]: any }): Types.HandrailParameters;
+
+        /**
+         * Creates a plain object from a HandrailParameters message. Also converts values to other types if specified.
+         * @param message HandrailParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.HandrailParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this HandrailParameters to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
