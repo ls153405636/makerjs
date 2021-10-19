@@ -30,7 +30,8 @@ export class CementComp extends BaseWidget {
     const compContainer = new PIXI.Container()
 
     let comp = new PIXI.Graphics()
-    comp.beginFill(0x888888, 1)
+    comp.lineStyle(1, 0x000000)
+    comp.beginFill(0xffffff, 1)
     comp.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
     comp.endFill()
     comp.position.set(this.positionX, this.positionY)
@@ -55,7 +56,7 @@ export class CementComp extends BaseWidget {
     text.pivot.set(text.width / 2, text.height / 2)
     text.rotation = this.rotationY
 
-    compContainer.addChild(comp, text)
+    compContainer.addChild(comp)
     this.sprite = compContainer
   }
 

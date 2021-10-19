@@ -32,7 +32,8 @@ export class Inlay extends BaseWidget {
     const inlayContainer = new PIXI.Container()
 
     let inlay = new PIXI.Graphics()
-    inlay.beginFill(0x888888, 1)
+    inlay.lineStyle(1, 0x000000)
+    inlay.beginFill(0xffffff, 1)
     inlay.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
     inlay.endFill()
     inlay.position.set(this.positionX, this.positionY)
@@ -60,7 +61,7 @@ export class Inlay extends BaseWidget {
     text.pivot.set(text.width / 2, text.height / 2)
     // text.rotation = this.rotationY
 
-    inlayContainer.addChild(inlay, text)
+    inlayContainer.addChild(inlay)
     this.sprite = inlayContainer
   }
 

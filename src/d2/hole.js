@@ -13,7 +13,6 @@ export class Hole extends BaseWidget {
   constructor(vPB) {
     super()
     this.edges = vPB.edges
-    // console.log(this.edges)
     this.draw()
     this.addEvent()
   }

@@ -27,6 +27,7 @@ export class Wall extends BaseWidget {
     this.createComponents(vPB.components)
     this.draw()
     this.addEvent()
+    // console.log(vPB)
   }
 
   // 求旋转
@@ -158,8 +159,8 @@ export class Wall extends BaseWidget {
 
     // 墙体绘制
     const wall = new PIXI.Graphics()
-    wall.lineStyle(1, 0x000000)
-    wall.beginFill(0xffffff, 1)
+    wall.lineStyle(1, 0x929292)
+    wall.beginFill(0xe5e5e5, 1)
     wall.alpha = 1
     const path = [
       this.p1.x,
@@ -190,24 +191,27 @@ export class Wall extends BaseWidget {
     // 标注线左右端线绘制
     const dobuleLineLeft = new PIXI.Graphics()
     dobuleLineLeft
-      .lineStyle(1, 0x888888, 1)
+      .lineStyle(2, 0x2d3037, 1)
       .moveTo(this.p1.x, this.p1.y)
       .lineTo(newOutP1.x, newOutP1.y)
 
     const dobuleLineRight = new PIXI.Graphics()
     dobuleLineRight
-      .lineStyle(1, 0x888888, 1)
+      .lineStyle(2, 0x2d3037, 1)
       .moveTo(this.p2.x, this.p2.y)
       .lineTo(newOouP2.x, newOouP2.y)
 
     const line = new PIXI.Graphics()
     const lPath = [newP1.x, newP1.y, newP2.x, newP2.y]
     line.position.set()
-    line.lineStyle(1, 0x888888, 1)
+    line.lineStyle(1, 0x2d3037, 1)
     line.drawPolygon(lPath)
 
     // 标注文字添加
-    const lineText = new PIXI.Text(linelength, { fontSize: 12, fill: 0x333333 })
+    const lineText = new PIXI.Text(linelength, {
+      fontSize: 17.98,
+      fill: 0x2d3037,
+    })
     lineText.position.set(linePos.x, linePos.y)
     lineText.pivot.set(lineText.width / 2, lineText.height / 2)
     lineText.rotation = newTextRotation
@@ -222,19 +226,20 @@ export class Wall extends BaseWidget {
   // 取消墙体选中效果
   cancelSelected() {
     this.sprite.tint = 0xffffff
+    this.sprite.alpha = 1
     this.iSelected = false
   }
   // 墙体选中效果
   setSelected() {
-    this.sprite.tint = 0x6e9aff
+    this.sprite.tint = 0xe9efff
     this.sprite.alpha = 1
     this.iSelected = true
   }
   // 鼠标进入墙体效果
   setHover() {
     if (!this.iSelected) {
-      this.sprite.tint = 0x6e8aff
-      this.sprite.alpha = 0.5
+      this.sprite.tint = 0xe9efff
+      this.sprite.alpha = 1
     }
   }
   // 鼠标离开墙体效果

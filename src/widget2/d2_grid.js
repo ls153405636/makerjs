@@ -1,6 +1,6 @@
 const mvcfg = {
   gridTheme: {
-    background: 0xfffdf9, // 背景色
+    background: 0xe5e5e5, // 背景色
     thickLine: 0x333333, // 粗线框
     slenderLine: 0x333333, // 细线
     backAlpha: 0.5, // 背景透明度
