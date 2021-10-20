@@ -69,10 +69,10 @@ export class Movie {
     window.onpopstate = function (event) {
       window.history.pushState(null, '', window.location.href)
     }
-
-    document.addEventListener('keydown', (event) => {
-      this.service.send({ type: events.KEY_DOWN, data: event })
-    })
+    // 键盘禁用
+    // document.addEventListener('keydown', (event) => {
+    //   this.service.send({ type: events.KEY_DOWN, data: event })
+    // })
 
     // 阻止鼠标右键打开上下文菜单
     this.app.view.oncontextmenu = (e) => e.preventDefault()
@@ -136,7 +136,7 @@ export class Movie {
       })
   }
   start() {
-    let grid = new D2Grid(1, 6840, 6840, 10, 240)
+    let grid = new D2Grid(1, 6840, 6840, 10, 120)
     grid.position.set(
       D2Config.CANVAS_WIDTH / 2 - grid.width / 2,
       D2Config.CANVAS_HEIGHT / 2 - grid.height / 2

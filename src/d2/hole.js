@@ -13,7 +13,6 @@ export class Hole extends BaseWidget {
   constructor(vPB) {
     super()
     this.edges = vPB.edges
-    // console.log(this.edges)
     this.draw()
     this.addEvent()
   }
@@ -29,8 +28,6 @@ export class Hole extends BaseWidget {
     // hole.beginFill(0xffff55, 1)
     hole.drawPolygon(path)
     hole.endFill()
-
-    // 绘制圆形
 
     this.sprite = hole
   }

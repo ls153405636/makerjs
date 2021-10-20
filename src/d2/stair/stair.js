@@ -1,3 +1,4 @@
+import { start } from 'xstate/lib/actions'
 import { Types } from "../../types/stair_v2";
 import { BaseWidget } from "../base_widget";
 import { D2Config } from "../config";
@@ -25,7 +26,7 @@ export class Stair extends BaseWidget {
     this.draw()
   }
 
-  draw () {
+  draw() {
     this.sprite = new PIXI.Container()
     for (const f of this.flights) {
       let flightSprite = f.getSprite()
@@ -40,6 +41,7 @@ export class Stair extends BaseWidget {
       }
     }
     /** 需设置整体精灵图的位置*/
+    this.sprite.position.set(this.position.x, this.position.y)
   }
 
   setSmallColSelected () {

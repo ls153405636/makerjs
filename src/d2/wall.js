@@ -1,4 +1,3 @@
-// import { Graphics } from "../../public/pixi/pixi";
 // import { initProj } from '../init_temp'
 import { Types } from '../types/stair_v2'
 import { BaseWidget } from './base_widget'
@@ -20,7 +19,6 @@ export class Wall extends BaseWidget {
     this.iSelected = false
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
-
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
     this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
@@ -29,6 +27,7 @@ export class Wall extends BaseWidget {
     this.createComponents(vPB.components)
     this.draw()
     this.addEvent()
+    // console.log(vPB)
   }
 
   // 求旋转
@@ -64,49 +63,75 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
-    const wall = new PIXI.Graphics()
-    wall.lineStyle(1, 0x000000)
-    wall.beginFill(0xffffff, 1)
-    wall.alpha = 1
-
     // 标注线偏移计算
     const { p1, p2, outP1, outP2, depth, normal } = this
     const newNormal = new Victor(normal.x, normal.y)
-    const offset = new Victor(depth * 2, depth * 2)
+    const offset = new Victor(depth * 1.5, depth * 1.5)
     newNormal.multiply(offset)
     const newP1 = new Victor(p1.x, p1.y)
     const newP2 = new Victor(p2.x, p2.y)
     const newOutP1 = new Victor(outP1.x, outP1.y)
     const newOouP2 = new Victor(outP2.x, outP2.y)
 
-    if (p1.x - p2.x < 0) {
+    let newTextRotation = ''
+    const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
+    const textAngle = textRotation.angle()
+    // console.log(textAngle)
+    // if (textAngle < Math.PI) {
+    //   newTextRotation = textRotation.invert().angle()
+    // } else if (textAngle == Math.PI) {
+    //   newTextRotation = 0
+    // } else if (textAngle > Math.PI) {
+    //   newTextRotation = textRotation.angle()
+    // } else if (textAngle == 0) {
+    //   newTextRotation = Math.PI
+    // }
+    // console.log(newTextRotation)
+    if (textAngle == Math.PI || textAngle == 0) {
+      newTextRotation = 0
+    } else if (textAngle < Math.PI) {
+      newTextRotation = textRotation.invert().angle()
+    } else if (textAngle > Math.PI) {
+      newTextRotation = textRotation.angle()
+    }
+
+    if (p1.x - p2.x < 0 && p1.y - p2.y == 0) {
       newP1.addY(newNormal)
       newP2.addY(newNormal)
       newOutP1.addY(newNormal)
       newOouP2.addY(newNormal)
-      if (p1.y - p2.y < 0) {
-        newP1.addX(newNormal)
-        newP2.addX(newNormal)
-        newOutP1.addX(newNormal)
-        newOouP2.addX(newNormal)
-      }
-    } else if (p1.y - p2.y < 0) {
+    }
+    if (p1.x - p2.x < 0 && p1.y - p2.y < 0) {
+      newP1.add(newNormal)
+      newP2.add(newNormal)
+      newOutP1.add(newNormal)
+      newOouP2.add(newNormal)
+    }
+    if (p1.x - p2.x > 0 && p1.y - p2.y > 0) {
+      newP1.add(newNormal)
+      newP2.add(newNormal)
+      newOutP1.add(newNormal)
+      newOouP2.add(newNormal)
+    }
+    if (p1.x - p2.x > 0 && p1.y - p2.y == 0) {
+      newP1.addY(newNormal)
+      newP2.addY(newNormal)
+      newOutP1.addY(newNormal)
+      newOouP2.addY(newNormal)
+    }
+    if (p1.x - p2.x == 0 && p1.y - p2.y > 0) {
       newP1.addX(newNormal)
       newP2.addX(newNormal)
       newOutP1.addX(newNormal)
       newOouP2.addX(newNormal)
-    } else if (p1.x - p2.x > 0) {
-      newP1.addY(newNormal)
-      newP2.addY(newNormal)
-      newOutP1.addY(newNormal)
-      newOouP2.addY(newNormal)
-      if (p1.y - p2.y > 0) {
-        newP1.subtractX(newNormal)
-        newP2.subtractX(newNormal)
-        newOutP1.subtractX(newNormal)
-        newOouP2.subtractX(newNormal)
-      }
-    } else if (p1.y - p2.y > 0) {
+    }
+    if (p1.x - p2.x < 0 && p1.y - p2.y > 0) {
+      newP1.add(newNormal)
+      newP2.add(newNormal)
+      newOutP1.add(newNormal)
+      newOouP2.add(newNormal)
+    }
+    if (p1.x - p2.x == 0 && p1.y - p2.y < 0) {
       newP1.addX(newNormal)
       newP2.addX(newNormal)
       newOutP1.addX(newNormal)
@@ -114,7 +139,9 @@ export class Wall extends BaseWidget {
     }
 
     // 获取标注线长度
-    const linelength = Math.hypot(newP1.x - newP2.x, newP1.y - newP2.y) * 10
+    const linelength =
+      Math.floor(Math.hypot(newP1.x - newP2.x, newP1.y - newP2.y) * 10 * 100) /
+      100
 
     // 计算标注线中心位置
     const innerlineCenter = {
@@ -130,12 +157,11 @@ export class Wall extends BaseWidget {
       y: (innerlineCenter.y + outterlineCenter.y) / 2,
     }
 
-    // 标注线绘制
-    const line = new PIXI.Graphics()
-    const lPath = [newP1.x, newP1.y, newP2.x, newP2.y]
-    line.lineStyle(1, 0x333333, 1)
-    line.position.set()
-    line.drawPolygon(lPath)
+    // 墙体绘制
+    const wall = new PIXI.Graphics()
+    wall.lineStyle(1, 0x929292)
+    wall.beginFill(0xe5e5e5, 1)
+    wall.alpha = 1
     const path = [
       this.p1.x,
       this.p1.y,
@@ -149,7 +175,7 @@ export class Wall extends BaseWidget {
     wall.drawPolygon(path)
     wall.endFill()
 
-    //创建纹理
+    //创建墙体纹理
     var texture = PIXI.Texture.from(catUrl)
     var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
 
@@ -159,39 +185,64 @@ export class Wall extends BaseWidget {
     tilingSprite.position.set(this.position.x, this.position.y)
     wall.addChild(tilingSprite)
 
+    // 标注线绘制
+    const lineContainer = new PIXI.Container()
+
+    // 标注线左右端线绘制
+    const dobuleLineLeft = new PIXI.Graphics()
+    dobuleLineLeft
+      .lineStyle(2, 0x2d3037, 1)
+      .moveTo(this.p1.x, this.p1.y)
+      .lineTo(newOutP1.x, newOutP1.y)
+
+    const dobuleLineRight = new PIXI.Graphics()
+    dobuleLineRight
+      .lineStyle(2, 0x2d3037, 1)
+      .moveTo(this.p2.x, this.p2.y)
+      .lineTo(newOouP2.x, newOouP2.y)
+
+    const line = new PIXI.Graphics()
+    const lPath = [newP1.x, newP1.y, newP2.x, newP2.y]
+    line.position.set()
+    line.lineStyle(1, 0x2d3037, 1)
+    line.drawPolygon(lPath)
+
     // 标注文字添加
-    const lineText = new PIXI.Text(linelength, { fontSize: 12, fill: 0x333333 })
-    lineText.position.set(
-      linePos.x - lineText.width / 2,
-      linePos.y - lineText.height / 2
-    )
+    const lineText = new PIXI.Text(linelength, {
+      fontSize: 17.98,
+      fill: 0x2d3037,
+    })
+    lineText.position.set(linePos.x, linePos.y)
+    lineText.pivot.set(lineText.width / 2, lineText.height / 2)
+    lineText.rotation = newTextRotation
+    // lineText.rotation = this.rotation
 
+    lineContainer.addChild(dobuleLineLeft, dobuleLineRight, line)
     this.sprite = wall
-    this.lineSprite = line
+    this.lineSprite = lineContainer
     this.textSprite = lineText
-
-    // // 绘制圆形
   }
 
   // 取消墙体选中效果
   cancelSelected() {
     this.sprite.tint = 0xffffff
+    this.sprite.alpha = 1
     this.iSelected = false
   }
-
+  // 墙体选中效果
   setSelected() {
-    this.sprite.tint = 0x6e9aff
+    this.sprite.tint = 0xe9efff
     this.sprite.alpha = 1
     this.iSelected = true
   }
-
+  // 鼠标进入墙体效果
   setHover() {
     if (!this.iSelected) {
-      this.sprite.tint = 0x6e8aff
-      this.sprite.alpha = 0.5
+      this.sprite.tint = 0xe9efff
+      this.sprite.alpha = 1
     }
   }
-
+  // 鼠标离开墙体效果
   cancelHover() {
     if (!this.iSelected) {
       this.sprite.tint = 0xffffff
@@ -219,14 +270,17 @@ export class Wall extends BaseWidget {
     vCompArr.forEach((c) => {
       if (
         [
-          Types.ComponentType.cdoor,
-          Types.ComponentType.cwindow,
-          Types.ComponentType.cdoor_hole,
+          Types.ComponentType.cdoor, // 门
+          Types.ComponentType.cwindow, // 窗
+          Types.ComponentType.cdoor_hole, // 门洞
         ].includes(c.type)
       ) {
         _this.components.push(new Inlay(c))
       } else if (
-        [Types.ComponentType.cpillar, Types.ComponentType.cbeam].includes(c)
+        [
+          Types.ComponentType.cpillar, // 柱
+          Types.ComponentType.cbeam, // 梁
+        ].includes(c.type)
       ) {
         _this.components.push(new CementComp(c))
       }
