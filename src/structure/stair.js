@@ -8,6 +8,8 @@ export class Stair {
     this.uuid = ''
     this.flights = []
     this.smallColumns = []
+    this.bigColumns = []
+    this.handrails = []
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
     this.stepWidth = Default.STEP_WIDTH
@@ -45,6 +47,7 @@ export class Stair {
     })
     this.createFlights()
     this.createSmallColumns()
+    this.createBigColumns()
   }
 
   computeSize () {
@@ -165,7 +168,7 @@ export class Stair {
       let length1 = 0, length2 = 0
       if (args.arrange_rule === Types.ArrangeRule.arrThree) {
         let index = i % 2
-        let border = this.stepWidth * (step_num - i + 1)
+        let border = this.stepWidth * (step_num - i)
         if (index === 0) {
           position1.y = border - Math.max(this.stepWidth / 6 , size.y)
           position2.y = border - this.stepWidth + Math.max(this.stepWidth / 6 , size.y)
@@ -195,27 +198,62 @@ export class Stair {
         this.smallColumns.push(new Types.SmallColumn({
           uuid:'',
           position: position1,
-          size: new Types.Vector3({x:size.x, y:length1, z:size.z})
+          size: new Types.Vector3({x:size.x, y:size.y, z:length1})
         }))
         this.smallColumns.push(new Types.SmallColumn({
           uuid: '',
           position: new Types.Vector3({x:this.width - offset, y: position1.y, z: position1.z}),
-          size: new Types.Vector3({x:size.x, y:length1, z:size.z})
+          size: new Types.Vector3({x:size.x, y:size.y, z:length1})
         }))
       }
       if (length2) {
         this.smallColumns.push(new Types.SmallColumn({
           uuid: '',
           position: position2,
-          size: new Types.Vector3({x:size.x, y:length2, z:size.z})
+          size: new Types.Vector3({x:size.x, y:size.y, z:length2})
         }))
         this.smallColumns.push(new Types.SmallColumn({
           uuid: '',
           position: new Types.Vector3({x:this.width - offset, y: position2.y, z: position2.z}),
-          size: new Types.Vector3({x:size.x, y:length2, z:size.z})
+          size: new Types.Vector3({x:size.x, y:size.y, z:length2})
         }))
       }
     } 
+  }
+
+  createBigColumns () {
+    let args = this.bigColParameters
+    let gArgs = this.girderParameters
+    let offset = this.treadParameters.sideNossing + gArgs.depth / 2
+    if (gArgs.type === Types.GirderType.gslab) {
+      offset = gArgs.depth / 2
+    }
+    let size = tool.parseSpecification(args.specification)
+    let leftPosition = new Types.Vector3({
+      x: offset,
+      y: this.depth + Default.BIG_COL_GAP + size.y / 2
+    })
+    let rightPosition = new Types.Vector3({
+      x: this.width - offset,
+      y: this.depth + Default.BIG_COL_GAP + size.y / 2
+    })
+    this.bigColumns.push(new Types.BigColumn({
+      uuid: '',
+      position: leftPosition,
+      size: size,
+      paras: this.bigColParameters
+    }))
+    this.bigColumns.push(new Types.BigColumn({
+      uuid: '',
+      position: rightPosition,
+      size: size,
+      paras: this.bigColParameters
+    }))
+  }
+
+  createHandrail () {
+    let args = this.handrailParameters
+
   }
 
 
@@ -237,7 +275,8 @@ export class Stair {
       }),
       flights: this.flights,
       smallColumns: this.smallColumns,
-      position: this.position
+      bigColumns: this.bigColumns,
+      position: this.position,
     })
   }
 }
