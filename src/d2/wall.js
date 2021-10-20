@@ -16,7 +16,6 @@ export class Wall extends BaseWidget {
    */
   constructor(vPB) {
     super()
-    this.iSelected = false
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
@@ -66,7 +65,7 @@ export class Wall extends BaseWidget {
     // 标注线偏移计算
     const { p1, p2, outP1, outP2, depth, normal } = this
     const newNormal = new Victor(normal.x, normal.y)
-    const offset = new Victor(depth * 1.5, depth * 1.5)
+    const offset = new Victor(depth * 3, depth * 3)
     newNormal.multiply(offset)
     const newP1 = new Victor(p1.x, p1.y)
     const newP2 = new Victor(p2.x, p2.y)
@@ -227,24 +226,24 @@ export class Wall extends BaseWidget {
   cancelSelected() {
     this.sprite.tint = 0xffffff
     this.sprite.alpha = 1
-    this.iSelected = false
+    this.isSelected = false
   }
   // 墙体选中效果
   setSelected() {
     this.sprite.tint = 0xe9efff
     this.sprite.alpha = 1
-    this.iSelected = true
+    this.isSelected = true
   }
   // 鼠标进入墙体效果
   setHover() {
-    if (!this.iSelected) {
+    if (!this.isSelected) {
       this.sprite.tint = 0xe9efff
       this.sprite.alpha = 1
     }
   }
   // 鼠标离开墙体效果
   cancelHover() {
-    if (!this.iSelected) {
+    if (!this.isSelected) {
       this.sprite.tint = 0xffffff
       this.sprite.alpha = 1
     }
@@ -294,7 +293,7 @@ export class Wall extends BaseWidget {
     this.sprite
       .on('mousedown', (event) => {
         event.stopPropagation()
-        if (this.iSelected) {
+        if (this.isSelected) {
           return
         }
         if (D2Config.SELECTED) {

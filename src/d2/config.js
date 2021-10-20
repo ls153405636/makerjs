@@ -3,4 +3,5 @@ export const D2Config = {
   CANVAS_HEIGHT: 937,
   SCREEN_RATE: 10,
   SELECTED: null,
+  IS_SINGLE_SELECTED: false,
 }

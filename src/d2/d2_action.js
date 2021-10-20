@@ -2,6 +2,7 @@ import { Movie } from './movie'
 import { Hole } from './hole'
 import { Wall } from './wall'
 import { Stair } from './stair/stair'
+import { D2Config } from './config'
 
 /**
  *
@@ -21,6 +22,17 @@ export function importProject(vPB) {
 export function initD2() {
   new Movie().bootstrap()
 }
+
+document.addEventListener('keydown', (e) => {
+  if (e.keyCode == 17) {
+    D2Config.IS_SINGLE_SELECTED = true
+  }
+})
+document.addEventListener('keyup', (e) => {
+  if (e.keyCode == 17) {
+    D2Config.IS_SINGLE_SELECTED = false
+  }
+})
 
 export default {
   importProject,

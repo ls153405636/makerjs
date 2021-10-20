@@ -1,5 +1,6 @@
 import { Types } from '../../types/stair_v2'
 import { BaseWidget } from '../base_widget'
+import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
 import { Tread } from './tread'
 
@@ -12,7 +13,7 @@ export class Flight extends BaseWidget {
     super()
     this.treads = []
     for (const t of vPB.treads) {
-      this.treads.push(new Tread(t))
+      this.treads.push(new Tread(t, this))
     }
     this.tread = vPB.treads
     this.stepLength = d2_tool.translateValue(vPB.stepLength)
@@ -44,6 +45,33 @@ export class Flight extends BaseWidget {
    */
   getSprite() {
     return this.sprite
+  }
+
+  setHover() {
+    this.treads.forEach((t) => {
+      t.setHover()
+    })
+  }
+
+  cancelHover() {
+    if (!this.isSelected) {
+      this.treads.forEach((t) => {
+        t.cancelHover()
+      })
+    }
+  }
+
+  setSelected() {
+    this.treads.forEach((t) => {
+      t.setSelected()
+    })
+    D2Config.SELECTED = this
+  }
+
+  cancelSelected() {
+    this.treads.forEach((t) => {
+      t.cancelSelected()
+    })
   }
 
   /**

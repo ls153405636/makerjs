@@ -7,12 +7,12 @@ export class Tread extends BaseWidget {
    *
    * @param {Types.Tread} vPB
    */
-  constructor(vPB) {
+  constructor(vPB, vParent) {
     super()
-    this.iSelected = false
     this.stepNumWord = 0
     this.outline = vPB.outline
     this.edges = vPB.stepOutline.edges
+    this.parent = vParent
     this.draw()
     this.addEvent()
   }
@@ -63,35 +63,27 @@ export class Tread extends BaseWidget {
    */
   addToStage() {}
 
-  // 取消墙体选中效果
+  // 取消踏板选中效果
   cancelSelected() {
-    for (let i = 0; i < this.sprite.parent.children.length; i++) {
-      this.sprite.parent.children[i].tint = 0xffffff
-    }
-    this.iSelected = false
+    this.sprite.tint = 0xffffff
+    this.isSelected = false
   }
-  // 墙体选中效果
+
+  // 踏板选中效果
   setSelected() {
-    for (let i = 0; i < this.sprite.parent.children.length; i++) {
-      // console.log(this.sprite.parent.children[i])
-      this.sprite.parent.children[i].tint = 0xe9efff
-    }
-    this.sprite.parent.children.tint = 0xff88ff
-    this.sprite.alpha = 1
-    this.iSelected = true
+    this.sprite.tint = 0xe9efff
+    this.isSelected = true
+    D2Config.SELECTED = this
   }
-  // 鼠标进入墙体效果
+
+  // 鼠标进入踏板效果
   setHover() {
-    if (!this.iSelected) {
-      this.sprite.tint = 0xe9efff
-      this.sprite.alpha = 1
-    }
+    this.sprite.tint = 0xe9efff
   }
-  // 鼠标离开墙体效果
+  // 鼠标离开踏板效果
   cancelHover() {
-    if (!this.iSelected) {
+    if (!this.isSelected) {
       this.sprite.tint = 0xffffff
-      this.sprite.alpha = 1
     }
   }
 
@@ -100,21 +92,33 @@ export class Tread extends BaseWidget {
     let _this = this
     this.sprite
       .on('mousedown', (event) => {
+        console.log(D2Config.IS_SINGLE_SELECTED)
         event.stopPropagation()
-        if (this.iSelected) {
+        if (this.isSelected) {
           return
         }
         if (D2Config.SELECTED) {
           D2Config.SELECTED.cancelSelected()
         }
-        _this.setSelected()
-        D2Config.SELECTED = this
+        if (D2Config.IS_SINGLE_SELECTED) {
+          _this.setSelected()
+        } else {
+          _this.parent.setSelected()
+        }
       })
       .on('mouseout', () => {
-        _this.cancelHover()
+        if (D2Config.IS_SINGLE_SELECTED) {
+          _this.cancelHover()
+        } else {
+          _this.parent.cancelHover()
+        }
       })
       .on('mouseover', () => {
-        _this.setHover()
+        if (D2Config.IS_SINGLE_SELECTED) {
+          _this.setHover()
+        } else {
+          _this.parent.setHover()
+        }
       })
   }
 }

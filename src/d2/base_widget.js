@@ -6,6 +6,7 @@ export class BaseWidget {
     this.uuid = uuidv4()
     /** @type {PIXI.Container} */
     this.sprite = null
+    this.isSelected = false
   }
 
   setuuid(uuid) {
