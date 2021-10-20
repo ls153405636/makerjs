@@ -9,30 +9,12 @@ export class Tread extends BaseWidget {
    */
   constructor(vPB, vParent) {
     super()
-    this.stepNumWord = 0
-    this.outline = vPB.outline
     this.edges = vPB.stepOutline.edges
     this.parent = vParent
     this.draw()
     this.addEvent()
   }
 
-  get position() {
-    const { p1, outP1, p2, outP2 } = this
-    const innerCenter = {
-      x: (p1.x + p2.x) / 2,
-      y: (p1.y + p2.y) / 2,
-    }
-    const outterCenter = {
-      x: (outP1.x + outP2.x) / 2,
-      y: (outP1.y + outP2.y) / 2,
-    }
-    const wallPos = {
-      x: (innerCenter.x + outterCenter.x) / 2,
-      y: (innerCenter.y + outterCenter.y) / 2,
-    }
-    return wallPos
-  }
   draw() {
     // 踏板绘制
     let tread = new PIXI.Graphics()
@@ -45,7 +27,6 @@ export class Tread extends BaseWidget {
     }
     tread.drawPolygon(path)
     tread.endFill()
-
     this.sprite = tread
   }
 
@@ -92,7 +73,6 @@ export class Tread extends BaseWidget {
     let _this = this
     this.sprite
       .on('mousedown', (event) => {
-        console.log(D2Config.IS_SINGLE_SELECTED)
         event.stopPropagation()
         if (this.isSelected) {
           return

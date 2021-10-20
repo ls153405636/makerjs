@@ -4,4 +4,5 @@ export const D2Config = {
   SCREEN_RATE: 10,
   SELECTED: null,
   IS_SINGLE_SELECTED: false,
+  CUR_STAIR: null,
 }

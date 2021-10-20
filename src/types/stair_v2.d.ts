@@ -72,6 +72,13 @@ export namespace Types {
         arrThree = 2
     }
 
+    /** GirderType enum. */
+    enum GirderType {
+        gph = 0,
+        gslab = 1,
+        gsaw = 2
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 
@@ -1020,6 +1027,9 @@ export namespace Types {
         /** Stair handrailParameters */
         handrailParameters?: (Types.IHandrailParameters|null);
 
+        /** Stair girderParameters */
+        girderParameters?: (Types.IGirderParameters|null);
+
         /** Stair flights */
         flights?: (Types.IFlight[]|null);
 
@@ -1031,6 +1041,12 @@ export namespace Types {
 
         /** Stair smallColumns */
         smallColumns?: (Types.ISmallColumn[]|null);
+
+        /** Stair handrails */
+        handrails?: (Types.IHandrail[]|null);
+
+        /** Stair girders */
+        girders?: (Types.IGirder[]|null);
 
         /** Stair stepHeight */
         stepHeight?: (number|null);
@@ -1081,6 +1097,9 @@ export namespace Types {
         /** Stair handrailParameters. */
         public handrailParameters?: (Types.IHandrailParameters|null);
 
+        /** Stair girderParameters. */
+        public girderParameters?: (Types.IGirderParameters|null);
+
         /** Stair flights. */
         public flights: Types.IFlight[];
 
@@ -1092,6 +1111,12 @@ export namespace Types {
 
         /** Stair smallColumns. */
         public smallColumns: Types.ISmallColumn[];
+
+        /** Stair handrails. */
+        public handrails: Types.IHandrail[];
+
+        /** Stair girders. */
+        public girders: Types.IGirder[];
 
         /** Stair stepHeight. */
         public stepHeight: number;
@@ -2420,6 +2445,9 @@ export namespace Types {
 
     /** Properties of a DxfData. */
     interface IDxfData {
+
+        /** DxfData specification */
+        specification?: (string|null);
     }
 
     /** Represents a DxfData. */
@@ -2430,6 +2458,9 @@ export namespace Types {
          * @param [properties] Properties to set
          */
         constructor(properties?: Types.IDxfData);
+
+        /** DxfData specification. */
+        public specification: string;
 
         /**
          * Creates a new DxfData instance using the specified properties.
@@ -2701,6 +2732,216 @@ export namespace Types {
 
         /**
          * Converts this HandrailParameters to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a Girder. */
+    interface IGirder {
+
+        /** Girder uuid */
+        uuid?: (string|null);
+
+        /** Girder length */
+        length?: (number|null);
+
+        /** Girder outline */
+        outline?: (Types.IOutline|null);
+    }
+
+    /** Represents a Girder. */
+    class Girder implements IGirder {
+
+        /**
+         * Constructs a new Girder.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IGirder);
+
+        /** Girder uuid. */
+        public uuid: string;
+
+        /** Girder length. */
+        public length: number;
+
+        /** Girder outline. */
+        public outline?: (Types.IOutline|null);
+
+        /**
+         * Creates a new Girder instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Girder instance
+         */
+        public static create(properties?: Types.IGirder): Types.Girder;
+
+        /**
+         * Encodes the specified Girder message. Does not implicitly {@link Types.Girder.verify|verify} messages.
+         * @param message Girder message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IGirder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Girder message, length delimited. Does not implicitly {@link Types.Girder.verify|verify} messages.
+         * @param message Girder message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IGirder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Girder message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Girder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Girder;
+
+        /**
+         * Decodes a Girder message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Girder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Girder;
+
+        /**
+         * Verifies a Girder message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Girder message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Girder
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Girder;
+
+        /**
+         * Creates a plain object from a Girder message. Also converts values to other types if specified.
+         * @param message Girder
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Girder, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Girder to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a GirderParameters. */
+    interface IGirderParameters {
+
+        /** GirderParameters height */
+        height?: (number|null);
+
+        /** GirderParameters depth */
+        depth?: (number|null);
+
+        /** GirderParameters type */
+        type?: (Types.GirderType|null);
+
+        /** GirderParameters material */
+        material?: (Types.IMaterial|null);
+    }
+
+    /** Represents a GirderParameters. */
+    class GirderParameters implements IGirderParameters {
+
+        /**
+         * Constructs a new GirderParameters.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IGirderParameters);
+
+        /** GirderParameters height. */
+        public height: number;
+
+        /** GirderParameters depth. */
+        public depth: number;
+
+        /** GirderParameters type. */
+        public type: Types.GirderType;
+
+        /** GirderParameters material. */
+        public material?: (Types.IMaterial|null);
+
+        /**
+         * Creates a new GirderParameters instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GirderParameters instance
+         */
+        public static create(properties?: Types.IGirderParameters): Types.GirderParameters;
+
+        /**
+         * Encodes the specified GirderParameters message. Does not implicitly {@link Types.GirderParameters.verify|verify} messages.
+         * @param message GirderParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IGirderParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GirderParameters message, length delimited. Does not implicitly {@link Types.GirderParameters.verify|verify} messages.
+         * @param message GirderParameters message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IGirderParameters, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GirderParameters message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GirderParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.GirderParameters;
+
+        /**
+         * Decodes a GirderParameters message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GirderParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.GirderParameters;
+
+        /**
+         * Verifies a GirderParameters message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GirderParameters message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GirderParameters
+         */
+        public static fromObject(object: { [k: string]: any }): Types.GirderParameters;
+
+        /**
+         * Creates a plain object from a GirderParameters message. Also converts values to other types if specified.
+         * @param message GirderParameters
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.GirderParameters, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GirderParameters to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
