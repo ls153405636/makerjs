@@ -322,7 +322,7 @@ export class Structure {
   }
 
   createStair () {
-    this.stair = new Stair()
+    this.stair = new Stair({})
     this.proj.stair = this.stair.writePB()
   }
 }

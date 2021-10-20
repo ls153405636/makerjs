@@ -46,6 +46,7 @@ enum NossingType {
   nluxury = 3;
 }
 
+//附属组件类型
 enum ComponentType {
   cph        = 0;
   cdoor      = 1;  //门
@@ -68,6 +69,13 @@ enum ArrangeRule {
   arph     = 0;  //占位
   arrFour  = 1;  //两级四根
   arrThree = 2;  //两级三根
+}
+
+//大梁类型
+enum GirderType {
+  gph   = 0;  //占位
+  gslab = 1;  //平板型
+  gsaw  = 2;  //锯齿型
 }
 
 //三维向量
@@ -154,12 +162,21 @@ message Stair {
   BigColParameters   bigColParameters         = 9;   //大柱参数
   SmallColParameters smallColParameters       = 10;  //小柱参数
   HandrailParameters handrailParameters       = 11;  //扶手参数
+  GirderParameters   girderParameters         = 12;  //大梁参数
   repeated           Flight flights           = 15;  //楼梯段集合
   repeated           Landing landings         = 16;  //休息平台合集
   repeated           BigColumn bigColumns     = 17;  //大柱集合
   repeated           SmallColumn smallColumns = 18;  //小柱集合
+  repeated           Handrail handrails       = 19;  //扶手集合
+  repeated           Girder   girders         = 20;  //大梁集合
+  HangingBoard       hangingBoard             = 21;  //挂板
   float              stepHeight               = 25;  //步高
   Vector3            position                 = 26;  //为包围框左上角顶点的坐标
+}
+
+message HangingBoard {
+  string uuid = 1;
+  float depth = 2;
 }
 
 //一段楼梯
@@ -251,7 +268,7 @@ message BigColParameters {
 }
 
 message DxfData {
-
+  string   specification = 1; //规格
 }
 
 message Handrail {
@@ -265,6 +282,19 @@ message HandrailParameters {
   DxfData  source   = 2;
   Material material = 3;
 } 
+
+message Girder {
+  string  uuid    = 1;
+  float   length  = 2;  //长度
+  Outline outline = 3;  //轮廓边
+}
+
+message GirderParameters {
+  float      height   = 1;  //高度
+  float      depth    = 2;  //厚度
+  GirderType type     = 3;  //类型
+  Material   material = 4;
+}
 
 
 

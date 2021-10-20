@@ -174,6 +174,22 @@ export const Types = $root.Types = (() => {
         return values;
     })();
 
+    /**
+     * GirderType enum.
+     * @name Types.GirderType
+     * @enum {number}
+     * @property {number} gph=0 gph value
+     * @property {number} gslab=1 gslab value
+     * @property {number} gsaw=2 gsaw value
+     */
+    Types.GirderType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "gph"] = 0;
+        values[valuesById[1] = "gslab"] = 1;
+        values[valuesById[2] = "gsaw"] = 2;
+        return values;
+    })();
+
     Types.Vector3 = (function() {
 
         /**
@@ -2613,10 +2629,13 @@ export const Types = $root.Types = (() => {
          * @property {Types.IBigColParameters|null} [bigColParameters] Stair bigColParameters
          * @property {Types.ISmallColParameters|null} [smallColParameters] Stair smallColParameters
          * @property {Types.IHandrailParameters|null} [handrailParameters] Stair handrailParameters
+         * @property {Types.IGirderParameters|null} [girderParameters] Stair girderParameters
          * @property {Array.<Types.IFlight>|null} [flights] Stair flights
          * @property {Array.<Types.ILanding>|null} [landings] Stair landings
          * @property {Array.<Types.IBigColumn>|null} [bigColumns] Stair bigColumns
          * @property {Array.<Types.ISmallColumn>|null} [smallColumns] Stair smallColumns
+         * @property {Array.<Types.IHandrail>|null} [handrails] Stair handrails
+         * @property {Array.<Types.IGirder>|null} [girders] Stair girders
          * @property {number|null} [stepHeight] Stair stepHeight
          * @property {Types.IVector3|null} [position] Stair position
          */
@@ -2634,6 +2653,8 @@ export const Types = $root.Types = (() => {
             this.landings = [];
             this.bigColumns = [];
             this.smallColumns = [];
+            this.handrails = [];
+            this.girders = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -2729,6 +2750,14 @@ export const Types = $root.Types = (() => {
         Stair.prototype.handrailParameters = null;
 
         /**
+         * Stair girderParameters.
+         * @member {Types.IGirderParameters|null|undefined} girderParameters
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.girderParameters = null;
+
+        /**
          * Stair flights.
          * @member {Array.<Types.IFlight>} flights
          * @memberof Types.Stair
@@ -2759,6 +2788,22 @@ export const Types = $root.Types = (() => {
          * @instance
          */
         Stair.prototype.smallColumns = $util.emptyArray;
+
+        /**
+         * Stair handrails.
+         * @member {Array.<Types.IHandrail>} handrails
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.handrails = $util.emptyArray;
+
+        /**
+         * Stair girders.
+         * @member {Array.<Types.IGirder>} girders
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.girders = $util.emptyArray;
 
         /**
          * Stair stepHeight.
@@ -2822,6 +2867,8 @@ export const Types = $root.Types = (() => {
                 $root.Types.SmallColParameters.encode(message.smallColParameters, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
             if (message.handrailParameters != null && Object.hasOwnProperty.call(message, "handrailParameters"))
                 $root.Types.HandrailParameters.encode(message.handrailParameters, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+            if (message.girderParameters != null && Object.hasOwnProperty.call(message, "girderParameters"))
+                $root.Types.GirderParameters.encode(message.girderParameters, writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
             if (message.flights != null && message.flights.length)
                 for (let i = 0; i < message.flights.length; ++i)
                     $root.Types.Flight.encode(message.flights[i], writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
@@ -2834,6 +2881,12 @@ export const Types = $root.Types = (() => {
             if (message.smallColumns != null && message.smallColumns.length)
                 for (let i = 0; i < message.smallColumns.length; ++i)
                     $root.Types.SmallColumn.encode(message.smallColumns[i], writer.uint32(/* id 18, wireType 2 =*/146).fork()).ldelim();
+            if (message.handrails != null && message.handrails.length)
+                for (let i = 0; i < message.handrails.length; ++i)
+                    $root.Types.Handrail.encode(message.handrails[i], writer.uint32(/* id 19, wireType 2 =*/154).fork()).ldelim();
+            if (message.girders != null && message.girders.length)
+                for (let i = 0; i < message.girders.length; ++i)
+                    $root.Types.Girder.encode(message.girders[i], writer.uint32(/* id 20, wireType 2 =*/162).fork()).ldelim();
             if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
                 writer.uint32(/* id 25, wireType 5 =*/205).float(message.stepHeight);
             if (message.position != null && Object.hasOwnProperty.call(message, "position"))
@@ -2905,6 +2958,9 @@ export const Types = $root.Types = (() => {
                 case 11:
                     message.handrailParameters = $root.Types.HandrailParameters.decode(reader, reader.uint32());
                     break;
+                case 12:
+                    message.girderParameters = $root.Types.GirderParameters.decode(reader, reader.uint32());
+                    break;
                 case 15:
                     if (!(message.flights && message.flights.length))
                         message.flights = [];
@@ -2924,6 +2980,16 @@ export const Types = $root.Types = (() => {
                     if (!(message.smallColumns && message.smallColumns.length))
                         message.smallColumns = [];
                     message.smallColumns.push($root.Types.SmallColumn.decode(reader, reader.uint32()));
+                    break;
+                case 19:
+                    if (!(message.handrails && message.handrails.length))
+                        message.handrails = [];
+                    message.handrails.push($root.Types.Handrail.decode(reader, reader.uint32()));
+                    break;
+                case 20:
+                    if (!(message.girders && message.girders.length))
+                        message.girders = [];
+                    message.girders.push($root.Types.Girder.decode(reader, reader.uint32()));
                     break;
                 case 25:
                     message.stepHeight = reader.float();
@@ -3023,6 +3089,11 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "handrailParameters." + error;
             }
+            if (message.girderParameters != null && message.hasOwnProperty("girderParameters")) {
+                let error = $root.Types.GirderParameters.verify(message.girderParameters);
+                if (error)
+                    return "girderParameters." + error;
+            }
             if (message.flights != null && message.hasOwnProperty("flights")) {
                 if (!Array.isArray(message.flights))
                     return "flights: array expected";
@@ -3057,6 +3128,24 @@ export const Types = $root.Types = (() => {
                     let error = $root.Types.SmallColumn.verify(message.smallColumns[i]);
                     if (error)
                         return "smallColumns." + error;
+                }
+            }
+            if (message.handrails != null && message.hasOwnProperty("handrails")) {
+                if (!Array.isArray(message.handrails))
+                    return "handrails: array expected";
+                for (let i = 0; i < message.handrails.length; ++i) {
+                    let error = $root.Types.Handrail.verify(message.handrails[i]);
+                    if (error)
+                        return "handrails." + error;
+                }
+            }
+            if (message.girders != null && message.hasOwnProperty("girders")) {
+                if (!Array.isArray(message.girders))
+                    return "girders: array expected";
+                for (let i = 0; i < message.girders.length; ++i) {
+                    let error = $root.Types.Girder.verify(message.girders[i]);
+                    if (error)
+                        return "girders." + error;
                 }
             }
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
@@ -3146,6 +3235,11 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Stair.handrailParameters: object expected");
                 message.handrailParameters = $root.Types.HandrailParameters.fromObject(object.handrailParameters);
             }
+            if (object.girderParameters != null) {
+                if (typeof object.girderParameters !== "object")
+                    throw TypeError(".Types.Stair.girderParameters: object expected");
+                message.girderParameters = $root.Types.GirderParameters.fromObject(object.girderParameters);
+            }
             if (object.flights) {
                 if (!Array.isArray(object.flights))
                     throw TypeError(".Types.Stair.flights: array expected");
@@ -3186,6 +3280,26 @@ export const Types = $root.Types = (() => {
                     message.smallColumns[i] = $root.Types.SmallColumn.fromObject(object.smallColumns[i]);
                 }
             }
+            if (object.handrails) {
+                if (!Array.isArray(object.handrails))
+                    throw TypeError(".Types.Stair.handrails: array expected");
+                message.handrails = [];
+                for (let i = 0; i < object.handrails.length; ++i) {
+                    if (typeof object.handrails[i] !== "object")
+                        throw TypeError(".Types.Stair.handrails: object expected");
+                    message.handrails[i] = $root.Types.Handrail.fromObject(object.handrails[i]);
+                }
+            }
+            if (object.girders) {
+                if (!Array.isArray(object.girders))
+                    throw TypeError(".Types.Stair.girders: array expected");
+                message.girders = [];
+                for (let i = 0; i < object.girders.length; ++i) {
+                    if (typeof object.girders[i] !== "object")
+                        throw TypeError(".Types.Stair.girders: object expected");
+                    message.girders[i] = $root.Types.Girder.fromObject(object.girders[i]);
+                }
+            }
             if (object.stepHeight != null)
                 message.stepHeight = Number(object.stepHeight);
             if (object.position != null) {
@@ -3214,6 +3328,8 @@ export const Types = $root.Types = (() => {
                 object.landings = [];
                 object.bigColumns = [];
                 object.smallColumns = [];
+                object.handrails = [];
+                object.girders = [];
             }
             if (options.defaults) {
                 object.uuid = "";
@@ -3227,6 +3343,7 @@ export const Types = $root.Types = (() => {
                 object.bigColParameters = null;
                 object.smallColParameters = null;
                 object.handrailParameters = null;
+                object.girderParameters = null;
                 object.stepHeight = 0;
                 object.position = null;
             }
@@ -3252,6 +3369,8 @@ export const Types = $root.Types = (() => {
                 object.smallColParameters = $root.Types.SmallColParameters.toObject(message.smallColParameters, options);
             if (message.handrailParameters != null && message.hasOwnProperty("handrailParameters"))
                 object.handrailParameters = $root.Types.HandrailParameters.toObject(message.handrailParameters, options);
+            if (message.girderParameters != null && message.hasOwnProperty("girderParameters"))
+                object.girderParameters = $root.Types.GirderParameters.toObject(message.girderParameters, options);
             if (message.flights && message.flights.length) {
                 object.flights = [];
                 for (let j = 0; j < message.flights.length; ++j)
@@ -3271,6 +3390,16 @@ export const Types = $root.Types = (() => {
                 object.smallColumns = [];
                 for (let j = 0; j < message.smallColumns.length; ++j)
                     object.smallColumns[j] = $root.Types.SmallColumn.toObject(message.smallColumns[j], options);
+            }
+            if (message.handrails && message.handrails.length) {
+                object.handrails = [];
+                for (let j = 0; j < message.handrails.length; ++j)
+                    object.handrails[j] = $root.Types.Handrail.toObject(message.handrails[j], options);
+            }
+            if (message.girders && message.girders.length) {
+                object.girders = [];
+                for (let j = 0; j < message.girders.length; ++j)
+                    object.girders[j] = $root.Types.Girder.toObject(message.girders[j], options);
             }
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
                 object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
@@ -6360,6 +6489,7 @@ export const Types = $root.Types = (() => {
          * Properties of a DxfData.
          * @memberof Types
          * @interface IDxfData
+         * @property {string|null} [specification] DxfData specification
          */
 
         /**
@@ -6376,6 +6506,14 @@ export const Types = $root.Types = (() => {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * DxfData specification.
+         * @member {string} specification
+         * @memberof Types.DxfData
+         * @instance
+         */
+        DxfData.prototype.specification = "";
 
         /**
          * Creates a new DxfData instance using the specified properties.
@@ -6401,6 +6539,8 @@ export const Types = $root.Types = (() => {
         DxfData.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.specification != null && Object.hasOwnProperty.call(message, "specification"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.specification);
             return writer;
         };
 
@@ -6435,6 +6575,9 @@ export const Types = $root.Types = (() => {
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 1:
+                    message.specification = reader.string();
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -6470,6 +6613,9 @@ export const Types = $root.Types = (() => {
         DxfData.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.specification != null && message.hasOwnProperty("specification"))
+                if (!$util.isString(message.specification))
+                    return "specification: string expected";
             return null;
         };
 
@@ -6484,7 +6630,10 @@ export const Types = $root.Types = (() => {
         DxfData.fromObject = function fromObject(object) {
             if (object instanceof $root.Types.DxfData)
                 return object;
-            return new $root.Types.DxfData();
+            let message = new $root.Types.DxfData();
+            if (object.specification != null)
+                message.specification = String(object.specification);
+            return message;
         };
 
         /**
@@ -6496,8 +6645,15 @@ export const Types = $root.Types = (() => {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        DxfData.toObject = function toObject() {
-            return {};
+        DxfData.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults)
+                object.specification = "";
+            if (message.specification != null && message.hasOwnProperty("specification"))
+                object.specification = message.specification;
+            return object;
         };
 
         /**
@@ -6991,6 +7147,520 @@ export const Types = $root.Types = (() => {
         };
 
         return HandrailParameters;
+    })();
+
+    Types.Girder = (function() {
+
+        /**
+         * Properties of a Girder.
+         * @memberof Types
+         * @interface IGirder
+         * @property {string|null} [uuid] Girder uuid
+         * @property {number|null} [length] Girder length
+         * @property {Types.IOutline|null} [outline] Girder outline
+         */
+
+        /**
+         * Constructs a new Girder.
+         * @memberof Types
+         * @classdesc Represents a Girder.
+         * @implements IGirder
+         * @constructor
+         * @param {Types.IGirder=} [properties] Properties to set
+         */
+        function Girder(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Girder uuid.
+         * @member {string} uuid
+         * @memberof Types.Girder
+         * @instance
+         */
+        Girder.prototype.uuid = "";
+
+        /**
+         * Girder length.
+         * @member {number} length
+         * @memberof Types.Girder
+         * @instance
+         */
+        Girder.prototype.length = 0;
+
+        /**
+         * Girder outline.
+         * @member {Types.IOutline|null|undefined} outline
+         * @memberof Types.Girder
+         * @instance
+         */
+        Girder.prototype.outline = null;
+
+        /**
+         * Creates a new Girder instance using the specified properties.
+         * @function create
+         * @memberof Types.Girder
+         * @static
+         * @param {Types.IGirder=} [properties] Properties to set
+         * @returns {Types.Girder} Girder instance
+         */
+        Girder.create = function create(properties) {
+            return new Girder(properties);
+        };
+
+        /**
+         * Encodes the specified Girder message. Does not implicitly {@link Types.Girder.verify|verify} messages.
+         * @function encode
+         * @memberof Types.Girder
+         * @static
+         * @param {Types.IGirder} message Girder message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Girder.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.length != null && Object.hasOwnProperty.call(message, "length"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.length);
+            if (message.outline != null && Object.hasOwnProperty.call(message, "outline"))
+                $root.Types.Outline.encode(message.outline, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Girder message, length delimited. Does not implicitly {@link Types.Girder.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.Girder
+         * @static
+         * @param {Types.IGirder} message Girder message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Girder.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Girder message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.Girder
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.Girder} Girder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Girder.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.Girder();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
+                    message.length = reader.float();
+                    break;
+                case 3:
+                    message.outline = $root.Types.Outline.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Girder message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.Girder
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.Girder} Girder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Girder.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Girder message.
+         * @function verify
+         * @memberof Types.Girder
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Girder.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.length != null && message.hasOwnProperty("length"))
+                if (typeof message.length !== "number")
+                    return "length: number expected";
+            if (message.outline != null && message.hasOwnProperty("outline")) {
+                let error = $root.Types.Outline.verify(message.outline);
+                if (error)
+                    return "outline." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a Girder message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.Girder
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.Girder} Girder
+         */
+        Girder.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.Girder)
+                return object;
+            let message = new $root.Types.Girder();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            if (object.length != null)
+                message.length = Number(object.length);
+            if (object.outline != null) {
+                if (typeof object.outline !== "object")
+                    throw TypeError(".Types.Girder.outline: object expected");
+                message.outline = $root.Types.Outline.fromObject(object.outline);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Girder message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.Girder
+         * @static
+         * @param {Types.Girder} message Girder
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Girder.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.uuid = "";
+                object.length = 0;
+                object.outline = null;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.length != null && message.hasOwnProperty("length"))
+                object.length = options.json && !isFinite(message.length) ? String(message.length) : message.length;
+            if (message.outline != null && message.hasOwnProperty("outline"))
+                object.outline = $root.Types.Outline.toObject(message.outline, options);
+            return object;
+        };
+
+        /**
+         * Converts this Girder to JSON.
+         * @function toJSON
+         * @memberof Types.Girder
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Girder.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return Girder;
+    })();
+
+    Types.GirderParameters = (function() {
+
+        /**
+         * Properties of a GirderParameters.
+         * @memberof Types
+         * @interface IGirderParameters
+         * @property {number|null} [height] GirderParameters height
+         * @property {number|null} [depth] GirderParameters depth
+         * @property {Types.GirderType|null} [type] GirderParameters type
+         * @property {Types.IMaterial|null} [material] GirderParameters material
+         */
+
+        /**
+         * Constructs a new GirderParameters.
+         * @memberof Types
+         * @classdesc Represents a GirderParameters.
+         * @implements IGirderParameters
+         * @constructor
+         * @param {Types.IGirderParameters=} [properties] Properties to set
+         */
+        function GirderParameters(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GirderParameters height.
+         * @member {number} height
+         * @memberof Types.GirderParameters
+         * @instance
+         */
+        GirderParameters.prototype.height = 0;
+
+        /**
+         * GirderParameters depth.
+         * @member {number} depth
+         * @memberof Types.GirderParameters
+         * @instance
+         */
+        GirderParameters.prototype.depth = 0;
+
+        /**
+         * GirderParameters type.
+         * @member {Types.GirderType} type
+         * @memberof Types.GirderParameters
+         * @instance
+         */
+        GirderParameters.prototype.type = 0;
+
+        /**
+         * GirderParameters material.
+         * @member {Types.IMaterial|null|undefined} material
+         * @memberof Types.GirderParameters
+         * @instance
+         */
+        GirderParameters.prototype.material = null;
+
+        /**
+         * Creates a new GirderParameters instance using the specified properties.
+         * @function create
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {Types.IGirderParameters=} [properties] Properties to set
+         * @returns {Types.GirderParameters} GirderParameters instance
+         */
+        GirderParameters.create = function create(properties) {
+            return new GirderParameters(properties);
+        };
+
+        /**
+         * Encodes the specified GirderParameters message. Does not implicitly {@link Types.GirderParameters.verify|verify} messages.
+         * @function encode
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {Types.IGirderParameters} message GirderParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GirderParameters.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
+                writer.uint32(/* id 1, wireType 5 =*/13).float(message.height);
+            if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.depth);
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.type);
+            if (message.material != null && Object.hasOwnProperty.call(message, "material"))
+                $root.Types.Material.encode(message.material, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GirderParameters message, length delimited. Does not implicitly {@link Types.GirderParameters.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {Types.IGirderParameters} message GirderParameters message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GirderParameters.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GirderParameters message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.GirderParameters} GirderParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GirderParameters.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.GirderParameters();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.height = reader.float();
+                    break;
+                case 2:
+                    message.depth = reader.float();
+                    break;
+                case 3:
+                    message.type = reader.int32();
+                    break;
+                case 4:
+                    message.material = $root.Types.Material.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a GirderParameters message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.GirderParameters} GirderParameters
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GirderParameters.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GirderParameters message.
+         * @function verify
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GirderParameters.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.height != null && message.hasOwnProperty("height"))
+                if (typeof message.height !== "number")
+                    return "height: number expected";
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                if (typeof message.depth !== "number")
+                    return "depth: number expected";
+            if (message.type != null && message.hasOwnProperty("type"))
+                switch (message.type) {
+                default:
+                    return "type: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            if (message.material != null && message.hasOwnProperty("material")) {
+                let error = $root.Types.Material.verify(message.material);
+                if (error)
+                    return "material." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a GirderParameters message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.GirderParameters} GirderParameters
+         */
+        GirderParameters.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.GirderParameters)
+                return object;
+            let message = new $root.Types.GirderParameters();
+            if (object.height != null)
+                message.height = Number(object.height);
+            if (object.depth != null)
+                message.depth = Number(object.depth);
+            switch (object.type) {
+            case "gph":
+            case 0:
+                message.type = 0;
+                break;
+            case "gslab":
+            case 1:
+                message.type = 1;
+                break;
+            case "gsaw":
+            case 2:
+                message.type = 2;
+                break;
+            }
+            if (object.material != null) {
+                if (typeof object.material !== "object")
+                    throw TypeError(".Types.GirderParameters.material: object expected");
+                message.material = $root.Types.Material.fromObject(object.material);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GirderParameters message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.GirderParameters
+         * @static
+         * @param {Types.GirderParameters} message GirderParameters
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GirderParameters.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.height = 0;
+                object.depth = 0;
+                object.type = options.enums === String ? "gph" : 0;
+                object.material = null;
+            }
+            if (message.height != null && message.hasOwnProperty("height"))
+                object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
+            if (message.type != null && message.hasOwnProperty("type"))
+                object.type = options.enums === String ? $root.Types.GirderType[message.type] : message.type;
+            if (message.material != null && message.hasOwnProperty("material"))
+                object.material = $root.Types.Material.toObject(message.material, options);
+            return object;
+        };
+
+        /**
+         * Converts this GirderParameters to JSON.
+         * @function toJSON
+         * @memberof Types.GirderParameters
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GirderParameters.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return GirderParameters;
     })();
 
     return Types;
