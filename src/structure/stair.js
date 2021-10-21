@@ -3,7 +3,7 @@ import { Default, StructConfig } from './config'
 import tool from './tool'
 
 export class Stair {
-  constructor({ id, againstWallType, type, startBeamDepth, exitBeamDepth }) {
+  constructor({ /*id, againstWallType, type, startBeamDepth, exitBeamDepth*/ }) {
     this.uuid = ''
     this.flights = []
     this.smallColumns = []
@@ -44,11 +44,15 @@ export class Stair {
     })
     this.handrailParameters = new Types.HandrailParameters({
       height: Default.HAND_HEIGHT,
+      source: new Types.DxfData({
+        specification: Default.HAND_SPEC
+      })
     })
     this.computeSideOffset()
     this.createFlights()
     this.createSmallColumns()
     this.createBigColumns()
+    this.createHandrails()
   }
 
   computeSize() {
@@ -277,19 +281,35 @@ export class Stair {
     rightPois[1] = new Types.Vector3({x:this.width - this.sideOffset, y:this.depth, z:args.height + this.stepHeight})
     rightPois[2] = new Types.Vector3({x:this.width - this.sideOffset, y:0, z:args.height + this.height})
 
-    for (let i = 0; i < leftPois - 1; i++) {
+    for (let i = 0; i < leftPois.length - 1; i++) {
       route1.edges.push(new Types.Edge({
         p1: leftPois[i],
         p2: leftPois[i+1],
         type: Types.EdgeType.estraight
       }))
-      route2.edges.push(new Edge({
+      route2.edges.push(new Types.Edge({
         p1: rightPois[i],
         p2: rightPois[i+1],
         type: Types.EdgeType.estraight
       }))
     }
+    let size = tool.parseSpecification(args.source.specification, 'yxz')
+    // let inRoute1 = new Outline(route1).offset(size.x / 2, true)
+    // let outRoute1 = new Outline(route1).offset(size.x / 2, false)
+    // let inRoute2 = new Outline(route2).offset(size.x / 2, true)
+    // let outRoute2 = new Outline(route2).offset(size.x / 2, false)
 
+    this.handrails.push(new Types.Handrail({
+      uuid: '',
+      route: route1,
+      width: size.x
+    }))
+
+    this.handrails.push(new Types.Handrail({
+      uuid: '',
+      route: route2,
+      width: size.x
+    }))
     
   }
 
@@ -311,6 +331,7 @@ export class Stair {
       flights: this.flights,
       smallColumns: this.smallColumns,
       bigColumns: this.bigColumns,
+      handrails: this.handrails,
       position: this.position,
     })
   }

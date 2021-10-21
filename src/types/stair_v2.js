@@ -804,6 +804,7 @@ export const Types = $root.Types = (() => {
          * @memberof Types
          * @interface IOutline
          * @property {Array.<Types.IEdge>|null} [edges] Outline edges
+         * @property {boolean|null} [isClose] Outline isClose
          */
 
         /**
@@ -829,6 +830,14 @@ export const Types = $root.Types = (() => {
          * @instance
          */
         Outline.prototype.edges = $util.emptyArray;
+
+        /**
+         * Outline isClose.
+         * @member {boolean} isClose
+         * @memberof Types.Outline
+         * @instance
+         */
+        Outline.prototype.isClose = false;
 
         /**
          * Creates a new Outline instance using the specified properties.
@@ -857,6 +866,8 @@ export const Types = $root.Types = (() => {
             if (message.edges != null && message.edges.length)
                 for (let i = 0; i < message.edges.length; ++i)
                     $root.Types.Edge.encode(message.edges[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.isClose != null && Object.hasOwnProperty.call(message, "isClose"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isClose);
             return writer;
         };
 
@@ -895,6 +906,9 @@ export const Types = $root.Types = (() => {
                     if (!(message.edges && message.edges.length))
                         message.edges = [];
                     message.edges.push($root.Types.Edge.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.isClose = reader.bool();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -940,6 +954,9 @@ export const Types = $root.Types = (() => {
                         return "edges." + error;
                 }
             }
+            if (message.isClose != null && message.hasOwnProperty("isClose"))
+                if (typeof message.isClose !== "boolean")
+                    return "isClose: boolean expected";
             return null;
         };
 
@@ -965,6 +982,8 @@ export const Types = $root.Types = (() => {
                     message.edges[i] = $root.Types.Edge.fromObject(object.edges[i]);
                 }
             }
+            if (object.isClose != null)
+                message.isClose = Boolean(object.isClose);
             return message;
         };
 
@@ -983,11 +1002,15 @@ export const Types = $root.Types = (() => {
             let object = {};
             if (options.arrays || options.defaults)
                 object.edges = [];
+            if (options.defaults)
+                object.isClose = false;
             if (message.edges && message.edges.length) {
                 object.edges = [];
                 for (let j = 0; j < message.edges.length; ++j)
                     object.edges[j] = $root.Types.Edge.toObject(message.edges[j], options);
             }
+            if (message.isClose != null && message.hasOwnProperty("isClose"))
+                object.isClose = message.isClose;
             return object;
         };
 
@@ -2636,6 +2659,7 @@ export const Types = $root.Types = (() => {
          * @property {Array.<Types.ISmallColumn>|null} [smallColumns] Stair smallColumns
          * @property {Array.<Types.IHandrail>|null} [handrails] Stair handrails
          * @property {Array.<Types.IGirder>|null} [girders] Stair girders
+         * @property {Types.IHangingBoard|null} [hangingBoard] Stair hangingBoard
          * @property {number|null} [stepHeight] Stair stepHeight
          * @property {Types.IVector3|null} [position] Stair position
          */
@@ -2806,6 +2830,14 @@ export const Types = $root.Types = (() => {
         Stair.prototype.girders = $util.emptyArray;
 
         /**
+         * Stair hangingBoard.
+         * @member {Types.IHangingBoard|null|undefined} hangingBoard
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.hangingBoard = null;
+
+        /**
          * Stair stepHeight.
          * @member {number} stepHeight
          * @memberof Types.Stair
@@ -2887,6 +2919,8 @@ export const Types = $root.Types = (() => {
             if (message.girders != null && message.girders.length)
                 for (let i = 0; i < message.girders.length; ++i)
                     $root.Types.Girder.encode(message.girders[i], writer.uint32(/* id 20, wireType 2 =*/162).fork()).ldelim();
+            if (message.hangingBoard != null && Object.hasOwnProperty.call(message, "hangingBoard"))
+                $root.Types.HangingBoard.encode(message.hangingBoard, writer.uint32(/* id 21, wireType 2 =*/170).fork()).ldelim();
             if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
                 writer.uint32(/* id 25, wireType 5 =*/205).float(message.stepHeight);
             if (message.position != null && Object.hasOwnProperty.call(message, "position"))
@@ -2990,6 +3024,9 @@ export const Types = $root.Types = (() => {
                     if (!(message.girders && message.girders.length))
                         message.girders = [];
                     message.girders.push($root.Types.Girder.decode(reader, reader.uint32()));
+                    break;
+                case 21:
+                    message.hangingBoard = $root.Types.HangingBoard.decode(reader, reader.uint32());
                     break;
                 case 25:
                     message.stepHeight = reader.float();
@@ -3148,6 +3185,11 @@ export const Types = $root.Types = (() => {
                         return "girders." + error;
                 }
             }
+            if (message.hangingBoard != null && message.hasOwnProperty("hangingBoard")) {
+                let error = $root.Types.HangingBoard.verify(message.hangingBoard);
+                if (error)
+                    return "hangingBoard." + error;
+            }
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
                 if (typeof message.stepHeight !== "number")
                     return "stepHeight: number expected";
@@ -3300,6 +3342,11 @@ export const Types = $root.Types = (() => {
                     message.girders[i] = $root.Types.Girder.fromObject(object.girders[i]);
                 }
             }
+            if (object.hangingBoard != null) {
+                if (typeof object.hangingBoard !== "object")
+                    throw TypeError(".Types.Stair.hangingBoard: object expected");
+                message.hangingBoard = $root.Types.HangingBoard.fromObject(object.hangingBoard);
+            }
             if (object.stepHeight != null)
                 message.stepHeight = Number(object.stepHeight);
             if (object.position != null) {
@@ -3344,6 +3391,7 @@ export const Types = $root.Types = (() => {
                 object.smallColParameters = null;
                 object.handrailParameters = null;
                 object.girderParameters = null;
+                object.hangingBoard = null;
                 object.stepHeight = 0;
                 object.position = null;
             }
@@ -3401,6 +3449,8 @@ export const Types = $root.Types = (() => {
                 for (let j = 0; j < message.girders.length; ++j)
                     object.girders[j] = $root.Types.Girder.toObject(message.girders[j], options);
             }
+            if (message.hangingBoard != null && message.hasOwnProperty("hangingBoard"))
+                object.hangingBoard = $root.Types.HangingBoard.toObject(message.hangingBoard, options);
             if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
                 object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
             if (message.position != null && message.hasOwnProperty("position"))
@@ -3420,6 +3470,216 @@ export const Types = $root.Types = (() => {
         };
 
         return Stair;
+    })();
+
+    Types.HangingBoard = (function() {
+
+        /**
+         * Properties of a HangingBoard.
+         * @memberof Types
+         * @interface IHangingBoard
+         * @property {string|null} [uuid] HangingBoard uuid
+         * @property {number|null} [depth] HangingBoard depth
+         */
+
+        /**
+         * Constructs a new HangingBoard.
+         * @memberof Types
+         * @classdesc Represents a HangingBoard.
+         * @implements IHangingBoard
+         * @constructor
+         * @param {Types.IHangingBoard=} [properties] Properties to set
+         */
+        function HangingBoard(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * HangingBoard uuid.
+         * @member {string} uuid
+         * @memberof Types.HangingBoard
+         * @instance
+         */
+        HangingBoard.prototype.uuid = "";
+
+        /**
+         * HangingBoard depth.
+         * @member {number} depth
+         * @memberof Types.HangingBoard
+         * @instance
+         */
+        HangingBoard.prototype.depth = 0;
+
+        /**
+         * Creates a new HangingBoard instance using the specified properties.
+         * @function create
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {Types.IHangingBoard=} [properties] Properties to set
+         * @returns {Types.HangingBoard} HangingBoard instance
+         */
+        HangingBoard.create = function create(properties) {
+            return new HangingBoard(properties);
+        };
+
+        /**
+         * Encodes the specified HangingBoard message. Does not implicitly {@link Types.HangingBoard.verify|verify} messages.
+         * @function encode
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {Types.IHangingBoard} message HangingBoard message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HangingBoard.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
+                writer.uint32(/* id 2, wireType 5 =*/21).float(message.depth);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified HangingBoard message, length delimited. Does not implicitly {@link Types.HangingBoard.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {Types.IHangingBoard} message HangingBoard message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        HangingBoard.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a HangingBoard message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.HangingBoard} HangingBoard
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HangingBoard.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.HangingBoard();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
+                    message.depth = reader.float();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a HangingBoard message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.HangingBoard} HangingBoard
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        HangingBoard.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a HangingBoard message.
+         * @function verify
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        HangingBoard.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                if (typeof message.depth !== "number")
+                    return "depth: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a HangingBoard message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.HangingBoard} HangingBoard
+         */
+        HangingBoard.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.HangingBoard)
+                return object;
+            let message = new $root.Types.HangingBoard();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            if (object.depth != null)
+                message.depth = Number(object.depth);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a HangingBoard message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.HangingBoard
+         * @static
+         * @param {Types.HangingBoard} message HangingBoard
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        HangingBoard.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.uuid = "";
+                object.depth = 0;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.depth != null && message.hasOwnProperty("depth"))
+                object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
+            return object;
+        };
+
+        /**
+         * Converts this HangingBoard to JSON.
+         * @function toJSON
+         * @memberof Types.HangingBoard
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        HangingBoard.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return HangingBoard;
     })();
 
     Types.Flight = (function() {

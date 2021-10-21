@@ -280,9 +280,7 @@ message DxfData {
 message Handrail {
   string  uuid  = 1;
   Outline route = 2;
-  float   width = 3;
-  Outline inRoute = 4;
-  Outline outRoute = 5;
+  float   width = 3; //宽度
 }
 
 message HandrailParameters {

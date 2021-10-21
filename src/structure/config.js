@@ -6,6 +6,7 @@ export const StructConfig = {
   INIT_HOLE_WIDTH: 3000,
   CUR_PROJ: null,
   CENTER: new THREE.Vector2(),
+  ROTATE_CENTER: new THREE.Vector2()
 }
 
 export const Default = {
@@ -24,8 +25,10 @@ export const Default = {
   SMALL_COL_SPEC: '58*58*950',
   BIG_COL_POS_TYPE: Types.BigColumnPosType.bcp_floor,
   BIG_COL_SPEC: '110*110*1200',
+  BIG_COL_GAP: 20,
   GIRDER_TYPE: Types.GirderType.gsaw,
   GIRDER_HEIGHT: 180,
   GIRDER_DEPTH: '50',
   HAND_HEIGHT: 870,
+  HAND_SPEC: '60*80',
 }
