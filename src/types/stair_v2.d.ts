@@ -318,6 +318,9 @@ export namespace Types {
 
         /** Outline edges */
         edges?: (Types.IEdge[]|null);
+
+        /** Outline isClose */
+        isClose?: (boolean|null);
     }
 
     /** Represents an Outline. */
@@ -331,6 +334,9 @@ export namespace Types {
 
         /** Outline edges. */
         public edges: Types.IEdge[];
+
+        /** Outline isClose. */
+        public isClose: boolean;
 
         /**
          * Creates a new Outline instance using the specified properties.
@@ -1048,6 +1054,9 @@ export namespace Types {
         /** Stair girders */
         girders?: (Types.IGirder[]|null);
 
+        /** Stair hangingBoard */
+        hangingBoard?: (Types.IHangingBoard|null);
+
         /** Stair stepHeight */
         stepHeight?: (number|null);
 
@@ -1117,6 +1126,9 @@ export namespace Types {
 
         /** Stair girders. */
         public girders: Types.IGirder[];
+
+        /** Stair hangingBoard. */
+        public hangingBoard?: (Types.IHangingBoard|null);
 
         /** Stair stepHeight. */
         public stepHeight: number;
@@ -1190,6 +1202,102 @@ export namespace Types {
 
         /**
          * Converts this Stair to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a HangingBoard. */
+    interface IHangingBoard {
+
+        /** HangingBoard uuid */
+        uuid?: (string|null);
+
+        /** HangingBoard depth */
+        depth?: (number|null);
+    }
+
+    /** Represents a HangingBoard. */
+    class HangingBoard implements IHangingBoard {
+
+        /**
+         * Constructs a new HangingBoard.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IHangingBoard);
+
+        /** HangingBoard uuid. */
+        public uuid: string;
+
+        /** HangingBoard depth. */
+        public depth: number;
+
+        /**
+         * Creates a new HangingBoard instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns HangingBoard instance
+         */
+        public static create(properties?: Types.IHangingBoard): Types.HangingBoard;
+
+        /**
+         * Encodes the specified HangingBoard message. Does not implicitly {@link Types.HangingBoard.verify|verify} messages.
+         * @param message HangingBoard message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IHangingBoard, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified HangingBoard message, length delimited. Does not implicitly {@link Types.HangingBoard.verify|verify} messages.
+         * @param message HangingBoard message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IHangingBoard, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a HangingBoard message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns HangingBoard
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.HangingBoard;
+
+        /**
+         * Decodes a HangingBoard message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns HangingBoard
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.HangingBoard;
+
+        /**
+         * Verifies a HangingBoard message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a HangingBoard message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns HangingBoard
+         */
+        public static fromObject(object: { [k: string]: any }): Types.HangingBoard;
+
+        /**
+         * Creates a plain object from a HangingBoard message. Also converts values to other types if specified.
+         * @param message HangingBoard
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.HangingBoard, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this HangingBoard to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };

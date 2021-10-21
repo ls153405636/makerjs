@@ -6,6 +6,7 @@ export const StructConfig = {
   INIT_HOLE_WIDTH: 3000,
   CUR_PROJ: null,
   CENTER: new THREE.Vector2(),
+  ROTATE_CENTER: new THREE.Vector2()
 }
 
 export const Default = {
@@ -29,4 +30,5 @@ export const Default = {
   GIRDER_HEIGHT: 180,
   GIRDER_DEPTH: 50,
   HAND_HEIGHT: 870,
+  HAND_SPEC: '60*80',
 }
