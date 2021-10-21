@@ -7,6 +7,8 @@ export class Stair {
     this.uuid = ''
     this.flights = []
     this.smallColumns = []
+    this.bigColumns = []
+    this.handrails = []
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
     this.stepWidth = Default.STEP_WIDTH
@@ -46,6 +48,7 @@ export class Stair {
     this.computeSideOffset()
     this.createFlights()
     this.createSmallColumns()
+    this.createBigColumns()
   }
 
   computeSize() {
@@ -180,7 +183,7 @@ export class Stair {
         length2 = 0
       if (args.arrange_rule === Types.ArrangeRule.arrThree) {
         let index = i % 2
-        let border = this.stepWidth * (step_num - i + 1)
+        let border = this.stepWidth * (step_num - i)
         if (index === 0) {
           position1.y = border - Math.max(this.stepWidth / 6, size.y)
           position2.y =
@@ -307,6 +310,7 @@ export class Stair {
       }),
       flights: this.flights,
       smallColumns: this.smallColumns,
+      bigColumns: this.bigColumns,
       position: this.position,
     })
   }
