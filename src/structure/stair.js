@@ -14,8 +14,9 @@ export class Stair {
     this.stepNumRule = Default.STEP_NUM_RULE
     this.stepWidth = Default.STEP_WIDTH
     this.stepLength = Default.STEP_LENGTH
+    this.sideOffset = 0
     this.computeSize()
-    this.stepHeight = Math.ceil(this.height / this.stepNum + 1 - this.stepNumRule)
+    this.stepHeight = Math.ceil(this.height / this.stepNum)
     this.againstWallType = Types.AgainstWallType.aw_no
     this.type = Types.StairType.sstright
     this.startBeamDepth = 0
@@ -45,6 +46,7 @@ export class Stair {
     this.handrailParameters = new Types.HandrailParameters({
       height: Default.HAND_HEIGHT
     })
+    this.computeSideOffset()
     this.createFlights()
     this.createSmallColumns()
     this.createBigColumns()
@@ -54,6 +56,16 @@ export class Stair {
     this.width = Default.STEP_LENGTH
     this.depth = Default.STEP_WIDTH * (this.stepNum - this.stepNumRule + 1)
     this.height = StructConfig.CUR_PROJ.hole.floorHeight
+  }
+
+  /**
+   * 计算侧边偏移
+   */
+  computeSideOffset () {
+    this.sideOffset = this.treadParameters.sideNossing + this.girderParameters.depth / 2
+    if (this.girderParameters.type === Types.GirderType.gslab) {
+      this.sideOffset = this.girderParameters.depth / 2
+    }
   }
 
   computePosition () {
@@ -90,7 +102,7 @@ export class Stair {
       stepNum: this.stepNum,
     })
     let step_num = flight.stepNum + 1 - flight.stepNumRule
-    flight.stepHeight = Math.ceil(this.height / step_num)
+    flight.stepHeight = this.stepHeight
     for (let i = 0; i < step_num; i++) {
       let tread = new Types.Tread({})
       let edges = []
@@ -155,15 +167,11 @@ export class Stair {
     let hArgs = this.handrailParameters
     let i = Math.abs(1 - this.bigColParameters.posType)
     let step_num = this.stepNum + 1 - this.stepNumRule
-    let offset = this.treadParameters.sideNossing + gArgs.depth / 2
-    if (gArgs.type === Types.GirderType.gslab) {
-      offset = gArgs.depth / 2
-    }
     let size = tool.parseSpecification(args.specification)
     let angle = Math.tanh(this.height / this.depth)
     for (; i < step_num; i++) {
       let position1 = new Types.Vector3(), position2 = new Types.Vector3()
-      position2.x = position1.x = offset
+      position2.x = position1.x = this.sideOffset
       position2.z = position1.z = this.stepHeight * (i + 1)
       let length1 = 0, length2 = 0
       if (args.arrange_rule === Types.ArrangeRule.arrThree) {
@@ -202,7 +210,7 @@ export class Stair {
         }))
         this.smallColumns.push(new Types.SmallColumn({
           uuid: '',
-          position: new Types.Vector3({x:this.width - offset, y: position1.y, z: position1.z}),
+          position: new Types.Vector3({x:this.width - this.sideOffset, y: position1.y, z: position1.z}),
           size: new Types.Vector3({x:size.x, y:size.y, z:length1})
         }))
       }
@@ -214,7 +222,7 @@ export class Stair {
         }))
         this.smallColumns.push(new Types.SmallColumn({
           uuid: '',
-          position: new Types.Vector3({x:this.width - offset, y: position2.y, z: position2.z}),
+          position: new Types.Vector3({x:this.width - this.sideOffset, y: position2.y, z: position2.z}),
           size: new Types.Vector3({x:size.x, y:size.y, z:length2})
         }))
       }
@@ -223,18 +231,13 @@ export class Stair {
 
   createBigColumns () {
     let args = this.bigColParameters
-    let gArgs = this.girderParameters
-    let offset = this.treadParameters.sideNossing + gArgs.depth / 2
-    if (gArgs.type === Types.GirderType.gslab) {
-      offset = gArgs.depth / 2
-    }
     let size = tool.parseSpecification(args.specification)
     let leftPosition = new Types.Vector3({
-      x: offset,
+      x: this.sideOffset,
       y: this.depth + Default.BIG_COL_GAP + size.y / 2
     })
     let rightPosition = new Types.Vector3({
-      x: this.width - offset,
+      x: this.width - this.sideOffset,
       y: this.depth + Default.BIG_COL_GAP + size.y / 2
     })
     this.bigColumns.push(new Types.BigColumn({
@@ -251,9 +254,31 @@ export class Stair {
     }))
   }
 
-  createHandrail () {
+  createHandrails () {
     let args = this.handrailParameters
+    let route1 = new Types.Outline(), route2 = new Types.Outline()
+    let leftPois = [], rightPois = []
+    leftPois[0] = new Types.Vector3({x:this.sideOffset, y:this.depth + Default.BIG_COL_GAP, z:args.height + this.stepHeight})
+    leftPois[1] = new Types.Vector3({x:this.sideOffset, y:this.depth, z:args.height + this.stepHeight})
+    leftPois[2] = new Types.Vector3({x:this.sideOffset, y:0, z:args.height + this.height})
+    rightPois[0] = new Types.Vector3({x:this.width - this.sideOffset, y:this.depth + Default.BIG_COL_GAP, z:args.height + this.stepHeight})
+    rightPois[1] = new Types.Vector3({x:this.width - this.sideOffset, y:this.depth, z:args.height + this.stepHeight})
+    rightPois[2] = new Types.Vector3({x:this.width - this.sideOffset, y:0, z:args.height + this.height})
 
+    for (let i = 0; i < leftPois - 1; i++) {
+      route1.edges.push(new Types.Edge({
+        p1: leftPois[i],
+        p2: leftPois[i+1],
+        type: Types.EdgeType.estraight
+      }))
+      route2.edges.push(new Edge({
+        p1: rightPois[i],
+        p2: rightPois[i+1],
+        type: Types.EdgeType.estraight
+      }))
+    }
+
+    
   }
 
 

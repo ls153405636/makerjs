@@ -1,6 +1,11 @@
 syntax = "proto3";
 package Types;
 
+/**
+ pb中所有涉及到顺逆时针方向的
+ 均以2d坐标中，正x到正y的方向为顺时针
+*/
+
 //边的类型
 enum EdgeType {
   eph       = 0;
@@ -99,6 +104,7 @@ message Edge {
 
 message Outline {
   repeated Edge edges = 1;
+  bool   isClose = 2;
 }
 
 //一个项目
@@ -275,6 +281,8 @@ message Handrail {
   string  uuid  = 1;
   Outline route = 2;
   float   width = 3;
+  Outline inRoute = 4;
+  Outline outRoute = 5;
 }
 
 message HandrailParameters {
