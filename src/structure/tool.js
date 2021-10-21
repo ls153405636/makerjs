@@ -1,6 +1,6 @@
-import { Types } from "../types/stair_v2"
+import { Types } from '../types/stair_v2'
 
-export function parseSpecification (vSpecStr, order='xyz') {
+export function parseSpecification(vSpecStr, order = 'xyz') {
   let size = new Types.Vector3()
   if (!vSpecStr || !vSpecStr instanceof String) {
     return size
@@ -13,5 +13,5 @@ export function parseSpecification (vSpecStr, order='xyz') {
 }
 
 export default {
-  parseSpecification
+  parseSpecification,
 }

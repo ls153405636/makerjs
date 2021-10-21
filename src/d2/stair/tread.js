@@ -1,38 +1,20 @@
 import { Types } from '../../types/stair_v2'
+import { BaseWidget } from '../base_widget'
 import { D2Config } from '../config'
-import { ChildWidget } from './child_widget'
 
-export class Tread extends ChildWidget {
+export class Tread extends BaseWidget {
   /**
    *
    * @param {Types.Tread} vPB
    */
-  constructor(vPB) {
+  constructor(vPB, vParent) {
     super()
-    this.iSelected = false
-    this.stepNumWord = 0
-    this.outline = vPB.outline
     this.edges = vPB.stepOutline.edges
+    this.parent = vParent
     this.draw()
     this.addEvent()
   }
 
-  get position() {
-    const { p1, outP1, p2, outP2 } = this
-    const innerCenter = {
-      x: (p1.x + p2.x) / 2,
-      y: (p1.y + p2.y) / 2,
-    }
-    const outterCenter = {
-      x: (outP1.x + outP2.x) / 2,
-      y: (outP1.y + outP2.y) / 2,
-    }
-    const wallPos = {
-      x: (innerCenter.x + outterCenter.x) / 2,
-      y: (innerCenter.y + outterCenter.y) / 2,
-    }
-    return wallPos
-  }
   draw() {
     // 踏板绘制
     let tread = new PIXI.Graphics()
@@ -45,39 +27,44 @@ export class Tread extends ChildWidget {
     }
     tread.drawPolygon(path)
     tread.endFill()
-
     this.sprite = tread
   }
 
-  // 取消墙体选中效果
+  /**
+   *
+   * @returns 获取当前组件的精灵图
+   */
+  getSprite() {
+    return this.sprite
+  }
+
+  /**
+   * 踏板只需要添加到父级，不需要添加到画布
+   * 所以此处用空函数重写
+   */
+  addToStage() {}
+
+  // 取消踏板选中效果
   cancelSelected() {
-    for (let i = 0; i < this.sprite.parent.children.length; i++) {
-      this.sprite.parent.children[i].tint = 0xffffff
-    }
-    this.iSelected = false
+    this.sprite.tint = 0xffffff
+    this.isSelected = false
   }
-  // 墙体选中效果
+
+  // 踏板选中效果
   setSelected() {
-    for (let i = 0; i < this.sprite.parent.children.length; i++) {
-      // console.log(this.sprite.parent.children[i])
-      this.sprite.parent.children[i].tint = 0xe9efff
-    }
-    this.sprite.parent.children.tint = 0xff88ff
-    this.sprite.alpha = 1
-    this.iSelected = true
+    this.sprite.tint = 0xe9efff
+    this.isSelected = true
+    D2Config.SELECTED = this
   }
-  // 鼠标进入墙体效果
+
+  // 鼠标进入踏板效果
   setHover() {
-    if (!this.iSelected) {
-      this.sprite.tint = 0xe9efff
-      this.sprite.alpha = 1
-    }
+    this.sprite.tint = 0xe9efff
   }
-  // 鼠标离开墙体效果
+  // 鼠标离开踏板效果
   cancelHover() {
-    if (!this.iSelected) {
+    if (!this.isSelected) {
       this.sprite.tint = 0xffffff
-      this.sprite.alpha = 1
     }
   }
 
@@ -87,20 +74,31 @@ export class Tread extends ChildWidget {
     this.sprite
       .on('mousedown', (event) => {
         event.stopPropagation()
-        if (this.iSelected) {
+        if (this.isSelected) {
           return
         }
         if (D2Config.SELECTED) {
           D2Config.SELECTED.cancelSelected()
         }
-        _this.setSelected()
-        D2Config.SELECTED = this
+        if (D2Config.IS_SINGLE_SELECTED) {
+          _this.setSelected()
+        } else {
+          _this.parent.setSelected()
+        }
       })
       .on('mouseout', () => {
-        _this.cancelHover()
+        if (D2Config.IS_SINGLE_SELECTED) {
+          _this.cancelHover()
+        } else {
+          _this.parent.cancelHover()
+        }
       })
       .on('mouseover', () => {
-        _this.setHover()
+        if (D2Config.IS_SINGLE_SELECTED) {
+          _this.setHover()
+        } else {
+          _this.parent.setHover()
+        }
       })
   }
 }

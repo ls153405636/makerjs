@@ -321,7 +321,7 @@ export class Structure {
     vWall.components.push(component)
   }
 
-  createStair () {
+  createStair() {
     this.stair = new Stair({})
     this.proj.stair = this.stair.writePB()
   }

@@ -37,6 +37,7 @@ module.exports = {
         "no-unused-vars": "off",
         "no-undef": "off",
         "no-debugger": "off",
+        "no-unsafe-negation": "off",
         "unused-imports/no-unused-imports": "off",
         "unused-imports/no-unused-vars": [
             "off",

@@ -1,15 +1,12 @@
-import { Types } from "../types/stair_v2"
-import { Default, StructConfig } from "./config"
-import tool from "./tool"
-
+import { Types } from '../types/stair_v2'
+import { Default, StructConfig } from './config'
+import tool from './tool'
 
 export class Stair {
-  constructor ({id, againstWallType, type, startBeamDepth, exitBeamDepth}) {
+  constructor({ id, againstWallType, type, startBeamDepth, exitBeamDepth }) {
     this.uuid = ''
     this.flights = []
     this.smallColumns = []
-    this.bigColumns = []
-    this.handrails = []
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
     this.stepWidth = Default.STEP_WIDTH
@@ -25,34 +22,33 @@ export class Stair {
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
       nossing: Default.TREAD_NOSSING,
-      sideNossing: Default.TREAD_SIDE_NOSSING
+      sideNossing: Default.TREAD_SIDE_NOSSING,
     })
     this.riserParameters = new Types.RiserParameters({
-      depth: Default.RISER_DEPTH
+      depth: Default.RISER_DEPTH,
     })
     this.smallColParameters = new Types.SmallColParameters({
       arrange_rule: Default.SMALL_COL_ARR_RULE,
-      specification: Default.SMALL_COL_SPEC
+      specification: Default.SMALL_COL_SPEC,
     })
     this.bigColParameters = new Types.BigColParameters({
       posType: Default.BIG_COL_POS_TYPE,
-      specification: Default.BIG_COL_SPEC
+      specification: Default.BIG_COL_SPEC,
     })
     this.girderParameters = new Types.GirderParameters({
       height: Default.GIRDER_HEIGHT,
       depth: Default.GIRDER_DEPTH,
-      type: Default.GIRDER_TYPE
+      type: Default.GIRDER_TYPE,
     })
     this.handrailParameters = new Types.HandrailParameters({
-      height: Default.HAND_HEIGHT
+      height: Default.HAND_HEIGHT,
     })
     this.computeSideOffset()
     this.createFlights()
     this.createSmallColumns()
-    this.createBigColumns()
   }
 
-  computeSize () {
+  computeSize() {
     this.width = Default.STEP_LENGTH
     this.depth = Default.STEP_WIDTH * (this.stepNum - this.stepNumRule + 1)
     this.height = StructConfig.CUR_PROJ.hole.floorHeight
@@ -72,10 +68,13 @@ export class Stair {
     let hole = StructConfig.CUR_PROJ.hole
     let edges = hole.edges
     let botEdge = edges[0]
-    let botCenter = {x: (edges[0].p1.x + edges[0].p2.x) / 2, y: (edges[0].p1.y + edges[0].p2.y) / 2}
+    let botCenter = {
+      x: (edges[0].p1.x + edges[0].p2.x) / 2,
+      y: (edges[0].p1.y + edges[0].p2.y) / 2,
+    }
     let topCenter = botCenter
     for (const e of edges) {
-      let center = {x: (e.p1.x + e.p2.x) / 2, y: (e.p1.y + e.p2.y) / 2}
+      let center = { x: (e.p1.x + e.p2.x) / 2, y: (e.p1.y + e.p2.y) / 2 }
       if (center.y > botCenter.y && e.p1.x !== e.p2.x) {
         botCenter = center
         botEdge = e
@@ -84,17 +83,21 @@ export class Stair {
         topCenter = center
       }
     }
-    this.position = new Types.Vector3({y: topCenter.y})
+    this.position = new Types.Vector3({ y: topCenter.y })
     if (this.againstWallType === Types.AgainstWallType.aw_no) {
       this.position.x = botCenter.x - this.width / 2
     } else if (this.againstWallType === Types.AgainstWallType.aw_right) {
-      this.position.x = botEdge.p1.x < botEdge.p2.x ? botEdge.p2.x - this.width : botEdge.p1.x - this.width 
+      this.position.x =
+        botEdge.p1.x < botEdge.p2.x
+          ? botEdge.p2.x - this.width
+          : botEdge.p1.x - this.width
     } else {
-      this.position.x = botEdge.p1.x < botEdge.p2.x ? botEdge.p1.x : botEdge.p2.x
+      this.position.x =
+        botEdge.p1.x < botEdge.p2.x ? botEdge.p1.x : botEdge.p2.x
     }
   }
 
-  createFlights () {
+  createFlights() {
     let flight = new Types.Flight({
       stepLength: Default.STEP_LENGTH,
       stepWidth: Default.STEP_WIDTH,
@@ -161,7 +164,7 @@ export class Stair {
     this.flights = [flight]
   }
 
-  createSmallColumns () {
+  createSmallColumns() {
     let args = this.smallColParameters
     let gArgs = this.girderParameters
     let hArgs = this.handrailParameters
@@ -173,31 +176,37 @@ export class Stair {
       let position1 = new Types.Vector3(), position2 = new Types.Vector3()
       position2.x = position1.x = this.sideOffset
       position2.z = position1.z = this.stepHeight * (i + 1)
-      let length1 = 0, length2 = 0
+      let length1 = 0,
+        length2 = 0
       if (args.arrange_rule === Types.ArrangeRule.arrThree) {
         let index = i % 2
-        let border = this.stepWidth * (step_num - i)
+        let border = this.stepWidth * (step_num - i + 1)
         if (index === 0) {
-          position1.y = border - Math.max(this.stepWidth / 6 , size.y)
-          position2.y = border - this.stepWidth + Math.max(this.stepWidth / 6 , size.y)
-          length1 = hArgs.height + this.stepWidth / 6 * Math.tan(angle)
-          length2 = hArgs.height + this.stepWidth / 6 * 5 * Math.tan(angle)
+          position1.y = border - Math.max(this.stepWidth / 6, size.y)
+          position2.y =
+            border - this.stepWidth + Math.max(this.stepWidth / 6, size.y)
+          length1 = hArgs.height + (this.stepWidth / 6) * Math.tan(angle)
+          length2 = hArgs.height + (this.stepWidth / 6) * 5 * Math.tan(angle)
           if (gArgs.type === Types.GirderType.gslab) {
             length2 = length1 = gArgs.height
             /**平板型大梁形状不确定，待确定后，需重新计算小柱的z坐标，即3d视图中的y坐标 */
           }
         } else {
           position1.y = border - this.stepWidth / 2
-          length1 = hArgs.height + this.stepWidth / 2 * Math.tan(angle)
+          length1 = hArgs.height + (this.stepWidth / 2) * Math.tan(angle)
           if (gArgs.type === Types.GirderType.gslab) {
             length1 = gArgs.height
           }
         }
       } else if (args.arrange_rule === Types.ArrangeRule.arrFour) {
         position1.y = border - this.stepWidth / 4
-        position2.y = border - this.stepWidth * 3 / 4
-        length1 = this.handrailParameters.height + this.stepWidth / 4 * Math.tan(angle)
-        length2 = this.handrailParameters.height + this.stepWidth * 3 / 4 * Math.tan(angle)
+        position2.y = border - (this.stepWidth * 3) / 4
+        length1 =
+          this.handrailParameters.height +
+          (this.stepWidth / 4) * Math.tan(angle)
+        length2 =
+          this.handrailParameters.height +
+          ((this.stepWidth * 3) / 4) * Math.tan(angle)
         if (gArgs.type === Types.GirderType.gslab) {
           length2 = length1 = gArgs.height
         }
@@ -281,10 +290,8 @@ export class Stair {
     
   }
 
-
-
-  writePB () {
-    return new Types.Stair ({
+  writePB() {
+    return new Types.Stair({
       uuid: this.uuid,
       startBeamDepth: this.startBeamDepth,
       exitBeamDepth: this.exitBeamDepth,
@@ -296,11 +303,10 @@ export class Stair {
         stepLength: this.width,
         stepWidth: this.flights[0].stepWidth,
         stepNumRule: this.stepNumRule,
-        stepNum: this.stepNum
+        stepNum: this.stepNum,
       }),
       flights: this.flights,
       smallColumns: this.smallColumns,
-      bigColumns: this.bigColumns,
       position: this.position,
     })
   }
