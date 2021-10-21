@@ -26,7 +26,6 @@ export class Wall extends BaseWidget {
     this.createComponents(vPB.components)
     this.draw()
     this.addEvent()
-    // console.log(vPB)
   }
 
   // 求旋转
@@ -75,17 +74,6 @@ export class Wall extends BaseWidget {
     let newTextRotation = ''
     const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
     const textAngle = textRotation.angle()
-    // console.log(textAngle)
-    // if (textAngle < Math.PI) {
-    //   newTextRotation = textRotation.invert().angle()
-    // } else if (textAngle == Math.PI) {
-    //   newTextRotation = 0
-    // } else if (textAngle > Math.PI) {
-    //   newTextRotation = textRotation.angle()
-    // } else if (textAngle == 0) {
-    //   newTextRotation = Math.PI
-    // }
-    // console.log(newTextRotation)
     if (textAngle == Math.PI || textAngle == 0) {
       newTextRotation = 0
     } else if (textAngle < Math.PI) {
@@ -179,7 +167,7 @@ export class Wall extends BaseWidget {
     var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
 
     tilingSprite.anchor.set(0.5, 0.5)
-    tilingSprite.tileScale.set(0.55) // 纹理缩放
+    tilingSprite.tileScale.set(0.1) // 纹理缩放
     tilingSprite.rotation = this.rotation
     tilingSprite.position.set(this.position.x, this.position.y)
     wall.addChild(tilingSprite)
@@ -208,13 +196,14 @@ export class Wall extends BaseWidget {
 
     // 标注文字添加
     const lineText = new PIXI.Text(linelength, {
-      fontSize: 17.98,
+      fontSize: 72,
       fill: 0x2d3037,
     })
+    lineText.scale.set(0.25)
+    lineText.anchor.set(0.375, 0.5)
     lineText.position.set(linePos.x, linePos.y)
     lineText.pivot.set(lineText.width / 2, lineText.height / 2)
     lineText.rotation = newTextRotation
-    // lineText.rotation = this.rotation
 
     lineContainer.addChild(dobuleLineLeft, dobuleLineRight, line)
     this.sprite = wall

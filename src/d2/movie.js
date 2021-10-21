@@ -100,6 +100,9 @@ export class Movie {
         if (D2Config.SELECTED) {
           D2Config.SELECTED.cancelSelected()
         }
+        if (D2Config.CUR_STAIR) {
+          D2Config.CUR_STAIR.cancelSmallColSelected()
+        }
         // console.error('-->', event.type)
         //this.service.send({type: events.MOUSE_DOWN, data: event})
       })

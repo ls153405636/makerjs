@@ -1,8 +1,8 @@
 import { Types } from '../../types/stair_v2'
-import { BaseWidget } from '../base_widget'
 import { D2Config } from '../config'
+import { ChildWidget } from './child_widget'
 
-export class Tread extends BaseWidget {
+export class Tread extends ChildWidget {
   /**
    *
    * @param {Types.Tread} vPB
@@ -19,7 +19,7 @@ export class Tread extends BaseWidget {
     // 踏板绘制
     let tread = new PIXI.Graphics()
     let path = []
-    tread.lineStyle(2, 0x2d3037)
+    tread.lineStyle(1, 0x2d3037)
     tread.beginFill(0xffffff)
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
@@ -27,6 +27,7 @@ export class Tread extends BaseWidget {
     }
     tread.drawPolygon(path)
     tread.endFill()
+
     this.sprite = tread
   }
 
@@ -34,15 +35,11 @@ export class Tread extends BaseWidget {
    *
    * @returns 获取当前组件的精灵图
    */
-  getSprite() {
-    return this.sprite
-  }
 
   /**
    * 踏板只需要添加到父级，不需要添加到画布
    * 所以此处用空函数重写
    */
-  addToStage() {}
 
   // 取消踏板选中效果
   cancelSelected() {
@@ -52,6 +49,10 @@ export class Tread extends BaseWidget {
 
   // 踏板选中效果
   setSelected() {
+    // this.sprite.clear()
+    // console.log(this.sprite)
+    // this.sprite.lineStyle(2, 0x2d3037)
+    // this.sprite.beginFill(0xffffff)
     this.sprite.tint = 0xe9efff
     this.isSelected = true
     D2Config.SELECTED = this

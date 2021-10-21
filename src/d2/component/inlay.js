@@ -33,38 +33,76 @@ export class Inlay extends BaseWidget {
   draw() {
     const inlayContainer = new PIXI.Container()
 
-    let inlay = new PIXI.Graphics()
-    inlay.lineStyle(1, 0x000000)
-    inlay.beginFill(0xffffff, 1)
-    inlay.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
-    inlay.endFill()
-    inlay.position.set(this.positionX, this.positionY)
-    inlay.pivot.set(0, 0)
-    inlay.rotation = this.rotationY
-    this.sprite = inlay
+    let inlayOut = new PIXI.Graphics()
+    inlayOut.lineStyle(1, 0x000000)
+    inlayOut.beginFill(0xffffff, 1)
+    inlayOut.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
+    inlayOut.endFill()
+    inlayOut.position.set(this.positionX, this.positionY)
+    inlayOut.pivot.set(0, 0)
+    inlayOut.rotation = this.rotationY
 
-    // // 添加名称
+    const path = []
+    switch (this.type) {
+      case 1: // 门
+        path.push(
+          0,
+          0,
+          this.width / 2,
+          0,
+          this.width / 2,
+          this.depth / 4,
+          this.width,
+          this.depth / 4,
+          this.width,
+          this.depth / 2,
+          this.width / 2,
+          this.depth / 2,
+          this.width / 2,
+          this.depth / 4,
+          0,
+          this.depth / 4,
+          0,
+          0
+        )
+        break
+      case 2: // 窗
+        path.push(
+          0,
+          0,
+          this.width / 2,
+          0,
+          this.width / 2,
+          this.depth / 4,
+          this.width,
+          this.depth / 4,
+          this.width,
+          this.depth / 2,
+          this.width / 2,
+          this.depth / 2,
+          this.width / 2,
+          this.depth / 4,
+          0,
+          this.depth / 4,
+          0,
+          0
+        )
+        break
+      case 3: // 洞
+        path.push(0, 0)
+        break
+    }
+    let inlayIn = new PIXI.Graphics()
+    inlayIn.beginFill(0x000000, 1)
+    inlayIn.drawPolygon(path)
+    inlayIn.endFill()
+    inlayIn.position.set(this.positionX, this.positionY)
+    inlayIn.pivot.set(inlayIn.width / 2, inlayIn.height / 2)
+    inlayIn.rotation = this.rotationY
 
-    // // 根据 type 获取名称
-    // var textWord = ''
-    // switch (this.type) {
-    //   case 1:
-    //     textWord = '门'
-    //     break
-    //   case 2:
-    //     textWord = '窗'
-    //     break
-    //   case 3:
-    //     textWord = '洞'
-    //     break
-    // }
-    // const text = new PIXI.Text(textWord, { fontSize: 12, fill: 0xffffff })
-    // text.position.set(this.positionX, this.positionY)
-    // text.pivot.set(text.width / 2, text.height / 2)
-    // // text.rotation = this.rotationY
+    inlayContainer.addChild(inlayOut, inlayIn)
 
-    // inlayContainer.addChild(inlay)
-    // this.sprite = inlayContainer
+    this.sprite = inlayContainer
   }
 
   // 取消 inlay 选中效果
