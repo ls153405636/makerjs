@@ -3480,6 +3480,8 @@ export const Types = $root.Types = (() => {
          * @interface IHangingBoard
          * @property {string|null} [uuid] HangingBoard uuid
          * @property {number|null} [depth] HangingBoard depth
+         * @property {number|null} [width] HangingBoard width
+         * @property {number|null} [height] HangingBoard height
          */
 
         /**
@@ -3514,6 +3516,22 @@ export const Types = $root.Types = (() => {
         HangingBoard.prototype.depth = 0;
 
         /**
+         * HangingBoard width.
+         * @member {number} width
+         * @memberof Types.HangingBoard
+         * @instance
+         */
+        HangingBoard.prototype.width = 0;
+
+        /**
+         * HangingBoard height.
+         * @member {number} height
+         * @memberof Types.HangingBoard
+         * @instance
+         */
+        HangingBoard.prototype.height = 0;
+
+        /**
          * Creates a new HangingBoard instance using the specified properties.
          * @function create
          * @memberof Types.HangingBoard
@@ -3541,6 +3559,10 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
             if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
                 writer.uint32(/* id 2, wireType 5 =*/21).float(message.depth);
+            if (message.width != null && Object.hasOwnProperty.call(message, "width"))
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.width);
+            if (message.height != null && Object.hasOwnProperty.call(message, "height"))
+                writer.uint32(/* id 4, wireType 5 =*/37).float(message.height);
             return writer;
         };
 
@@ -3580,6 +3602,12 @@ export const Types = $root.Types = (() => {
                     break;
                 case 2:
                     message.depth = reader.float();
+                    break;
+                case 3:
+                    message.width = reader.float();
+                    break;
+                case 4:
+                    message.height = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -3622,6 +3650,12 @@ export const Types = $root.Types = (() => {
             if (message.depth != null && message.hasOwnProperty("depth"))
                 if (typeof message.depth !== "number")
                     return "depth: number expected";
+            if (message.width != null && message.hasOwnProperty("width"))
+                if (typeof message.width !== "number")
+                    return "width: number expected";
+            if (message.height != null && message.hasOwnProperty("height"))
+                if (typeof message.height !== "number")
+                    return "height: number expected";
             return null;
         };
 
@@ -3641,6 +3675,10 @@ export const Types = $root.Types = (() => {
                 message.uuid = String(object.uuid);
             if (object.depth != null)
                 message.depth = Number(object.depth);
+            if (object.width != null)
+                message.width = Number(object.width);
+            if (object.height != null)
+                message.height = Number(object.height);
             return message;
         };
 
@@ -3660,11 +3698,17 @@ export const Types = $root.Types = (() => {
             if (options.defaults) {
                 object.uuid = "";
                 object.depth = 0;
+                object.width = 0;
+                object.height = 0;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
             if (message.depth != null && message.hasOwnProperty("depth"))
                 object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
+            if (message.width != null && message.hasOwnProperty("width"))
+                object.width = options.json && !isFinite(message.width) ? String(message.width) : message.width;
+            if (message.height != null && message.hasOwnProperty("height"))
+                object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
             return object;
         };
 
@@ -4015,6 +4059,8 @@ export const Types = $root.Types = (() => {
          * @interface ITread
          * @property {string|null} [uuid] Tread uuid
          * @property {Types.IOutline|null} [stepOutline] Tread stepOutline
+         * @property {number|null} [index] Tread index
+         * @property {boolean|null} [isLast] Tread isLast
          */
 
         /**
@@ -4049,6 +4095,22 @@ export const Types = $root.Types = (() => {
         Tread.prototype.stepOutline = null;
 
         /**
+         * Tread index.
+         * @member {number} index
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.index = 0;
+
+        /**
+         * Tread isLast.
+         * @member {boolean} isLast
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.isLast = false;
+
+        /**
          * Creates a new Tread instance using the specified properties.
          * @function create
          * @memberof Types.Tread
@@ -4076,6 +4138,10 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
             if (message.stepOutline != null && Object.hasOwnProperty.call(message, "stepOutline"))
                 $root.Types.Outline.encode(message.stepOutline, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.index != null && Object.hasOwnProperty.call(message, "index"))
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.index);
+            if (message.isLast != null && Object.hasOwnProperty.call(message, "isLast"))
+                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.isLast);
             return writer;
         };
 
@@ -4115,6 +4181,12 @@ export const Types = $root.Types = (() => {
                     break;
                 case 2:
                     message.stepOutline = $root.Types.Outline.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    message.index = reader.float();
+                    break;
+                case 4:
+                    message.isLast = reader.bool();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4159,6 +4231,12 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "stepOutline." + error;
             }
+            if (message.index != null && message.hasOwnProperty("index"))
+                if (typeof message.index !== "number")
+                    return "index: number expected";
+            if (message.isLast != null && message.hasOwnProperty("isLast"))
+                if (typeof message.isLast !== "boolean")
+                    return "isLast: boolean expected";
             return null;
         };
 
@@ -4181,6 +4259,10 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Tread.stepOutline: object expected");
                 message.stepOutline = $root.Types.Outline.fromObject(object.stepOutline);
             }
+            if (object.index != null)
+                message.index = Number(object.index);
+            if (object.isLast != null)
+                message.isLast = Boolean(object.isLast);
             return message;
         };
 
@@ -4200,11 +4282,17 @@ export const Types = $root.Types = (() => {
             if (options.defaults) {
                 object.uuid = "";
                 object.stepOutline = null;
+                object.index = 0;
+                object.isLast = false;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
             if (message.stepOutline != null && message.hasOwnProperty("stepOutline"))
                 object.stepOutline = $root.Types.Outline.toObject(message.stepOutline, options);
+            if (message.index != null && message.hasOwnProperty("index"))
+                object.index = options.json && !isFinite(message.index) ? String(message.index) : message.index;
+            if (message.isLast != null && message.hasOwnProperty("isLast"))
+                object.isLast = message.isLast;
             return object;
         };
 
@@ -7417,6 +7505,9 @@ export const Types = $root.Types = (() => {
          * @interface IGirder
          * @property {string|null} [uuid] Girder uuid
          * @property {number|null} [length] Girder length
+         * @property {number|null} [length2D] Girder length2D
+         * @property {Types.IVector3|null} [position] Girder position
+         * @property {Types.IVector3|null} [rotation] Girder rotation
          * @property {Types.IOutline|null} [outline] Girder outline
          */
 
@@ -7450,6 +7541,30 @@ export const Types = $root.Types = (() => {
          * @instance
          */
         Girder.prototype.length = 0;
+
+        /**
+         * Girder length2D.
+         * @member {number} length2D
+         * @memberof Types.Girder
+         * @instance
+         */
+        Girder.prototype.length2D = 0;
+
+        /**
+         * Girder position.
+         * @member {Types.IVector3|null|undefined} position
+         * @memberof Types.Girder
+         * @instance
+         */
+        Girder.prototype.position = null;
+
+        /**
+         * Girder rotation.
+         * @member {Types.IVector3|null|undefined} rotation
+         * @memberof Types.Girder
+         * @instance
+         */
+        Girder.prototype.rotation = null;
 
         /**
          * Girder outline.
@@ -7487,8 +7602,14 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
             if (message.length != null && Object.hasOwnProperty.call(message, "length"))
                 writer.uint32(/* id 2, wireType 5 =*/21).float(message.length);
+            if (message.length2D != null && Object.hasOwnProperty.call(message, "length2D"))
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.length2D);
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
+                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.rotation != null && Object.hasOwnProperty.call(message, "rotation"))
+                $root.Types.Vector3.encode(message.rotation, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             if (message.outline != null && Object.hasOwnProperty.call(message, "outline"))
-                $root.Types.Outline.encode(message.outline, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                $root.Types.Outline.encode(message.outline, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             return writer;
         };
 
@@ -7530,6 +7651,15 @@ export const Types = $root.Types = (() => {
                     message.length = reader.float();
                     break;
                 case 3:
+                    message.length2D = reader.float();
+                    break;
+                case 4:
+                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 5:
+                    message.rotation = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 6:
                     message.outline = $root.Types.Outline.decode(reader, reader.uint32());
                     break;
                 default:
@@ -7573,6 +7703,19 @@ export const Types = $root.Types = (() => {
             if (message.length != null && message.hasOwnProperty("length"))
                 if (typeof message.length !== "number")
                     return "length: number expected";
+            if (message.length2D != null && message.hasOwnProperty("length2D"))
+                if (typeof message.length2D !== "number")
+                    return "length2D: number expected";
+            if (message.position != null && message.hasOwnProperty("position")) {
+                let error = $root.Types.Vector3.verify(message.position);
+                if (error)
+                    return "position." + error;
+            }
+            if (message.rotation != null && message.hasOwnProperty("rotation")) {
+                let error = $root.Types.Vector3.verify(message.rotation);
+                if (error)
+                    return "rotation." + error;
+            }
             if (message.outline != null && message.hasOwnProperty("outline")) {
                 let error = $root.Types.Outline.verify(message.outline);
                 if (error)
@@ -7597,6 +7740,18 @@ export const Types = $root.Types = (() => {
                 message.uuid = String(object.uuid);
             if (object.length != null)
                 message.length = Number(object.length);
+            if (object.length2D != null)
+                message.length2D = Number(object.length2D);
+            if (object.position != null) {
+                if (typeof object.position !== "object")
+                    throw TypeError(".Types.Girder.position: object expected");
+                message.position = $root.Types.Vector3.fromObject(object.position);
+            }
+            if (object.rotation != null) {
+                if (typeof object.rotation !== "object")
+                    throw TypeError(".Types.Girder.rotation: object expected");
+                message.rotation = $root.Types.Vector3.fromObject(object.rotation);
+            }
             if (object.outline != null) {
                 if (typeof object.outline !== "object")
                     throw TypeError(".Types.Girder.outline: object expected");
@@ -7621,12 +7776,21 @@ export const Types = $root.Types = (() => {
             if (options.defaults) {
                 object.uuid = "";
                 object.length = 0;
+                object.length2D = 0;
+                object.position = null;
+                object.rotation = null;
                 object.outline = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
             if (message.length != null && message.hasOwnProperty("length"))
                 object.length = options.json && !isFinite(message.length) ? String(message.length) : message.length;
+            if (message.length2D != null && message.hasOwnProperty("length2D"))
+                object.length2D = options.json && !isFinite(message.length2D) ? String(message.length2D) : message.length2D;
+            if (message.position != null && message.hasOwnProperty("position"))
+                object.position = $root.Types.Vector3.toObject(message.position, options);
+            if (message.rotation != null && message.hasOwnProperty("rotation"))
+                object.rotation = $root.Types.Vector3.toObject(message.rotation, options);
             if (message.outline != null && message.hasOwnProperty("outline"))
                 object.outline = $root.Types.Outline.toObject(message.outline, options);
             return object;
