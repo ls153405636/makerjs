@@ -13,7 +13,7 @@ export const Default = {
   WALL_DEPTH: 240,
   HOLE_LENGTH: 4000,
   HOLE_WIDTH: 3000,
-  STEP_NUM_RULE: Types.StepNumRule.snr_n,
+  STEP_NUM_RULE: Types.StepNumRule.snr_n_add_1,
   STEP_NUM: 15,
   STEP_LENGTH: 900,
   STEP_WIDTH: 259,
