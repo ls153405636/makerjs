@@ -20,7 +20,6 @@ export class Inlay extends BaseWidget {
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.rotationY = vPB.rotation.y
-    // console.log(this.rotationY)
 
     this.draw()
     this.addEvent()

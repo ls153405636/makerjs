@@ -13,6 +13,7 @@ export class Tread extends ChildWidget {
     this.parent = vParent
     this.draw()
     this.addEvent()
+    // console.log(this.edges)
   }
 
   draw() {
@@ -24,6 +25,7 @@ export class Tread extends ChildWidget {
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      console.log(path)
     }
     tread.drawPolygon(path)
     tread.endFill()

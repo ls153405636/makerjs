@@ -7,6 +7,7 @@ import { BigColumn } from './big_column'
 import { ChildWidget } from './child_widget'
 import d2_tool from '../d2_tool'
 import { Flight } from './flight'
+import { Handrail } from './handrail'
 
 export class Stair extends BaseWidget {
   /**
@@ -19,8 +20,12 @@ export class Stair extends BaseWidget {
     this.flights = []
     this.smallColumns = []
     this.bigColumns = []
+    this.handrails = []
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
+    }
+    for (const hdl of vPB.handrails) {
+      this.handrails.push(new Handrail(hdl))
     }
     for (const col of vPB.smallColumns) {
       this.smallColumns.push(new SmallColumn(col, this))
@@ -36,6 +41,7 @@ export class Stair extends BaseWidget {
   draw() {
     this.sprite = new PIXI.Container()
     this.addSprites(this.flights)
+    this.addSprites(this.handrails)
     this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)
 
