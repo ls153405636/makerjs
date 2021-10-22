@@ -10,13 +10,23 @@ export class Tread extends ChildWidget {
   constructor(vPB, vParent) {
     super()
     this.edges = vPB.stepOutline.edges
+    this.index = vPB.index
     this.parent = vParent
     this.draw()
     this.addEvent()
-    // console.log(this.edges)
   }
 
   draw() {
+    // 中心位置计算
+    let positionX
+    let positionY
+    for (let i = 0; i < this.edges.length; i++) {
+      let f = this.edges[i]
+      positionX = f.p1.x
+      positionY = f.p1.y
+    }
+    let treadContainer = new PIXI.Container()
+
     // 踏板绘制
     let tread = new PIXI.Graphics()
     let path = []
@@ -25,12 +35,20 @@ export class Tread extends ChildWidget {
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-      console.log(path)
     }
     tread.drawPolygon(path)
     tread.endFill()
 
-    this.sprite = tread
+    // 踏板编号
+    let stepNum = new PIXI.Text(this.index, { fontSize: 56 })
+    stepNum.scale.set(0.25)
+    stepNum.position.set(
+      positionX / D2Config.SCREEN_RATE + tread.width / 2,
+      positionY / D2Config.SCREEN_RATE - tread.height / 2
+    )
+    stepNum.anchor.set(0.5, 0.5)
+    treadContainer.addChild(tread, stepNum)
+    this.sprite = treadContainer
   }
 
   /**
@@ -45,7 +63,7 @@ export class Tread extends ChildWidget {
 
   // 取消踏板选中效果
   cancelSelected() {
-    this.sprite.tint = 0xffffff
+    this.sprite.children[0].tint = 0xffffff
     this.isSelected = false
   }
 
@@ -55,19 +73,19 @@ export class Tread extends ChildWidget {
     // console.log(this.sprite)
     // this.sprite.lineStyle(2, 0x2d3037)
     // this.sprite.beginFill(0xffffff)
-    this.sprite.tint = 0xe9efff
+    this.sprite.children[0].tint = 0xe9efff
     this.isSelected = true
     D2Config.SELECTED = this
   }
 
   // 鼠标进入踏板效果
   setHover() {
-    this.sprite.tint = 0xe9efff
+    this.sprite.children[0].tint = 0xe9efff
   }
   // 鼠标离开踏板效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xffffff
+      this.sprite.children[0].tint = 0xffffff
     }
   }
 

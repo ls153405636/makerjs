@@ -1,10 +1,10 @@
 import { Types } from '../../types/stair_v2'
+import { BaseWidget } from '../base_widget'
 import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
 import { Tread } from './tread'
-import { ChildWidget } from './child_widget'
 
-export class Flight extends ChildWidget {
+export class Flight extends BaseWidget {
   /**
    *
    * @param {Types.Flight} vPB
@@ -29,17 +29,13 @@ export class Flight extends ChildWidget {
         this.sprite.addChild(treadSprite)
       }
     }
-    for (let i = 0; i < this.tread.length; i++) {
-      let stepNum = new PIXI.Text(i + 1, { fontSize: 56 })
-      stepNum.scale.set(0.25)
-      stepNum.anchor.set(0.5, 0)
-      stepNum.position.set(
-        this.stepLength / 2,
-        this.stepWidth * (this.tread.length - 1) - i * this.stepWidth
-      )
-      stepNum.pivot.set(stepNum.width / 2, -stepNum.height)
-      this.sprite.addChild(stepNum)
-    }
+  }
+
+  /**
+   * 获取当前对象精灵图
+   */
+  getSprite() {
+    return this.sprite
   }
 
   setHover() {
@@ -73,5 +69,5 @@ export class Flight extends ChildWidget {
    * 楼梯段只需要添加到父级，不需要添加到画布
    * 所以此处用空函数重写
    */
-  // addToStage() {}
+  addToStage() {}
 }

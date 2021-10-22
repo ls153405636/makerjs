@@ -106,27 +106,27 @@ export class Inlay extends BaseWidget {
 
   // 取消 inlay 选中效果
   cancelSelected() {
-    this.sprite.tint = 0xffffff
+    this.sprite.children[0].tint = 0xffffff
     this.sprite.alpha = 1
     this.isSelected = false
   }
   //  inlay 选中效果
   setSelected() {
-    this.sprite.tint = 0xe9efff
+    this.sprite.children[0].tint = 0xe9efff
     this.sprite.alpha = 1
     this.isSelected = true
   }
   // 鼠标进入 inlay 效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xe9efff
+      this.sprite.children[0].tint = 0xe9efff
       this.sprite.alpha = 1
     }
   }
   // 鼠标离开 inlay 效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xffffff
+      this.sprite.children[0].tint = 0xffffff
       this.sprite.alpha = 1
     }
   }

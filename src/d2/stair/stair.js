@@ -1,13 +1,14 @@
 import { start } from 'xstate/lib/actions'
 import { Types } from '../../types/stair_v2'
 import { BaseWidget } from '../base_widget'
-import { SmallColumn } from './small_column'
-import { D2Config } from '../config'
-import { BigColumn } from './big_column'
 import { ChildWidget } from './child_widget'
+import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
+import { BigColumn } from './big_column'
+import { SmallColumn } from './small_column'
 import { Flight } from './flight'
 import { Handrail } from './handrail'
+import { HangingBoard } from './hanging_board'
 
 export class Stair extends BaseWidget {
   /**
@@ -21,6 +22,7 @@ export class Stair extends BaseWidget {
     this.smallColumns = []
     this.bigColumns = []
     this.handrails = []
+    this.hangingBoard = []
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
     }
@@ -31,8 +33,10 @@ export class Stair extends BaseWidget {
       this.smallColumns.push(new SmallColumn(col, this))
     }
     for (const col of vPB.bigColumns) {
+      console.log(col)
       this.bigColumns.push(new BigColumn(col))
     }
+    this.hangingBoard.push(new HangingBoard(vPB.hangingBoard))
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
@@ -40,6 +44,7 @@ export class Stair extends BaseWidget {
 
   draw() {
     this.sprite = new PIXI.Container()
+    this.addSprites(this.hangingBoard)
     this.addSprites(this.flights)
     this.addSprites(this.handrails)
     this.addSprites(this.smallColumns)
