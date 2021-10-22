@@ -1215,6 +1215,12 @@ export namespace Types {
 
         /** HangingBoard depth */
         depth?: (number|null);
+
+        /** HangingBoard width */
+        width?: (number|null);
+
+        /** HangingBoard height */
+        height?: (number|null);
     }
 
     /** Represents a HangingBoard. */
@@ -1231,6 +1237,12 @@ export namespace Types {
 
         /** HangingBoard depth. */
         public depth: number;
+
+        /** HangingBoard width. */
+        public width: number;
+
+        /** HangingBoard height. */
+        public height: number;
 
         /**
          * Creates a new HangingBoard instance using the specified properties.
@@ -1425,6 +1437,12 @@ export namespace Types {
 
         /** Tread stepOutline */
         stepOutline?: (Types.IOutline|null);
+
+        /** Tread index */
+        index?: (number|null);
+
+        /** Tread isLast */
+        isLast?: (boolean|null);
     }
 
     /** Represents a Tread. */
@@ -1441,6 +1459,12 @@ export namespace Types {
 
         /** Tread stepOutline. */
         public stepOutline?: (Types.IOutline|null);
+
+        /** Tread index. */
+        public index: number;
+
+        /** Tread isLast. */
+        public isLast: boolean;
 
         /**
          * Creates a new Tread instance using the specified properties.
@@ -2854,6 +2878,15 @@ export namespace Types {
         /** Girder length */
         length?: (number|null);
 
+        /** Girder length2D */
+        length2D?: (number|null);
+
+        /** Girder position */
+        position?: (Types.IVector3|null);
+
+        /** Girder rotation */
+        rotation?: (Types.IVector3|null);
+
         /** Girder outline */
         outline?: (Types.IOutline|null);
     }
@@ -2872,6 +2905,15 @@ export namespace Types {
 
         /** Girder length. */
         public length: number;
+
+        /** Girder length2D. */
+        public length2D: number;
+
+        /** Girder position. */
+        public position?: (Types.IVector3|null);
+
+        /** Girder rotation. */
+        public rotation?: (Types.IVector3|null);
 
         /** Girder outline. */
         public outline?: (Types.IOutline|null);

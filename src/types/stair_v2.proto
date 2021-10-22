@@ -104,7 +104,7 @@ message Edge {
 
 message Outline {
   repeated Edge edges = 1;
-  bool   isClose = 2;
+  bool     isClose    = 2;
 }
 
 //一个项目
@@ -180,9 +180,12 @@ message Stair {
   Vector3            position                 = 26;  //为包围框左上角顶点的坐标
 }
 
+//挂板
 message HangingBoard {
-  string uuid = 1;
-  float depth = 2;
+  string uuid   = 1;
+  float  depth  = 2;  //厚度
+  float  width  = 3;
+  float  height = 4;
 }
 
 //一段楼梯
@@ -198,6 +201,8 @@ message Flight {
 message Tread {
   string  uuid        = 1;
   Outline stepOutline = 2;  //踏板边缘轮廓
+  float   index       = 3;  //索引
+  bool    isLast      = 4;  //是否为n+1步中作为楼面的最后一级
 }
 
 //踏步参数
@@ -274,13 +279,13 @@ message BigColParameters {
 }
 
 message DxfData {
-  string   specification = 1; //规格
+  string specification = 1;  //规格
 }
 
 message Handrail {
   string  uuid  = 1;
   Outline route = 2;
-  float   width = 3; //宽度
+  float   width = 3;  //宽度
 }
 
 message HandrailParameters {
@@ -290,9 +295,12 @@ message HandrailParameters {
 } 
 
 message Girder {
-  string  uuid    = 1;
-  float   length  = 2;  //长度
-  Outline outline = 3;  //轮廓边
+  string  uuid     = 1;
+  float   length   = 2;  //长度 
+  float   length2D = 3;  //在2d平面的长度
+  Vector3 position = 4;  //模型包围盒左下后点的坐标，2d平面俯视图中左上角顶点的位置
+  Vector3 rotation = 5;  //以顶点为中心的旋转角度
+  Outline outline  = 6;  //轮廓边
 }
 
 message GirderParameters {
