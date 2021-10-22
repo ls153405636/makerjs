@@ -289,21 +289,47 @@ export class Stair {
       return
       /**平面图不需要绘制锯齿梁，故先不做处理*/
     }
-    this.girders.push(
-      new Types.Girder({
-        length2D: this.depth - this.hangYOffset,
-        position: new Types.Vector3({ x: 0, y: this.hangYOffset }),
-      })
-    )
-    this.girders.push(
-      new Types.Girder({
-        length2D: this.depth - this.hangYOffset,
-        position: new Types.Vector3({
-          x: this.stepLength,
+    let leftInEdges = [
+      new Types.Edge({
+        p1: new Types.Vector3({ x: args.depth, y: this.depth }),
+        p2: new Types.Vector3({ x: args.depth, y: this.hangYOffset }),
+      }),
+    ]
+    let leftOutEdges = [
+      new Types.Edge({
+        p1: new Types.Vector3({ x: 0, y: this.depth }),
+        p2: new Types.Vector3({ x: 0, y: this.hangYOffset }),
+      }),
+    ]
+    let rightInEdges = [
+      new Types.Edge({
+        p1: new Types.Vector3({
+          x: this.stepLength - args.depth,
+          y: this.depth,
+        }),
+        p2: new Types.Vector3({
+          x: this.stepLength - args.depth,
           y: this.hangYOffset,
         }),
-      })
-    )
+      }),
+    ]
+    let rightOutEdges = [
+      new Types.Edge({
+        p1: new Types.Vector3({ x: this.stepLength, y: this.depth }),
+        p2: new Types.Vector3({ x: this.stepLength, y: this.hangYOffset }),
+      }),
+    ]
+    this.girders.push(this.createGirder(leftInEdges, leftOutEdges))
+    this.girders.push(this.createGirder(rightInEdges, rightOutEdges))
+  }
+
+  createGirder(vInEdges, vOutEdges) {
+    let inRoute = new Types.Outline({ edges: vInEdges })
+    let outRoute = new Types.Outline({ edges: vOutEdges })
+    return new Types.Girder({
+      inRoute: inRoute,
+      outRoute: outRoute,
+    })
   }
 
   createHandrails() {
@@ -360,10 +386,6 @@ export class Stair {
       )
     }
     let size = tool.parseSpecification(args.source.specification, 'yxz')
-    // let inRoute1 = new Outline(route1).offset(size.x / 2, true)
-    // let outRoute1 = new Outline(route1).offset(size.x / 2, false)
-    // let inRoute2 = new Outline(route2).offset(size.x / 2, true)
-    // let outRoute2 = new Outline(route2).offset(size.x / 2, false)
 
     this.handrails.push(
       new Types.Handrail({

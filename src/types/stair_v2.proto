@@ -297,10 +297,10 @@ message HandrailParameters {
 message Girder {
   string  uuid     = 1;
   float   length   = 2;  //长度 
-  float   length2D = 3;  //在2d平面的长度
-  Vector3 position = 4;  //模型包围盒左下后点的坐标，2d平面俯视图中左上角顶点的位置
-  Vector3 rotation = 5;  //以顶点为中心的旋转角度
-  Outline outline  = 6;  //轮廓边
+  Outline inRoute   = 3;  //内侧轮廓路径，贴近楼梯方向的一侧
+  Outline outRoute  = 4;  //外侧路径
+  Outline inTopRoute = 5;  //内侧上方路径   
+  Outline outTopRoute  = 6;  //外侧上方路径
 }
 
 message GirderParameters {

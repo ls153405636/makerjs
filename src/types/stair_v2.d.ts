@@ -2878,17 +2878,17 @@ export namespace Types {
         /** Girder length */
         length?: (number|null);
 
-        /** Girder length2D */
-        length2D?: (number|null);
+        /** Girder inRoute */
+        inRoute?: (Types.IOutline|null);
 
-        /** Girder position */
-        position?: (Types.IVector3|null);
+        /** Girder outRoute */
+        outRoute?: (Types.IOutline|null);
 
-        /** Girder rotation */
-        rotation?: (Types.IVector3|null);
+        /** Girder inTopRoute */
+        inTopRoute?: (Types.IOutline|null);
 
-        /** Girder outline */
-        outline?: (Types.IOutline|null);
+        /** Girder outTopRoute */
+        outTopRoute?: (Types.IOutline|null);
     }
 
     /** Represents a Girder. */
@@ -2906,17 +2906,17 @@ export namespace Types {
         /** Girder length. */
         public length: number;
 
-        /** Girder length2D. */
-        public length2D: number;
+        /** Girder inRoute. */
+        public inRoute?: (Types.IOutline|null);
 
-        /** Girder position. */
-        public position?: (Types.IVector3|null);
+        /** Girder outRoute. */
+        public outRoute?: (Types.IOutline|null);
 
-        /** Girder rotation. */
-        public rotation?: (Types.IVector3|null);
+        /** Girder inTopRoute. */
+        public inTopRoute?: (Types.IOutline|null);
 
-        /** Girder outline. */
-        public outline?: (Types.IOutline|null);
+        /** Girder outTopRoute. */
+        public outTopRoute?: (Types.IOutline|null);
 
         /**
          * Creates a new Girder instance using the specified properties.

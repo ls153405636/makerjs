@@ -7505,10 +7505,10 @@ export const Types = $root.Types = (() => {
          * @interface IGirder
          * @property {string|null} [uuid] Girder uuid
          * @property {number|null} [length] Girder length
-         * @property {number|null} [length2D] Girder length2D
-         * @property {Types.IVector3|null} [position] Girder position
-         * @property {Types.IVector3|null} [rotation] Girder rotation
-         * @property {Types.IOutline|null} [outline] Girder outline
+         * @property {Types.IOutline|null} [inRoute] Girder inRoute
+         * @property {Types.IOutline|null} [outRoute] Girder outRoute
+         * @property {Types.IOutline|null} [inTopRoute] Girder inTopRoute
+         * @property {Types.IOutline|null} [outTopRoute] Girder outTopRoute
          */
 
         /**
@@ -7543,36 +7543,36 @@ export const Types = $root.Types = (() => {
         Girder.prototype.length = 0;
 
         /**
-         * Girder length2D.
-         * @member {number} length2D
+         * Girder inRoute.
+         * @member {Types.IOutline|null|undefined} inRoute
          * @memberof Types.Girder
          * @instance
          */
-        Girder.prototype.length2D = 0;
+        Girder.prototype.inRoute = null;
 
         /**
-         * Girder position.
-         * @member {Types.IVector3|null|undefined} position
+         * Girder outRoute.
+         * @member {Types.IOutline|null|undefined} outRoute
          * @memberof Types.Girder
          * @instance
          */
-        Girder.prototype.position = null;
+        Girder.prototype.outRoute = null;
 
         /**
-         * Girder rotation.
-         * @member {Types.IVector3|null|undefined} rotation
+         * Girder inTopRoute.
+         * @member {Types.IOutline|null|undefined} inTopRoute
          * @memberof Types.Girder
          * @instance
          */
-        Girder.prototype.rotation = null;
+        Girder.prototype.inTopRoute = null;
 
         /**
-         * Girder outline.
-         * @member {Types.IOutline|null|undefined} outline
+         * Girder outTopRoute.
+         * @member {Types.IOutline|null|undefined} outTopRoute
          * @memberof Types.Girder
          * @instance
          */
-        Girder.prototype.outline = null;
+        Girder.prototype.outTopRoute = null;
 
         /**
          * Creates a new Girder instance using the specified properties.
@@ -7602,14 +7602,14 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
             if (message.length != null && Object.hasOwnProperty.call(message, "length"))
                 writer.uint32(/* id 2, wireType 5 =*/21).float(message.length);
-            if (message.length2D != null && Object.hasOwnProperty.call(message, "length2D"))
-                writer.uint32(/* id 3, wireType 5 =*/29).float(message.length2D);
-            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
-                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-            if (message.rotation != null && Object.hasOwnProperty.call(message, "rotation"))
-                $root.Types.Vector3.encode(message.rotation, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-            if (message.outline != null && Object.hasOwnProperty.call(message, "outline"))
-                $root.Types.Outline.encode(message.outline, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+            if (message.inRoute != null && Object.hasOwnProperty.call(message, "inRoute"))
+                $root.Types.Outline.encode(message.inRoute, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.outRoute != null && Object.hasOwnProperty.call(message, "outRoute"))
+                $root.Types.Outline.encode(message.outRoute, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.inTopRoute != null && Object.hasOwnProperty.call(message, "inTopRoute"))
+                $root.Types.Outline.encode(message.inTopRoute, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.outTopRoute != null && Object.hasOwnProperty.call(message, "outTopRoute"))
+                $root.Types.Outline.encode(message.outTopRoute, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             return writer;
         };
 
@@ -7651,16 +7651,16 @@ export const Types = $root.Types = (() => {
                     message.length = reader.float();
                     break;
                 case 3:
-                    message.length2D = reader.float();
+                    message.inRoute = $root.Types.Outline.decode(reader, reader.uint32());
                     break;
                 case 4:
-                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
+                    message.outRoute = $root.Types.Outline.decode(reader, reader.uint32());
                     break;
                 case 5:
-                    message.rotation = $root.Types.Vector3.decode(reader, reader.uint32());
+                    message.inTopRoute = $root.Types.Outline.decode(reader, reader.uint32());
                     break;
                 case 6:
-                    message.outline = $root.Types.Outline.decode(reader, reader.uint32());
+                    message.outTopRoute = $root.Types.Outline.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -7703,23 +7703,25 @@ export const Types = $root.Types = (() => {
             if (message.length != null && message.hasOwnProperty("length"))
                 if (typeof message.length !== "number")
                     return "length: number expected";
-            if (message.length2D != null && message.hasOwnProperty("length2D"))
-                if (typeof message.length2D !== "number")
-                    return "length2D: number expected";
-            if (message.position != null && message.hasOwnProperty("position")) {
-                let error = $root.Types.Vector3.verify(message.position);
+            if (message.inRoute != null && message.hasOwnProperty("inRoute")) {
+                let error = $root.Types.Outline.verify(message.inRoute);
                 if (error)
-                    return "position." + error;
+                    return "inRoute." + error;
             }
-            if (message.rotation != null && message.hasOwnProperty("rotation")) {
-                let error = $root.Types.Vector3.verify(message.rotation);
+            if (message.outRoute != null && message.hasOwnProperty("outRoute")) {
+                let error = $root.Types.Outline.verify(message.outRoute);
                 if (error)
-                    return "rotation." + error;
+                    return "outRoute." + error;
             }
-            if (message.outline != null && message.hasOwnProperty("outline")) {
-                let error = $root.Types.Outline.verify(message.outline);
+            if (message.inTopRoute != null && message.hasOwnProperty("inTopRoute")) {
+                let error = $root.Types.Outline.verify(message.inTopRoute);
                 if (error)
-                    return "outline." + error;
+                    return "inTopRoute." + error;
+            }
+            if (message.outTopRoute != null && message.hasOwnProperty("outTopRoute")) {
+                let error = $root.Types.Outline.verify(message.outTopRoute);
+                if (error)
+                    return "outTopRoute." + error;
             }
             return null;
         };
@@ -7740,22 +7742,25 @@ export const Types = $root.Types = (() => {
                 message.uuid = String(object.uuid);
             if (object.length != null)
                 message.length = Number(object.length);
-            if (object.length2D != null)
-                message.length2D = Number(object.length2D);
-            if (object.position != null) {
-                if (typeof object.position !== "object")
-                    throw TypeError(".Types.Girder.position: object expected");
-                message.position = $root.Types.Vector3.fromObject(object.position);
+            if (object.inRoute != null) {
+                if (typeof object.inRoute !== "object")
+                    throw TypeError(".Types.Girder.inRoute: object expected");
+                message.inRoute = $root.Types.Outline.fromObject(object.inRoute);
             }
-            if (object.rotation != null) {
-                if (typeof object.rotation !== "object")
-                    throw TypeError(".Types.Girder.rotation: object expected");
-                message.rotation = $root.Types.Vector3.fromObject(object.rotation);
+            if (object.outRoute != null) {
+                if (typeof object.outRoute !== "object")
+                    throw TypeError(".Types.Girder.outRoute: object expected");
+                message.outRoute = $root.Types.Outline.fromObject(object.outRoute);
             }
-            if (object.outline != null) {
-                if (typeof object.outline !== "object")
-                    throw TypeError(".Types.Girder.outline: object expected");
-                message.outline = $root.Types.Outline.fromObject(object.outline);
+            if (object.inTopRoute != null) {
+                if (typeof object.inTopRoute !== "object")
+                    throw TypeError(".Types.Girder.inTopRoute: object expected");
+                message.inTopRoute = $root.Types.Outline.fromObject(object.inTopRoute);
+            }
+            if (object.outTopRoute != null) {
+                if (typeof object.outTopRoute !== "object")
+                    throw TypeError(".Types.Girder.outTopRoute: object expected");
+                message.outTopRoute = $root.Types.Outline.fromObject(object.outTopRoute);
             }
             return message;
         };
@@ -7776,23 +7781,23 @@ export const Types = $root.Types = (() => {
             if (options.defaults) {
                 object.uuid = "";
                 object.length = 0;
-                object.length2D = 0;
-                object.position = null;
-                object.rotation = null;
-                object.outline = null;
+                object.inRoute = null;
+                object.outRoute = null;
+                object.inTopRoute = null;
+                object.outTopRoute = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
             if (message.length != null && message.hasOwnProperty("length"))
                 object.length = options.json && !isFinite(message.length) ? String(message.length) : message.length;
-            if (message.length2D != null && message.hasOwnProperty("length2D"))
-                object.length2D = options.json && !isFinite(message.length2D) ? String(message.length2D) : message.length2D;
-            if (message.position != null && message.hasOwnProperty("position"))
-                object.position = $root.Types.Vector3.toObject(message.position, options);
-            if (message.rotation != null && message.hasOwnProperty("rotation"))
-                object.rotation = $root.Types.Vector3.toObject(message.rotation, options);
-            if (message.outline != null && message.hasOwnProperty("outline"))
-                object.outline = $root.Types.Outline.toObject(message.outline, options);
+            if (message.inRoute != null && message.hasOwnProperty("inRoute"))
+                object.inRoute = $root.Types.Outline.toObject(message.inRoute, options);
+            if (message.outRoute != null && message.hasOwnProperty("outRoute"))
+                object.outRoute = $root.Types.Outline.toObject(message.outRoute, options);
+            if (message.inTopRoute != null && message.hasOwnProperty("inTopRoute"))
+                object.inTopRoute = $root.Types.Outline.toObject(message.inTopRoute, options);
+            if (message.outTopRoute != null && message.hasOwnProperty("outTopRoute"))
+                object.outTopRoute = $root.Types.Outline.toObject(message.outTopRoute, options);
             return object;
         };
 

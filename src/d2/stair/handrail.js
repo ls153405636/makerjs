@@ -30,10 +30,10 @@ export class Handrail extends ChildWidget {
 
   draw() {
     const handrail = new PIXI.Graphics()
-    handrail.lineStyle(0.5, 0x000000)
+    handrail.lineStyle(0.5, 0x2d3037)
     handrail.beginFill(0xffffff)
 
-    // 多边形方法绘制无效
+    // 多边形方法绘制
     let path = []
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]

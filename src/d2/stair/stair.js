@@ -9,6 +9,7 @@ import { SmallColumn } from './small_column'
 import { Flight } from './flight'
 import { Handrail } from './handrail'
 import { HangingBoard } from './hanging_board'
+import { Girder } from './girder'
 
 export class Stair extends BaseWidget {
   /**
@@ -23,6 +24,7 @@ export class Stair extends BaseWidget {
     this.bigColumns = []
     this.handrails = []
     this.hangingBoard = []
+    this.girders = []
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
     }
@@ -33,8 +35,10 @@ export class Stair extends BaseWidget {
       this.smallColumns.push(new SmallColumn(col, this))
     }
     for (const col of vPB.bigColumns) {
-      console.log(col)
       this.bigColumns.push(new BigColumn(col))
+    }
+    for (const gd of vPB.girders) {
+      this.girders.push(new Girder(gd))
     }
     this.hangingBoard.push(new HangingBoard(vPB.hangingBoard))
 
@@ -46,6 +50,7 @@ export class Stair extends BaseWidget {
     this.sprite = new PIXI.Container()
     this.addSprites(this.hangingBoard)
     this.addSprites(this.flights)
+    this.addSprites(this.girders)
     this.addSprites(this.handrails)
     this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)

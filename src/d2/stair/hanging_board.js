@@ -10,7 +10,6 @@ export class HangingBoard extends ChildWidget {
    */
   constructor(vPB) {
     super()
-    console.log(vPB)
     this.width = d2_tool.translateValue(vPB.width)
     this.height = d2_tool.translateValue(vPB.depth)
     this.draw()
