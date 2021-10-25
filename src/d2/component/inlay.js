@@ -32,6 +32,21 @@ export class Inlay extends BaseWidget {
   draw() {
     const inlayContainer = new PIXI.Container()
 
+    let changeInlayOut = new PIXI.Graphics()
+    changeInlayOut.visible = false
+    changeInlayOut.lineStyle(1, 0x4478f4)
+    changeInlayOut.beginFill(0xffffff, 1)
+    changeInlayOut.drawRect(
+      -this.width / 2,
+      -this.depth / 2,
+      this.width,
+      this.depth
+    )
+    changeInlayOut.endFill()
+    changeInlayOut.position.set(this.positionX, this.positionY)
+    changeInlayOut.pivot.set(0, 0)
+    changeInlayOut.rotation = this.rotationY
+
     let inlayOut = new PIXI.Graphics()
     inlayOut.lineStyle(1, 0x000000)
     inlayOut.beginFill(0xffffff, 1)
@@ -41,93 +56,55 @@ export class Inlay extends BaseWidget {
     inlayOut.pivot.set(0, 0)
     inlayOut.rotation = this.rotationY
 
-    const path = []
-    switch (this.type) {
-      case 1: // 门
-        path.push(
-          0,
-          0,
-          this.width / 2,
-          0,
-          this.width / 2,
-          this.depth / 4,
-          this.width,
-          this.depth / 4,
-          this.width,
-          this.depth / 2,
-          this.width / 2,
-          this.depth / 2,
-          this.width / 2,
-          this.depth / 4,
-          0,
-          this.depth / 4,
-          0,
-          0
-        )
-        break
-      case 2: // 窗
-        path.push(
-          0,
-          0,
-          this.width / 2,
-          0,
-          this.width / 2,
-          this.depth / 4,
-          this.width,
-          this.depth / 4,
-          this.width,
-          this.depth / 2,
-          this.width / 2,
-          this.depth / 2,
-          this.width / 2,
-          this.depth / 4,
-          0,
-          this.depth / 4,
-          0,
-          0
-        )
-        break
-      case 3: // 洞
-        path.push(0, 0)
-        break
-    }
-    let inlayIn = new PIXI.Graphics()
-    inlayIn.beginFill(0x000000, 1)
-    inlayIn.drawPolygon(path)
-    inlayIn.endFill()
-    inlayIn.position.set(this.positionX, this.positionY)
-    inlayIn.pivot.set(inlayIn.width / 2, inlayIn.height / 2)
-    inlayIn.rotation = this.rotationY
+    // const path = []
+    // switch (this.type) {
+    //   case 1: // 门
+    //     path.push( 0, 0, this.width / 2, 0, this.width / 2, this.depth / 4, this.width, this.depth / 4, this.width, this.depth / 2, this.width / 2, this.depth / 2, this.width / 2, this.depth / 4, 0, this.depth / 4, 0, 0)
+    //     break
+    //   case 2: // 窗
+    //     path.push( 0, 0, this.width / 2, 0, this.width / 2, this.depth / 4, this.width, this.depth / 4, this.width, this.depth / 2, this.width / 2, this.depth / 2, this.width / 2, this.depth / 4, 0, this.depth / 4, 0, 0)
+    //     break
+    //   case 3: // 洞
+    //     path.push(0, 0)
+    //     break
+    // }
+    // let inlayIn = new PIXI.Graphics()
+    // inlayIn.beginFill(0x000000, 1)
+    // inlayIn.drawPolygon(path)
+    // inlayIn.endFill()
+    // inlayIn.position.set(this.positionX, this.positionY)
+    // inlayIn.pivot.set(inlayIn.width / 2, inlayIn.height / 2)
+    // inlayIn.rotation = this.rotationY
 
-    inlayContainer.addChild(inlayOut, inlayIn)
+    inlayContainer.addChild(changeInlayOut, inlayOut)
 
     this.sprite = inlayContainer
   }
 
   // 取消 inlay 选中效果
   cancelSelected() {
-    this.sprite.children[0].tint = 0xffffff
-    this.sprite.alpha = 1
+    this.sprite.children[0].visible = false
+    this.sprite.children[1].visible = true
     this.isSelected = false
   }
   //  inlay 选中效果
   setSelected() {
-    this.sprite.children[0].tint = 0xe9efff
-    this.sprite.alpha = 1
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = false
     this.isSelected = true
   }
   // 鼠标进入 inlay 效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].tint = 0xe9efff
-      this.sprite.alpha = 1
+      this.sprite.children[0].visible = true
+      this.sprite.children[1].visible = false
     }
   }
   // 鼠标离开 inlay 效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].tint = 0xffffff
-      this.sprite.alpha = 1
+      this.sprite.children[0].visible = false
+      this.sprite.children[1].visible = true
     }
   }
 

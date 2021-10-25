@@ -19,7 +19,6 @@ export class CementComp extends BaseWidget {
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.rotationY = vPB.rotation.y
-    // console.log(this.rotationY)
 
     this.draw()
     this.addEvent()
@@ -31,6 +30,21 @@ export class CementComp extends BaseWidget {
   draw() {
     const compContainer = new PIXI.Container()
 
+    let changeComp = new PIXI.Graphics()
+    changeComp.visible = false
+    changeComp.lineStyle(1, 0x4478f4)
+    changeComp.beginFill(0xffffff, 1)
+    changeComp.drawRect(
+      -this.width / 2,
+      -this.depth / 2,
+      this.width,
+      this.depth
+    )
+    changeComp.endFill()
+    changeComp.position.set(this.positionX, this.positionY)
+    changeComp.pivot.set(0, 0)
+    changeComp.rotation = this.rotationY
+
     let comp = new PIXI.Graphics()
     comp.lineStyle(1, 0x000000)
     comp.beginFill(0xffffff, 1)
@@ -39,9 +53,9 @@ export class CementComp extends BaseWidget {
     comp.position.set(this.positionX, this.positionY)
     comp.pivot.set(0, 0)
     comp.rotation = this.rotationY
-    this.sprite = comp
 
-    // // 添加名称
+    compContainer.addChild(changeComp, comp)
+    this.sprite = compContainer
 
     // // 根据 type 获取名称
     // var textWord = ''
@@ -58,34 +72,34 @@ export class CementComp extends BaseWidget {
     // text.pivot.set(text.width / 2, text.height / 2)
     // text.rotation = this.rotationY
 
-    // compContainer.addChild(comp)
+    // compContainer.addChild(comp,text)
     // this.sprite = compContainer
   }
 
   // 取消 cement 选中效果
   cancelSelected() {
-    this.sprite.tint = 0xffffff
-    this.sprite.alpha = 1
+    this.sprite.children[0].visible = false
+    this.sprite.children[1].visible = true
     this.isSelected = false
   }
   //  cement 选中效果
   setSelected() {
-    this.sprite.tint = 0xe9efff
-    this.sprite.alpha = 1
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = false
     this.isSelected = true
   }
   // 鼠标进入 cement 效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xe9efff
-      this.sprite.alpha = 1
+      this.sprite.children[0].visible = true
+      this.sprite.children[1].visible = false
     }
   }
   // 鼠标离开 cement 效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xffffff
-      this.sprite.alpha = 1
+      this.sprite.children[0].visible = false
+      this.sprite.children[1].visible = true
     }
   }
 

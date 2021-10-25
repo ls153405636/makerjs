@@ -20,6 +20,35 @@ export class SmallColumn extends ChildWidget {
   }
 
   draw() {
+    const smallColumnContainer = new PIXI.Container()
+
+    // 小柱-变
+    const changeSmallColumn = new PIXI.Graphics()
+    changeSmallColumn.visible = false
+    changeSmallColumn.lineStyle(0.5, 0xffffff)
+    changeSmallColumn.beginFill(0x4478f4)
+    changeSmallColumn.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
+    changeSmallColumn.drawPolygon(0, 0, this.sizeX, this.sizeY)
+    changeSmallColumn.drawPolygon(this.sizeX, 0, 0, this.sizeY)
+    changeSmallColumn.position.set(
+      this.positionX - changeSmallColumn.width / 2 + 0.25,
+      this.positionY - changeSmallColumn.height / 2
+    )
+    changeSmallColumn.endFill()
+
+    const SmallColumnBg = new PIXI.Graphics()
+    SmallColumnBg.visible = false
+    SmallColumnBg.lineStyle(2, 0x4478f4)
+    SmallColumnBg.beginFill(0x4478f4)
+    SmallColumnBg.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
+    SmallColumnBg.drawPolygon(0, 0, this.sizeX, this.sizeY)
+    SmallColumnBg.drawPolygon(this.sizeX, 0, 0, this.sizeY)
+    SmallColumnBg.position.set(
+      this.positionX - SmallColumnBg.width / 2 + 1,
+      this.positionY - SmallColumnBg.height / 2 + 1
+    )
+    SmallColumnBg.endFill()
+
     // 小柱
     const smallColumn = new PIXI.Graphics()
     smallColumn.lineStyle(0.5, 0x2d3037)
@@ -33,7 +62,9 @@ export class SmallColumn extends ChildWidget {
     )
     smallColumn.endFill()
 
-    this.sprite = smallColumn
+    smallColumnContainer.addChild(SmallColumnBg, changeSmallColumn, smallColumn)
+
+    this.sprite = smallColumnContainer
   }
 
   // addToStage() {}
@@ -50,24 +81,35 @@ export class SmallColumn extends ChildWidget {
 
   // 取消小柱选中效果
   cancelSelected() {
+    this.sprite.children[0].visible = false
+    this.sprite.children[1].visible = false
+    this.sprite.children[2].visible = true
     this.sprite.tint = 0xffffff
     this.isSelected = false
   }
 
   // 小柱选中效果
   setSelected() {
-    this.sprite.tint = 0x4478f4
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = true
+    this.sprite.children[2].visible = false
     this.isSelected = true
     // D2Config.CUR_STAIR = this
   }
 
   // 鼠标进入小柱效果
   setHover() {
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = true
+    this.sprite.children[2].visible = false
     this.sprite.tint = 0x4478f4
   }
   // 鼠标离开小柱效果
   cancelHover() {
     if (!this.isSelected) {
+      this.sprite.children[0].visible = false
+      this.sprite.children[1].visible = false
+      this.sprite.children[2].visible = true
       this.sprite.tint = 0xffffff
     }
   }

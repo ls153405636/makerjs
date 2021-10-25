@@ -256,7 +256,7 @@ export class Structure {
           edge: edge,
           outEdge: outEdge,
           depth: StructConfig.INIT_WALL_DEPTH,
-          type: Types.WallType.wboth,
+          type: Types.WallType.wboth, //
           normal: new Types.Vector3({ x: norVec.x, y: norVec.y, z: norVec.z }),
         })
       )

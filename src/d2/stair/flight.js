@@ -23,6 +23,8 @@ export class Flight extends BaseWidget {
 
   draw() {
     this.sprite = new PIXI.Graphics()
+    this.sprite.sortableChildren = true
+
     for (const t of this.treads) {
       let treadSprite = t.getSprite()
       if (treadSprite) {

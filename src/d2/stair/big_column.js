@@ -23,6 +23,17 @@ export class BigColumn extends ChildWidget {
     // 大柱
     const bigColContainer = new PIXI.Container()
 
+    const changeBigColumnOut = new PIXI.Graphics()
+    changeBigColumnOut.visible = false
+    changeBigColumnOut.lineStyle(1, 0x4478f4)
+    changeBigColumnOut.beginFill(0xc8d3f2)
+    changeBigColumnOut.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
+    changeBigColumnOut.position.set(
+      this.positionX - changeBigColumnOut.width / 2 + 0.5,
+      this.positionY - changeBigColumnOut.height / 2
+    )
+    changeBigColumnOut.endFill()
+
     const bigColumnOut = new PIXI.Graphics()
     bigColumnOut.lineStyle(1, 0x2d3037)
     bigColumnOut.beginFill(0xc8d3f2)
@@ -32,6 +43,17 @@ export class BigColumn extends ChildWidget {
       this.positionY - bigColumnOut.height / 2
     )
     bigColumnOut.endFill()
+
+    const changeBigColumnIn = new PIXI.Graphics()
+    changeBigColumnIn.visible = false
+    changeBigColumnIn.lineStyle(1, 0x4478f4)
+    changeBigColumnIn.beginFill(0xffffff)
+    changeBigColumnIn.drawRoundedRect(0, 0, this.sizeX / 2, this.sizeY / 2, 0.5)
+    changeBigColumnIn.position.set(
+      this.positionX - changeBigColumnIn.width / 2 + 0.5,
+      this.positionY - changeBigColumnIn.height / 2
+    )
+    changeBigColumnIn.endFill()
 
     const bigColumnIn = new PIXI.Graphics()
 
@@ -43,31 +65,49 @@ export class BigColumn extends ChildWidget {
       this.positionY - bigColumnIn.height / 2
     )
     bigColumnIn.endFill()
-    bigColContainer.addChild(bigColumnOut, bigColumnIn)
+
+    bigColContainer.addChild(
+      changeBigColumnOut,
+      bigColumnOut,
+      changeBigColumnIn,
+      bigColumnIn
+    )
 
     this.sprite = bigColContainer
   }
 
-  // 取消墙体选中效果
+  // 取消大柱选中效果
   cancelSelected() {
-    this.sprite.children[0].tint = 0xffffff
+    this.sprite.children[0].visible = false
+    this.sprite.children[2].visible = false
+    this.sprite.children[1].visible = true
+    this.sprite.children[3].visible = true
     this.isSelected = false
   }
-  // 墙体选中效果
+  // 大柱选中效果
   setSelected() {
-    this.sprite.tint = 0x4478f4
+    this.sprite.children[0].visible = true
+    this.sprite.children[2].visible = true
+    this.sprite.children[1].visible = false
+    this.sprite.children[3].visible = false
     this.isSelected = true
   }
-  // 鼠标进入墙体效果
+  // 鼠标进入大柱效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].tint = 0x4478f4
+      this.sprite.children[0].visible = true
+      this.sprite.children[2].visible = true
+      this.sprite.children[1].visible = false
+      this.sprite.children[3].visible = false
     }
   }
-  // 鼠标离开墙体效果
+  // 鼠标离开大柱效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].tint = 0xffffff
+      this.sprite.children[0].visible = false
+      this.sprite.children[2].visible = false
+      this.sprite.children[1].visible = true
+      this.sprite.children[3].visible = true
     }
   }
 

@@ -2,7 +2,10 @@
 import { Types } from '../types/stair_v2'
 import { BaseWidget } from './base_widget'
 import d2_tool from './d2_tool'
-import catUrl from '../assets/cat.png'
+import wBoth from '../assets/wboth.png'
+import wFirst from '../assets/wfirst.png'
+import wSecond from '../assets/wsecond.png'
+import wNone from '../assets/wboth11.png'
 import Victor from 'victor'
 import { Movie } from './movie'
 import { D2Config } from './config'
@@ -22,6 +25,8 @@ export class Wall extends BaseWidget {
     this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
     this.normal = vPB.normal
+    this.type = vPB.type
+    this.alpha = 0
     this.components = []
     this.createComponents(vPB.components)
     this.draw()
@@ -144,11 +149,32 @@ export class Wall extends BaseWidget {
       y: (innerlineCenter.y + outterlineCenter.y) / 2,
     }
 
+    //创建墙体纹理
+    var texture = null
+    switch (this.type) {
+      case 1:
+        texture = PIXI.Texture.from(wFirst)
+        break
+      case 2:
+        texture = PIXI.Texture.from(wSecond)
+        break
+      case 3:
+        texture = PIXI.Texture.from(wBoth)
+        break
+      case 4:
+        texture = PIXI.Texture.from(wNone)
+        break
+    }
+    var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
+    tilingSprite.anchor.set(0.5, 0.5)
+    tilingSprite.tileScale.set(0.1) // 纹理缩放
+    tilingSprite.rotation = this.rotation
+    tilingSprite.position.set(this.position.x, this.position.y)
+
     // 墙体绘制
     const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x929292)
     wall.beginFill(0xe5e5e5, 1)
-    wall.alpha = 1
     const path = [
       this.p1.x,
       this.p1.y,
@@ -160,21 +186,14 @@ export class Wall extends BaseWidget {
       this.outP1.y,
     ]
     wall.drawPolygon(path)
+    if (this.type === 4) {
+      wall.alpha = this.alpha
+    }
     wall.endFill()
-
-    //创建墙体纹理
-    var texture = PIXI.Texture.from(catUrl)
-    var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
-
-    tilingSprite.anchor.set(0.5, 0.5)
-    tilingSprite.tileScale.set(0.1) // 纹理缩放
-    tilingSprite.rotation = this.rotation
-    tilingSprite.position.set(this.position.x, this.position.y)
     wall.addChild(tilingSprite)
 
     // 标注线绘制
     const lineContainer = new PIXI.Container()
-
     // 标注线左右端线绘制
     const dobuleLineLeft = new PIXI.Graphics()
     dobuleLineLeft
@@ -214,19 +233,24 @@ export class Wall extends BaseWidget {
   // 取消墙体选中效果
   cancelSelected() {
     this.sprite.tint = 0xffffff
-    this.sprite.alpha = 1
     this.isSelected = false
+    if (this.type === 4) {
+      this.sprite.alpha = this.alpha
+    } else {
+      this.sprite.alpha = 1
+    }
   }
   // 墙体选中效果
   setSelected() {
-    this.sprite.tint = 0xe9efff
-    this.sprite.alpha = 1
+    this.sprite.tint = 0x818796
     this.isSelected = true
+    this.sprite.alpha = 1
+    D2Config.SELECTED = this
   }
   // 鼠标进入墙体效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xe9efff
+      this.sprite.tint = 0x818796
       this.sprite.alpha = 1
     }
   }
@@ -234,7 +258,11 @@ export class Wall extends BaseWidget {
   cancelHover() {
     if (!this.isSelected) {
       this.sprite.tint = 0xffffff
-      this.sprite.alpha = 1
+      if (this.type === 4) {
+        this.sprite.alpha = this.alpha
+      } else {
+        this.sprite.alpha = 1
+      }
     }
   }
 

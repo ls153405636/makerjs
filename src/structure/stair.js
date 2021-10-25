@@ -147,7 +147,7 @@ export class Stair {
       flight.treads.push(tread)
     }
     flight.treads.reverse()
-    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
+    if (this.stepNumRule === Types.StepNumRule.snr_n) {
       flight.treads.push(
         new Types.Tread({
           index: this.stepNum,

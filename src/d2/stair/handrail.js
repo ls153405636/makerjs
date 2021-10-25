@@ -29,11 +29,7 @@ export class Handrail extends ChildWidget {
   }
 
   draw() {
-    const handrail = new PIXI.Graphics()
-    handrail.lineStyle(0.5, 0x2d3037)
-    handrail.beginFill(0xffffff)
-
-    // 多边形方法绘制
+    // 扶手路径
     let path = []
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
@@ -51,32 +47,49 @@ export class Handrail extends ChildWidget {
         this.outEdges[0].p1.y / D2Config.SCREEN_RATE
       )
     }
+
+    const handrailContainer = new PIXI.Container()
+
+    const changeHandrail = new PIXI.Graphics()
+    changeHandrail.visible = false
+    changeHandrail.lineStyle(1, 0x4478f4)
+    changeHandrail.beginFill(0xffffff)
+    changeHandrail.drawPolygon(path)
+
+    const handrail = new PIXI.Graphics()
+    handrail.lineStyle(1, 0x2d3037)
+    handrail.beginFill(0xffffff)
     handrail.drawPolygon(path)
 
-    this.sprite = handrail
+    handrailContainer.addChild(changeHandrail, handrail)
+    this.sprite = handrailContainer
   }
 
   // 取消扶手选中效果
   cancelSelected() {
-    this.sprite.tint = 0xffffff
+    this.sprite.children[0].visible = false
+    this.sprite.children[1].visible = true
     this.isSelected = false
   }
 
   // 扶手选中效果
   setSelected() {
-    this.sprite.tint = 0x4478f4
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = false
     this.isSelected = true
     D2Config.SELECTED = this
   }
 
   // 鼠标进入扶手效果
   setHover() {
-    this.sprite.tint = 0x4478f4
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = false
   }
   // 鼠标离开扶手效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xffffff
+      this.sprite.children[0].visible = false
+      this.sprite.children[1].visible = true
     }
   }
 

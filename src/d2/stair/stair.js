@@ -48,10 +48,10 @@ export class Stair extends BaseWidget {
 
   draw() {
     this.sprite = new PIXI.Container()
-    this.addSprites(this.hangingBoard)
     this.addSprites(this.flights)
-    this.addSprites(this.girders)
+    this.addSprites(this.hangingBoard)
     this.addSprites(this.handrails)
+    this.addSprites(this.girders)
     this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)
 

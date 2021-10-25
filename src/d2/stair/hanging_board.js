@@ -17,37 +17,47 @@ export class HangingBoard extends ChildWidget {
   }
 
   draw() {
+    const hangingBoardContainer = new PIXI.Container()
+
+    const changeHangingBoard = new PIXI.Graphics()
+    changeHangingBoard.visible = false
+    changeHangingBoard.lineStyle(1, 0x4478f4)
+    changeHangingBoard.beginFill(0xffffff)
+    changeHangingBoard.drawRect(0, 0, this.width, this.height)
+
     const hangingBoard = new PIXI.Graphics()
     hangingBoard.lineStyle(1, 0x2d3037)
-    hangingBoard.beginFill(0xf5f5f5)
+    hangingBoard.beginFill(0xffffff)
     hangingBoard.drawRect(0, 0, this.width, this.height)
-    this.sprite = hangingBoard
+
+    hangingBoardContainer.addChild(changeHangingBoard, hangingBoard)
+    this.sprite = hangingBoardContainer
   }
 
-  // 取消 inlay 选中效果
+  // 取消 hangingBoard 选中效果
   cancelSelected() {
-    this.sprite.tint = 0xffffff
-    this.sprite.alpha = 1
+    this.sprite.children[0].visible = false
+    this.sprite.children[1].visible = true
     this.isSelected = false
   }
-  //  inlay 选中效果
+  //  hangingBoard 选中效果
   setSelected() {
-    this.sprite.tint = 0x888888
-    this.sprite.alpha = 1
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = false
     this.isSelected = true
   }
-  // 鼠标进入 inlay 效果
+  // 鼠标进入 hangingBoard 效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0x888888
-      this.sprite.alpha = 1
+      this.sprite.children[0].visible = true
+      this.sprite.children[1].visible = false
     }
   }
-  // 鼠标离开 inlay 效果
+  // 鼠标离开 hangingBoard 效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xffffff
-      this.sprite.alpha = 1
+      this.sprite.children[0].visible = false
+      this.sprite.children[1].visible = true
     }
   }
 

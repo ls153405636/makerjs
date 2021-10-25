@@ -25,13 +25,27 @@ export class Tread extends ChildWidget {
       positionX = f.p1.x
       positionY = f.p1.y
     }
+
     let treadContainer = new PIXI.Container()
+    // 踏板绘制
+    let changeTread = new PIXI.Graphics()
+    let path1 = []
+    changeTread.visible = false
+    changeTread.lineStyle(1, 0x4478f4)
+    changeTread.beginFill(0xe9efff)
+    for (let i = 0; i < this.edges.length; i++) {
+      let e = this.edges[i]
+      path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+    }
+    changeTread.drawPolygon(path1)
+    changeTread.endFill()
 
     // 踏板绘制
     let tread = new PIXI.Graphics()
     let path = []
     tread.lineStyle(1, 0x2d3037)
     tread.beginFill(0xffffff)
+    tread.visible = true
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
@@ -47,7 +61,7 @@ export class Tread extends ChildWidget {
       positionY / D2Config.SCREEN_RATE - tread.height / 2
     )
     stepNum.anchor.set(0.5, 0.5)
-    treadContainer.addChild(tread, stepNum)
+    treadContainer.addChild(changeTread, tread, stepNum)
     this.sprite = treadContainer
   }
 
@@ -63,29 +77,33 @@ export class Tread extends ChildWidget {
 
   // 取消踏板选中效果
   cancelSelected() {
-    this.sprite.children[0].tint = 0xffffff
+    this.sprite.zIndex = 0
+    this.sprite.children[0].visible = false
+    this.sprite.children[1].visible = true
     this.isSelected = false
   }
 
   // 踏板选中效果
   setSelected() {
-    // this.sprite.clear()
-    // console.log(this.sprite)
-    // this.sprite.lineStyle(2, 0x2d3037)
-    // this.sprite.beginFill(0xffffff)
-    this.sprite.children[0].tint = 0xe9efff
+    this.sprite.zIndex = 100
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = false
     this.isSelected = true
     D2Config.SELECTED = this
   }
 
   // 鼠标进入踏板效果
   setHover() {
-    this.sprite.children[0].tint = 0xe9efff
+    this.sprite.zIndex = 100
+    this.sprite.children[0].visible = true
+    this.sprite.children[1].visible = false
   }
   // 鼠标离开踏板效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].tint = 0xffffff
+      this.sprite.zIndex = 0
+      this.sprite.children[0].visible = false
+      this.sprite.children[1].visible = true
     }
   }
 
