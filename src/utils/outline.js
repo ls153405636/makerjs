@@ -1,4 +1,4 @@
-import { Types } from "../../types/stair_v2";
+import { Types } from "../types/stair_v2";
 import { Edge } from "./edge";
 
 
