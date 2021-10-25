@@ -7,4 +7,20 @@ export const allCmds = {
     d2: D2BootCmd,
     d3: D3BootCmd,
   },
+
+  ProjInitCmd: {
+
+  },
+
+  EleAddCmd: {
+
+  },
+
+  EleDelCmd: {
+
+  },
+
+  EleUpdateCmd: {
+
+  }
 }

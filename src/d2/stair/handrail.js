@@ -1,4 +1,4 @@
-import { Outline } from '../../common/common_tools/outline'
+import { Outline } from '../../utils/outline'
 import { Types } from '../../types/stair_v2'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
