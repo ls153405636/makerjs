@@ -13,6 +13,7 @@ module.exports = {
     globals: {
         "$": true,
         "PIXI": true,
+        "THREE": true,
         "globalThis": false
     },
     parser: "babel-eslint",
@@ -32,13 +33,15 @@ module.exports = {
         "prettier"
     ],
     rules: {
-        "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "error",
+        "react-hooks/rules-of-hooks": "off",
+        "react-hooks/exhaustive-deps": "off",
         "no-unused-vars": "off",
-        "no-undef": "error",
-        "unused-imports/no-unused-imports": "error",
+        "no-undef": "off",
+        "no-debugger": "off",
+        "no-unsafe-negation": "off",
+        "unused-imports/no-unused-imports": "off",
         "unused-imports/no-unused-vars": [
-            "warn",
+            "off",
             {
                 "vars": "all",
                 "varsIgnorePattern": "^_",

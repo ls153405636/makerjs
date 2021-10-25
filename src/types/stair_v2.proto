@@ -1,19 +1,93 @@
 syntax = "proto3";
 package Types;
 
-
-//三维向量
-message Vector3{
-	float x = 1;
-	float y = 2;
-	float z = 3;
-}
+/**
+ pb中所有涉及到顺逆时针方向的
+ 均以2d坐标中，正x到正y的方向为顺时针
+*/
 
 //边的类型
 enum EdgeType {
   eph       = 0;
   estraight = 1;
   earc      = 2;
+}
+
+//墙体类型
+enum WallType {
+  wph     = 0;  //占位
+  wfirst  = 1;  //一层有二层无
+  wsecond = 2;  //二层有一层无
+  wboth   = 3;  //一二层皆有
+  wnone   = 4;  //一二层皆无
+}
+
+//靠墙类型
+enum AgainstWallType {
+  aw_ph    = 0;
+  aw_no    = 1;
+  aw_left  = 2;
+  aw_right = 3;
+}
+
+//楼梯类型
+enum StairType {
+  sph      = 0;
+  sstright = 1;  //直梯
+}
+
+//步数规则
+enum StepNumRule {
+  snr_ph      = 0;
+  snr_n       = 1;
+  snr_n_add_1 = 2;
+} 
+
+//加边类型
+enum NossingType {
+  nph     = 0;
+  nno     = 1;
+  ncommon = 2;
+  nluxury = 3;
+}
+
+//附属组件类型
+enum ComponentType {
+  cph        = 0;
+  cdoor      = 1;  //门
+  cwindow    = 2;  //窗
+  cdoor_hole = 3;  //门洞
+  cbeam      = 4;  //梁
+  cpillar    = 5;  //柱
+}
+
+//大柱位置的类型
+enum BigColumnPosType {
+  bcp_ph     = 0;
+  bcp_floor  = 1;  //地板
+  bcp_first  = 2;  //第一级踏步
+  bcp_second = 3;  //第二级踏步
+}
+
+//小柱排列规则
+enum ArrangeRule {
+  arph     = 0;  //占位
+  arrFour  = 1;  //两级四根
+  arrThree = 2;  //两级三根
+}
+
+//大梁类型
+enum GirderType {
+  gph   = 0;  //占位
+  gslab = 1;  //平板型
+  gsaw  = 2;  //锯齿型
+}
+
+//三维向量
+message Vector3{
+	float x = 1;
+	float y = 2;
+	float z = 3;
 }
 
 //构成轮廓的边
@@ -28,41 +102,213 @@ message Edge {
   bool     is_clockwise = 8;  // 是否为顺时针
 }
 
-//一个项目
-message Project {
-  string   uuid       = 1; //项目id
-  Hole     hole       = 2; //洞
-  repeated Wall walls = 3; //墙体数组
-  Stair    stair      = 4; //楼梯
+message Outline {
+  repeated Edge edges = 1;
+  bool     isClose    = 2;
 }
 
-message Stair {
-
+//一个项目
+message Project {
+  string   uuid       = 1;  //项目id
+  Hole     hole       = 2;  //洞
+  repeated Wall walls = 3;  //墙体数组
+  Stair    stair      = 4;  //楼梯
 }
 
 //洞
 message Hole {
-  repeated Edge edges = 1; //围成洞的边
-  float    floorHeight = 2; //层高
-}
-
-//墙体类型
-enum WallType {
-  wph     = 0; //占位
-  wfirst  = 1; //一层有二层无
-  wsecond = 2; //二层有一层无
-  wboth   = 3; //一二层皆有
-  wnone   = 4; //一二层皆无
+  string   uuid        = 1;
+  repeated Edge edges  = 2;  //围成洞的边,边一定按顺序首尾相连
+  float    floorHeight = 3;  //层高
 }
 
 //墙
 message Wall {
-  Vector3 p1 = 1; //起点 
-  Vector3 p2 = 2; //终点
-  WallType type = 3; //类型
-  float  startExtend = 4; //起点延伸
-  float  endExtend = 5; //终点延伸
-  float  depth = 6; //厚度
-  float  height = 7; //高度
+  string   uuid                 = 1;
+  Edge     edge                 = 2;   //墙体对应的边
+  Edge     outEdge              = 3;   //墙体的外边
+  WallType type                 = 4;   //类型
+  float    startExtend          = 5;   //起点延伸
+  float    endExtend            = 6;   //终点延伸
+  float    depth                = 7;   //厚度
+  float    height               = 8;   //高度
+  repeated Component components = 9;   //部件集合
+  Edge     holeEdge             = 10;  //对应的洞口边
+  Vector3  normal               = 11;  //法线向量
 }
+
+//门窗门洞梁柱等房间组件
+message Component {
+  string        uuid       = 1;
+  ComponentType type       = 2;   //类型
+  float         width      = 3;   //宽 旋转值为0时，x轴方向的尺寸为宽
+  float         height     = 4;   //高 
+  float         depth      = 5;   //深，旋转值为0时，y轴方向的尺寸为深，门窗门洞不可修改此属性
+  float         offGround  = 6;   //离地， 柱的离地默认为0，不可修改
+  float         disToStart = 7;   //距起点的距离，梁平行于墙，此处不可修改
+  float         interval   = 8;   //与墙之间的间隙，门窗门洞置于墙内，不可修改
+  Vector3       position   = 9;   //位置
+  Vector3       rotation   = 10;  //旋转 范围是（0，2pai）
+}
+
+message Material {
+
+}
+
+//一套楼梯
+message Stair {
+  string             uuid                     = 1;
+  float              startBeamDepth           = 2;   //起步梁厚度
+  float              exitBeamDepth            = 3;   //出口梁厚度
+  StairType          type                     = 4;   //类型
+  AgainstWallType    againstWallType          = 5;   //靠墙类型
+  TreadParameters    treadParameters          = 6;   //踏板参数
+  RiserParameters    riserParameters          = 7;   //立板参数
+  StepParameters     stepParameters           = 8;   //踏步参数
+  BigColParameters   bigColParameters         = 9;   //大柱参数
+  SmallColParameters smallColParameters       = 10;  //小柱参数
+  HandrailParameters handrailParameters       = 11;  //扶手参数
+  GirderParameters   girderParameters         = 12;  //大梁参数
+  repeated           Flight flights           = 15;  //楼梯段集合
+  repeated           Landing landings         = 16;  //休息平台合集
+  repeated           BigColumn bigColumns     = 17;  //大柱集合
+  repeated           SmallColumn smallColumns = 18;  //小柱集合
+  repeated           Handrail handrails       = 19;  //扶手集合
+  repeated           Girder   girders         = 20;  //大梁集合
+  HangingBoard       hangingBoard             = 21;  //挂板
+  float              stepHeight               = 25;  //步高
+  Vector3            position                 = 26;  //为包围框左上角顶点的坐标
+}
+
+//挂板
+message HangingBoard {
+  string uuid   = 1;
+  float  depth  = 2;  //厚度
+  float  width  = 3;
+  float  height = 4;
+}
+
+//一段楼梯
+message Flight {
+  string         uuid           = 1;
+  float          stepHeight     = 4;  //步高
+  StepParameters stepParameters = 5;  //踏步参数
+  repeated       Tread treads   = 7;  //踏板集合
+  repeated       Riser risers   = 8;  //立板集合
+}
+
+//踏板
+message Tread {
+  string  uuid        = 1;
+  Outline stepOutline = 2;  //踏板边缘轮廓
+  float   index       = 3;  //索引
+  bool    isLast      = 4;  //是否为n+1步中作为楼面的最后一级
+}
+
+//踏步参数
+message StepParameters {
+  float       stepLength  = 1;  //步长
+  float       stepWidth   = 2;  //步宽
+  StepNumRule stepNumRule = 3;  //步数规则
+  float       stepNum     = 4;  //步数
+}
+
+//踏板参数
+message TreadParameters {
+  float       depth              = 1;  //厚度
+  Material    material           = 2;  //材质
+  bool        doubleFaceMaterial = 3;  //是否双面漆
+  NossingType nossingType        = 4;  //加边类型
+  float       nossing            = 5;  //加边厚度
+  float       sideNossing        = 6;  //飘边长度
+}
+
+//休息平台
+message Landing {
+}
+
+//立板
+message Riser {
+  string uuid = 1;
+}
+
+//立板参数
+message RiserParameters {
+  bool  riserExist = 1;
+  float depth      = 2;
+}
+
+//模型源信息
+message ObjData {
+  string model_path = 1;  // obj 模型网络文件路径（通常是gltf格式）
+  string img_path   = 2;  // 模型预览图路径
+  string max_path   = 3;  // obj 模型网络文件路径（max格式）
+}
+
+//小柱
+message SmallColumn {
+  string  uuid     = 1;
+  Vector3 size     = 2;  //尺寸
+  Vector3 position = 3;  //位置
+  Vector3 rotation = 4;  //旋转
+}
+
+//小柱参数
+message SmallColParameters {
+  ObjData     source        = 1;  //模型源信息
+  ArrangeRule arrange_rule  = 2;  //排列规则
+  Material    material      = 3;
+  string      specification = 4;  // 规格
+}
+
+//大柱
+message BigColumn {
+  string           uuid     = 1;
+  Vector3          position = 2;
+  Vector3          size     = 3;
+  Vector3          rotation = 4;
+  BigColParameters paras    = 5;
+}
+
+//大柱参数
+message BigColParameters {
+  ObjData          source        = 1;  //模型源信息
+  BigColumnPosType posType       = 2;  //位置类型
+  Material         material      = 3;
+  string           specification = 4;  // 规格
+}
+
+message DxfData {
+  string specification = 1;  //规格
+}
+
+message Handrail {
+  string  uuid  = 1;
+  Outline route = 2;
+  float   width = 3;  //宽度
+}
+
+message HandrailParameters {
+  float    height   = 1;
+  DxfData  source   = 2;
+  Material material = 3;
+} 
+
+message Girder {
+  string  uuid     = 1;
+  float   length   = 2;  //长度 
+  Outline inRoute   = 3;  //内侧轮廓路径，贴近楼梯方向的一侧
+  Outline outRoute  = 4;  //外侧路径
+  Outline inTopRoute = 5;  //内侧上方路径   
+  Outline outTopRoute  = 6;  //外侧上方路径
+}
+
+message GirderParameters {
+  float      height   = 1;  //高度
+  float      depth    = 2;  //厚度
+  GirderType type     = 3;  //类型
+  Material   material = 4;
+}
+
+
 
