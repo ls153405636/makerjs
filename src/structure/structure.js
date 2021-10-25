@@ -224,7 +224,9 @@ export class Structure {
   createWalls(vHole) {
     let walls = []
     let center = new THREE.Vector2(0, 0)
+    let i = 0
     for (const e of vHole.edges) {
+      i++
       let p1 = new THREE.Vector2(e.p1.x, e.p1.y)
       let p2 = new THREE.Vector2(e.p2.x, e.p2.y)
       let vec = new THREE.Vector2().subVectors(p2, p1).normalize()
@@ -256,7 +258,7 @@ export class Structure {
           edge: edge,
           outEdge: outEdge,
           depth: StructConfig.INIT_WALL_DEPTH,
-          type: Types.WallType.wboth, //
+          type: i, //
           normal: new Types.Vector3({ x: norVec.x, y: norVec.y, z: norVec.z }),
         })
       )
