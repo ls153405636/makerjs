@@ -1,18 +1,13 @@
-
 <template>
-  <div>
-    <template>
-
-    </template>
-
-  </div>
+  <div>args</div>
 </template>
 
 <script>
-  export default {
-    data: {},
-    props: {
-      args: Object
-    }
-  }
+export default {
+  name: 'args',
+  data: {},
+  props: {
+    args: Object,
+  },
+}
 </script>

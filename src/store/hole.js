@@ -1,23 +1,16 @@
-
 const state = {
   hole_type: '',
   rect_args: {
-    width: {name: '宽', value: 4000, type: 'input'},
-    height: {name: '高', value: 3000, type: 'input'}
-  }
+    length: { name: '长', value: 4000, type: 'input' },
+    height: { name: '宽', value: 3000, type: 'input' },
+  },
 }
 
-const getters = {
+const getters = {}
 
-}
+const mutations = {}
 
-const mutations = {
-
-}
-
-const actions = {
-
-}
+const actions = {}
 
 export default {
   namespaced: true,

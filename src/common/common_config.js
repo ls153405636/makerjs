@@ -1,4 +1,3 @@
-
 const COMP_TYPES = {
   HOLE: 1,
   WALL: 2,
@@ -10,11 +9,11 @@ const COMP_TYPES = {
 }
 
 const CUR_DATA = {
-  SELECTED_TYPE: COMP_TYPE.HOLE,
+  // SELECTED_TYPE: COMP_TYPE.HOLE,
   SELECTED_ID: '',
 }
 
 export default {
   COMP_TYPES,
-  CUR_DATA
+  // CUR_DATA
 }
