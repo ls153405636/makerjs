@@ -51,7 +51,7 @@ export default {
   top: 80px;
   left: 10px;
   width: 205px;
-  height: 800;
+  height: 800px;
   background-color: #fff;
   box-shadow: 0px 4px 20px rgba(45, 48, 55, 0.1);
   border-radius: 8px;
@@ -69,13 +69,13 @@ export default {
   width: 190px;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 .recommend .recommend-demo div {
   display: flex;
+  height: 100px;
   flex-direction: column;
   align-items: center;
-  margin: 20px 0;
+  margin: 10px 0;
   cursor: pointer;
 }
 .recommend .recommend-demo img {
