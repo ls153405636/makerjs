@@ -1,3 +1,6 @@
+import { Command } from '../../common/command'
+import { COMP_TYPES } from '../../common/common_config'
+import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
 import { BaseWidget } from '../base_widget'
 import { D2Config } from '../config'
@@ -59,6 +62,9 @@ export class Flight extends BaseWidget {
       t.setSelected()
     })
     D2Config.SELECTED = this
+    //设置选中
+    let core = new Core()
+    core.execute(new Command(core.cmds.SelectedCmd, {uuid:this.uuid, type:COMP_TYPES.FLIGHT}))
   }
 
   cancelSelected() {

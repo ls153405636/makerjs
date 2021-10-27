@@ -11,6 +11,9 @@ export class Command {
       if (cmd?.d2) {
         this.d2cmd = new cmd.d2(args)
       }
+      if (cmd?.struc) {
+        this.strucCmd = new cmd.struc(args)
+      }
     }
   }
 
@@ -18,15 +21,18 @@ export class Command {
     //
     this.d3cmd && this.d3cmd.execute()
     this.d2cmd && this.d2cmd.execute()
+    this.strucCmd && this.strucCmd.execute()
   }
 
   undo() {
     this.d3cmd && this.d3cmd.undo()
     this.d2cmd && this.d2cmd.undo()
+    this.strucCmd && this.strucCmd.execute()
   }
 
   redo() {
     this.d2cmd && this.d2cmd.redo()
     this.d3cmd && this.d3cmd.redo()
+    this.strucCmd && this.strucCmd.execute()
   }
 }

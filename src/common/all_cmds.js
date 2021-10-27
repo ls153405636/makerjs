@@ -1,5 +1,6 @@
 import { D2BootCmd } from '../d2/cmds/d2_boot_cmd'
 import { D3BootCmd } from '../d3/cmds/d3_boot_cmd'
+import { StrucSelectedCmd } from '../structure/cmds/struc_selected_cmd'
 
 export const allCmds = {
   BootCmd: {
@@ -8,7 +9,15 @@ export const allCmds = {
     d3: D3BootCmd,
   },
 
-  ProjInitCmd: {
+  HoleInitCmd: {
+
+  },
+
+  StairInitCmd: {
+
+  },
+
+  ProjImportCmd: {
 
   },
 
@@ -22,5 +31,9 @@ export const allCmds = {
 
   EleUpdateCmd: {
 
-  }
+  },
+
+  SelectedCmd: {
+    struc: StrucSelectedCmd,
+  },
 }

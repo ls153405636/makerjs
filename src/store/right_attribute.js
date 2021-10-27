@@ -1,6 +1,7 @@
 
 const state = {
   cur_type: 1,
+  cur_args: {}
 }
 
 const getters = {
@@ -10,6 +11,11 @@ const getters = {
 const mutations = {
   setCurType (state, vType) {
     state.cur_type = vType
+  },
+
+  setCurArgs (state, args) {
+    state.cur_args = args
+    console.log('cur_args:', state.cur_args)
   }
 }
 

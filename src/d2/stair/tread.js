@@ -1,3 +1,6 @@
+import { Command } from '../../common/command'
+import { COMP_TYPES } from '../../common/common_config'
+import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
 import { D2Config } from '../config'
 import { ChildWidget } from './child_widget'
@@ -90,6 +93,10 @@ export class Tread extends ChildWidget {
     this.sprite.children[1].visible = false
     this.isSelected = true
     D2Config.SELECTED = this
+    if (D2Config.IS_SINGLE_SELECTED) {
+      let core = new Core()
+      core.execute(new Command(core.cmds.SelectedCmd, {uuid:this.uuid, type:COMP_TYPES.TREAD}))
+    }
   }
 
   // 鼠标进入踏板效果

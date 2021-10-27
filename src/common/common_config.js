@@ -1,5 +1,5 @@
 
-const COMP_TYPES = {
+export const COMP_TYPES = {
   HOLE: 1,
   WALL: 2,
   STAIR: 3,
@@ -7,11 +7,13 @@ const COMP_TYPES = {
   SMALL_COLUMN: 5,
   BIG_COLUMN: 6,
   GIRDER: 7,
+  TREAD: 8,
 }
 
-const CUR_DATA = {
-  SELECTED_TYPE: COMP_TYPE.HOLE,
+export const CUR_DATA = {
+  SELECTED_TYPE: COMP_TYPES.HOLE,
   SELECTED_ID: '',
+  MODE: '2D',
 }
 
 export default {

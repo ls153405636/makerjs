@@ -7,12 +7,18 @@ export const StructConfig = {
   CUR_PROJ: null,
   CENTER: new THREE.Vector2(),
   ROTATE_CENTER: new THREE.Vector2(),
+  INFOS: new Map(),
+  SELECTED: null
 }
 
 export const Default = {
+  FLOOR_HEIGHT: 2840,
   WALL_DEPTH: 240,
   HOLE_LENGTH: 4000,
   HOLE_WIDTH: 3000,
+  INLAY_WIDTH: 600,
+  INLAY_HEIGHT: 2000,
+  CEMENT_SIZE: 300,
   STEP_NUM_RULE: Types.StepNumRule.snr_n_add_1,
   STEP_NUM: 15,
   STEP_LENGTH: 900,

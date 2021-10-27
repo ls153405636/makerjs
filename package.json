@@ -20,7 +20,7 @@
     "uuid": "^8.3.2",
     "victor": "^1.1.0",
     "vue": "^3.2.16",
-    "vuex": "^3.6.2",
+    "vuex": "^4.0.2",
     "xstate": "^4.25.0"
   },
   "devDependencies": {

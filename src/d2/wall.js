@@ -11,6 +11,9 @@ import { Movie } from './movie'
 import { D2Config } from './config'
 import { Inlay } from './component/inlay'
 import { CementComp } from './component/cement_comp'
+import { Core } from '../common/core'
+import { Command } from '../common/command'
+import { COMP_TYPES } from '../common/common_config'
 
 export class Wall extends BaseWidget {
   /**
@@ -18,7 +21,7 @@ export class Wall extends BaseWidget {
    * @param {Types.Wall} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
@@ -246,6 +249,8 @@ export class Wall extends BaseWidget {
     this.isSelected = true
     this.sprite.alpha = 1
     D2Config.SELECTED = this
+    let core = new Core()
+    core.execute(new Command(core.cmds.SelectedCmd, {uuid:this.uuid, type:COMP_TYPES.WALL}))
   }
   // 鼠标进入墙体效果
   setHover() {

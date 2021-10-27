@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import store from '../../store'
 import { allCmds } from '../../common/all_cmds'
 import { Core } from '../../common/core'
 import App from './App.vue'
@@ -11,4 +12,4 @@ import './index.css'
   new Core().setCmds(allCmds)
 })()
 
-createApp(App).mount('#app')
+createApp(App).use(store).mount('#app')

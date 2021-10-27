@@ -40,7 +40,9 @@ export class Stair extends BaseWidget {
     for (const gd of vPB.girders) {
       this.girders.push(new Girder(gd))
     }
-    this.hangingBoard.push(new HangingBoard(vPB.hangingBoard))
+    if (vPB.hangingBoard) {
+      this.hangingBoard.push(new HangingBoard(vPB.hangingBoard))
+    }
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()

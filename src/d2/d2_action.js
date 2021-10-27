@@ -4,6 +4,20 @@ import { Wall } from './wall'
 import { Stair } from './stair/stair'
 import { D2Config } from './config'
 
+const WIDGET_TYPES = {
+  'RectHole': Hole,
+  'Wall': Wall,
+  'Stair': Stair,
+}
+
+export function createWidget (vPB, vName) {
+  let widget = null
+  if (WIDGET_TYPES[vName]) {
+    widget = new WIDGET_TYPES[vName](vPB).addToStage()
+  }
+  return widget
+}
+
 /**
  *
  * @param {Types.Project} vPB
@@ -37,4 +51,5 @@ document.addEventListener('keyup', (e) => {
 export default {
   importProject,
   initD2,
+  createWidget
 }

@@ -7,6 +7,8 @@ import { stuff_machine } from './fsm/stuff'
 import { events } from './fsm/state_event'
 import { RunContext } from './fsm/context'
 import { Wall } from './wall'
+import { Core } from '../common/core'
+import { Command } from '../common/command'
 
 export class Movie {
   constructor() {
@@ -103,6 +105,10 @@ export class Movie {
         if (D2Config.CUR_STAIR) {
           D2Config.CUR_STAIR.cancelSmallColSelected()
         }
+
+        //取消选中时，同样需执行取消选中的命令，将uuid的传入参数设为null
+        let core = new Core()
+        core.execute(new Command(core.cmds.SelectedCmd,  {uuid: null}))
         // console.error('-->', event.type)
         //this.service.send({type: events.MOUSE_DOWN, data: event})
       })

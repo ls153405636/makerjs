@@ -6,6 +6,7 @@
 import { Command } from '../../common/command'
 import { Core } from '../../common/core'
 import { initProj } from '../../init_temp'
+import { Structure } from '../../structure/structure'
 
 
 export default {
@@ -13,7 +14,8 @@ export default {
   mounted() {
     new Core().execute(new Command(new Core().cmds.BootCmd))
 
-    initProj()
+    //initProj()
+    new Structure().initHole('rect').initStair('stright')
   },
 }
 </script>
