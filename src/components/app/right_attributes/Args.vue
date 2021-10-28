@@ -6,11 +6,11 @@
       </el-form-item>
 
       <el-form-item v-if="arg.type === 'select'" :label="arg.name">
-        <el-select v-model="value" placeholder="请选择墙体类型">
+        <el-select v-model="arg.value.value" label="arg.value.label">
           <el-option
             v-for="item in cur_args.type.options"
             :key="item.value"
-            :label="item.lable"
+            :label="item.label"
             :value="item.value"
           ></el-option>
         </el-select>

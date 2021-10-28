@@ -1,8 +1,8 @@
 <template>
   <div class="component-right" id="component-right">
     <right-wall v-if="cur_type === cts.WALL"></right-wall>
-    <right-hole v-if="cur_type === cts.HOLE"></right-hole>
     <!-- <right-flight></right-flight> -->
+    <right-hole v-if="cur_type === cts.HOLE"></right-hole>
     <!-- <right-stair></right-stair> -->
   </div>
 </template>

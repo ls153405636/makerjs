@@ -1,19 +1,20 @@
-import { Action } from "../../common/action";
-import store from "../../store";
-import { StructConfig } from "../config";
-import { Structure } from "../structure";
-
+import { Action } from '../../common/action'
+import { COMP_TYPES } from '../../common/common_config'
+import store from '../../store'
+import { StructConfig } from '../config'
+import { Structure } from '../structure'
 
 export class StrucSelectedCmd extends Action {
-  constructor ({uuid, type}) {
+  constructor({ uuid, type }) {
     super()
     this.uuid = uuid
     this.type = type
   }
 
-  execute () {
+  execute() {
     if (!this.uuid) {
       this.info = new Structure().stair || new Structure().hole
+      this.type = new Structure().stair ? COMP_TYPES.STAIR : COMP_TYPES.HOLE
     } else {
       this.info = StructConfig.INFOS.get(this.uuid)
     }

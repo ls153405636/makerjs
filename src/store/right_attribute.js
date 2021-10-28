@@ -8,7 +8,7 @@ const getters = {}
 const mutations = {
   setCurType(state, vType) {
     state.cur_type = vType
-    console.log(state.cur_type)
+    console.log('cur_Type:', state.cur_type)
   },
 
   setCurArgs(state, args) {

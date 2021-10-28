@@ -9,20 +9,20 @@ import { Info } from './info'
 import { SmallColumn } from './small_column'
 import tool from './tool'
 
-export class Stair extends Info{
+export class Stair extends Info {
   static NUM_RULE_OPTIONS = [
-    {value:Types.StepNumRule.snr_n, label:'n步'},
-    {value:Types.StepNumRule.snr_n_add_1, label:'n+1步'}
+    { value: Types.StepNumRule.snr_n, label: 'n步' },
+    { value: Types.StepNumRule.snr_n_add_1, label: 'n+1步' },
   ]
   static NOSS_TYPE_OPTIONS = [
-    {value:Types.NossingType.nno, label:'无加边'},
-    {value:Types.NossingType.ncommon, label:'普通加边'},
-    {value:Types.NossingType.nluxury, label:'豪华加边'}
+    { value: Types.NossingType.nno, label: '无加边' },
+    { value: Types.NossingType.ncommon, label: '普通加边' },
+    { value: Types.NossingType.nluxury, label: '豪华加边' },
   ]
-  
-  constructor(vParent, vArgs) {
+
+  constructor(vParent, againstWall = Types.AgainstWallType.aw_left) {
     super(vParent)
-    this.againstWallType = Types.AgainstWallType.aw_no
+    this.againstWallType = againstWall
     this.type = Types.StairType.sstright
     this.startBeamDepth = 0
     this.exitBeamDepth = 0
@@ -57,10 +57,10 @@ export class Stair extends Info{
         specification: Default.HAND_SPEC,
       }),
     })
-    this.rebuild ()
+    this.rebuild()
   }
 
-  rebuild () {
+  rebuild() {
     this.flights = []
     this.smallColumns = []
     this.bigColumns = []
@@ -79,52 +79,94 @@ export class Stair extends Info{
     this.updateCanvas()
   }
 
-  update () {
+  update() {}
 
-  }
-
-  getArgs () {
+  getArgs() {
+    let f = tool.getItemFromOptions
     let args = {
-      startBeamDepth: {name:'起步梁厚', value:this.startBeamDepth, type:'input'},
-      exitBeamDepth: {name:'出口梁厚', value:this.exitBeamDepth, type:'input'},
-      stepNumRule: {name:'步数规则', value:this.stepNumRule, type:'selecte', options:Stair.NUM_RULE_OPTIONS},
-      stepNum: {name:'步数', value:this.stepNum, type:'input'},
-      treadParameters: {name:'踏板参数', type:'group'},
-      riserParameters: {name:'立板参数', type:'group'},
-      girderParameters: {name:'大梁参数', type:'group'},
-      handrailParameters: {name:'扶手参数', type:'group'},
-      smallColParameters: {name:'小柱参数', type:'group'},
-      bigColParameters: {name:'大柱参数', type:'group'},
+      startBeamDepth: {
+        name: '起步梁厚',
+        value: this.startBeamDepth,
+        type: 'input',
+      },
+      exitBeamDepth: {
+        name: '出口梁厚',
+        value: this.exitBeamDepth,
+        type: 'input',
+      },
+      stepNumRule: {
+        name: '步数规则',
+        value: f(this.stepNumRule, Stair.NUM_RULE_OPTIONS),
+        type: 'selecte',
+        options: Stair.NUM_RULE_OPTIONS,
+      },
+      stepNum: { name: '步数', value: this.stepNum, type: 'input' },
+      treadParameters: { name: '踏板参数', type: 'group' },
+      riserParameters: { name: '立板参数', type: 'group' },
+      girderParameters: { name: '大梁参数', type: 'group' },
+      handrailParameters: { name: '扶手参数', type: 'group' },
+      smallColParameters: { name: '小柱参数', type: 'group' },
+      bigColParameters: { name: '大柱参数', type: 'group' },
     }
     let targs = this.treadParameters
     args.treadParaParameters.value = {
-      depth: {name:'厚度', value:targs.depth, type:'input'},
-      doubleFaceMaterial: {name:'双面漆', value:targs.doubleFaceMaterial, type:'switch'},
-      nossingType: {name:'加边类型', value:targs.nossingType, type:'selecte', options:Stair.NUM_RULE_OPTIONS},
-      sideNossing: {name:'飘边厚度', value:targs.sideNossing, type:'input'},
-      material: {name:'材质', value:'', type:'replace'}
+      depth: { name: '厚度', value: targs.depth, type: 'input' },
+      doubleFaceMaterial: {
+        name: '双面漆',
+        value: targs.doubleFaceMaterial,
+        type: 'switch',
+      },
+      nossingType: {
+        name: '加边类型',
+        value: f(targs.nossingType, Stair.NUM_RULE_OPTIONS),
+        type: 'selecte',
+        options: Stair.NUM_RULE_OPTIONS,
+      },
+      sideNossing: {
+        name: '飘边厚度',
+        value: targs.sideNossing,
+        type: 'input',
+      },
+      material: { name: '材质', value: '', type: 'replace' },
     }
     if (targs.nossingType !== Types.NossingType.nno) {
       args.treadParas.value.nossing = {
-        name:'加边厚度',
-        type:'input'
+        name: '加边厚度',
+        type: 'input',
       }
     }
     let rargs = this.riserParameters
     args.riserParameters.value = {
-      riserExist: {name:'立板有无', value:rargs.riserExist, type:'switch'},
+      riserExist: { name: '立板有无', value: rargs.riserExist, type: 'switch' },
     }
     if (rargs.riserExist) {
-      args.riserParameters.value.depth = {name:'厚度', value:rargs.depth, type:'input'}
-      args.riserParameters.value.doubleFaceMaterial = {name:'双面漆', value:rargs.doubleFaceMaterial, type:'switch'}
-      args.riserParameters.value.material = {name:'材质', value:'', type:'replace'}
+      args.riserParameters.value.depth = {
+        name: '厚度',
+        value: rargs.depth,
+        type: 'input',
+      }
+      args.riserParameters.value.doubleFaceMaterial = {
+        name: '双面漆',
+        value: rargs.doubleFaceMaterial,
+        type: 'switch',
+      }
+      args.riserParameters.value.material = {
+        name: '材质',
+        value: '',
+        type: 'replace',
+      }
     }
     let gargs = this.girderParameters
     args.girderParameters.value = {
-      type:{name:'类型', value:gargs.type, type:'selecte', options:Girder.GIRDER_TYPE_OPTIONS},
-      height:{name:'高度', value:gargs.height, type:'input'},
-      depth:{name:'厚度', value:gargs.depth, type:'input'},
-      material:{name:'材质', value:'', type:'replace'}
+      type: {
+        name: '类型',
+        value: f(gargs.type, Girder.GIRDER_TYPE_OPTIONS),
+        type: 'selecte',
+        options: Girder.GIRDER_TYPE_OPTIONS,
+      },
+      height: { name: '高度', value: gargs.height, type: 'input' },
+      depth: { name: '厚度', value: gargs.depth, type: 'input' },
+      material: { name: '材质', value: '', type: 'replace' },
     }
     if (this.handrails.length) {
       args.handrailParameters.value = this.handrails[0].getArgs()
@@ -190,8 +232,9 @@ export class Stair extends Info{
     }
   }
 
-  addHangingBoard() {
-    this.hangingBoard = new HangingBoard(this)
+  addHangingBoard(vInfo) {
+    this.hangingBoard = vInfo
+    this.rebuild()
   }
 
   createFlights() {
@@ -258,7 +301,7 @@ export class Stair extends Info{
       y: position.y,
       z: position.z,
     })
-    size = new Types.Vector3({ x: size.x, y: size.y, z: length})
+    size = new Types.Vector3({ x: size.x, y: size.y, z: length })
     this.smallColumns.push(new SmallColumn(this, leftPosition, size))
     this.smallColumns.push(new SmallColumn(this, rightPosition, size))
   }
@@ -274,7 +317,10 @@ export class Stair extends Info{
       x: this.width - this.sideOffset,
       y: this.depth + Default.BIG_COL_GAP + size.y / 2,
     })
-    this.bigColumns.push(new BigColumn(this, leftPosition, size), new BigColumn(this, rightPosition, size))
+    this.bigColumns.push(
+      new BigColumn(this, leftPosition, size),
+      new BigColumn(this, rightPosition, size)
+    )
   }
 
   createGirders() {

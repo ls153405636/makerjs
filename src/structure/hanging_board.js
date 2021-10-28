@@ -1,18 +1,26 @@
-import { Types } from "../types/stair_v2";
-import { ChildInfo } from "./child_info";
-import { Default } from "./config";
+import { Types } from '../types/stair_v2'
+import { ChildInfo } from './child_info'
+import { Default } from './config'
 
 export class HangingBoard extends ChildInfo {
-  constructor (vParent) {
-    super (vParent)
+  constructor(vParent) {
+    super(vParent)
     this.depth = Default.HANG_BOARD_DEPTH
     this.width = this.parent.stepLength
   }
 
-  writePB () {
+  addInfo() {
+    this.parent.addHangingBoard(this)
+  }
+
+  delInfo() {
+    this.parent.addHangingBoard(null)
+  }
+
+  writePB() {
     return new Types.HangingBoard({
       depth: this.depth,
-      width: this.width
+      width: this.width,
     })
   }
 }

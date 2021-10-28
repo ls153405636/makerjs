@@ -75,6 +75,8 @@
 
 <script>
 import { ref, defineComponent } from 'vue'
+import { Core } from '../../common/core'
+import { Command } from '../../common/command'
 
 export default defineComponent({
   name: 'componentStairInit',
@@ -158,6 +160,8 @@ export default defineComponent({
     clickCreate() {
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'none'
+      let core = new Core()
+      core.execute(new Command(core.cmds.StairInitCmd, {}))
     },
   },
 })
