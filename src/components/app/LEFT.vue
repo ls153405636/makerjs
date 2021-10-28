@@ -1,93 +1,91 @@
 <template>
   <div class="component-left">
-    <div class="recommend">
-      <div class="recommend-title">
-        <span>推荐方案</span>
-      </div>
-      <div class="recommend-demo">
-        <div>
-          <img src="../../assets/logo.png" alt="" />
-          <span>L型中式楼梯</span>
+    <el-card class="box-card-left">
+      <template #header>
+        <div class="card-header">
+          <span>推荐方案</span>
         </div>
-        <div>
-          <img src="../../assets/logo.png" alt="" />
-          <span>L型中式楼梯</span>
-        </div>
-        <div>
-          <img src="../../assets/logo.png" alt="" />
-          <span>L型中式楼梯</span>
-        </div>
-        <div>
-          <img src="../../assets/logo.png" alt="" />
-          <span>L型中式楼梯</span>
-        </div>
-        <div>
-          <img src="../../assets/logo.png" alt="" />
-          <span>L型中式楼梯</span>
-        </div>
-        <div>
-          <img src="../../assets/logo.png" alt="" />
-          <span>L型中式楼梯</span>
-        </div>
-      </div>
-    </div>
+      </template>
+      <el-col class="demo-show" v-for="(stair, index) in stairD" :key="index">
+        <el-card :body-style="{ padding: '0px' }" shadow="never">
+          <img :src="stair.picSrc" class="image" />
+          <span class="dec-text">{{ stair.describe }}</span>
+        </el-card>
+      </el-col>
+    </el-card>
   </div>
 </template>
 <script>
 export default {
   name: 'componentLeft',
-  date() {
-    return {}
+  data() {
+    return {
+      stairD: [
+        {
+          describe: '壹号别墅L形',
+          id: 1,
+          picSrc: '../../../public/images/Rectangle 93.png',
+        },
+        {
+          describe: '壹号别墅梯形',
+          id: 2,
+          picSrc: '../../../public/images/Rectangle 94.png',
+        },
+        {
+          describe: '壹号别墅圆形',
+          id: 3,
+          picSrc: '../../../public/images/Rectangle 95.png',
+        },
+        {
+          describe: '壹号别墅矩形形',
+          id: 4,
+          picSrc: '../../../public/images/Rectangle 93.png',
+        },
+        {
+          describe: '壹号别墅矩形形',
+          id: 5,
+          picSrc: '../../../public/images/Rectangle 93.png',
+        },
+      ],
+    }
   },
 }
 </script>
 
 <style>
-.recommend {
+.box-card-left {
   position: fixed;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   top: 80px;
   left: 10px;
   width: 205px;
-  height: 800;
-  background-color: #fff;
-  box-shadow: 0px 4px 20px rgba(45, 48, 55, 0.1);
-  border-radius: 8px;
+  height: 800px;
 }
-.recommend .recommend-title span {
-  display: block;
-  width: 190px;
-  height: 50px;
-  font: bold 18px/50px arial;
-  line-height: 50px;
-  margin-bottom: 5px;
-  border-bottom: 1px solid rgb(8, 8, 8);
-}
-.recommend .recommend-demo {
-  width: 190px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.recommend .recommend-demo div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px 0;
+.box-card-left .demo-show {
   cursor: pointer;
+  margin: 6px 0;
 }
-.recommend .recommend-demo img {
+.box-card-left .demo-show .dec-text {
+  height: 30px;
   display: block;
-  width: 116px;
-  height: 66px;
+  font-size: 12px;
+  line-height: 30px;
+  text-align: center;
 }
-.recommend .recommend-demo span {
-  font-family: Source Han Sans CN;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 21px;
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  padding: 0;
+  min-height: auto;
 }
 </style>

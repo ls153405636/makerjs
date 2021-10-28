@@ -1,12 +1,12 @@
 <template>
-  <div class="componen-bottom">
+  <div class="component-bottom">
     <div class="D23">
       <div class="d2-d3">
         <span class="left">2D</span>
         <span class="right">3D</span>
       </div>
     </div>
-    <div class="add-stair">添加楼梯</div>
+    <div class="add-stair" @click="addStair">添加楼梯</div>
     <div class="zoom">
       <div class="vector">
         <i class="iconfont icon-view-angle"></i>
@@ -29,31 +29,38 @@
 
 <script>
 export default {
-  name: 'componenBottom',
+  name: 'componentBottom',
   date() {
     return {}
+  },
+  methods: {
+    addStair() {
+      let stairInit = document.getElementById('component-stair-init')
+      stairInit.style.display = 'block'
+    },
   },
 }
 </script>
 
 <style>
-.componen-bottom {
+.component-bottom {
   position: fixed;
   display: flex;
   justify-content: space-between;
   align-items: center;
   bottom: 50px;
   left: 50%;
-  width: 70%;
+  width: 60%;
   height: 50px;
-  margin-left: -35%;
+  margin-left: -30%;
 }
-.componen-bottom .D23 {
+.component-bottom .D23 {
   width: 220px;
   height: 34px;
   padding: 0 20px;
+  cursor: pointer;
 }
-.componen-bottom .d2-d3 {
+.component-bottom .d2-d3 {
   width: 128px;
   height: 34px;
   background: #4478f4;
@@ -63,16 +70,16 @@ export default {
   color: #fff;
   text-align: center;
 }
-.componen-bottom .d2-d3 span {
+.component-bottom .d2-d3 span {
   float: left;
   width: 50%;
   height: 100%;
 }
-.componen-bottom .d2-d3 span:nth-child(2) {
+.component-bottom .d2-d3 span:nth-child(2) {
   background-color: aliceblue;
   color: #4478f4;
 }
-.componen-bottom .add-stair {
+.component-bottom .add-stair {
   width: 128px;
   height: 34px;
   font: normal 14px/34px Source Han Sans CN;
@@ -80,8 +87,9 @@ export default {
   background-color: #4478f4;
   border-radius: 8px;
   text-align: center;
+  cursor: pointer;
 }
-.componen-bottom .zoom {
+.component-bottom .zoom {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -90,15 +98,16 @@ export default {
   background: #ffffff;
   border-radius: 8px;
   padding: 0 20px;
+  cursor: pointer;
 }
-.componen-bottom .zoom .vector-two {
+.component-bottom .zoom .vector-two {
   width: 180px;
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.componen-bottom .zoom .vector-two .slider-demo-block {
+.component-bottom .zoom .vector-two .slider-demo-block {
   height: 100%;
   line-height: 34px;
   width: 90px;

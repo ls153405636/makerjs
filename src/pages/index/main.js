@@ -18,4 +18,4 @@ app.use(ElementPlus)
   new Core().setCmds(allCmds)
 })()
 
-createApp(App).use(store).mount('#app')
+createApp(App).use(store).use(ElementPlus).mount('#app')

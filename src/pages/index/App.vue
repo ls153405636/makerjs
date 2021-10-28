@@ -1,7 +1,9 @@
 <template>
   <component-hole-init></component-hole-init>
+  <component-stair-init></component-stair-init>
   <component-top></component-top>
   <componen-left></componen-left>
+  <componen-right></componen-right>
   <component-bottom></component-bottom>
   <div id="canvas"></div>
 </template>
@@ -16,8 +18,8 @@ import componentTop from '../../components/app/Top.vue'
 import componenLeft from '../../components/app/Left.vue'
 import componenRight from '../../components/app/Right.vue'
 import componentBottom from '../../components/app/Bottom.vue'
-import componentHoleInit from '../../components/app/HoleInit.vue'
 import componentStairInit from '../../components/app/StairInit.vue'
+import componentHoleInit from '../../components/app/HoleInit.vue'
 
 export default {
   name: 'App',
@@ -26,8 +28,8 @@ export default {
     componenLeft,
     componenRight,
     componentBottom,
-    componentHoleInit,
     componentStairInit,
+    componentHoleInit,
   },
   mounted() {
     new Core().execute(new Command(new Core().cmds.BootCmd))
