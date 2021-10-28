@@ -1,35 +1,43 @@
-import { Types } from "../types/stair_v2";
-import { Edge } from "../utils/edge";
-import { Default } from "./config";
-import { Info } from "./info";
-
+import { Types } from '../types/stair_v2'
+import { Edge } from '../utils/edge'
+import { Default } from './config'
+import { Info } from './info'
 
 export class Component extends Info {
-  constructor (vParent, vType) {
-    super (vParent)
+  constructor(vParent, vType) {
+    super(vParent)
     this.type = vType
     this.offGround = 0
     this.disToStart = (this.parent.width - this.width) / 2
     let angle = new Edge(this.parent.edge).getAngle()
-    this.rotation = new Types.rotation({y:angle})
+    this.rotation = new Types.rotation({ y: angle })
     this.interval = 0
   }
 
-  computePosition () {
+  computePosition() {
     let utilEdge = new Edge(this.parent.edge)
-    let pos = utilEdge.getP1().addScaledVector(utilEdge.getVec(), (this.disToStart + this.width / 2))
-    if ([Types.ComponentType.cbeam, Types.ComponentType.cpillar].includes(this.type)) {
-      pos.addScaledVector(utilEdge.getNormal().negate(), (this.parent.depth + this.depth) / 2)
+    let pos = utilEdge
+      .getP1()
+      .addScaledVector(utilEdge.getVec(), this.disToStart + this.width / 2)
+    if (
+      [Types.ComponentType.cbeam, Types.ComponentType.cpillar].includes(
+        this.type
+      )
+    ) {
+      pos.addScaledVector(
+        utilEdge.getNormal().negate(),
+        (this.parent.depth + this.depth) / 2
+      )
     }
-    this.position = new Types.Vector3({x:pos.x, y:pos.y})
+    this.position = new Types.Vector3({ x: pos.x, y: pos.y })
   }
 
-  rebuild () {
+  rebuild() {
     this.computePosition()
     this.updateCanvas()
   }
 
-  writePB () {
+  writePB() {
     return new Types.Component({
       uuid: this.uuid,
       width: this.width,
@@ -40,39 +48,50 @@ export class Component extends Info {
       disToStart: this.disToStart,
       angle: this.angle,
       rotation: this.rotation,
-      interval: this.interval
+      interval: this.interval,
     })
   }
 }
 
 export class Inlay extends Component {
-  constructor (vParent, vType) {
+  constructor(vParent, vType) {
     super(vParent, vType)
     this.width = Default.INLAY_WIDTH
     this.height = Default.INLAY_HEIGHT
     this.depth = this.parent.depth
   }
 
-  getArgs () {
-
+  getArgs() {
+    return {
+      depth: { name: '宽度', value: this.depth, type: 'input' },
+      length: { name: '长度', value: this.width, type: 'input' },
+      height: { name: '高度', value: this.height, type: 'input' },
+      disToStart: { name: '距端点的距离', value: 0, type: 'input' },
+    }
   }
 }
 
 export class Cloumn extends Component {
-  constructor (vParent, vType) {
+  constructor(vParent, vType) {
     super(vParent, vType)
     this.width = Default.CEMENT_SIZE
     this.height = this.parent.height
     this.depth = Default.CEMENT_SIZE
   }
 
-  getArgs () {
-
+  getArgs() {
+    return {
+      width: { name: '宽度', value: this.width, type: 'input' },
+      length: { name: '深度', value: this.depth, type: 'input' },
+      height: { name: '高度', value: this.height, type: 'input' },
+      interval: { name: '间隙', value: this.interval, type: 'input' },
+      disToStart: { name: '距端点的距离', value: 0, type: 'input' },
+    }
   }
 }
 
 export class Beam extends Component {
-  constructor (vParent, vType) {
+  constructor(vParent, vType) {
     super(vParent, vType)
     this.width = new Edge(this.parent.edge).getLength()
     this.height = Default.CEMENT_SIZE
@@ -81,8 +100,13 @@ export class Beam extends Component {
     this.disToStart = 0
   }
 
-  getArgs () {
-
+  getArgs() {
+    return {
+      width: { name: '宽度', value: this.width, type: 'input' },
+      length: { name: '深度', value: this.depth, type: 'input' },
+      height: { name: '高度', value: this.height, type: 'input' },
+      interval: { name: '间隙', value: this.interval, type: 'input' },
+      disToStart: { name: '距端点的距离', value: 0, type: 'input' },
+    }
   }
-
 }

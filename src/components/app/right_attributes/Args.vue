@@ -37,6 +37,5 @@ export default defineComponent({
     args: Object,
   },
 })
-console.log(1)
 </script>
 <style></style>

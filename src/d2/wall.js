@@ -34,7 +34,6 @@ export class Wall extends BaseWidget {
     this.createComponents(vPB.components)
     this.draw()
     this.addEvent()
-    this.rightMenu = document.getElementById('component-right')
   }
 
   // 求旋转
@@ -237,7 +236,6 @@ export class Wall extends BaseWidget {
   // 取消墙体选中效果
   cancelSelected() {
     this.sprite.tint = 0xffffff
-    this.rightMenu.style.display = 'none'
     this.isSelected = false
     if (this.type === 4) {
       this.sprite.alpha = this.alpha
@@ -248,7 +246,6 @@ export class Wall extends BaseWidget {
   // 墙体选中效果
   setSelected() {
     this.sprite.tint = 0x818796
-    this.rightMenu.style.display = 'block'
     this.isSelected = true
     this.sprite.alpha = 1
     D2Config.SELECTED = this
