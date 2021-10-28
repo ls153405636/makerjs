@@ -9,6 +9,15 @@ export class Handrail extends ChildInfo {
     this.width = vWidth
   }
 
+  getArgs () {
+    let targs = this.parent.handrailParameters
+    return {
+      height: {name:'高度', value:targs.height, type:'input'},
+      model: {name:'规格', value:'', type:'replace'},
+      material: {name:'材质', value:'', type:'replace'}
+    }
+  }
+
   writePB () {
     let pb = new Types.Handrail({
       uuid: this.uuid,

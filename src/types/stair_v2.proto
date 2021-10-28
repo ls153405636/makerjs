@@ -234,15 +234,17 @@ message Riser {
 
 //立板参数
 message RiserParameters {
-  bool  riserExist = 1;
-  float depth      = 2;
+  bool     riserExist         = 1;
+  float    depth              = 2;
+  bool     doubleFaceMaterial = 3;  //是否双面漆
+  Material material           = 4;  //材质
 }
 
 //模型源信息
 message ObjData {
-  string model_path = 1;  // obj 模型网络文件路径（通常是gltf格式）
-  string img_path   = 2;  // 模型预览图路径
-  string max_path   = 3;  // obj 模型网络文件路径（max格式）
+  string modelPath = 1;  // obj 模型网络文件路径（通常是gltf格式）
+  string imgPath   = 2;  // 模型预览图路径
+  string maxPath   = 3;  // obj 模型网络文件路径（max格式）
 }
 
 //小柱
@@ -256,7 +258,7 @@ message SmallColumn {
 //小柱参数
 message SmallColParameters {
   ObjData     source        = 1;  //模型源信息
-  ArrangeRule arrange_rule  = 2;  //排列规则
+  ArrangeRule arrangeRule  = 2;  //排列规则
   Material    material      = 3;
   string      specification = 4;  // 规格
 }
@@ -295,12 +297,12 @@ message HandrailParameters {
 } 
 
 message Girder {
-  string  uuid     = 1;
-  float   length   = 2;  //长度 
-  Outline inRoute   = 3;  //内侧轮廓路径，贴近楼梯方向的一侧
-  Outline outRoute  = 4;  //外侧路径
-  Outline inTopRoute = 5;  //内侧上方路径   
-  Outline outTopRoute  = 6;  //外侧上方路径
+  string  uuid        = 1;
+  float   length      = 2;  //长度 
+  Outline inRoute     = 3;  //内侧轮廓路径，贴近楼梯方向的一侧
+  Outline outRoute    = 4;  //外侧路径
+  Outline inTopRoute  = 5;  //内侧上方路径   
+  Outline outTopRoute = 6;  //外侧上方路径
 }
 
 message GirderParameters {

@@ -2,7 +2,7 @@ import { Flight } from './flight'
 import { Types } from '../types/stair_v2'
 import { BigColumn } from './big_column'
 import { Default } from './config'
-import { Girder } from './gitder'
+import { Girder } from './girder'
 import { Handrail } from './handrails'
 import { HangingBoard } from './hanging_board'
 import { Info } from './info'
@@ -10,6 +10,16 @@ import { SmallColumn } from './small_column'
 import tool from './tool'
 
 export class Stair extends Info{
+  static NUM_RULE_OPTIONS = [
+    {value:Types.StepNumRule.snr_n, label:'n步'},
+    {value:Types.StepNumRule.snr_n_add_1, label:'n+1步'}
+  ]
+  static NOSS_TYPE_OPTIONS = [
+    {value:Types.NossingType.nno, label:'无加边'},
+    {value:Types.NossingType.ncommon, label:'普通加边'},
+    {value:Types.NossingType.nluxury, label:'豪华加边'}
+  ]
+  
   constructor(vParent, vArgs) {
     super(vParent)
     this.againstWallType = Types.AgainstWallType.aw_no
@@ -29,7 +39,7 @@ export class Stair extends Info{
       depth: Default.RISER_DEPTH,
     })
     this.smallColParameters = new Types.SmallColParameters({
-      arrange_rule: Default.SMALL_COL_ARR_RULE,
+      arrangeRule: Default.SMALL_COL_ARR_RULE,
       specification: Default.SMALL_COL_SPEC,
     })
     this.bigColParameters = new Types.BigColParameters({
@@ -71,6 +81,61 @@ export class Stair extends Info{
 
   update () {
 
+  }
+
+  getArgs () {
+    let args = {
+      startBeamDepth: {name:'起步梁厚', value:this.startBeamDepth, type:'input'},
+      exitBeamDepth: {name:'出口梁厚', value:this.exitBeamDepth, type:'input'},
+      stepNumRule: {name:'步数规则', value:this.stepNumRule, type:'selecte', options:Stair.NUM_RULE_OPTIONS},
+      stepNum: {name:'步数', value:this.stepNum, type:'input'},
+      treadParameters: {name:'踏板参数', type:'group'},
+      riserParameters: {name:'立板参数', type:'group'},
+      girderParameters: {name:'大梁参数', type:'group'},
+      handrailParameters: {name:'扶手参数', type:'group'},
+      smallColParameters: {name:'小柱参数', type:'group'},
+      bigColParameters: {name:'大柱参数', type:'group'},
+    }
+    let targs = this.treadParameters
+    args.treadParaParameters.value = {
+      depth: {name:'厚度', value:targs.depth, type:'input'},
+      doubleFaceMaterial: {name:'双面漆', value:targs.doubleFaceMaterial, type:'switch'},
+      nossingType: {name:'加边类型', value:targs.nossingType, type:'selecte', options:Stair.NUM_RULE_OPTIONS},
+      sideNossing: {name:'飘边厚度', value:targs.sideNossing, type:'input'},
+      material: {name:'材质', value:'', type:'replace'}
+    }
+    if (targs.nossingType !== Types.NossingType.nno) {
+      args.treadParas.value.nossing = {
+        name:'加边厚度',
+        type:'input'
+      }
+    }
+    let rargs = this.riserParameters
+    args.riserParameters.value = {
+      riserExist: {name:'立板有无', value:rargs.riserExist, type:'switch'},
+    }
+    if (rargs.riserExist) {
+      args.riserParameters.value.depth = {name:'厚度', value:rargs.depth, type:'input'}
+      args.riserParameters.value.doubleFaceMaterial = {name:'双面漆', value:rargs.doubleFaceMaterial, type:'switch'}
+      args.riserParameters.value.material = {name:'材质', value:'', type:'replace'}
+    }
+    let gargs = this.girderParameters
+    args.girderParameters.value = {
+      type:{name:'类型', value:gargs.type, type:'selecte', options:Girder.GIRDER_TYPE_OPTIONS},
+      height:{name:'高度', value:gargs.height, type:'input'},
+      depth:{name:'厚度', value:gargs.depth, type:'input'},
+      material:{name:'材质', value:'', type:'replace'}
+    }
+    if (this.handrails.length) {
+      args.handrailParameters.value = this.handrails[0].getArgs()
+    }
+    if (this.smallColParameters.length) {
+      args.smallColParameters.value = this.smallColParameters[0].getArgs()
+    }
+    if (this.bigColParameters.length) {
+      args.bigColParameters.value = this.bigColParameters[0].getArgs()
+    }
+    return args
   }
 
   computeSize() {
@@ -148,7 +213,7 @@ export class Stair extends Info{
       position2.z = position1.z = this.stepHeight * (i + 1)
       let length1 = 0
       let length2 = 0
-      if (args.arrange_rule === Types.ArrangeRule.arrThree) {
+      if (args.arrangeRule === Types.ArrangeRule.arrThree) {
         let index = i % 2
         let border = this.stepWidth * (step_num - i) + this.hangYOffset
         if (index === 0) {
@@ -168,7 +233,7 @@ export class Stair extends Info{
             length1 = gArgs.height
           }
         }
-      } else if (args.arrange_rule === Types.ArrangeRule.arrFour) {
+      } else if (args.arrangeRule === Types.ArrangeRule.arrFour) {
         position1.y = border - this.stepWidth / 4
         position2.y = border - (this.stepWidth * 3) / 4
         length1 = hArgs.height + (this.stepWidth / 4) * Math.tan(angle)

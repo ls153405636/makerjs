@@ -1947,6 +1947,12 @@ export namespace Types {
 
         /** RiserParameters depth */
         depth?: (number|null);
+
+        /** RiserParameters doubleFaceMaterial */
+        doubleFaceMaterial?: (boolean|null);
+
+        /** RiserParameters material */
+        material?: (Types.IMaterial|null);
     }
 
     /** Represents a RiserParameters. */
@@ -1963,6 +1969,12 @@ export namespace Types {
 
         /** RiserParameters depth. */
         public depth: number;
+
+        /** RiserParameters doubleFaceMaterial. */
+        public doubleFaceMaterial: boolean;
+
+        /** RiserParameters material. */
+        public material?: (Types.IMaterial|null);
 
         /**
          * Creates a new RiserParameters instance using the specified properties.
@@ -2038,14 +2050,14 @@ export namespace Types {
     /** Properties of an ObjData. */
     interface IObjData {
 
-        /** ObjData model_path */
-        model_path?: (string|null);
+        /** ObjData modelPath */
+        modelPath?: (string|null);
 
-        /** ObjData img_path */
-        img_path?: (string|null);
+        /** ObjData imgPath */
+        imgPath?: (string|null);
 
-        /** ObjData max_path */
-        max_path?: (string|null);
+        /** ObjData maxPath */
+        maxPath?: (string|null);
     }
 
     /** Represents an ObjData. */
@@ -2057,14 +2069,14 @@ export namespace Types {
          */
         constructor(properties?: Types.IObjData);
 
-        /** ObjData model_path. */
-        public model_path: string;
+        /** ObjData modelPath. */
+        public modelPath: string;
 
-        /** ObjData img_path. */
-        public img_path: string;
+        /** ObjData imgPath. */
+        public imgPath: string;
 
-        /** ObjData max_path. */
-        public max_path: string;
+        /** ObjData maxPath. */
+        public maxPath: string;
 
         /**
          * Creates a new ObjData instance using the specified properties.
@@ -2251,8 +2263,8 @@ export namespace Types {
         /** SmallColParameters source */
         source?: (Types.IObjData|null);
 
-        /** SmallColParameters arrange_rule */
-        arrange_rule?: (Types.ArrangeRule|null);
+        /** SmallColParameters arrangeRule */
+        arrangeRule?: (Types.ArrangeRule|null);
 
         /** SmallColParameters material */
         material?: (Types.IMaterial|null);
@@ -2273,8 +2285,8 @@ export namespace Types {
         /** SmallColParameters source. */
         public source?: (Types.IObjData|null);
 
-        /** SmallColParameters arrange_rule. */
-        public arrange_rule: Types.ArrangeRule;
+        /** SmallColParameters arrangeRule. */
+        public arrangeRule: Types.ArrangeRule;
 
         /** SmallColParameters material. */
         public material?: (Types.IMaterial|null);

@@ -5263,6 +5263,8 @@ export const Types = $root.Types = (() => {
          * @interface IRiserParameters
          * @property {boolean|null} [riserExist] RiserParameters riserExist
          * @property {number|null} [depth] RiserParameters depth
+         * @property {boolean|null} [doubleFaceMaterial] RiserParameters doubleFaceMaterial
+         * @property {Types.IMaterial|null} [material] RiserParameters material
          */
 
         /**
@@ -5297,6 +5299,22 @@ export const Types = $root.Types = (() => {
         RiserParameters.prototype.depth = 0;
 
         /**
+         * RiserParameters doubleFaceMaterial.
+         * @member {boolean} doubleFaceMaterial
+         * @memberof Types.RiserParameters
+         * @instance
+         */
+        RiserParameters.prototype.doubleFaceMaterial = false;
+
+        /**
+         * RiserParameters material.
+         * @member {Types.IMaterial|null|undefined} material
+         * @memberof Types.RiserParameters
+         * @instance
+         */
+        RiserParameters.prototype.material = null;
+
+        /**
          * Creates a new RiserParameters instance using the specified properties.
          * @function create
          * @memberof Types.RiserParameters
@@ -5324,6 +5342,10 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 1, wireType 0 =*/8).bool(message.riserExist);
             if (message.depth != null && Object.hasOwnProperty.call(message, "depth"))
                 writer.uint32(/* id 2, wireType 5 =*/21).float(message.depth);
+            if (message.doubleFaceMaterial != null && Object.hasOwnProperty.call(message, "doubleFaceMaterial"))
+                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.doubleFaceMaterial);
+            if (message.material != null && Object.hasOwnProperty.call(message, "material"))
+                $root.Types.Material.encode(message.material, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             return writer;
         };
 
@@ -5363,6 +5385,12 @@ export const Types = $root.Types = (() => {
                     break;
                 case 2:
                     message.depth = reader.float();
+                    break;
+                case 3:
+                    message.doubleFaceMaterial = reader.bool();
+                    break;
+                case 4:
+                    message.material = $root.Types.Material.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -5405,6 +5433,14 @@ export const Types = $root.Types = (() => {
             if (message.depth != null && message.hasOwnProperty("depth"))
                 if (typeof message.depth !== "number")
                     return "depth: number expected";
+            if (message.doubleFaceMaterial != null && message.hasOwnProperty("doubleFaceMaterial"))
+                if (typeof message.doubleFaceMaterial !== "boolean")
+                    return "doubleFaceMaterial: boolean expected";
+            if (message.material != null && message.hasOwnProperty("material")) {
+                let error = $root.Types.Material.verify(message.material);
+                if (error)
+                    return "material." + error;
+            }
             return null;
         };
 
@@ -5424,6 +5460,13 @@ export const Types = $root.Types = (() => {
                 message.riserExist = Boolean(object.riserExist);
             if (object.depth != null)
                 message.depth = Number(object.depth);
+            if (object.doubleFaceMaterial != null)
+                message.doubleFaceMaterial = Boolean(object.doubleFaceMaterial);
+            if (object.material != null) {
+                if (typeof object.material !== "object")
+                    throw TypeError(".Types.RiserParameters.material: object expected");
+                message.material = $root.Types.Material.fromObject(object.material);
+            }
             return message;
         };
 
@@ -5443,11 +5486,17 @@ export const Types = $root.Types = (() => {
             if (options.defaults) {
                 object.riserExist = false;
                 object.depth = 0;
+                object.doubleFaceMaterial = false;
+                object.material = null;
             }
             if (message.riserExist != null && message.hasOwnProperty("riserExist"))
                 object.riserExist = message.riserExist;
             if (message.depth != null && message.hasOwnProperty("depth"))
                 object.depth = options.json && !isFinite(message.depth) ? String(message.depth) : message.depth;
+            if (message.doubleFaceMaterial != null && message.hasOwnProperty("doubleFaceMaterial"))
+                object.doubleFaceMaterial = message.doubleFaceMaterial;
+            if (message.material != null && message.hasOwnProperty("material"))
+                object.material = $root.Types.Material.toObject(message.material, options);
             return object;
         };
 
@@ -5471,9 +5520,9 @@ export const Types = $root.Types = (() => {
          * Properties of an ObjData.
          * @memberof Types
          * @interface IObjData
-         * @property {string|null} [model_path] ObjData model_path
-         * @property {string|null} [img_path] ObjData img_path
-         * @property {string|null} [max_path] ObjData max_path
+         * @property {string|null} [modelPath] ObjData modelPath
+         * @property {string|null} [imgPath] ObjData imgPath
+         * @property {string|null} [maxPath] ObjData maxPath
          */
 
         /**
@@ -5492,28 +5541,28 @@ export const Types = $root.Types = (() => {
         }
 
         /**
-         * ObjData model_path.
-         * @member {string} model_path
+         * ObjData modelPath.
+         * @member {string} modelPath
          * @memberof Types.ObjData
          * @instance
          */
-        ObjData.prototype.model_path = "";
+        ObjData.prototype.modelPath = "";
 
         /**
-         * ObjData img_path.
-         * @member {string} img_path
+         * ObjData imgPath.
+         * @member {string} imgPath
          * @memberof Types.ObjData
          * @instance
          */
-        ObjData.prototype.img_path = "";
+        ObjData.prototype.imgPath = "";
 
         /**
-         * ObjData max_path.
-         * @member {string} max_path
+         * ObjData maxPath.
+         * @member {string} maxPath
          * @memberof Types.ObjData
          * @instance
          */
-        ObjData.prototype.max_path = "";
+        ObjData.prototype.maxPath = "";
 
         /**
          * Creates a new ObjData instance using the specified properties.
@@ -5539,12 +5588,12 @@ export const Types = $root.Types = (() => {
         ObjData.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.model_path != null && Object.hasOwnProperty.call(message, "model_path"))
-                writer.uint32(/* id 1, wireType 2 =*/10).string(message.model_path);
-            if (message.img_path != null && Object.hasOwnProperty.call(message, "img_path"))
-                writer.uint32(/* id 2, wireType 2 =*/18).string(message.img_path);
-            if (message.max_path != null && Object.hasOwnProperty.call(message, "max_path"))
-                writer.uint32(/* id 3, wireType 2 =*/26).string(message.max_path);
+            if (message.modelPath != null && Object.hasOwnProperty.call(message, "modelPath"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.modelPath);
+            if (message.imgPath != null && Object.hasOwnProperty.call(message, "imgPath"))
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.imgPath);
+            if (message.maxPath != null && Object.hasOwnProperty.call(message, "maxPath"))
+                writer.uint32(/* id 3, wireType 2 =*/26).string(message.maxPath);
             return writer;
         };
 
@@ -5580,13 +5629,13 @@ export const Types = $root.Types = (() => {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1:
-                    message.model_path = reader.string();
+                    message.modelPath = reader.string();
                     break;
                 case 2:
-                    message.img_path = reader.string();
+                    message.imgPath = reader.string();
                     break;
                 case 3:
-                    message.max_path = reader.string();
+                    message.maxPath = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -5623,15 +5672,15 @@ export const Types = $root.Types = (() => {
         ObjData.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.model_path != null && message.hasOwnProperty("model_path"))
-                if (!$util.isString(message.model_path))
-                    return "model_path: string expected";
-            if (message.img_path != null && message.hasOwnProperty("img_path"))
-                if (!$util.isString(message.img_path))
-                    return "img_path: string expected";
-            if (message.max_path != null && message.hasOwnProperty("max_path"))
-                if (!$util.isString(message.max_path))
-                    return "max_path: string expected";
+            if (message.modelPath != null && message.hasOwnProperty("modelPath"))
+                if (!$util.isString(message.modelPath))
+                    return "modelPath: string expected";
+            if (message.imgPath != null && message.hasOwnProperty("imgPath"))
+                if (!$util.isString(message.imgPath))
+                    return "imgPath: string expected";
+            if (message.maxPath != null && message.hasOwnProperty("maxPath"))
+                if (!$util.isString(message.maxPath))
+                    return "maxPath: string expected";
             return null;
         };
 
@@ -5647,12 +5696,12 @@ export const Types = $root.Types = (() => {
             if (object instanceof $root.Types.ObjData)
                 return object;
             let message = new $root.Types.ObjData();
-            if (object.model_path != null)
-                message.model_path = String(object.model_path);
-            if (object.img_path != null)
-                message.img_path = String(object.img_path);
-            if (object.max_path != null)
-                message.max_path = String(object.max_path);
+            if (object.modelPath != null)
+                message.modelPath = String(object.modelPath);
+            if (object.imgPath != null)
+                message.imgPath = String(object.imgPath);
+            if (object.maxPath != null)
+                message.maxPath = String(object.maxPath);
             return message;
         };
 
@@ -5670,16 +5719,16 @@ export const Types = $root.Types = (() => {
                 options = {};
             let object = {};
             if (options.defaults) {
-                object.model_path = "";
-                object.img_path = "";
-                object.max_path = "";
+                object.modelPath = "";
+                object.imgPath = "";
+                object.maxPath = "";
             }
-            if (message.model_path != null && message.hasOwnProperty("model_path"))
-                object.model_path = message.model_path;
-            if (message.img_path != null && message.hasOwnProperty("img_path"))
-                object.img_path = message.img_path;
-            if (message.max_path != null && message.hasOwnProperty("max_path"))
-                object.max_path = message.max_path;
+            if (message.modelPath != null && message.hasOwnProperty("modelPath"))
+                object.modelPath = message.modelPath;
+            if (message.imgPath != null && message.hasOwnProperty("imgPath"))
+                object.imgPath = message.imgPath;
+            if (message.maxPath != null && message.hasOwnProperty("maxPath"))
+                object.maxPath = message.maxPath;
             return object;
         };
 
@@ -5973,7 +6022,7 @@ export const Types = $root.Types = (() => {
          * @memberof Types
          * @interface ISmallColParameters
          * @property {Types.IObjData|null} [source] SmallColParameters source
-         * @property {Types.ArrangeRule|null} [arrange_rule] SmallColParameters arrange_rule
+         * @property {Types.ArrangeRule|null} [arrangeRule] SmallColParameters arrangeRule
          * @property {Types.IMaterial|null} [material] SmallColParameters material
          * @property {string|null} [specification] SmallColParameters specification
          */
@@ -6002,12 +6051,12 @@ export const Types = $root.Types = (() => {
         SmallColParameters.prototype.source = null;
 
         /**
-         * SmallColParameters arrange_rule.
-         * @member {Types.ArrangeRule} arrange_rule
+         * SmallColParameters arrangeRule.
+         * @member {Types.ArrangeRule} arrangeRule
          * @memberof Types.SmallColParameters
          * @instance
          */
-        SmallColParameters.prototype.arrange_rule = 0;
+        SmallColParameters.prototype.arrangeRule = 0;
 
         /**
          * SmallColParameters material.
@@ -6051,8 +6100,8 @@ export const Types = $root.Types = (() => {
                 writer = $Writer.create();
             if (message.source != null && Object.hasOwnProperty.call(message, "source"))
                 $root.Types.ObjData.encode(message.source, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.arrange_rule != null && Object.hasOwnProperty.call(message, "arrange_rule"))
-                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.arrange_rule);
+            if (message.arrangeRule != null && Object.hasOwnProperty.call(message, "arrangeRule"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.arrangeRule);
             if (message.material != null && Object.hasOwnProperty.call(message, "material"))
                 $root.Types.Material.encode(message.material, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             if (message.specification != null && Object.hasOwnProperty.call(message, "specification"))
@@ -6095,7 +6144,7 @@ export const Types = $root.Types = (() => {
                     message.source = $root.Types.ObjData.decode(reader, reader.uint32());
                     break;
                 case 2:
-                    message.arrange_rule = reader.int32();
+                    message.arrangeRule = reader.int32();
                     break;
                 case 3:
                     message.material = $root.Types.Material.decode(reader, reader.uint32());
@@ -6143,10 +6192,10 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "source." + error;
             }
-            if (message.arrange_rule != null && message.hasOwnProperty("arrange_rule"))
-                switch (message.arrange_rule) {
+            if (message.arrangeRule != null && message.hasOwnProperty("arrangeRule"))
+                switch (message.arrangeRule) {
                 default:
-                    return "arrange_rule: enum value expected";
+                    return "arrangeRule: enum value expected";
                 case 0:
                 case 1:
                 case 2:
@@ -6180,18 +6229,18 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.SmallColParameters.source: object expected");
                 message.source = $root.Types.ObjData.fromObject(object.source);
             }
-            switch (object.arrange_rule) {
+            switch (object.arrangeRule) {
             case "arph":
             case 0:
-                message.arrange_rule = 0;
+                message.arrangeRule = 0;
                 break;
             case "arrFour":
             case 1:
-                message.arrange_rule = 1;
+                message.arrangeRule = 1;
                 break;
             case "arrThree":
             case 2:
-                message.arrange_rule = 2;
+                message.arrangeRule = 2;
                 break;
             }
             if (object.material != null) {
@@ -6219,14 +6268,14 @@ export const Types = $root.Types = (() => {
             let object = {};
             if (options.defaults) {
                 object.source = null;
-                object.arrange_rule = options.enums === String ? "arph" : 0;
+                object.arrangeRule = options.enums === String ? "arph" : 0;
                 object.material = null;
                 object.specification = "";
             }
             if (message.source != null && message.hasOwnProperty("source"))
                 object.source = $root.Types.ObjData.toObject(message.source, options);
-            if (message.arrange_rule != null && message.hasOwnProperty("arrange_rule"))
-                object.arrange_rule = options.enums === String ? $root.Types.ArrangeRule[message.arrange_rule] : message.arrange_rule;
+            if (message.arrangeRule != null && message.hasOwnProperty("arrangeRule"))
+                object.arrangeRule = options.enums === String ? $root.Types.ArrangeRule[message.arrangeRule] : message.arrangeRule;
             if (message.material != null && message.hasOwnProperty("material"))
                 object.material = $root.Types.Material.toObject(message.material, options);
             if (message.specification != null && message.hasOwnProperty("specification"))
