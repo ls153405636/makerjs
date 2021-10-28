@@ -15,6 +15,10 @@ export class Info {
     this.isUpdate3D = true
   }
 
+  addInfo () {}
+
+  delInfo () {}
+
   rebuild () {}
 
   update () {}

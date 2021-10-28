@@ -42,17 +42,20 @@ export class Wall extends Info {
     let nor = utilEdge.getNormal()
     this.normal = new Types.Vector3({x:nor.x, y:nor.y})
     this.outEdge = utilEdge.offSet(this.depth)
-    this.components = []
+    this.components = new Map()
     this.updateCanvas()
   }
 
   update (vArgs) {
   }
 
-  addComponent (vType) {
-    let component = new Component(this, vType)
-    this.components.push(component)
+  addComponent (vInfo) {
+    
   }
+
+  delComponent (vInfo) {
+
+  } 
 
   getArgs () {
     return {
@@ -76,7 +79,7 @@ export class Wall extends Info {
       holeEdge: this.holeEdge,
       normal: this.normal
     })
-    for (const c of this.components) {
+    for (const c of this.components.values()) {
       pb.components.push(c.writePB())
     }
     return pb

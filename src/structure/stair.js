@@ -20,9 +20,9 @@ export class Stair extends Info{
     {value:Types.NossingType.nluxury, label:'豪华加边'}
   ]
   
-  constructor(vParent, vArgs) {
+  constructor(vParent, againstWall = Types.AgainstWallType.aw_left) {
     super(vParent)
-    this.againstWallType = Types.AgainstWallType.aw_no
+    this.againstWallType = againstWall
     this.type = Types.StairType.sstright
     this.startBeamDepth = 0
     this.exitBeamDepth = 0
@@ -190,8 +190,9 @@ export class Stair extends Info{
     }
   }
 
-  addHangingBoard() {
-    this.hangingBoard = new HangingBoard(this)
+  addHangingBoard(vInfo) {
+    this.hangingBoard = vInfo
+    this.rebuild()
   }
 
   createFlights() {

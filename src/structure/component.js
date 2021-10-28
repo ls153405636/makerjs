@@ -5,6 +5,13 @@ import { Info } from "./info";
 
 
 export class Component extends Info {
+  static TYPE_MAP = new Map([
+    [1, Inlay],
+    [2, Inlay],
+    [3, Inlay],
+    [4, Cloumn],
+    [5, Beam]
+  ])
   constructor (vParent, vType) {
     super (vParent)
     this.type = vType
@@ -51,6 +58,7 @@ export class Inlay extends Component {
     this.width = Default.INLAY_WIDTH
     this.height = Default.INLAY_HEIGHT
     this.depth = this.parent.depth
+    this.rebuild()
   }
 
   getArgs () {
@@ -64,6 +72,7 @@ export class Cloumn extends Component {
     this.width = Default.CEMENT_SIZE
     this.height = this.parent.height
     this.depth = Default.CEMENT_SIZE
+    this.rebuild()
   }
 
   getArgs () {
@@ -79,6 +88,7 @@ export class Beam extends Component {
     this.depth = Default.CEMENT_SIZE
     this.offGround = this.parent.height - this.height
     this.disToStart = 0
+    this.rebuild()
   }
 
   getArgs () {

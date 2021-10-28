@@ -9,6 +9,14 @@ export class HangingBoard extends ChildInfo {
     this.width = this.parent.stepLength
   }
 
+  addInfo () {
+    this.parent.addHangingBoard(this)
+  }
+
+  delInfo () {
+    this.parent.addHangingBoard(null)
+  }
+
   writePB () {
     return new Types.HangingBoard({
       depth: this.depth,

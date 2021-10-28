@@ -2,9 +2,9 @@ import { Action } from "../../common/action";
 import { Structure } from "../structure";
 
 export class StrucHoleInitCmd extends Action {
-  constructor (vType) {
+  constructor ({type = 'rect'}) {
     super()
-    this.type = vType
+    this.type = type
   }
 
   execute () {
