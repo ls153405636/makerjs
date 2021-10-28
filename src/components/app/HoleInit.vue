@@ -2,7 +2,15 @@
   <div class="component-hole-init" id="component-hole-init">
     <div class="add-hole-main">
       <div class="hole-main-left">
-        <div class="update-log"></div>
+        <div class="update-log">
+          <div class="update-log-box">
+            <span>更新日志</span>
+            <p class="update-time"></p>
+          </div>
+          <div v-for="(text, index) in updateText" :key="index">
+            <p>{{ text.describe }}</p>
+          </div>
+        </div>
         <div class="novice-tutorial"></div>
       </div>
       <div class="hole-main-right">
@@ -62,6 +70,20 @@ export default {
   name: 'componentHoleInit',
   data() {
     return {
+      updateText: [
+        {
+          describe: '优化楼梯模梯模梯模模型',
+        },
+        {
+          describe: '优化楼梯模梯模梯模模型',
+        },
+        {
+          describe: '优化楼梯模梯模梯模模型',
+        },
+        {
+          describe: '优化楼梯模梯模梯模模型',
+        },
+      ],
       demoP: [
         {
           describe: '壹号别墅L形',

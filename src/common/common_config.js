@@ -1,4 +1,3 @@
-
 export const COMP_TYPES = {
   HOLE: 1,
   WALL: 2,
@@ -18,5 +17,5 @@ export const CUR_DATA = {
 
 export default {
   COMP_TYPES,
-  // CUR_DATA
+  CUR_DATA,
 }

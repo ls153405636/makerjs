@@ -58,6 +58,7 @@ export default {
   width: 220px;
   height: 34px;
   padding: 0 20px;
+  cursor: pointer;
 }
 .component-bottom .d2-d3 {
   width: 128px;
@@ -97,6 +98,7 @@ export default {
   background: #ffffff;
   border-radius: 8px;
   padding: 0 20px;
+  cursor: pointer;
 }
 .component-bottom .zoom .vector-two {
   width: 180px;
