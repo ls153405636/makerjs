@@ -26,9 +26,10 @@ export class BigColumn extends ChildInfo {
 
   getArgs () {
     let bargs = this.parent.bigColParameters
+    let f = tool.getItemFromOptions
     return {
-      posType:{name:'位置类型', value:bargs.posType, type:'selecte', options:BigColumn.POS_TYPE_OPTIONS},
-      specification:{name:'规格', value:bargs.posType, type:'selecte', options:BigColumn.SPEC_OPTIONS},
+      posType:{name:'位置类型', value:f(bargs.posType), type:'selecte', options:BigColumn.POS_TYPE_OPTIONS},
+      specification:{name:'规格', value:f(bargs.specification), type:'selecte', options:BigColumn.SPEC_OPTIONS},
       model:{name:'型号', value:'', type:'replace'},
       material:{name:'材质', value:'', type:'replace'}
     }

@@ -1,16 +1,16 @@
 import { Types } from "../types/stair_v2"
 import { Edge } from "../utils/edge"
-import { Component } from "./component"
 import { Default, StructConfig } from "./config"
 import { Info } from "./info"
+import tool from "./tool"
 
 
 export class Wall extends Info {
   static TYPE_OPTIONS = [
-    {value:Types.WallType.wboth, lable:'一二楼均有墙'},
-    {value:Types.WallType.wfirst, lable:'一楼有墙二楼空'},
-    {value:Types.WallType.wsecond, lable:'一楼空二楼有墙'},
-    {value:Types.WallType.wnone, lable:'一二楼均空'}
+    {value:Types.WallType.wboth, label:'一二楼均有墙'},
+    {value:Types.WallType.wfirst, label:'一楼有墙二楼空'},
+    {value:Types.WallType.wsecond, label:'一楼空二楼有墙'},
+    {value:Types.WallType.wnone, label:'一二楼均空'}
   ]
   /**
    * 
@@ -58,8 +58,9 @@ export class Wall extends Info {
   } 
 
   getArgs () {
+    let f = tool.getItemFromOptions
     return {
-      type: {name:'墙体类型', value:this.type, type:'select', options:Wall.TYPE_OPTIONS},
+      type: {name:'墙体类型', value:f(this.type, Wall.TYPE_OPTIONS), type:'select', options:Wall.TYPE_OPTIONS},
       depth: {name:'墙体厚度', value:this.depth, type:'input'},
       startExtend: {name:'起点延伸', value:this.startExtend, type:'input'},
       endExtend: {name:'终点延伸', value:this.endExtend, type:'input'}

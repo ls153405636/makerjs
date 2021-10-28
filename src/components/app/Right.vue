@@ -1,9 +1,9 @@
 <template>
   <div class="component-right" id="component-right">
-    <right-wall></right-wall>
-    <!-- <right-flight></right-flight>
-    <right-hole></right-hole>
-    <right-stair></right-stair> -->
+    <right-wall v-if="cur_type === cts.WALL"></right-wall>
+    <!-- <right-flight></right-flight> -->
+    <right-hole v-if="cur_type === cts.HOLE"></right-hole>
+    <!-- <right-stair></right-stair> -->
   </div>
 </template>
 
@@ -36,7 +36,7 @@ export default {
 </script>
 <style>
 .component-right {
-  display: none;
+  display: block;
   position: absolute;
   right: 10px;
   top: 80px;

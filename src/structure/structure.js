@@ -29,15 +29,13 @@ export class Structure {
     if (vType === 'rect') {
       this.hole = new RectHole(this)
     }
-    StructConfig.SELECTED = this.hole
     return this
   }
 
   initStair (vArgs) {
-    if (vArgs.type === Types.StairType.sstright) {
+    //if (vArgs.type === Types.StairType.sstright) {
       this.stair = new Stair(this, vArgs)
-    }
-    StructConfig.stair = this.stair
+    //}
     return this
   }
 

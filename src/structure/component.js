@@ -5,13 +5,6 @@ import { Info } from "./info";
 
 
 export class Component extends Info {
-  static TYPE_MAP = new Map([
-    [1, Inlay],
-    [2, Inlay],
-    [3, Inlay],
-    [4, Cloumn],
-    [5, Beam]
-  ])
   constructor (vParent, vType) {
     super (vParent)
     this.type = vType

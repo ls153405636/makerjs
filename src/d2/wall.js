@@ -237,7 +237,6 @@ export class Wall extends BaseWidget {
   // 取消墙体选中效果
   cancelSelected() {
     this.sprite.tint = 0xffffff
-    this.rightMenu.style.display = 'none'
     this.isSelected = false
     if (this.type === 4) {
       this.sprite.alpha = this.alpha
@@ -248,17 +247,9 @@ export class Wall extends BaseWidget {
   // 墙体选中效果
   setSelected() {
     this.sprite.tint = 0x818796
-    this.rightMenu.style.display = 'block'
     this.isSelected = true
     this.sprite.alpha = 1
     D2Config.SELECTED = this
-    let core = new Core()
-    core.execute(
-      new Command(core.cmds.SelectedCmd, {
-        uuid: this.uuid,
-        type: COMP_TYPES.WALL,
-      })
-    )
   }
   // 鼠标进入墙体效果
   setHover() {
@@ -329,6 +320,13 @@ export class Wall extends BaseWidget {
         if (D2Config.SELECTED) {
           D2Config.SELECTED.cancelSelected()
         }
+        let core = new Core()
+        core.execute(
+          new Command(core.cmds.SelectedCmd, {
+            uuid: this.uuid,
+            type: COMP_TYPES.WALL,
+          })
+        )
         _this.setSelected()
         D2Config.SELECTED = this
       })

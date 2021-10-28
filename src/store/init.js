@@ -2,6 +2,7 @@ import { Types } from "../types/stair_v2"
 
 
 const state = {
+  cur_hole_type: 'rect',
   hole_types:[
     {name:'矩形洞口', value:'rect', imgPath:''},
     {name:'L形洞口', value:'L', imgPath:''},

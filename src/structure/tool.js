@@ -53,7 +53,19 @@ export function createRectOutline (vOri, vLength, vWdith) {
   return outline
 }
 
+export function getItemFromOptions (vValue, vOptions) {
+  let item = {value:vValue}
+  for (const i of vOptions) {
+    if (i.value === vValue) {
+      item.label = i.label
+      break
+    }
+  }
+  return item
+}
+
 export default {
   parseSpecification,
-  createRectOutline
+  createRectOutline,
+  getItemFromOptions
 }

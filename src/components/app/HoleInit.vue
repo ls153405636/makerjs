@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import { Command } from '../../common/command'
+import { Core } from '../../common/core'
 export default {
   name: 'componentHoleInit',
   data() {
@@ -112,6 +114,8 @@ export default {
     createStair() {
       let holeInit = document.getElementById('component-hole-init')
       holeInit.style.display = 'none'
+      let core = new Core()
+      core.execute(new Command(core.cmds.HoleInitCmd, {type: 'rect'}))
     },
   },
 }
