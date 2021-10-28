@@ -1,19 +1,13 @@
-import { Command } from "../../common/command";
-
+import { Command } from '../../common/command'
 
 export class StrucUpdateCmd extends Command {
-  constructor (vArgs) {
+  constructor(vArgs) {
+    super()
   }
 
-  execute () {
+  execute() {}
 
-  }
+  undo() {}
 
-  undo () {
-
-  }
-
-  redo () {
-
-  }
+  redo() {}
 }
