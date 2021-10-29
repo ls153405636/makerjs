@@ -8,61 +8,12 @@
             <img src="../../../public/images/stairs 1.png" alt="" />
           </div>
           <p class="type-text">楼梯类型</p>
-          <el-select v-model="value1" placeholder="整体楼梯">
+          <el-select placeholder="请选择" v-model="value">
             <el-option
-              v-for="item in options1"
-              :key="item.value"
+              v-for="(item, index) in stair_types"
+              :key="index"
               :label="item.label"
               :value="item.value"
-              :disabled="item.disabled"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="type">
-          <div class="stair-2">
-            <img src="../../../public/images/shelves 1.png" alt="" />
-          </div>
-          <p class="type-text">靠墙方式</p>
-          <el-select v-model="value2" placeholder="左靠墙">
-            <el-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="type">
-          <div class="stair-3">
-            <img src="../../../public/images/home 1.png" alt="" />
-          </div>
-          <p class="type-text">楼梯形状</p>
-          <el-select v-model="value3" placeholder="直形">
-            <el-option
-              v-for="item in options3"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="type">
-          <div class="stair-4">
-            <img src="../../../public/images/pictures 2.png" alt="" />
-          </div>
-          <p class="type-text">转向方式</p>
-          <el-select v-model="value4" placeholder="左转">
-            <el-option
-              v-for="item in options4"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled"
             >
             </el-option>
           </el-select>
@@ -77,80 +28,11 @@
 import { ref, defineComponent } from 'vue'
 import { Core } from '../../common/core'
 import { Command } from '../../common/command'
-
+import { mapState } from 'vuex'
 export default defineComponent({
   name: 'componentStairInit',
   data() {
-    return {
-      options1: ref([
-        {
-          value: '整体楼梯',
-          label: '整体楼梯',
-        },
-        {
-          value: '水泥楼梯',
-          label: '水泥楼梯',
-        },
-      ]),
-      value1: ref(''),
-      options2: ref([
-        {
-          value: '左靠墙',
-          label: '左靠墙',
-        },
-        {
-          value: '右靠墙',
-          label: '右靠墙',
-        },
-        {
-          value: '不靠墙',
-          label: '不靠墙',
-        },
-      ]),
-      value2: ref(''),
-      options3: ref([
-        {
-          value: '直形',
-          label: '直形',
-        },
-        {
-          value: 'L形',
-          label: 'L形',
-        },
-        {
-          value: '小U形',
-          label: '小U形',
-        },
-        {
-          value: '大U形',
-          label: '大U形',
-        },
-        {
-          value: '弧形',
-          label: '弧形',
-        },
-        {
-          value: '回形',
-          label: '回形',
-        },
-        {
-          value: '中心旋转形',
-          label: '中心旋转形',
-        },
-      ]),
-      value3: ref(''),
-      options4: ref([
-        {
-          value: '左转',
-          label: '左转',
-        },
-        {
-          value: '右转',
-          label: '右转',
-        },
-      ]),
-      value4: ref(''),
-    }
+    return {}
   },
   methods: {
     clickCreate() {
@@ -159,6 +41,9 @@ export default defineComponent({
       let core = new Core()
       core.execute(new Command(core.cmds.StairInitCmd, { type, againstWall }))
     },
+  },
+  computed: {
+    ...mapState('init', ['stair_types']),
   },
 })
 </script>

@@ -16,29 +16,17 @@
       <div class="hole-main-right">
         <span class="hello-user">HELLO, User</span>
         <div class="hole-types">
-          <div class="hole-type">
-            <div class="draw-hole">
-              <img src="../../../public/images/home 1.png" alt="" />
+          <div v-for="(hole, index) in hole_types" :key="index">
+            <div
+              class="hole-type"
+              :class="hole.value == 'rect' ? 'activeClass' : ' '"
+              @click="clickStyle"
+            >
+              <div class="draw-hole">
+                <img :src="hole.imgPath" alt="" />
+              </div>
+              <p class="hole-type-name">{{ hole.name }}</p>
             </div>
-            <p class="hole-type-name">矩形洞口</p>
-          </div>
-          <div class="hole-type">
-            <div class="draw-hole">
-              <img src="../../../public/images/home 1.png" alt="" />
-            </div>
-            <p class="hole-type-name">L形洞口</p>
-          </div>
-          <div class="hole-type">
-            <div class="draw-hole">
-              <img src="../../../public/images/home 1.png" alt="" />
-            </div>
-            <p class="hole-type-name">梯形洞口</p>
-          </div>
-          <div class="hole-type">
-            <div class="draw-hole">
-              <img src="../../../public/images/home 1.png" alt="" />
-            </div>
-            <p class="hole-type-name">圆形洞口</p>
           </div>
         </div>
         <span class="create-stair-programme" @click="createStair"
@@ -68,6 +56,7 @@
 <script>
 import { Command } from '../../common/command'
 import { Core } from '../../common/core'
+import { mapState } from 'vuex'
 export default {
   name: 'componentHoleInit',
   data() {
@@ -111,12 +100,18 @@ export default {
     }
   },
   methods: {
+    clickStyle() {
+      document.getElementsByClassName('pic')
+    },
     createStair() {
       let holeInit = document.getElementById('component-hole-init')
       holeInit.style.display = 'none'
       let core = new Core()
       core.execute(new Command(core.cmds.HoleInitCmd, { type: 'rect' }))
     },
+  },
+  computed: {
+    ...mapState('init', ['hole_types']),
   },
 }
 </script>
@@ -176,7 +171,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 25%;
+  width: 180px;
   height: 200px;
   padding: 20px 10px 10px;
   margin-right: 5px;
@@ -186,7 +181,10 @@ export default {
   cursor: pointer;
 }
 .add-hole-main .hole-main-right .hole-types .hole-type:hover {
-  border: 1px solid rgba(68, 120, 244, 1);
+  border: 1px solid rgba(26, 87, 230, 1);
+}
+.add-hole-main .hole-main-right .hole-types .activeClass {
+  border: 1px solid rgba(26, 87, 230, 1);
 }
 /* 确认创建 */
 .add-hole-main .hole-main-right .create-stair-programme {
