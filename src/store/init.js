@@ -3,10 +3,22 @@ import { Types } from '../types/stair_v2'
 const state = {
   cur_hole_type: 'rect',
   hole_types: [
-    { name: '矩形洞口', value: 'rect', imgPath: '' },
-    { name: 'L形洞口', value: 'L', imgPath: '' },
-    { name: '梯形洞口', value: 'trape', imgPath: '' },
-    { name: '圆形洞口', value: 'circle', imgPath: '' },
+    {
+      name: '矩形洞口',
+      value: 'rect',
+      imgPath: '../../public/images/home 1.png',
+    },
+    { name: 'L形洞口', value: 'L', imgPath: '../../public/images/home 1.png' },
+    {
+      name: '梯形洞口',
+      value: 'trape',
+      imgPath: '../../public/images/home 1.png',
+    },
+    {
+      name: '圆形洞口',
+      value: 'circle',
+      imgPath: '../../public/images/home 1.png',
+    },
   ],
   stair_types: [{ value: '', label: '整体楼梯' }],
   stair_against_wall_options: [
