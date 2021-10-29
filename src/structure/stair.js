@@ -4,7 +4,6 @@ import { BigColumn } from './big_column'
 import { Default } from './config'
 import { Girder } from './girder'
 import { Handrail } from './handrails'
-import { HangingBoard } from './hanging_board'
 import { Info } from './info'
 import { SmallColumn } from './small_column'
 import tool from './tool'
@@ -97,7 +96,7 @@ export class Stair extends Info {
       stepNumRule: {
         name: '步数规则',
         value: f(this.stepNumRule, Stair.NUM_RULE_OPTIONS),
-        type: 'selecte',
+        type: 'select',
         options: Stair.NUM_RULE_OPTIONS,
       },
       stepNum: { name: '步数', value: this.stepNum, type: 'input' },
@@ -109,7 +108,7 @@ export class Stair extends Info {
       bigColParameters: { name: '大柱参数', type: 'group' },
     }
     let targs = this.treadParameters
-    args.treadParaParameters.value = {
+    args.treadParameters.value = {
       depth: { name: '厚度', value: targs.depth, type: 'input' },
       doubleFaceMaterial: {
         name: '双面漆',
@@ -130,7 +129,7 @@ export class Stair extends Info {
       material: { name: '材质', value: '', type: 'replace' },
     }
     if (targs.nossingType !== Types.NossingType.nno) {
-      args.treadParas.value.nossing = {
+      args.treadParameters.value.nossing = {
         name: '加边厚度',
         type: 'input',
       }

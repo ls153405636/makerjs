@@ -17,7 +17,7 @@ export class Stair extends BaseWidget {
    * @param {Types.Stair} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     D2Config.CUR_STAIR = this
     this.flights = []
     this.smallColumns = []

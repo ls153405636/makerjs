@@ -1,4 +1,3 @@
-// import { initProj } from '../init_temp'
 import { Types } from '../types/stair_v2'
 import { BaseWidget } from './base_widget'
 import d2_tool from './d2_tool'
@@ -7,7 +6,6 @@ import wFirst from '../assets/wfirst.png'
 import wSecond from '../assets/wsecond.png'
 import wNone from '../assets/wboth11.png'
 import Victor from 'victor'
-import { Movie } from './movie'
 import { D2Config } from './config'
 import { Inlay } from './component/inlay'
 import { CementComp } from './component/cement_comp'
@@ -248,7 +246,6 @@ export class Wall extends BaseWidget {
     this.sprite.tint = 0x818796
     this.isSelected = true
     this.sprite.alpha = 1
-    D2Config.SELECTED = this
   }
   // 鼠标进入墙体效果
   setHover() {
@@ -316,18 +313,13 @@ export class Wall extends BaseWidget {
         if (this.isSelected) {
           return
         }
-        if (D2Config.SELECTED) {
-          D2Config.SELECTED.cancelSelected()
-        }
         let core = new Core()
         core.execute(
-          new Command(core.cmds.SelectedCmd, {
+          new Command(core.cmds.SelecteCmd, {
             uuid: this.uuid,
             type: COMP_TYPES.WALL,
           })
         )
-        _this.setSelected()
-        D2Config.SELECTED = this
       })
       .on('mouseout', () => {
         _this.cancelHover()

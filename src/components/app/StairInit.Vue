@@ -106,10 +106,6 @@ export default defineComponent({
           value: '不靠墙',
           label: '不靠墙',
         },
-        {
-          value: '大U形',
-          label: '大U形',
-        },
       ]),
       value2: ref(''),
       options3: ref([
@@ -161,7 +157,7 @@ export default defineComponent({
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'none'
       let core = new Core()
-      core.execute(new Command(core.cmds.StairInitCmd, {}))
+      core.execute(new Command(core.cmds.StairInitCmd, { type, againstWall }))
     },
   },
 })

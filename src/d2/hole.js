@@ -11,7 +11,7 @@ export class Hole extends BaseWidget {
    * @param {Types.Hole} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.edges = vPB.edges
     this.draw()
     this.addEvent()

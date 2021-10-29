@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
+import { D2Config } from './config'
 import { Movie } from './movie'
 export class BaseWidget {
   constructor(uuid) {
@@ -6,23 +7,23 @@ export class BaseWidget {
     this.uuid = uuid || uuidv4()
     this.sprite = null
     this.isSelected = false
+    D2Config.WIDGETS.set(this.uuid, this)
   }
 
   /**
    * 销毁函数
    */
-  destory () {
+  destory() {
     /**由外部和父级调用，销毁此精灵，阅读学习PIXI里的destory方法 */
     /**父类里可写一部分通用方法，不同的子类如果有需要，也要写具体实现 */
   }
 
   /**清空函数 */
-  clear () {
+  clear() {
     /**类内部调用，阅读学习PIXI里的clear方法 */
   }
 
-
-  reDraw () {
+  reDraw() {
     /**清空后重新绘制 */
   }
 
@@ -63,9 +64,7 @@ export class BaseWidget {
 
   cancelSelected() {}
 
-  setSelected() {
-
-  }
+  setSelected() {}
 
   setHover() {}
 

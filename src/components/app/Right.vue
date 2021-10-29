@@ -4,7 +4,7 @@
       <right-wall v-if="cur_type === cts.WALL"></right-wall>
       <!-- <right-flight></right-flight> -->
       <right-hole v-if="cur_type === cts.HOLE"></right-hole>
-      <!-- <right-stair></right-stair> -->
+      <right-stair v-if="cur_type === cts.STAIR"></right-stair>
     </el-scrollbar>
   </div>
 </template>

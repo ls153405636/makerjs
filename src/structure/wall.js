@@ -1,6 +1,6 @@
 import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
-import { Default, StructConfig } from './config'
+import { Default } from './config'
 import { Info } from './info'
 import tool from './tool'
 
@@ -27,7 +27,6 @@ export class Wall extends Info {
     this.height = this.parent.floorHeight
     this.components = []
     this.rebuild()
-    StructConfig.INFOS.set(this.uuid, this)
   }
 
   rebuild() {

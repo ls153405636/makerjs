@@ -52,13 +52,13 @@ export class SmallColumn extends ChildInfo {
       arrangeRule: {
         name: '排列规则',
         value: f(sargs.arrangeRule, SmallColumn.ARRANGR_RULE_OPTIONS),
-        type: 'selecte',
+        type: 'select',
         options: SmallColumn.ARRANGR_RULE_OPTIONS,
       },
       specification: {
         name: '规格',
         value: f(sargs.specification, specOptions),
-        type: 'selecte',
+        type: 'select',
         options: specOptions,
       },
       model: { name: '型号', value: '', type: 'replace' },

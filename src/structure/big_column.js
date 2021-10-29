@@ -30,13 +30,13 @@ export class BigColumn extends ChildInfo {
       posType: {
         name: '位置类型',
         value: f(bargs.posType),
-        type: 'selecte',
+        type: 'select',
         options: BigColumn.POS_TYPE_OPTIONS,
       },
       specification: {
         name: '规格',
         value: f(bargs.specification),
-        type: 'selecte',
+        type: 'select',
         options: BigColumn.SPEC_OPTIONS,
       },
       model: { name: '型号', value: '', type: 'replace' },

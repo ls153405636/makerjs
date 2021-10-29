@@ -1,9 +1,5 @@
-import { Command } from '../../common/command'
-import { COMP_TYPES } from '../../common/common_config'
-import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
 import { BaseWidget } from '../base_widget'
-import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
 import { Tread } from './tread'
 
@@ -13,7 +9,7 @@ export class Flight extends BaseWidget {
    * @param {Types.Flight} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.treads = []
     for (const t of vPB.treads) {
       this.treads.push(new Tread(t, this))
@@ -61,10 +57,6 @@ export class Flight extends BaseWidget {
     this.treads.forEach((t) => {
       t.setSelected()
     })
-    D2Config.SELECTED = this
-    //设置选中
-    let core = new Core()
-    core.execute(new Command(core.cmds.SelectedCmd, {uuid:this.uuid, type:COMP_TYPES.FLIGHT}))
   }
 
   cancelSelected() {
