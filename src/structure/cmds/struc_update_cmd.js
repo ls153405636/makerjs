@@ -8,23 +8,18 @@ export class StrucUpdateCmd extends Command {
    *
    * @param {Map} vArgs
    */
-  constructor(vArgs) {
+  constructor(vArgItems) {
     super()
-    this.newArgs = vArgs
+    this.newArgs = vArgItems
     this.info = StructConfig.SELECTED
     if (this.info) {
-      this.oldArgs = this.info.getArgItems(vArgs)
+      this.oldArgs = this.info.getArgItems(vArgItems)
     }
   }
 
   execute() {
     this.info.update(this.newArgs)
-    if (
-      StructConfig.SELECTED &&
-      StructConfig.SELECTED.uuid === this.info.uuid
-    ) {
-      console.log(1)
-    }
+    this.setSelecte()
   }
 
   undo() {}

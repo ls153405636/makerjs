@@ -43,8 +43,6 @@ export class Wall extends Info {
     this.updateCanvas()
   }
 
-  update(vArgs) {}
-
   addComponent(vInfo) {
     this.components.set(vInfo.uuid, vInfo)
     this.updateCanvas()

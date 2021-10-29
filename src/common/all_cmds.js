@@ -5,6 +5,7 @@ import { StrucEleAddCmd } from '../structure/cmds/strcu_ele_add_cmd'
 import { StrucHoleInitCmd } from '../structure/cmds/struc_hole_init_cmd'
 import { StrucSelecteCmd } from '../structure/cmds/struc_selecte_cmd'
 import { StrucStairInitCmd } from '../structure/cmds/struc_stair_init_cmd'
+import { StrucUpdateCmd } from '../structure/cmds/struc_update_cmd'
 
 export const allCmds = {
   BootCmd: {
@@ -29,7 +30,9 @@ export const allCmds = {
 
   EleDelCmd: {},
 
-  EleUpdateCmd: {},
+  EleUpdateCmd: {
+    struc: StrucUpdateCmd
+  },
 
   SelecteCmd: {
     struc: StrucSelecteCmd,

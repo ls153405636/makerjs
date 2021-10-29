@@ -23,7 +23,16 @@ export class Info {
 
   rebuild() {}
 
-  update() {}
+  update(vArgItems) {
+    for (const [k, v] of vArgItems) {
+      if (!(v instanceof Map)) {
+        if (this[k] != undefined) {
+          this[k] = v
+        }
+      } 
+    }
+    this.rebuild()
+  }
 
   getArgs() {
     return {}

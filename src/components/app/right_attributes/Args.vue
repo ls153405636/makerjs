@@ -5,7 +5,7 @@
       <el-form-item v-if="arg.type === 'input'" :label="arg.name">
         <el-input
           v-model="arg.value"
-          @blur="updateArgs(arg.value, index)"
+          @blur="updateArgs(arg.value, index, arg.type)"
         ></el-input>
       </el-form-item>
 
@@ -14,7 +14,7 @@
         <el-select
           v-model="arg.value.value"
           :label="arg.value.label"
-          @blur="updateArgs(arg.value, index)"
+          @change="updateArgs(arg.value.value, index, arg.type)"
         >
           <el-option
             v-for="item in arg.options"
@@ -29,7 +29,7 @@
       <div v-if="arg.type === 'group'" class="demo-collapse">
         <el-collapse>
           <el-collapse-item :title="arg.name">
-            <el-form v-for="(item1, index) in arg.value" :key="index">
+            <el-form v-for="(item1, key) in arg.value" :key="key">
               <!-- 展开-输入 -->
               <el-form-item v-if="item1.type === 'input'" :label="item1.name">
                 <el-input v-model="item1.value"></el-input>
@@ -40,7 +40,7 @@
                 <el-select
                   v-model="item1.value.value"
                   :label="item1.value.label"
-                  @blur="updateArgs(item1.value, index)"
+                  @change="updateArgs(item1.value.value, index, item1.type, key)"
                 >
                   <el-option
                     v-for="item in item1.options"
@@ -80,6 +80,8 @@
 <script>
 import { ref, defineComponent } from 'vue'
 import { mapState } from 'vuex'
+import { Command } from '../../../common/command'
+import { Core } from '../../../common/core'
 export default defineComponent({
   name: 'args',
   setup() {},
@@ -104,8 +106,19 @@ export default defineComponent({
       console.log(file)
     },
 
-    updateArgs(value, key, secondKey) {
-      console.log('key, value:', key, value)
+    updateArgs(value, key, type, secondKey) {
+      if (type === 'input') {
+        value = Number(value)
+      }
+      let argItems = new Map()
+      if (secondKey) {
+        let item = new Map([secondKey, value])
+        argItems.set(key, item)
+      } else {
+        argItems.set(key, value)
+      }
+      let core = new Core()
+      core.execute(new Command(core.cmds.EleUpdateCmd, argItems))
     },
   },
   computed: {

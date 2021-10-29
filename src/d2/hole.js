@@ -1,6 +1,7 @@
 // 绘制洞口
 // import { initProj } from '../init_temp'
 // import { Types } from '../types/stair_v2'
+import { COMP_TYPES } from '../common/common_config'
 import { BaseWidget } from './base_widget'
 import { D2Config } from './config'
 // import { Wall } from './wall'
@@ -12,6 +13,20 @@ export class Hole extends BaseWidget {
    */
   constructor(vPB) {
     super(vPB.uuid)
+    this.init(vPB)
+  }
+
+  /**重写父类销毁函数，洞口销毁时，所有墙体需要跟着销毁 */
+  destroy () {
+    D2Config.WIDGETS.forEach(w => {
+      if (w.getWidgetType() === COMP_TYPES.WALL) {
+        w.destroy()
+      }
+    })
+    super.destroy()
+  }
+
+  init (vPB) {
     this.edges = vPB.edges
     this.draw()
     this.addEvent()

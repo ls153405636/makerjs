@@ -10,7 +10,6 @@ export class RectHole extends Info {
     this.length = Default.HOLE_LENGTH
     this.width = Default.HOLE_WIDTH
     this.floorHeight = Default.FLOOR_HEIGHT
-    this.walls = []
     this.rebuild()
   }
 
@@ -21,27 +20,16 @@ export class RectHole extends Info {
       y: center.y - this.width / 2
     })
     this.outline = tool.createRectOutline(this.ori, this.length, this.width)
-    this.createWalls()
-    this.updateCanvas()
-  }
-
-  update (vArgs) {
-    if (vArgs.length?.value) {
-      this.length = vArgs.length.value
-    }
-    if (vArgs.width?.value) {
-      this.width = vArgs.width.value
-    }
-    if (vArgs.floorHeight?.value) {
-      this.floorHeight = vArgs.floorHeight.value
-    }
     this.walls = []
+    this.updateCanvas()
+    this.createWalls()
   }
 
   getArgs () {
     return {
-      width: {name: '宽', value: 4000, type: 'input'},
-      height: {name: '高', value: 3000, type: 'input'}
+      length: {name: '长', value: this.length, type: 'input'},
+      width: {name: '宽', value: this.width, type: 'input'},
+      floorHeight: {name: '层高', value: this.floorHeight, type: 'input'},
     }
   }
 

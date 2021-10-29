@@ -54,13 +54,25 @@ export class Wall extends BaseWidget {
     return Math.hypot(p1.x - p2.x, p1.y - p2.y)
   }
 
+  /**重写父类销毁函数 */
   destroy () {
     this.components.forEach(c => {
       c.destroy()
     })
+    this.lineSprite.destroy()
+    this.textSprite.destroy()
     super.destroy()
   }
 
+  /**获取当前组件的类型 */
+  getWidgetType () {
+    return COMP_TYPES.WALL
+  }
+
+  /**
+   * 重写父类初始化函数
+   * @param {Types.Wall} vPB 
+   */
   init (vPB) {
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
@@ -72,6 +84,7 @@ export class Wall extends BaseWidget {
     this.alpha = 0
     this.components = []
     this.createComponents(vPB.components)
+    console.log(this.p1, this.p2, this.outP1, this.outP2, this.depth, this.normal, this.type)
     this.draw()
     this.addEvent()
   }

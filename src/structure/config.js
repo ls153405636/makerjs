@@ -2,7 +2,7 @@ import { Types } from '../types/stair_v2'
 
 export const StructConfig = {
   INIT_WALL_DEPTH: 240,
-  INIT_HOLE_LENGTH: 4000,
+  INIT_HOLE_LENGTH: 3000,
   INIT_HOLE_WIDTH: 3000,
   CUR_PROJ: null,
   CENTER: new THREE.Vector2(),

@@ -17,11 +17,13 @@ export class BaseWidget {
     /**由外部和父级调用，销毁此精灵，阅读学习PIXI里的destory方法 */
     /**父类里可写一部分通用方法，不同的子类如果有需要，也要写具体实现 */
     /**注意以下两点，精灵图destory的时候，其child的状态，以及destory之后，其绑定事件的处理*/
-    this.sprite.destroy()
+    this.sprite.destroy({children:true})
     D2Config.WIDGETS.delete(this.uuid)
   }
 
   init () {}
+
+  getWidgetType () {}
 
 
   update (vPB) {
