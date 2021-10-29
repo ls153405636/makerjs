@@ -1,17 +1,26 @@
 import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
-import { Default } from './config'
+import { Default, StructConfig } from './config'
 import { Info } from './info'
 
 export class Component extends Info {
+  /**
+   * 
+   * @param {typeof import('./wall').Wall} vParent 
+   * @param {*} vType 
+   */
   constructor(vParent, vType) {
     super(vParent)
     this.type = vType
     this.offGround = 0
-    this.disToStart = (this.parent.width - this.width) / 2
     let angle = new Edge(this.parent.edge).getAngle()
-    this.rotation = new Types.rotation({ y: angle })
+    this.rotation = new Types.Vector3({ y: angle })
     this.interval = 0
+  }
+
+  addInfo () {
+    StructConfig.INFOS.set(this.uuid, this)
+    this.parent.addComponent(this)
   }
 
   computePosition() {
@@ -19,22 +28,16 @@ export class Component extends Info {
     let pos = utilEdge
       .getP1()
       .addScaledVector(utilEdge.getVec(), this.disToStart + this.width / 2)
-    if (
-      [Types.ComponentType.cbeam, Types.ComponentType.cpillar].includes(
-        this.type
-      )
-    ) {
-      pos.addScaledVector(
-        utilEdge.getNormal().negate(),
-        (this.parent.depth + this.depth) / 2
-      )
+    if ([4, 5].includes(this.type)) {
+      pos.addScaledVector(utilEdge.getNormal().negate(),this.depth / 2)
+    } else {
+      pos.addScaledVector(utilEdge.getNormal(), this.depth / 2)
     }
     this.position = new Types.Vector3({ x: pos.x, y: pos.y })
   }
 
   rebuild() {
     this.computePosition()
-    this.updateCanvas()
   }
 
   writePB() {
@@ -49,6 +52,7 @@ export class Component extends Info {
       angle: this.angle,
       rotation: this.rotation,
       interval: this.interval,
+      position: this.position
     })
   }
 }
@@ -59,6 +63,7 @@ export class Inlay extends Component {
     this.width = Default.INLAY_WIDTH
     this.height = Default.INLAY_HEIGHT
     this.depth = this.parent.depth
+    this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
     this.rebuild()
   }
 
@@ -78,6 +83,7 @@ export class Cloumn extends Component {
     this.width = Default.CEMENT_SIZE
     this.height = this.parent.height
     this.depth = Default.CEMENT_SIZE
+    this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
     this.rebuild()
   }
 

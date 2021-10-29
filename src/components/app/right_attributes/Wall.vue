@@ -8,21 +8,21 @@
       </template>
       <span class="add-parts">添加结构部件</span>
       <el-row>
-        <el-button id="door" @click="addComponent" size="medium">门</el-button>
-        <el-button id="window" @click="addComponent" size="medium"
+        <el-button id="door" @click="addComponent(1)" size="medium">门</el-button>
+        <el-button id="window" @click="addComponent(2)" size="medium"
           >窗</el-button
         >
-        <el-button id="door-hole" @click="addComponent" size="medium"
+        <el-button id="door-hole" @click="addComponent(3)" size="medium"
           >门洞</el-button
         >
         <el-button
           id="beam"
-          @click="addComponent"
+          @click="addComponent(4)"
           size="medium"
           style="margin-left: 0"
           >梁</el-button
         >
-        <el-button id="cloumn" @click="addComponent" size="medium"
+        <el-button id="cloumn" @click="addComponent(5)" size="medium"
           >柱子</el-button
         >
       </el-row>
@@ -32,6 +32,8 @@
 </template>
 o
 <script>
+import { Command } from '../../../common/command'
+import { Core } from '../../../common/core'
 import rightArgs from './Args.vue'
 export default {
   name: 'rightWall',
@@ -42,7 +44,9 @@ export default {
     return {}
   },
   methods: {
-    addComponent() {
+    addComponent(vType) {
+      let core = new Core()
+      core.execute(new Command(core.cmds.EleAddCmd, {type: vType}))
       document.getElementById('door').blur()
       document.getElementById('window').blur()
       document.getElementById('door-hole').blur()
