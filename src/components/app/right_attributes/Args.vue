@@ -8,7 +8,7 @@
       <el-form-item v-if="arg.type === 'select'" :label="arg.name">
         <el-select v-model="arg.value.value" label="arg.value.label">
           <el-option
-            v-for="item in cur_args.type.options"
+            v-for="item in arg.options"
             :key="item.value"
             :label="item.label"
             :value="item.value"

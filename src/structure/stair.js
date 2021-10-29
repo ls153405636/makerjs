@@ -88,7 +88,7 @@ export class Stair extends Info{
     let args = {
       startBeamDepth: {name:'起步梁厚', value:this.startBeamDepth, type:'input'},
       exitBeamDepth: {name:'出口梁厚', value:this.exitBeamDepth, type:'input'},
-      stepNumRule: {name:'步数规则', value:f(this.stepNumRule, Stair.NUM_RULE_OPTIONS), type:'selecte', options:Stair.NUM_RULE_OPTIONS},
+      stepNumRule: {name:'步数规则', value:f(this.stepNumRule, Stair.NUM_RULE_OPTIONS), type:'select', options:Stair.NUM_RULE_OPTIONS},
       stepNum: {name:'步数', value:this.stepNum, type:'input'},
       treadParameters: {name:'踏板参数', type:'group'},
       riserParameters: {name:'立板参数', type:'group'},
@@ -98,15 +98,15 @@ export class Stair extends Info{
       bigColParameters: {name:'大柱参数', type:'group'},
     }
     let targs = this.treadParameters
-    args.treadParaParameters.value = {
+    args.treadParameters.value = {
       depth: {name:'厚度', value:targs.depth, type:'input'},
       doubleFaceMaterial: {name:'双面漆', value:targs.doubleFaceMaterial, type:'switch'},
-      nossingType: {name:'加边类型', value:f(targs.nossingType, Stair.NUM_RULE_OPTIONS), type:'selecte', options:Stair.NUM_RULE_OPTIONS},
+      nossingType: {name:'加边类型', value:f(targs.nossingType, Stair.NUM_RULE_OPTIONS), type:'select', options:Stair.NUM_RULE_OPTIONS},
       sideNossing: {name:'飘边厚度', value:targs.sideNossing, type:'input'},
       material: {name:'材质', value:'', type:'replace'}
     }
     if (targs.nossingType !== Types.NossingType.nno) {
-      args.treadParas.value.nossing = {
+      args.treadParameters.value.nossing = {
         name:'加边厚度',
         type:'input'
       }
@@ -122,7 +122,7 @@ export class Stair extends Info{
     }
     let gargs = this.girderParameters
     args.girderParameters.value = {
-      type:{name:'类型', value:f(gargs.type, Girder.GIRDER_TYPE_OPTIONS), type:'selecte', options:Girder.GIRDER_TYPE_OPTIONS},
+      type:{name:'类型', value:f(gargs.type, Girder.GIRDER_TYPE_OPTIONS), type:'select', options:Girder.GIRDER_TYPE_OPTIONS},
       height:{name:'高度', value:gargs.height, type:'input'},
       depth:{name:'厚度', value:gargs.depth, type:'input'},
       material:{name:'材质', value:'', type:'replace'}

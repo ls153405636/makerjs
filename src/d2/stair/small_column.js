@@ -2,6 +2,9 @@ import { Types } from '../../types/stair_v2'
 import { ChildWidget } from './child_widget'
 import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
+import { Core } from '../../common/core'
+import { Command } from '../../common/command'
+import { COMP_TYPES } from '../../common/common_config'
 
 export class SmallColumn extends ChildWidget {
   /**
@@ -9,7 +12,7 @@ export class SmallColumn extends ChildWidget {
    * @param {Types.SmallColumn} vPB
    */
   constructor(vPB, vParent) {
-    super()
+    super(vPB.uuid)
     this.parent = vParent
     this.sizeX = d2_tool.translateValue(vPB.size.x)
     this.sizeY = d2_tool.translateValue(vPB.size.x)
@@ -94,7 +97,6 @@ export class SmallColumn extends ChildWidget {
     this.sprite.children[1].visible = true
     this.sprite.children[2].visible = false
     this.isSelected = true
-    // D2Config.CUR_STAIR = this
   }
 
   // 鼠标进入小柱效果
@@ -118,8 +120,6 @@ export class SmallColumn extends ChildWidget {
     /**需实现的效果，点击任意一个小柱，均为选中整套楼梯的所有小柱
      * 可通过如下方式实现
      */
-    //D2Config.CUR_STAIR.setSmallColSelected()
-    //D2Config.CUR_STAIR.setSmallColHover()
     this.sprite.interactive = true
     let _this = this
     this.sprite
@@ -128,11 +128,8 @@ export class SmallColumn extends ChildWidget {
         if (this.isSelected) {
           return
         }
-        if (D2Config.CUR_STAIR) {
-          D2Config.CUR_STAIR.cancelSelected()
-        }
-        _this.parent.setSmallColSelected()
-        D2Config.CUR_STAIR = this.parent
+        let core = new Core()
+        core.execute(new Command(core.cmds.SelecteCmd, {uuid:this.uuid, type:COMP_TYPES.SMALL_COLUMN}))
       })
       .on('mouseout', () => {
         _this.parent.cancelSmallColHover()

@@ -9,7 +9,7 @@ export class Girder extends ChildWidget {
    * @param {Types.HanginGirdergBoard} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.inEdges = vPB.inRoute.edges
     this.outEdges = vPB.outRoute.edges
     this.draw()

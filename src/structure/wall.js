@@ -1,3 +1,4 @@
+import { COMP_TYPES } from "../common/common_config"
 import { Types } from "../types/stair_v2"
 import { Edge } from "../utils/edge"
 import { Default, StructConfig } from "./config"
@@ -28,7 +29,6 @@ export class Wall extends Info {
     this.height = this.parent.floorHeight
     this.components = []
     this.rebuild()
-    StructConfig.INFOS.set(this.uuid, this)
   }
 
   rebuild () {

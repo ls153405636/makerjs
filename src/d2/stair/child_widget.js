@@ -5,8 +5,8 @@ import { BaseWidget } from '../base_widget'
  * 而需要添加到父级
  */
 export class ChildWidget extends BaseWidget {
-  constructor() {
-    super()
+  constructor(uuid) {
+    super(uuid)
   }
 
   /**

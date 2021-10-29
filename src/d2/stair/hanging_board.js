@@ -9,7 +9,7 @@ export class HangingBoard extends ChildWidget {
    * @param {Types.HangingBoard} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.width = d2_tool.translateValue(vPB.width)
     this.height = d2_tool.translateValue(vPB.depth)
     this.draw()

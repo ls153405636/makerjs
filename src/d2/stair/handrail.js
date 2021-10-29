@@ -11,7 +11,7 @@ export class Handrail extends ChildWidget {
    * @param {Types.Handrail} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.width = vPB.width
     let route = vPB.route
     /**pb里只保存了中线路径，通过中线路径向两侧分别偏移宽度的1/2

@@ -11,7 +11,7 @@ export class Tread extends ChildWidget {
    * @param {Types.Tread} vPB
    */
   constructor(vPB, vParent) {
-    super()
+    super(vPB.uuid)
     this.edges = vPB.stepOutline.edges
     this.index = vPB.index
     this.parent = vParent
@@ -92,11 +92,6 @@ export class Tread extends ChildWidget {
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
     this.isSelected = true
-    D2Config.SELECTED = this
-    if (D2Config.IS_SINGLE_SELECTED) {
-      let core = new Core()
-      core.execute(new Command(core.cmds.SelectedCmd, {uuid:this.uuid, type:COMP_TYPES.TREAD}))
-    }
   }
 
   // 鼠标进入踏板效果
@@ -123,13 +118,11 @@ export class Tread extends ChildWidget {
         if (this.isSelected) {
           return
         }
-        if (D2Config.SELECTED) {
-          D2Config.SELECTED.cancelSelected()
-        }
+        let core = new Core()
         if (D2Config.IS_SINGLE_SELECTED) {
-          _this.setSelected()
+          core.execute(new Command(core.cmds.SelecteCmd, {uuid:this.uuid, type:COMP_TYPES.TREAD}))
         } else {
-          _this.parent.setSelected()
+          core.execute(new Command(core.cmds.SelecteCmd, {uuid:this.parent.uuid, type:COMP_TYPES.FLIGHT}))
         }
       })
       .on('mouseout', () => {

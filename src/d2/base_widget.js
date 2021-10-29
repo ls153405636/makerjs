@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
+import { D2Config } from './config'
 import { Movie } from './movie'
 export class BaseWidget {
   constructor(uuid) {
@@ -6,6 +7,7 @@ export class BaseWidget {
     this.uuid = uuid || uuidv4()
     this.sprite = null
     this.isSelected = false
+    D2Config.WIDGETS.set(this.uuid, this)
   }
 
   /**

@@ -99,16 +99,16 @@ export class Movie {
           return
         }
 
-        if (D2Config.SELECTED) {
-          D2Config.SELECTED.cancelSelected()
-        }
-        if (D2Config.CUR_STAIR) {
-          D2Config.CUR_STAIR.cancelSmallColSelected()
-        }
+        // if (D2Config.SELECTED) {
+        //   D2Config.SELECTED.cancelSelected()
+        // }
+        // if (D2Config.CUR_STAIR) {
+        //   D2Config.CUR_STAIR.cancelSmallColSelected()
+        // }
 
         //取消选中时，同样需执行取消选中的命令，将uuid的传入参数设为null
         let core = new Core()
-        core.execute(new Command(core.cmds.SelectedCmd,  {uuid: null}))
+        core.execute(new Command(core.cmds.SelecteCmd,  {uuid: null}))
         // console.error('-->', event.type)
         //this.service.send({type: events.MOUSE_DOWN, data: event})
       })
