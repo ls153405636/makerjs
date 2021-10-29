@@ -25,23 +25,23 @@ export class Structure {
     return Structure.instance
   }
 
-  initHole (vType) {
+  initHole(vType) {
     if (vType === 'rect') {
       this.hole = new RectHole(this)
     }
     return this
   }
 
-  initStair (vArgs) {
+  initStair(vArgs) {
     //if (vArgs.type === Types.StairType.sstright) {
-      this.stair = new Stair(this, vArgs)
+    this.stair = new Stair(this, vArgs)
     //}
     return this
   }
 
-  createProject () {
+  createProject() {
     this.initHole('rect')
-    this.initStair({type:Types.StairType.sstright})
+    this.initStair({ type: Types.StairType.sstright })
     if (!this.proj) {
       this.proj = new Types.Project()
     }

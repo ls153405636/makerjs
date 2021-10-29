@@ -6,10 +6,10 @@ import { StructConfig } from "./config"
 
 export class Info {
   /**
-   * 
-   * @param {Info} vParent 
+   *
+   * @param {Info} vParent
    */
-  constructor (vParent) {
+  constructor(vParent) {
     this.uuid = v4()
     this.parent = vParent
     this.isUpdate2D = true
@@ -17,15 +17,15 @@ export class Info {
     StructConfig.INFOS.set(this.uuid, this)
   }
 
-  addInfo () {}
+  addInfo() {}
 
-  delInfo () {}
+  delInfo() {}
 
-  rebuild () {}
+  rebuild() {}
 
-  update () {}
+  update() {}
 
-  getArgs () {
+  getArgs() {
     return {}
   }
 
@@ -75,10 +75,10 @@ export class Info {
       } else {
         widget.update(this.writePB())
       }
-    } 
+    }
   }
 
-  setSelected () {}
+  setSelected() {}
 
-  writePB () {}
+  writePB() {}
 }

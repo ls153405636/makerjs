@@ -12,7 +12,7 @@ export class StrucSelecteCmd extends Action {
     this.type = type
   }
 
-  execute () {
+  execute() {
     if (!this.uuid) {
       this.info = new Structure().stair || new Structure().hole
       this.type = new Structure().stair ? COMP_TYPES.STAIR : COMP_TYPES.HOLE

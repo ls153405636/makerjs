@@ -1,33 +1,33 @@
-import { Types } from "../types/stair_v2";
-import { ChildInfo } from "./child_info";
-import tool from "./tool";
+import { Types } from '../types/stair_v2'
+import { ChildInfo } from './child_info'
+import tool from './tool'
 
 export class SmallColumn extends ChildInfo {
   static ARRANGR_RULE_OPTIONS = [
-    {value:Types.ArrangeRule.arrThree, label:'两跑三根'},
-    {value:Types.ArrangeRule.arrFour, label:'两跑四根'}
+    { value: Types.ArrangeRule.arrThree, label: '两跑三根' },
+    { value: Types.ArrangeRule.arrFour, label: '两跑四根' },
   ]
   static SPEC_OPTIONS = [
-    {value:'48*48*850', label:'48*48*850'},
-    {value:'48*48*950', label:'48*48*950'},
-    {value:'48*48*1050', label:'48*48*1050'},
-    {value:'48*48*1150', label:'48*48*1150'},
-    {value:'58*58*850', label:'58*58*850'},
-    {value:'58*58*950', label:'58*58*950'},
-    {value:'58*58*1050', label:'58*58*1050'},
-    {value:'58*58*1150', label:'58*58*1150'},
-    {value:'68*68*850', label:'68*68*850'},
-    {value:'68*68*950', label:'68*68*950'},
-    {value:'68*68*1050', label:'68*68*1050'},
-    {value:'68*68*1150', label:'68*68*1150'},
+    { value: '48*48*850', label: '48*48*850' },
+    { value: '48*48*950', label: '48*48*950' },
+    { value: '48*48*1050', label: '48*48*1050' },
+    { value: '48*48*1150', label: '48*48*1150' },
+    { value: '58*58*850', label: '58*58*850' },
+    { value: '58*58*950', label: '58*58*950' },
+    { value: '58*58*1050', label: '58*58*1050' },
+    { value: '58*58*1150', label: '58*58*1150' },
+    { value: '68*68*850', label: '68*68*850' },
+    { value: '68*68*950', label: '68*68*950' },
+    { value: '68*68*1050', label: '68*68*1050' },
+    { value: '68*68*1150', label: '68*68*1150' },
   ]
-  constructor (vParent, vPosition, vSize) {
+  constructor(vParent, vPosition, vSize) {
     super(vParent)
     this.position = vPosition
     this.size = vSize
   }
 
-  getArgs () {
+  getArgs() {
     let sargs = this.parent.smallColParameters
     let specOptions = []
     let height = 0
@@ -41,7 +41,7 @@ export class SmallColumn extends ChildInfo {
             height = size.z
             specOptions = [item]
           }
-        } else if(!height) {
+        } else if (!height) {
           height = size.z
           specOptions = [item]
         }
@@ -56,11 +56,11 @@ export class SmallColumn extends ChildInfo {
     }
   }
 
-  writePB () {
+  writePB() {
     return new Types.SmallColumn({
       uuid: this.uuid,
       position: this.position,
-      size: this.size
+      size: this.size,
     })
   }
 }

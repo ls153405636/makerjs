@@ -115,7 +115,7 @@ export default {
       let holeInit = document.getElementById('component-hole-init')
       holeInit.style.display = 'none'
       let core = new Core()
-      core.execute(new Command(core.cmds.HoleInitCmd, {type: 'rect'}))
+      core.execute(new Command(core.cmds.HoleInitCmd, { type: 'rect' }))
     },
   },
 }
@@ -123,7 +123,7 @@ export default {
 
 <style>
 .component-hole-init {
-  display: block;
+  display: none;
   position: absolute;
   width: 100%;
   height: 100%;

@@ -13,28 +13,20 @@ export const allCmds = {
   },
 
   HoleInitCmd: {
-    struc: StrucHoleInitCmd
+    struc: StrucHoleInitCmd,
   },
 
   StairInitCmd: {
-    struc: StrucStairInitCmd
+    struc: StrucStairInitCmd,
   },
 
-  ProjImportCmd: {
+  ProjImportCmd: {},
 
-  },
+  EleAddCmd: {},
 
-  EleAddCmd: {
+  EleDelCmd: {},
 
-  },
-
-  EleDelCmd: {
-
-  },
-
-  EleUpdateCmd: {
-
-  },
+  EleUpdateCmd: {},
 
   SelecteCmd: {
     struc: StrucSelecteCmd,

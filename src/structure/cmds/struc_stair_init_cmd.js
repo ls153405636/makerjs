@@ -6,12 +6,12 @@ import { Structure } from "../structure";
 
 
 export class StrucStairInitCmd extends Action {
-  constructor (args) {
+  constructor(args) {
     super()
     this.args = args
   }
 
-  execute () {
+  execute() {
     new Structure().initStair(this.args)
     StructConfig.SELECTED = new Structure().stair
     store.commit('right_attribute/setCurType', COMP_TYPES.STAIR)

@@ -1,7 +1,6 @@
 // import Vue from 'vue'
 // import Vuex from 'vuex'
-import {createStore} from 'vuex'
-
+import { createStore } from 'vuex'
 
 import right_attribute from './right_attribute'
 
@@ -9,6 +8,6 @@ import right_attribute from './right_attribute'
 
 export default createStore({
   modules: {
-    right_attribute
-  }
+    right_attribute,
+  },
 })

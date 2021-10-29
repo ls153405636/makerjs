@@ -75,8 +75,8 @@
 
 <script>
 import { ref, defineComponent } from 'vue'
-import {Core} from '../../common/core'
-import {Command} from '../../common/command'
+import { Core } from '../../common/core'
+import { Command } from '../../common/command'
 
 export default defineComponent({
   name: 'componentStairInit',

@@ -32,7 +32,6 @@ export class Wall extends BaseWidget {
     this.createComponents(vPB.components)
     this.draw()
     this.addEvent()
-    this.rightMenu = document.getElementById('component-right')
   }
 
   // 求旋转
