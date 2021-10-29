@@ -32,10 +32,10 @@ export class Structure {
     return this
   }
 
-  initStair(vArgs) {
-    //if (vArgs.type === Types.StairType.sstright) {
-    this.stair = new Stair(this, vArgs)
-    //}
+  initStair({ type = Types.StairType.sstright, againstWall }) {
+    if (type === Types.StairType.sstright) {
+      this.stair = new Stair(this, againstWall)
+    }
     return this
   }
 

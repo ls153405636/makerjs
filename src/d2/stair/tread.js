@@ -120,9 +120,19 @@ export class Tread extends ChildWidget {
         }
         let core = new Core()
         if (D2Config.IS_SINGLE_SELECTED) {
-          core.execute(new Command(core.cmds.SelecteCmd, {uuid:this.uuid, type:COMP_TYPES.TREAD}))
+          core.execute(
+            new Command(core.cmds.SelecteCmd, {
+              uuid: this.uuid,
+              type: COMP_TYPES.TREAD,
+            })
+          )
         } else {
-          core.execute(new Command(core.cmds.SelecteCmd, {uuid:this.parent.uuid, type:COMP_TYPES.FLIGHT}))
+          core.execute(
+            new Command(core.cmds.SelecteCmd, {
+              uuid: this.parent.uuid,
+              type: COMP_TYPES.FLIGHT,
+            })
+          )
         }
       })
       .on('mouseout', () => {

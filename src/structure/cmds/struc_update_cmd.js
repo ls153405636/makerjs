@@ -5,8 +5,8 @@ import { StructConfig } from '../config'
 
 export class StrucUpdateCmd extends Command {
   /**
-   * 
-   * @param {Map} vArgs 
+   *
+   * @param {Map} vArgs
    */
   constructor(vArgs) {
     super()
@@ -19,7 +19,11 @@ export class StrucUpdateCmd extends Command {
 
   execute() {
     this.info.update(this.newArgs)
-    if (StructConfig.SELECTED && StructConfig.SELECTED.uuid === this.info.uuid) {
+    if (
+      StructConfig.SELECTED &&
+      StructConfig.SELECTED.uuid === this.info.uuid
+    ) {
+      console.log(1)
     }
   }
 
@@ -27,10 +31,19 @@ export class StrucUpdateCmd extends Command {
 
   redo() {}
 
-  setSelecte () {
-    if (StructConfig.SELECTED && this.info && StructConfig.SELECTED.uuid === this.info.uuid) {
+  setSelecte() {
+    if (
+      StructConfig.SELECTED &&
+      this.info &&
+      StructConfig.SELECTED.uuid === this.info.uuid
+    ) {
       let core = new Core()
-      core.execute(new Command(core.cmds.SelecteCmd, {uuid:this.info.uuid, type:CUR_DATA.SELECTED_TYPE}))
+      core.execute(
+        new Command(core.cmds.SelecteCmd, {
+          uuid: this.info.uuid,
+          type: CUR_DATA.SELECTED_TYPE,
+        })
+      )
     }
   }
 }

@@ -129,7 +129,12 @@ export class SmallColumn extends ChildWidget {
           return
         }
         let core = new Core()
-        core.execute(new Command(core.cmds.SelecteCmd, {uuid:this.uuid, type:COMP_TYPES.SMALL_COLUMN}))
+        core.execute(
+          new Command(core.cmds.SelecteCmd, {
+            uuid: this.uuid,
+            type: COMP_TYPES.SMALL_COLUMN,
+          })
+        )
       })
       .on('mouseout', () => {
         _this.parent.cancelSmallColHover()

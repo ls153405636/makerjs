@@ -6,17 +6,27 @@
           <span>墙体参数</span>
         </div>
       </template>
-      <right-args></right-args>
       <span class="add-parts">添加结构部件</span>
       <el-row>
-        <el-button @click="addComponent(1)" size="medium">门</el-button>
-        <el-button @click="addComponent(2)" size="medium">窗</el-button>
-        <el-button @click="addComponent(3)" size="medium">门洞</el-button>
-        <el-button @click="addComponent(4)" size="medium" style="margin-left: 0"
+        <el-button id="door" @click="addComponent(1)" size="medium">门</el-button>
+        <el-button id="window" @click="addComponent(2)" size="medium"
+          >窗</el-button
+        >
+        <el-button id="door-hole" @click="addComponent(3)" size="medium"
+          >门洞</el-button
+        >
+        <el-button
+          id="beam"
+          @click="addComponent(4)"
+          size="medium"
+          style="margin-left: 0"
           >梁</el-button
         >
-        <el-button @click="addComponent(5)" size="medium">柱子</el-button>
+        <el-button id="cloumn" @click="addComponent(5)" size="medium"
+          >柱子</el-button
+        >
       </el-row>
+      <right-args></right-args>
     </el-card>
   </div>
 </template>
@@ -37,6 +47,11 @@ export default {
     addComponent(vType) {
       let core = new Core()
       core.execute(new Command(core.cmds.EleAddCmd, {type: vType}))
+      document.getElementById('door').blur()
+      document.getElementById('window').blur()
+      document.getElementById('door-hole').blur()
+      document.getElementById('beam').blur()
+      document.getElementById('cloumn').blur()
     },
   },
   props: {
@@ -54,10 +69,11 @@ export default {
   align-content: flex-start;
   flex-wrap: wrap;
   width: 100%;
+  margin-bottom: 20px;
   /* background-color: aqua; */
 }
 .el-row .el-button--default {
   width: 88px;
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

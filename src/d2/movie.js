@@ -108,7 +108,7 @@ export class Movie {
 
         //取消选中时，同样需执行取消选中的命令，将uuid的传入参数设为null
         let core = new Core()
-        core.execute(new Command(core.cmds.SelecteCmd,  {uuid: null}))
+        core.execute(new Command(core.cmds.SelecteCmd, { uuid: null }))
         // console.error('-->', event.type)
         //this.service.send({type: events.MOUSE_DOWN, data: event})
       })

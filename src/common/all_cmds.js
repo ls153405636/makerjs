@@ -33,6 +33,6 @@ export const allCmds = {
 
   SelecteCmd: {
     struc: StrucSelecteCmd,
-    d2: D2SelectCmd
+    d2: D2SelectCmd,
   },
 }

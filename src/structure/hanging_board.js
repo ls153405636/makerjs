@@ -1,6 +1,6 @@
-import { Types } from "../types/stair_v2";
-import { ChildInfo } from "./child_info";
-import { Default, StructConfig } from "./config";
+import { Types } from '../types/stair_v2'
+import { ChildInfo } from './child_info'
+import { Default, StructConfig } from './config'
 
 export class HangingBoard extends ChildInfo {
   constructor(vParent) {

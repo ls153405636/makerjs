@@ -1,12 +1,11 @@
-import { Action } from "../../common/action";
-import { COMP_TYPES, CUR_DATA } from "../../common/common_config";
-import store from "../../store";
-import { StructConfig } from "../config";
-import { Structure } from "../structure";
-
+import { Action } from '../../common/action'
+import { COMP_TYPES, CUR_DATA } from '../../common/common_config'
+import store from '../../store'
+import { StructConfig } from '../config'
+import { Structure } from '../structure'
 
 export class StrucSelecteCmd extends Action {
-  constructor ({uuid, type}) {
+  constructor({ uuid, type }) {
     super()
     this.uuid = uuid
     this.type = type

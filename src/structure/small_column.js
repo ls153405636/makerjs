@@ -49,10 +49,20 @@ export class SmallColumn extends ChildInfo {
     }
     let f = tool.getItemFromOptions
     return {
-      arrangeRule:{name:'排列规则', value:f(sargs.arrangeRule, SmallColumn.ARRANGR_RULE_OPTIONS), type:'select', options:SmallColumn.ARRANGR_RULE_OPTIONS},
-      specification:{name:'规格', value:f(sargs.specification, specOptions), type:'select', options:specOptions},
-      model:{name:'型号', value:'', type:'replace'},
-      material:{name:'材质', value:'', type:'replace'}
+      arrangeRule: {
+        name: '排列规则',
+        value: f(sargs.arrangeRule, SmallColumn.ARRANGR_RULE_OPTIONS),
+        type: 'select',
+        options: SmallColumn.ARRANGR_RULE_OPTIONS,
+      },
+      specification: {
+        name: '规格',
+        value: f(sargs.specification, specOptions),
+        type: 'select',
+        options: specOptions,
+      },
+      model: { name: '型号', value: '', type: 'replace' },
+      material: { name: '材质', value: '', type: 'replace' },
     }
   }
 

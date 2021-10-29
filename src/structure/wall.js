@@ -1,9 +1,8 @@
-import { Types } from "../types/stair_v2"
-import { Edge } from "../utils/edge"
-import { Default } from "./config"
-import { Info } from "./info"
-import tool from "./tool"
-
+import { Types } from '../types/stair_v2'
+import { Edge } from '../utils/edge'
+import { Default } from './config'
+import { Info } from './info'
+import tool from './tool'
 
 export class Wall extends Info {
   static TYPE_OPTIONS = [

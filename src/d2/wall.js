@@ -56,7 +56,7 @@ export class Wall extends BaseWidget {
 
   destroy () {
     this.components.forEach(c => {
-      c.destory()
+      c.destroy()
     })
     super.destroy()
   }

@@ -1,9 +1,8 @@
-import { Action } from "../../common/action";
-import { COMP_TYPES } from "../../common/common_config";
-import store from "../../store";
-import { StructConfig } from "../config";
-import { Structure } from "../structure";
-
+import { Action } from '../../common/action'
+import { COMP_TYPES } from '../../common/common_config'
+import store from '../../store'
+import { StructConfig } from '../config'
+import { Structure } from '../structure'
 
 export class StrucStairInitCmd extends Action {
   constructor(args) {
