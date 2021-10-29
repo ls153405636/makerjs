@@ -119,7 +119,7 @@ export class Stair extends Info {
       nossingType: {
         name: '加边类型',
         value: f(targs.nossingType, Stair.NUM_RULE_OPTIONS),
-        type: 'selecte',
+        type: 'select',
         options: Stair.NUM_RULE_OPTIONS,
       },
       sideNossing: {
@@ -161,7 +161,7 @@ export class Stair extends Info {
       type: {
         name: '类型',
         value: f(gargs.type, Girder.GIRDER_TYPE_OPTIONS),
-        type: 'selecte',
+        type: 'select',
         options: Girder.GIRDER_TYPE_OPTIONS,
       },
       height: { name: '高度', value: gargs.height, type: 'input' },
