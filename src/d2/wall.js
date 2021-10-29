@@ -20,18 +20,7 @@ export class Wall extends BaseWidget {
    */
   constructor(vPB) {
     super(vPB.uuid)
-    this.p1 = d2_tool.translateCoord(vPB.edge.p1)
-    this.p2 = d2_tool.translateCoord(vPB.edge.p2)
-    this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
-    this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
-    this.depth = d2_tool.translateValue(vPB.depth)
-    this.normal = vPB.normal
-    this.type = vPB.type
-    this.alpha = 0
-    this.components = []
-    this.createComponents(vPB.components)
-    this.draw()
-    this.addEvent()
+    this.init(vPB)
   }
 
   // 求旋转
@@ -63,6 +52,28 @@ export class Wall extends BaseWidget {
   get width() {
     const { p1, p2 } = this
     return Math.hypot(p1.x - p2.x, p1.y - p2.y)
+  }
+
+  destroy () {
+    this.components.forEach(c => {
+      c.destory()
+    })
+    super.destroy()
+  }
+
+  init (vPB) {
+    this.p1 = d2_tool.translateCoord(vPB.edge.p1)
+    this.p2 = d2_tool.translateCoord(vPB.edge.p2)
+    this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
+    this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
+    this.depth = d2_tool.translateValue(vPB.depth)
+    this.normal = vPB.normal
+    this.type = vPB.type
+    this.alpha = 0
+    this.components = []
+    this.createComponents(vPB.components)
+    this.draw()
+    this.addEvent()
   }
 
   // 墙体绘制

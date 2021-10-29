@@ -26,7 +26,6 @@ export class Wall extends Info {
     this.endExtend = 0
     this.depth = Default.WALL_DEPTH
     this.height = this.parent.floorHeight
-    this.components = []
     this.rebuild()
   }
 
@@ -47,7 +46,10 @@ export class Wall extends Info {
 
   update(vArgs) {}
 
-  addComponent(vInfo) {}
+  addComponent(vInfo) {
+    this.components.set(vInfo.uuid, vInfo)
+    this.updateCanvas()
+  }
 
   delComponent(vInfo) {}
 

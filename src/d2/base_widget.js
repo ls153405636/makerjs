@@ -13,19 +13,24 @@ export class BaseWidget {
   /**
    * 销毁函数
    */
-  destory () {
+  destroy () {
     /**由外部和父级调用，销毁此精灵，阅读学习PIXI里的destory方法 */
     /**父类里可写一部分通用方法，不同的子类如果有需要，也要写具体实现 */
+    /**注意以下两点，精灵图destory的时候，其child的状态，以及destory之后，其绑定事件的处理*/
+    this.sprite.destroy()
+    D2Config.WIDGETS.delete(this.uuid)
   }
 
-  /**清空函数 */
-  clear () {
-    /**类内部调用，阅读学习PIXI里的clear方法 */
-  }
+  init () {}
 
 
-  reDraw () {
+  update (vPB) {
     /**清空后重新绘制 */
+    console.log('重绘pb：', vPB)
+    this.destroy()
+    this.init(vPB)
+    D2Config.WIDGETS.set(this.uuid, this)
+    this.addToStage()
   }
 
   setuuid(uuid) {

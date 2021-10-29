@@ -123,7 +123,7 @@ export default {
 
 <style>
 .component-hole-init {
-  display: none;
+  display: block;
   position: absolute;
   width: 100%;
   height: 100%;
