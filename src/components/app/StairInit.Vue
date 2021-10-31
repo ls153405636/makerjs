@@ -39,7 +39,7 @@ export default defineComponent({
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'none'
       let core = new Core()
-      core.execute(new Command(core.cmds.StairInitCmd, { type, againstWall }))
+      core.execute(new Command(core.cmds.StairInitCmd, {}))
     },
   },
   computed: {

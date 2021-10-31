@@ -4,7 +4,7 @@ import { ChildInfo } from "./child_info";
 export class Girder extends ChildInfo {
   static GIRDER_TYPE_OPTIONS = [
     {value:Types.GirderType.gsaw, label:'锯齿型'},
-    {value:Types.GirderType}
+    {value:Types.GirderType.gslab, label:'平板型'}
   ]
   constructor (vParent, vInEdges, vOutEdges) {
     super(vParent)

@@ -4,8 +4,8 @@ import tool from './tool'
 
 export class SmallColumn extends ChildInfo {
   static ARRANGR_RULE_OPTIONS = [
-    { value: Types.ArrangeRule.arrThree, label: '两跑三根' },
-    { value: Types.ArrangeRule.arrFour, label: '两跑四根' },
+    { value: Types.ArrangeRule.arrThree, label: '两级三根' },
+    { value: Types.ArrangeRule.arrFour, label: '两级四根' },
   ]
   static SPEC_OPTIONS = [
     { value: '48*48*850', label: '48*48*850' },

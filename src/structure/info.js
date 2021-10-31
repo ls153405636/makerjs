@@ -23,15 +23,35 @@ export class Info {
 
   rebuild() {}
 
+  /**
+   * 
+   * @param {Map} vArgItems 
+   */
   update(vArgItems) {
-    for (const [k, v] of vArgItems) {
-      if (!(v instanceof Map)) {
-        if (this[k] != undefined) {
-          this[k] = v
+    for (const [key1, value1] of vArgItems) {
+      if (this[key1] == undefined) {
+        continue
+      }
+      if (value1 instanceof Map) {
+        let curInfo = this[key1]
+        for (const [key2, value2] of value1) {
+          if (curInfo[key2] != undefined) {
+            this.updateItem(value2, key1, key2)
+          }
         }
-      } 
+      } else {
+        this.updateItem(value1, key1)
+      }
     }
     this.rebuild()
+  }
+
+  updateItem (vValue, vKey, vSecondKey) {
+    if (vSecondKey) {
+      this[vKey][vSecondKey] = vValue
+    } else {
+      this[vKey] = vValue
+    }
   }
 
   getArgs() {
@@ -64,14 +84,15 @@ export class Info {
         argItems.set(key, itemValue)
       }
     }
+    return argItems
   }
 
-  getItemValue(vItem) {
+  getItemValue(vObjItem) {
     let value = null
-    if (vItem.type === 'select') {
-      value = vItem.value.value
+    if (vObjItem.type === 'select') {
+      value = vObjItem.value.value
     } else {
-      value = vItem.value
+      value = vObjItem.value
     }
     return value
   }

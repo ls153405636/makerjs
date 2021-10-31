@@ -43,7 +43,7 @@ export class Flight extends ChildInfo {
       pb.treads.push(tread)
     }
     pb.treads.reverse()
-    if (this.stepNumRule === Types.StepNumRule.snr_n) {
+    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
       pb.treads.push(
         new Types.Tread({
           index: this.stepNum,

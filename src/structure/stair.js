@@ -31,6 +31,7 @@ export class Stair extends Info {
     this.stepLength = Default.STEP_LENGTH
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
+      nossingType: Default.TREAD_NOSSING_TYPE,
       nossing: Default.TREAD_NOSSING,
       sideNossing: Default.TREAD_SIDE_NOSSING,
     })
@@ -78,7 +79,20 @@ export class Stair extends Info {
     this.updateCanvas()
   }
 
-  update() {}
+  updateItem (vValue, vKey1, vKey2) {
+    if (vKey2 && ['model', 'material'].includes(vKey2)) {
+    } else {
+      super.updateItem(vValue, vKey1, vKey2)
+    }
+  }
+
+  getItemValue (vItem) {
+    if (vItem.type === 'replace') {
+      return ''
+    } else {
+      return super.getItemValue(vItem)
+    }
+  }
 
   getArgs() {
     let f = tool.getItemFromOptions
@@ -117,9 +131,9 @@ export class Stair extends Info {
       },
       nossingType: {
         name: '加边类型',
-        value: f(targs.nossingType, Stair.NUM_RULE_OPTIONS),
+        value: f(targs.nossingType, Stair.NOSS_TYPE_OPTIONS),
         type: 'select',
-        options: Stair.NUM_RULE_OPTIONS,
+        options: Stair.NOSS_TYPE_OPTIONS,
       },
       sideNossing: {
         name: '飘边厚度',
@@ -131,6 +145,7 @@ export class Stair extends Info {
     if (targs.nossingType !== Types.NossingType.nno) {
       args.treadParameters.value.nossing = {
         name: '加边厚度',
+        value: targs.nossing,
         type: 'input',
       }
     }
@@ -170,11 +185,11 @@ export class Stair extends Info {
     if (this.handrails.length) {
       args.handrailParameters.value = this.handrails[0].getArgs()
     }
-    if (this.smallColParameters.length) {
-      args.smallColParameters.value = this.smallColParameters[0].getArgs()
+    if (this.smallColumns.length) {
+      args.smallColParameters.value = this.smallColumns[0].getArgs()
     }
-    if (this.bigColParameters.length) {
-      args.bigColParameters.value = this.bigColParameters[0].getArgs()
+    if (this.bigColumns.length) {
+      args.bigColParameters.value = this.bigColumns[0].getArgs()
     }
     return args
   }
@@ -255,9 +270,9 @@ export class Stair extends Info {
       position2.z = position1.z = this.stepHeight * (i + 1)
       let length1 = 0
       let length2 = 0
+      let border = this.stepWidth * (step_num - i) + this.hangYOffset
       if (args.arrangeRule === Types.ArrangeRule.arrThree) {
         let index = i % 2
-        let border = this.stepWidth * (step_num - i) + this.hangYOffset
         if (index === 0) {
           position1.y = border - Math.max(this.stepWidth / 6, size.y)
           position2.y =
@@ -265,14 +280,14 @@ export class Stair extends Info {
           length1 = hArgs.height + (this.stepWidth / 6) * Math.tan(angle)
           length2 = hArgs.height + (this.stepWidth / 6) * 5 * Math.tan(angle)
           if (gArgs.type === Types.GirderType.gslab) {
-            length2 = length1 = gArgs.height
+            length2 = length1 = hArgs.height
             /**平板型大梁形状不确定，待确定后，需重新计算小柱的z坐标，即3d视图中的y坐标 */
           }
         } else {
           position1.y = border - this.stepWidth / 2
           length1 = hArgs.height + (this.stepWidth / 2) * Math.tan(angle)
           if (gArgs.type === Types.GirderType.gslab) {
-            length1 = gArgs.height
+            length1 = hArgs.height
           }
         }
       } else if (args.arrangeRule === Types.ArrangeRule.arrFour) {
@@ -281,7 +296,7 @@ export class Stair extends Info {
         length1 = hArgs.height + (this.stepWidth / 4) * Math.tan(angle)
         length2 = hArgs.height + ((this.stepWidth * 3) / 4) * Math.tan(angle)
         if (gArgs.type === Types.GirderType.gslab) {
-          length2 = length1 = gArgs.height
+          length2 = length1 = hArgs.height
         }
       }
       if (length1) {
@@ -312,9 +327,15 @@ export class Stair extends Info {
       x: this.sideOffset,
       y: this.depth + Default.BIG_COL_GAP + size.y / 2,
     })
+    if (args.posType === Types.BigColumnPosType.bcp_first) {
+      leftPosition.y = this.depth - this.stepWidth / 2
+    }
+    if (args.posType === Types.BigColumnPosType.bcp_second) {
+      leftPosition.y = this.depth - this.stepWidth * 3 / 2
+    }
     let rightPosition = new Types.Vector3({
       x: this.width - this.sideOffset,
-      y: this.depth + Default.BIG_COL_GAP + size.y / 2,
+      y: leftPosition.y,
     })
     this.bigColumns.push(
       new BigColumn(this, leftPosition, size),
@@ -364,13 +385,23 @@ export class Stair extends Info {
 
   createHandrails() {
     let args = this.handrailParameters
-    let route1 = new Types.Outline(),
-      route2 = new Types.Outline()
-    let leftPois = [],
-      rightPois = []
+    let bArgs = this.bigColParameters
+    let route1 = new Types.Outline()
+    let route2 = new Types.Outline()
+    let leftPois = []
+    let rightPois = []
+    let startY = this.depth + Default.BIG_COL_GAP
+    let bigColSize = tool.parseSpecification(bArgs.specification)
+    if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
+      startY = this.depth - this.stepWidth / 2 - bigColSize.y / 2
+    }
+    if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
+      startY = this.depth - this.stepWidth * 3 / 2 - bigColSize.y / 2
+    }
+    
     leftPois[0] = new Types.Vector3({
       x: this.sideOffset,
-      y: this.depth + Default.BIG_COL_GAP,
+      y: startY,
       z: args.height + this.stepHeight,
     })
     leftPois[1] = new Types.Vector3({
@@ -385,7 +416,7 @@ export class Stair extends Info {
     })
     rightPois[0] = new Types.Vector3({
       x: this.width - this.sideOffset,
-      y: this.depth + Default.BIG_COL_GAP,
+      y: startY,
       z: args.height + this.stepHeight,
     })
     rightPois[1] = new Types.Vector3({

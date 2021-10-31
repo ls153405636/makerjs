@@ -84,7 +84,6 @@ export class Wall extends BaseWidget {
     this.alpha = 0
     this.components = []
     this.createComponents(vPB.components)
-    console.log(this.p1, this.p2, this.outP1, this.outP2, this.depth, this.normal, this.type)
     this.draw()
     this.addEvent()
   }

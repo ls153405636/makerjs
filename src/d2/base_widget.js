@@ -25,10 +25,12 @@ export class BaseWidget {
 
   getWidgetType () {}
 
-
+  /**
+   * 页面参数发生改变后，结构计算模块会调用此函数
+   * 当前逻辑为销毁当前组件的精灵图，重新绘制
+   * @param {*} vPB 
+   */
   update (vPB) {
-    /**清空后重新绘制 */
-    console.log('重绘pb：', vPB)
     this.destroy()
     this.init(vPB)
     D2Config.WIDGETS.set(this.uuid, this)

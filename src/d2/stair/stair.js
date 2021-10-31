@@ -18,6 +18,10 @@ export class Stair extends BaseWidget {
    */
   constructor(vPB) {
     super(vPB.uuid)
+    this.init(vPB)
+  }
+
+  init (vPB) {
     D2Config.CUR_STAIR = this
     this.flights = []
     this.smallColumns = []
@@ -46,6 +50,28 @@ export class Stair extends BaseWidget {
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
+  }
+
+  destroy () {
+    for (const f of this.flights) {
+      f.destroy()
+    }
+    for (const hdl of this.handrails) {
+      hdl.destroy()
+    }
+    for (const col of this.smallColumns) {
+      col.destroy()
+    }
+    for (const col of this.bigColumns) {
+      col.destroy()
+    }
+    for (const gd of this.girders) {
+      gd.destroy()
+    }
+    for (const hb of this.girders) {
+      hb.destroy()
+    }
+    super.destroy()
   }
 
   draw() {

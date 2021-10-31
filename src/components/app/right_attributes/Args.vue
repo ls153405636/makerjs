@@ -32,7 +32,7 @@
             <el-form v-for="(item1, key) in arg.value" :key="key">
               <!-- 展开-输入 -->
               <el-form-item v-if="item1.type === 'input'" :label="item1.name">
-                <el-input v-model="item1.value"></el-input>
+                <el-input v-model="item1.value" @blur="updateArgs(item1.value, index, item1.type, key)"></el-input>
               </el-form-item>
 
               <!-- 展开-选择 -->
@@ -53,7 +53,7 @@
 
               <!-- 开关 -->
               <el-form-item v-if="item1.type === 'switch'" :label="item1.name">
-                <el-switch v-model="item1.value"></el-switch>
+                <el-switch v-model="item1.value" @change="updateArgs(item1.value, index, item1.type, key)"></el-switch>
               </el-form-item>
 
               <!-- 图片上传 -->
@@ -112,7 +112,8 @@ export default defineComponent({
       }
       let argItems = new Map()
       if (secondKey) {
-        let item = new Map([secondKey, value])
+        let item = new Map()
+        item.set(secondKey, value)
         argItems.set(key, item)
       } else {
         argItems.set(key, value)
