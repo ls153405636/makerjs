@@ -5,6 +5,12 @@
       <right-flight v-if="cur_type === cts.FLIGHT"></right-flight>
       <right-hole v-if="cur_type === cts.HOLE"></right-hole>
       <right-stair v-if="cur_type === cts.STAIR"></right-stair>
+      <right-handrail v-if="cur_type === cts.HANDRAIL"></right-handrail>
+      <right-girder v-if="cur_type === cts.GIRDER"></right-girder>
+      <right-big-column v-if="cur_type === cts.BIG_COLUMN"></right-big-column>
+      <right-small-column
+        v-if="cur_type === cts.SMALL_COLUMN"
+      ></right-small-column>
     </el-scrollbar>
   </div>
 </template>
@@ -16,15 +22,32 @@ import rightHole from './right_attributes/Hole.vue'
 import rightFlight from './right_attributes/Flight.vue'
 import rightStair from './right_attributes/Stair.vue'
 import rightWall from './right_attributes/Wall.vue'
+import rightHandrail from './right_attributes/Handrail.vue'
+import rightGirder from './right_attributes/Girder.vue'
+import rightBigColumn from './right_attributes/BigColumn.vue'
+import rightSmallColumn from './right_attributes/SmallColumn.vue'
 
 export default {
   name: 'componentRight',
-  components: { rightHole, rightFlight, rightStair, rightWall },
+  components: {
+    rightHole,
+    rightFlight,
+    rightStair,
+    rightWall,
+    rightHandrail,
+    rightGirder,
+    rightBigColumn,
+    rightSmallColumn,
+  },
   props: {
     rightFlight,
     rightHole,
     rightStair,
     rightWall,
+    rightHandrail,
+    rightGirder,
+    rightBigColumn,
+    rightSmallColumn,
   },
   data() {
     return {
