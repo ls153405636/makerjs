@@ -354,6 +354,7 @@ export class Stair extends Info {
   createGirders() {
     let args = this.girderParameters
     if (args.type === Types.GirderType.gsaw) {
+      this.girders = []
       return
       /**平面图不需要绘制锯齿梁，故先不做处理*/
     }
@@ -419,7 +420,7 @@ export class Stair extends Info {
     })
     leftPois[1] = new Types.Vector3({
       x: this.sideOffset,
-      y: this.depth,
+      y: startY - Default.BIG_COL_GAP,
       z: args.height + this.stepHeight,
     })
     leftPois[2] = new Types.Vector3({
@@ -434,7 +435,7 @@ export class Stair extends Info {
     })
     rightPois[1] = new Types.Vector3({
       x: this.width - this.sideOffset,
-      y: this.depth,
+      y: startY - Default.BIG_COL_GAP,
       z: args.height + this.stepHeight,
     })
     rightPois[2] = new Types.Vector3({

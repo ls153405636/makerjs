@@ -1,3 +1,4 @@
+import { D2 } from '..'
 import { Action } from '../../common/action'
 import { COMP_TYPES, CUR_DATA } from '../../common/common_config'
 import { D2Config } from '../config'
@@ -16,6 +17,7 @@ export class D2SelectCmd extends Action {
       } else {
         D2Config.SELECTED.cancelSelected()
       }
+      D2Config.SELECTED = null
     }
     if (this.widget) {
       if (this.type === COMP_TYPES.SMALL_COLUMN) {
