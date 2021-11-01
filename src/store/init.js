@@ -6,18 +6,18 @@ const state = {
     {
       name: '矩形洞口',
       value: 'rect',
-      imgPath: '../../public/images/home1.png',
+      imgPath: '../../images/home1.png',
     },
-    { name: 'L形洞口', value: 'L', imgPath: '../../public/images/home1.png' },
+    { name: 'L形洞口', value: 'L', imgPath: '../../images/home1.png' },
     {
       name: '梯形洞口',
       value: 'trape',
-      imgPath: '../../public/images/home1.png',
+      imgPath: '../../images/home1.png',
     },
     {
       name: '圆形洞口',
       value: 'circle',
-      imgPath: '../../public/images/home1.png',
+      imgPath: '../../images/home1.png',
     },
   ],
   stair_types: {

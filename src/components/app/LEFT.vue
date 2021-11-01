@@ -24,27 +24,27 @@ export default {
         {
           describe: '壹号别墅L形',
           id: 1,
-          picSrc: '../../../public/images/Rectangle93.png',
+          picSrc: '../../../images/Rectangle93.png',
         },
         {
           describe: '壹号别墅梯形',
           id: 2,
-          picSrc: '../../../public/images/Rectangle94.png',
+          picSrc: '../../../images/Rectangle94.png',
         },
         {
           describe: '壹号别墅圆形',
           id: 3,
-          picSrc: '../../../public/images/Rectangle95.png',
+          picSrc: '../../../images/Rectangle95.png',
         },
         {
           describe: '壹号别墅矩形形',
           id: 4,
-          picSrc: '../../../public/images/Rectangle93.png',
+          picSrc: '../../../images/Rectangle93.png',
         },
         {
           describe: '壹号别墅矩形形',
           id: 5,
-          picSrc: '../../../public/images/Rectangle93.png',
+          picSrc: '../../../images/Rectangle93.png',
         },
       ],
     }
