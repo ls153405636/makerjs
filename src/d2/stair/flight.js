@@ -32,6 +32,13 @@ export class Flight extends BaseWidget {
     }
   }
 
+  destroy () {
+    for (const t of this.treads) {
+      t.destroy()
+    }
+    super.destroy()
+  }
+
   /**
    * 获取当前对象精灵图
    */

@@ -7,6 +7,7 @@ export const COMP_TYPES = {
   BIG_COLUMN: 6,
   GIRDER: 7,
   TREAD: 8,
+  HANDRAIL: 9,
 }
 
 export const CUR_DATA = {

@@ -8,7 +8,6 @@
       </template>
       <right-args></right-args>
     </el-card>
-    <right-args></right-args>
   </div>
 </template>
 

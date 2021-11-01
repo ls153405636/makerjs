@@ -19,6 +19,10 @@ export class BigColumn extends ChildInfo {
   ]
   constructor(vParent, vPosition, vSize) {
     super(vParent)
+    this.rebuild(vPosition, vSize)
+  }
+
+  rebuild (vPosition, vSize) {
     this.position = vPosition
     this.size = vSize
   }
@@ -42,6 +46,10 @@ export class BigColumn extends ChildInfo {
       model: { name: '型号', value: '', type: 'replace' },
       material: { name: '材质', value: '', type: 'replace' },
     }
+  }
+
+  update (vArgItems) {
+    super.update(vArgItems, 'bigColParameters')
   }
 
   writePB() {

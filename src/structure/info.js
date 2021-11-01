@@ -6,7 +6,7 @@ import { StructConfig } from './config'
 
 export class Info {
   /**
-   *
+   * 结构计算模块的基类
    * @param {Info} vParent
    */
   constructor(vParent) {
@@ -21,10 +21,13 @@ export class Info {
 
   delInfo() {}
 
+  /**
+   * 重新计算当前组件
+   */
   rebuild() {}
 
   /**
-   * 
+   * 由命令调用，当页面参数发生改变时，由此函数更新当前组件
    * @param {Map} vArgItems 
    */
   update(vArgItems) {
@@ -46,6 +49,12 @@ export class Info {
     this.rebuild()
   }
 
+  /**
+   * 逐条更新参数
+   * @param {*} vValue 
+   * @param {String} vKey 
+   * @param {String} vSecondKey 
+   */
   updateItem (vValue, vKey, vSecondKey) {
     if (vSecondKey) {
       this[vKey][vSecondKey] = vValue
@@ -54,12 +63,17 @@ export class Info {
     }
   }
 
+  /**
+   * 返回页面参数，全部由子类重写
+   * @returns
+   */
   getArgs() {
     return {}
   }
 
   /**
-   * 提供给更新命令调用
+   * 获取命令里保存的argItems，以供撤销恢复使用
+   * @returns {Map}
    */
   getArgItems(vArgItems) {
     let args = this.getArgs()
@@ -87,6 +101,11 @@ export class Info {
     return argItems
   }
 
+  /**
+   * 根据页面参数中的一条信息，提取其中的value值
+   * @param {*} vObjItem 
+   * @returns 
+   */
   getItemValue(vObjItem) {
     let value = null
     if (vObjItem.type === 'select') {
@@ -97,6 +116,9 @@ export class Info {
     return value
   }
 
+  /**
+   * 本组件重新计算完成后，更新23d画布
+   */
   updateCanvas() {
     if (CUR_DATA.MODE === '2D' && this.isUpdate2D) {
       let widget = D2Config.WIDGETS.get(this.uuid)

@@ -3,16 +3,12 @@ import { Types } from '../types/stair_v2'
 import { BigColumn } from './big_column'
 import { Default } from './config'
 import { Girder } from './girder'
-import { Handrail } from './handrails'
+import { Handrail } from './handrail'
 import { Info } from './info'
 import { SmallColumn } from './small_column'
 import tool from './tool'
 
 export class Stair extends Info {
-  static NUM_RULE_OPTIONS = [
-    { value: Types.StepNumRule.snr_n, label: 'n步' },
-    { value: Types.StepNumRule.snr_n_add_1, label: 'n+1步' },
-  ]
   static NOSS_TYPE_OPTIONS = [
     { value: Types.NossingType.nno, label: '无加边' },
     { value: Types.NossingType.ncommon, label: '普通加边' },
@@ -29,6 +25,10 @@ export class Stair extends Info {
     this.stepNumRule = Default.STEP_NUM_RULE
     this.stepWidth = Default.STEP_WIDTH
     this.stepLength = Default.STEP_LENGTH
+    this.flights = []
+    this.bigColumns = []
+    this.handrails = []
+    this.girders = []
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
       nossingType: Default.TREAD_NOSSING_TYPE,
@@ -61,11 +61,7 @@ export class Stair extends Info {
   }
 
   rebuild() {
-    this.flights = []
     this.smallColumns = []
-    this.bigColumns = []
-    this.handrails = []
-    this.girders = []
     this.hangYOffset = this.hangingBoard?.depth || 0
     this.computeSize()
     this.stepHeight = Math.ceil(this.height / this.stepNum)
@@ -109,9 +105,9 @@ export class Stair extends Info {
       },
       stepNumRule: {
         name: '步数规则',
-        value: f(this.stepNumRule, Stair.NUM_RULE_OPTIONS),
+        value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
         type: 'select',
-        options: Stair.NUM_RULE_OPTIONS,
+        options: Flight.NUM_RULE_OPTIONS,
       },
       stepNum: { name: '步数', value: this.stepNum, type: 'input' },
       treadParameters: { name: '踏板参数', type: 'group' },
@@ -195,9 +191,9 @@ export class Stair extends Info {
   }
 
   computeSize() {
-    this.width = Default.STEP_LENGTH
+    this.width = this.stepLength
     this.depth =
-      Default.STEP_WIDTH * (this.stepNum - this.stepNumRule + 1) +
+      this.stepWidth * (this.stepNum - this.stepNumRule + 1) +
       this.hangYOffset
     this.height = this.parent.hole.floorHeight
   }
@@ -252,7 +248,13 @@ export class Stair extends Info {
   }
 
   createFlights() {
-    this.flights.push(new Flight(this))
+    if (this.flights.length) {
+      for (const f of this.flights) {
+        f.rebuild()
+      }
+    } else {
+      this.flights.push(new Flight(this))
+    }
   }
 
   createSmallColumns() {
@@ -337,10 +339,15 @@ export class Stair extends Info {
       x: this.width - this.sideOffset,
       y: leftPosition.y,
     })
-    this.bigColumns.push(
-      new BigColumn(this, leftPosition, size),
-      new BigColumn(this, rightPosition, size)
-    )
+    if (this.bigColumns.length === 2) {
+      this.bigColumns[0].rebuild(leftPosition, size)
+      this.bigColumns[1].rebuild(rightPosition, size)
+    } else {
+      this.bigColumns.push(
+        new BigColumn(this, leftPosition, size),
+        new BigColumn(this, rightPosition, size)
+      )
+    }
   }
 
   createGirders() {
@@ -379,8 +386,13 @@ export class Stair extends Info {
         p2: new Types.Vector3({ x: this.stepLength, y: this.hangYOffset }),
       }),
     ]
-    this.girders.push(new Girder(this, leftInEdges, leftOutEdges))
-    this.girders.push(new Girder(this, rightInEdges, rightOutEdges))
+    if (this.girders.length === 2) {
+      this.girders[0].rebuild(leftInEdges, leftOutEdges)
+      this.girders[1].rebuild(rightInEdges, rightOutEdges)
+    } else {
+      this.girders.push(new Girder(this, leftInEdges, leftOutEdges))
+      this.girders.push(new Girder(this, rightInEdges, rightOutEdges))
+    }
   }
 
   createHandrails() {
@@ -448,8 +460,13 @@ export class Stair extends Info {
     }
     let size = tool.parseSpecification(args.source.specification, 'yxz')
 
-    this.handrails.push(new Handrail(this, route1, size.x))
-    this.handrails.push(new Handrail(this, route2, size.x))
+    if (this.handrails.length === 2) {
+      this.handrails[0].rebuild(route1, size.x)
+      this.handrails[1].rebuild(route2, size.x)
+    } else {
+      this.handrails.push(new Handrail(this, route1, size.x))
+      this.handrails.push(new Handrail(this, route2, size.x))
+    }
   }
 
   writePB() {
