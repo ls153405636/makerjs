@@ -5,6 +5,7 @@ import { ChildWidget } from './child_widget'
 import { D2Config } from '../config'
 import { Core } from '../../common/core'
 import { COMP_TYPES } from '../../common/common_config'
+import { Command } from '../../common/command'
 
 /**需继承自childWidget */
 export class Handrail extends ChildWidget {

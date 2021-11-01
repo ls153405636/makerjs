@@ -1,3 +1,4 @@
+import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
