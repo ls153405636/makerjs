@@ -5,7 +5,7 @@
       <div class="type-select">
         <div class="type">
           <div class="stair-1">
-            <img src="../../../public/images/stairs 1.png" alt="" />
+            <img src="../../assets/stairs1.png" alt="" />
           </div>
           <p class="type-text">{{ stair_types.name }}</p>
           <el-select
@@ -24,7 +24,7 @@
         </div>
         <div class="type">
           <div class="stair-1">
-            <img src="../../../public/images/stairs 1.png" alt="" />
+            <img src="../../assets/stairs1.png" alt="" />
           </div>
           <p class="type-text">{{ stair_against_wall_options.name }}</p>
           <el-select
@@ -43,7 +43,7 @@
         </div>
         <div class="type">
           <div class="stair-1">
-            <img src="../../../public/images/stairs 1.png" alt="" />
+            <img src="../../assets/stairs1.png" alt="" />
           </div>
           <p class="type-text">{{ stair_shape_options.name }}</p>
           <el-select
@@ -62,7 +62,7 @@
         </div>
         <div class="type">
           <div class="stair-1">
-            <img src="../../../public/images/stairs 1.png" alt="" />
+            <img src="../../assets/stairs1.png" alt="" />
           </div>
           <p class="type-text">{{ stair_dir_options.name }}</p>
           <el-select

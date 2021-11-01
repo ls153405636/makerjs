@@ -15,7 +15,7 @@ import { Structure } from '../../structure/structure'
 
 // 引入组件
 import componentTop from '../../components/app/Top.vue'
-import componenLeft from '../../components/app/Left.vue'
+import componenLeft from '../../components/app/LEFT.vue'
 import componenRight from '../../components/app/Right.vue'
 import componentBottom from '../../components/app/Bottom.vue'
 import componentStairInit from '../../components/app/StairInit.vue'
