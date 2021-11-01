@@ -119,11 +119,11 @@ export class Info {
   /**
    * 本组件重新计算完成后，更新23d画布
    */
-  updateCanvas() {
+  updateCanvas(vName) {
     if (CUR_DATA.MODE === '2D' && this.isUpdate2D) {
       let widget = D2Config.WIDGETS.get(this.uuid)
       if (!widget) {
-        d2_action.createWidget(this.writePB(), this.constructor.name)
+        d2_action.createWidget(this.writePB(), vName)
       } else {
         widget.update(this.writePB())
       }

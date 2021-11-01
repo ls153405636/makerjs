@@ -36,7 +36,7 @@ export class Wall extends Info {
     this.normal = new Types.Vector3({ x: nor.x, y: nor.y })
     this.outEdge = utilEdge.offSet(this.depth)
     this.components = new Map()
-    this.updateCanvas()
+    this.updateCanvas('Wall')
   }
 
   addComponent(vInfo) {

@@ -21,7 +21,7 @@ export class RectHole extends Info {
     })
     this.outline = tool.createRectOutline(this.ori, this.length, this.width)
     this.walls = []
-    this.updateCanvas()
+    this.updateCanvas('RectHole')
     this.createWalls()
   }
 

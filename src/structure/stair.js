@@ -72,7 +72,7 @@ export class Stair extends Info {
     this.createBigColumns()
     this.createHandrails()
     this.createGirders()
-    this.updateCanvas()
+    this.updateCanvas('Stair')
   }
 
   updateItem(vValue, vKey1, vKey2) {
