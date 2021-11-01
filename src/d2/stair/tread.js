@@ -11,7 +11,7 @@ export class Tread extends ChildWidget {
    * @param {Types.Tread} vPB
    */
   constructor(vPB, vParent) {
-    super(vPB.uuid)
+    super(vPB.uuid, vParent.uuid)
     this.edges = vPB.stepOutline.edges
     this.index = vPB.index
     this.parent = vParent
@@ -78,6 +78,10 @@ export class Tread extends ChildWidget {
    * 所以此处用空函数重写
    */
 
+  getSprite() {
+    return this.sprite
+  }
+
   // 取消踏板选中效果
   cancelSelected() {
     this.sprite.zIndex = 0
@@ -126,7 +130,8 @@ export class Tread extends ChildWidget {
               type: COMP_TYPES.TREAD,
             })
           )
-        } else {
+        }
+        if (!D2Config.IS_SINGLE_SELECTED) {
           core.execute(
             new Command(core.cmds.SelecteCmd, {
               uuid: this.parent.uuid,

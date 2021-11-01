@@ -70,8 +70,6 @@ export class SmallColumn extends ChildWidget {
     this.sprite = smallColumnContainer
   }
 
-  // addToStage() {}
-
   /**
    * 获取当前组件的精灵图
    * 注意，类里的所有属性，如果外界需要调用，全部使用get函数来实现

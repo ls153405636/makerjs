@@ -2,6 +2,9 @@ import { Types } from '../../types/stair_v2'
 import { ChildWidget } from './child_widget'
 import d2_tool from '../d2_tool'
 import { D2Config } from '../config'
+import { Core } from '../../common/core'
+import { Command } from '../../common/command'
+import { COMP_TYPES } from '../../common/common_config'
 
 /**大柱 */
 export class BigColumn extends ChildWidget {
@@ -10,7 +13,7 @@ export class BigColumn extends ChildWidget {
    * @param {Types.BigColumn} vPB
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.sizeX = d2_tool.translateValue(vPB.size.x)
     this.sizeY = d2_tool.translateValue(vPB.size.x)
     this.positionX = d2_tool.translateValue(vPB.position.x)
@@ -76,6 +79,10 @@ export class BigColumn extends ChildWidget {
     this.sprite = bigColContainer
   }
 
+  getSprite() {
+    return this.sprite
+  }
+
   // 取消大柱选中效果
   cancelSelected() {
     this.sprite.children[0].visible = false
@@ -119,11 +126,13 @@ export class BigColumn extends ChildWidget {
         if (this.isSelected) {
           return
         }
-        if (D2Config.SELECTED) {
-          D2Config.SELECTED.cancelSelected()
-        }
-        this.setSelected()
-        D2Config.SELECTED = this
+        let core = new Core()
+        core.execute(
+          new Command(core.cmds.SelecteCmd, {
+            uuid: this.uuid,
+            type: COMP_TYPES.BIG_COLUMN,
+          })
+        )
       })
       .on('mouseout', () => {
         this.cancelHover()

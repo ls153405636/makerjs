@@ -11,6 +11,10 @@
       <right-small-column
         v-if="cur_type === cts.SMALL_COLUMN"
       ></right-small-column>
+      <right-inlay v-if="cur_type === cts.INLAY"></right-inlay>
+      <right-cement-comp
+        v-if="cur_type === cts.CEMENT_COMP"
+      ></right-cement-comp>
     </el-scrollbar>
   </div>
 </template>
@@ -26,6 +30,8 @@ import rightHandrail from './right_attributes/Handrail.vue'
 import rightGirder from './right_attributes/Girder.vue'
 import rightBigColumn from './right_attributes/BigColumn.vue'
 import rightSmallColumn from './right_attributes/SmallColumn.vue'
+import rightInlay from './right_attributes/Inlay.vue'
+import rightCementComp from './right_attributes/CementComp.vue'
 
 export default {
   name: 'componentRight',
@@ -38,6 +44,8 @@ export default {
     rightGirder,
     rightBigColumn,
     rightSmallColumn,
+    rightInlay,
+    rightCementComp,
   },
   props: {
     rightFlight,
@@ -48,6 +56,8 @@ export default {
     rightGirder,
     rightBigColumn,
     rightSmallColumn,
+    rightInlay,
+    rightCementComp,
   },
   data() {
     return {

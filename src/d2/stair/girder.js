@@ -24,7 +24,7 @@ export class Girder extends ChildWidget {
 
     const changeGirder = new PIXI.Graphics()
     changeGirder.visible = false
-    changeGirder.lineStyle(1, 0x4478f4)
+    changeGirder.lineStyle(1, 0xff88ff)
     changeGirder.beginFill(0xffffff)
     const path1 = []
     for (let i = 0; i < this.inEdges.length; i++) {
