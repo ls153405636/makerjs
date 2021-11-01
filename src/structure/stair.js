@@ -79,14 +79,15 @@ export class Stair extends Info {
     this.updateCanvas()
   }
 
-  updateItem (vValue, vKey1, vKey2) {
+  updateItem(vValue, vKey1, vKey2) {
     if (vKey2 && ['model', 'material'].includes(vKey2)) {
+      console.log(1)
     } else {
       super.updateItem(vValue, vKey1, vKey2)
     }
   }
 
-  getItemValue (vItem) {
+  getItemValue(vItem) {
     if (vItem.type === 'replace') {
       return ''
     } else {
@@ -331,7 +332,7 @@ export class Stair extends Info {
       leftPosition.y = this.depth - this.stepWidth / 2
     }
     if (args.posType === Types.BigColumnPosType.bcp_second) {
-      leftPosition.y = this.depth - this.stepWidth * 3 / 2
+      leftPosition.y = this.depth - (this.stepWidth * 3) / 2
     }
     let rightPosition = new Types.Vector3({
       x: this.width - this.sideOffset,
@@ -396,9 +397,9 @@ export class Stair extends Info {
       startY = this.depth - this.stepWidth / 2 - bigColSize.y / 2
     }
     if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
-      startY = this.depth - this.stepWidth * 3 / 2 - bigColSize.y / 2
+      startY = this.depth - (this.stepWidth * 3) / 2 - bigColSize.y / 2
     }
-    
+
     leftPois[0] = new Types.Vector3({
       x: this.sideOffset,
       y: startY,

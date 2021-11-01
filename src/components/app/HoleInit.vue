@@ -180,9 +180,9 @@ export default {
   font: normal bold 18px/30px Source Han Sans CN;
   cursor: pointer;
 }
-.add-hole-main .hole-main-right .hole-types .hole-type:hover {
+/* .add-hole-main .hole-main-right .hole-types .hole-type:hover {
   border: 1px solid rgba(26, 87, 230, 1);
-}
+} */
 .add-hole-main .hole-main-right .hole-types .activeClass {
   border: 1px solid rgba(26, 87, 230, 1);
 }

@@ -1,9 +1,9 @@
 <template>
-  <div class="right-flight">
+  <div class="right-component">
     <el-card class="box-card" shadow="never">
       <template #header>
         <div class="card-header">
-          <span>楼梯段参数</span>
+          <span>门窗梁柱参数</span>
         </div>
       </template>
       <right-args></right-args>
@@ -14,7 +14,7 @@
 <script>
 import rightArgs from './Args.vue'
 export default {
-  name: 'rightFlight',
+  name: 'rightComponent',
   components: {
     rightArgs,
   },

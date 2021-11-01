@@ -7,11 +7,72 @@
           <div class="stair-1">
             <img src="../../../public/images/stairs 1.png" alt="" />
           </div>
-          <p class="type-text">楼梯类型</p>
-          <el-select placeholder="请选择" v-model="value">
+          <p class="type-text">{{ stair_types.name }}</p>
+          <el-select
+            v-model="stair_types.value.value"
+            :label="stair_types.value.label"
+          >
             <el-option
-              v-for="(item, index) in stair_types"
-              :key="index"
+              v-for="item in stair_types.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div class="type">
+          <div class="stair-1">
+            <img src="../../../public/images/stairs 1.png" alt="" />
+          </div>
+          <p class="type-text">{{ stair_against_wall_options.name }}</p>
+          <el-select
+            v-model="stair_against_wall_options.value.value"
+            :label="stair_against_wall_options.value.label"
+          >
+            <el-option
+              v-for="item in stair_against_wall_options.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div class="type">
+          <div class="stair-1">
+            <img src="../../../public/images/stairs 1.png" alt="" />
+          </div>
+          <p class="type-text">{{ stair_shape_options.name }}</p>
+          <el-select
+            v-model="stair_shape_options.value.value"
+            :label="stair_shape_options.value.label"
+          >
+            <el-option
+              v-for="item in stair_shape_options.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div class="type">
+          <div class="stair-1">
+            <img src="../../../public/images/stairs 1.png" alt="" />
+          </div>
+          <p class="type-text">{{ stair_dir_options.name }}</p>
+          <el-select
+            v-model="stair_dir_options.value.value"
+            :label="stair_dir_options.value.label"
+            disabled
+          >
+            <el-option
+              v-for="item in stair_dir_options.options"
+              :key="item.value"
               :label="item.label"
               :value="item.value"
             >
@@ -39,11 +100,20 @@ export default defineComponent({
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'none'
       let core = new Core()
-      core.execute(new Command(core.cmds.StairInitCmd, {}))
+      core.execute(
+        new Command(core.cmds.StairInitCmd, {
+          againstWall: this.stair_against_wall_options.value.value,
+        })
+      )
     },
   },
   computed: {
-    ...mapState('init', ['stair_types']),
+    ...mapState('init', [
+      'stair_types',
+      'stair_against_wall_options',
+      'stair_shape_options',
+      'stair_dir_options',
+    ]),
   },
 })
 </script>
