@@ -1,0 +1,26 @@
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - yarn config set registry https://registry.npm.taobao.org
+  - yarn install
+
+stages:
+  - build
+  - deploy
+
+build-job:
+  stage: build
+  script:
+    - yarn build
+
+deploy-prod:
+  stage: deploy
+  script:
+    - echo $PWD
+    - yarn build
+    - ls -lAh
+    - sshpass -p a3u9svpc5528ytwzvtcvjxvvz2zduvxr rsync -e 'ssh -o StrictHostKeyChecking=no' -vrczP dist/* deploy@106.55.246.230:/home/deploy/app/web
+  only:
+    - /^v[0-9]+.[0-9]+.[0-9]+$/
