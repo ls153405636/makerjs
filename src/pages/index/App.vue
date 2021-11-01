@@ -18,7 +18,7 @@ import componentTop from '../../components/app/Top.vue'
 import componenLeft from '../../components/app/LEFT.vue'
 import componenRight from '../../components/app/Right.vue'
 import componentBottom from '../../components/app/Bottom.vue'
-import componentStairInit from '../../components/app/StairIni.vue'
+import componentStairInit from '../../components/app/StairInit.vue'
 import componentHoleInit from '../../components/app/HoleInit.vue'
 
 export default {
