@@ -30,12 +30,8 @@ export class Wall extends Info {
 
   rebuild() {
     let utilEdge = new Edge(this.holeEdge)
-    if (this.startExtend) {
-      this.edge = utilEdge.extendP1(this.startExtend)
-    }
-    if (this.endExtend) {
-      this.edge = utilEdge.extendP2(this.endExtend)
-    }
+    this.edge = utilEdge.extendP1(this.startExtend)
+    this.edge = utilEdge.extendP2(this.endExtend)
     let nor = utilEdge.getNormal()
     this.normal = new Types.Vector3({ x: nor.x, y: nor.y })
     this.outEdge = utilEdge.offSet(this.depth)
