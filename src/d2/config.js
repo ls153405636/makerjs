@@ -5,7 +5,9 @@ export const D2Config = {
   SELECTED: null,
   CUR_STAIR: null,
   IS_SINGLE_SELECTED: false,
-  WIDGETS: new Map()
+  WIDGETS: new Map(),
 }
+
+const Z_INDEX = {}
 
 window.D2Config = D2Config
