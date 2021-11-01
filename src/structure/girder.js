@@ -1,5 +1,6 @@
 import { Types } from "../types/stair_v2";
 import { ChildInfo } from "./child_info";
+import tool from "./tool";
 
 export class Girder extends ChildInfo {
   static GIRDER_TYPE_OPTIONS = [

@@ -19,6 +19,7 @@ export class BaseWidget {
     /**注意以下两点，精灵图destory的时候，其child的状态，以及destory之后，其绑定事件的处理*/
     if (this.isSelected) {
       D2Config.SELECTED = null
+      this.isSelected = false
     }
     this.sprite.destroy({children:true})
     D2Config.WIDGETS.delete(this.uuid)

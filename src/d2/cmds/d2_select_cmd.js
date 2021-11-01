@@ -16,6 +16,7 @@ export class D2SelectCmd extends Action {
       } else {
         D2Config.SELECTED.cancelSelected()
       }
+      D2Config.SELECTED = null
     }
     if (this.widget) {
       if (this.type === COMP_TYPES.SMALL_COLUMN) {
