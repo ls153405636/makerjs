@@ -7,12 +7,10 @@ export class ChildInfo extends Info {
     this.isUpdateParent = false
   }
 
-  update (vArgs) {
-    if (this.isUpdateParent) {
-      this.parent.update(vArgs)
-      this.isUpdateParent = false
-    } else {
-      this.rebuild()
-    }
+  update (vArgItems, vKey1) {
+    let value = vArgItems
+    let pArgeItems = new Map()
+    pArgeItems.set(vKey1, value)
+    this.parent.update(pArgeItems)
   }
 }

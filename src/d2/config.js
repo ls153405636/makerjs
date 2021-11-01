@@ -7,3 +7,5 @@ export const D2Config = {
   IS_SINGLE_SELECTED: false,
   WIDGETS: new Map()
 }
+
+window.D2Config = D2Config

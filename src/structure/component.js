@@ -38,6 +38,7 @@ export class Component extends Info {
 
   rebuild() {
     this.computePosition()
+    this.updateCanvas()
   }
 
   writePB() {

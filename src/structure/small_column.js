@@ -66,6 +66,10 @@ export class SmallColumn extends ChildInfo {
     }
   }
 
+  update (vArgItems) {
+    super.update(vArgItems, 'smallColParameters')
+  }
+
   writePB() {
     return new Types.SmallColumn({
       uuid: this.uuid,

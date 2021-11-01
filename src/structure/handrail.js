@@ -5,6 +5,10 @@ import { ChildInfo } from "./child_info";
 export class Handrail extends ChildInfo {
   constructor(vParent, vRoute, vWidth) {
     super (vParent)
+    this.rebuild(vRoute, vWidth)
+  }
+
+  rebuild (vRoute, vWidth) {
     this.route = vRoute
     this.width = vWidth
   }
@@ -16,6 +20,10 @@ export class Handrail extends ChildInfo {
       model: {name:'规格', value:'', type:'replace'},
       material: {name:'材质', value:'', type:'replace'}
     }
+  }
+
+  update (vArgItems) {
+    super.update(vArgItems, 'handrailParameters')
   }
 
   writePB () {

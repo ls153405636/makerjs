@@ -1,3 +1,5 @@
+import { COMP_TYPES } from '../../common/common_config'
+import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
 import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
@@ -105,11 +107,13 @@ export class Girder extends ChildWidget {
         if (this.isSelected) {
           return
         }
-        if (D2Config.SELECTED) {
-          D2Config.SELECTED.cancelSelected()
-        }
-        _this.setSelected()
-        D2Config.SELECTED = this
+        let core = new Core()
+        core.execute(
+          new Command(core.cmds.SelecteCmd, {
+            uuid: this.uuid,
+            type: COMP_TYPES.GIRDER,
+          })
+        )
       })
       .on('mouseout', () => {
         _this.cancelHover()

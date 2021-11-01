@@ -5,14 +5,14 @@ export class Command {
       if (cmd == undefined) {
         throw 'No Such Command, Check Your Spelling.'
       }
+      if (cmd?.struc) {
+        this.strucCmd = new cmd.struc(args)
+      }
       if (cmd?.d3) {
         this.d3cmd = new cmd.d3(args)
       }
       if (cmd?.d2) {
         this.d2cmd = new cmd.d2(args)
-      }
-      if (cmd?.struc) {
-        this.strucCmd = new cmd.struc(args)
       }
     }
   }

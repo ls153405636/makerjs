@@ -12,12 +12,11 @@ export class StrucSelecteCmd extends Action {
   }
 
   execute() {
-    if (!this.uuid) {
+    this.info = StructConfig.INFOS.get(this.uuid)
+    if (!this.info) {
       this.info = new Structure().stair || new Structure().hole
       this.type = new Structure().stair ? COMP_TYPES.STAIR : COMP_TYPES.HOLE
-    } else {
-      this.info = StructConfig.INFOS.get(this.uuid)
-    }
+    } 
     if (this.info && StructConfig?.uuid !== this.uuid) {
       StructConfig.SELECTED = this.info
       CUR_DATA.SELECTED_TYPE = this.type

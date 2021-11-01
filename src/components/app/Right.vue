@@ -2,7 +2,7 @@
   <div class="component-right" id="component-right">
     <el-scrollbar height="800px">
       <right-wall v-if="cur_type === cts.WALL"></right-wall>
-      <!-- <right-flight></right-flight> -->
+      <right-flight v-if="cur_type === cts.FLIGHT"></right-flight>
       <right-hole v-if="cur_type === cts.HOLE"></right-hole>
       <right-stair v-if="cur_type === cts.STAIR"></right-stair>
     </el-scrollbar>

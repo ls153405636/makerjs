@@ -3,6 +3,8 @@ import { Types } from '../../types/stair_v2'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
 import { D2Config } from '../config'
+import { Core } from '../../common/core'
+import { COMP_TYPES } from '../../common/common_config'
 
 /**需继承自childWidget */
 export class Handrail extends ChildWidget {
@@ -77,7 +79,6 @@ export class Handrail extends ChildWidget {
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
     this.isSelected = true
-    D2Config.SELECTED = this
   }
 
   // 鼠标进入扶手效果
@@ -102,10 +103,13 @@ export class Handrail extends ChildWidget {
         if (this.isSelected) {
           return
         }
-        if (D2Config.SELECTED) {
-          D2Config.SELECTED.cancelSelected()
-        }
-        _this.setSelected()
+        let core = new Core()
+        core.execute(
+          new Command(core.cmds.SelecteCmd, {
+            uuid: this.uuid,
+            type: COMP_TYPES.HANDRAIL,
+          })
+        )
       })
       .on('mouseout', () => {
         _this.cancelHover()
