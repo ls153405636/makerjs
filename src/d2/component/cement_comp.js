@@ -64,26 +64,28 @@ export class CementComp extends BaseWidget {
     comp.pivot.set(0, 0)
     comp.rotation = this.rotationY
 
-    compContainer.addChild(changeComp, comp)
-    this.sprite = compContainer
-
-    // // 根据 type 获取名称
-    // var textWord = ''
-    // switch (this.type) {
-    //   case 4:
-    //     textWord = '梁'
-    //     break
-    //   case 5:
-    //     textWord = '柱'
-    //     break
-    // }
-    // const text = new PIXI.Text(textWord, { fontSize: 12, fill: 0xffffff })
-    // text.position.set(this.positionX, this.positionY)
-    // text.pivot.set(text.width / 2, text.height / 2)
-    // text.rotation = this.rotationY
-
-    // compContainer.addChild(comp,text)
+    // compContainer.addChild(changeComp, comp)
     // this.sprite = compContainer
+
+    // 根据 type 获取名称
+    var textWord = ''
+    switch (this.type) {
+      case 4:
+        textWord = '梁'
+        break
+      case 5:
+        textWord = '柱'
+        break
+    }
+    let text = new PIXI.Text(textWord, { fontSize: 48, fill: 0x000000 })
+    text.scale.set(0.25)
+    text.position.set(
+      this.positionX - text.width / 2,
+      this.positionY - text.height / 2
+    )
+
+    compContainer.addChild(changeComp, comp, text)
+    this.sprite = compContainer
   }
 
   // 取消 cement 选中效果

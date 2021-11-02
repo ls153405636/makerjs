@@ -66,18 +66,21 @@ export class Inlay extends BaseWidget {
     inlayOut.pivot.set(0, 0)
     inlayOut.rotation = this.rotationY
 
-    // const path = []
-    // switch (this.type) {
-    //   case 1: // 门
-    //     path.push( 0, 0, this.width / 2, 0, this.width / 2, this.depth / 4, this.width, this.depth / 4, this.width, this.depth / 2, this.width / 2, this.depth / 2, this.width / 2, this.depth / 4, 0, this.depth / 4, 0, 0)
-    //     break
-    //   case 2: // 窗
-    //     path.push( 0, 0, this.width / 2, 0, this.width / 2, this.depth / 4, this.width, this.depth / 4, this.width, this.depth / 2, this.width / 2, this.depth / 2, this.width / 2, this.depth / 4, 0, this.depth / 4, 0, 0)
-    //     break
-    //   case 3: // 洞
-    //     path.push(0, 0)
-    //     break
-    // }
+    var textWord = ''
+    switch (this.type) {
+      case 1: // 门
+        textWord = '门'
+        // path.push( 0, 0, this.width / 2, 0, this.width / 2, this.depth / 4, this.width, this.depth / 4, this.width, this.depth / 2, this.width / 2, this.depth / 2, this.width / 2, this.depth / 4, 0, this.depth / 4, 0, 0)
+        break
+      case 2: // 窗
+        textWord = '窗'
+        // path.push( 0, 0, this.width / 2, 0, this.width / 2, this.depth / 4, this.width, this.depth / 4, this.width, this.depth / 2, this.width / 2, this.depth / 2, this.width / 2, this.depth / 4, 0, this.depth / 4, 0, 0)
+        break
+      case 3: // 洞
+        textWord = '洞'
+        // path.push(0, 0)
+        break
+    }
     // let inlayIn = new PIXI.Graphics()
     // inlayIn.beginFill(0x000000, 1)
     // inlayIn.drawPolygon(path)
@@ -85,8 +88,15 @@ export class Inlay extends BaseWidget {
     // inlayIn.position.set(this.positionX, this.positionY)
     // inlayIn.pivot.set(inlayIn.width / 2, inlayIn.height / 2)
     // inlayIn.rotation = this.rotationY
+    let text = new PIXI.Text(textWord, { fontSize: 48, fill: 0x000000 })
+    text.scale.set(0.25)
+    text.position.set(
+      this.positionX - text.width / 2,
+      this.positionY - text.height / 2
+    )
+    text.pivot.set(0, 0)
 
-    inlayContainer.addChild(changeInlayOut, inlayOut)
+    inlayContainer.addChild(changeInlayOut, inlayOut, text)
 
     this.sprite = inlayContainer
   }

@@ -1,14 +1,15 @@
 <template>
-  <div class="right-handrail">
+  <div class="right-tread">
     <el-card class="box-card" shadow="never">
       <template #header>
         <div class="card-header">
-          <span>扶手参数</span>
+          <span>踏步参数</span>
         </div>
       </template>
-      <right-args></right-args>
       <el-row>
-        <el-button>隐藏扶手</el-button>
+        <el-button @click="enterEdit()" type="primary"
+          >进入可视化编辑</el-button
+        >
       </el-row>
     </el-card>
   </div>
@@ -17,14 +18,18 @@
 <script>
 import rightArgs from './Args.vue'
 export default {
-  name: 'rightHandrail',
+  name: 'rightTread',
   components: {
     rightArgs,
   },
   data() {
     return {}
   },
-  methods: {},
+  methods: {
+    enterEdit() {
+      console.log('进入编辑')
+    },
+  },
   props: {
     args: Object,
   },

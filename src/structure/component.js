@@ -29,7 +29,10 @@ export class Component extends Info {
       .getP1()
       .addScaledVector(utilEdge.getVec(), this.disToStart + this.width / 2)
     if ([4, 5].includes(this.type)) {
-      pos.addScaledVector(utilEdge.getNormal().negate(), this.depth / 2)
+      pos.addScaledVector(
+        utilEdge.getNormal().negate(),
+        this.depth / 2 + this.interval
+      )
     } else {
       pos.addScaledVector(utilEdge.getNormal(), this.depth / 2)
     }

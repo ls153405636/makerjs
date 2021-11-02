@@ -29,18 +29,20 @@
         </el-select>
       </el-form-item>
 
+      <!-- 开关 -->
+      <el-form-item v-if="arg.type === 'switch'" :label="arg.name">
+        <el-switch
+          v-model="arg.value"
+          @change="updateArgs(arg.value, index, arg.type, key)"
+        ></el-switch>
+      </el-form-item>
+
       <!-- 图片上传 -->
       <el-form-item v-if="arg.type === 'replace'" :label="arg.name">
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          list-type="picture"
-        >
-          <el-button size="small" type="primary">上传材质</el-button>
-        </el-upload>
+        <div class="show_img" @click="openEdit()">
+          <img class="show_img_small" :src="url" />
+          <img class="show_img_big" :src="url" alt="" />
+        </div>
       </el-form-item>
 
       <!-- 展开 -->
@@ -84,16 +86,10 @@
 
               <!-- 图片上传 -->
               <el-form-item v-if="item1.type === 'replace'" :label="item1.name">
-                <el-upload
-                  class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :file-list="fileList"
-                  list-type="picture"
-                >
-                  <el-button size="small" type="primary">上传材质</el-button>
-                </el-upload>
+                <div class="show_img" @click="openEdit()">
+                  <img class="show_img_small" :src="url" />
+                  <img class="show_img_big" :src="url" alt="" />
+                </div>
               </el-form-item>
             </el-form>
           </el-collapse-item>
@@ -110,21 +106,19 @@ import { Command } from '../../../common/command'
 import { Core } from '../../../common/core'
 export default defineComponent({
   name: 'args',
-  setup() {},
   data() {
+    const url = ref(
+      'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/dls.jpg'
+    )
     return {
-      value: ref(''),
-
-      fileList: [
-        {
-          name: '材质1.jpeg',
-          url:
-            'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/dls.jpg',
-        },
-      ],
+      url,
     }
   },
   methods: {
+    openEdit() {
+      const TextureEdit = document.getElementById('right-texture-edit')
+      TextureEdit.style.display = 'block'
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList)
     },
@@ -172,4 +166,38 @@ export default defineComponent({
   },
 })
 </script>
-<style></style>
+<style scoped>
+.el-card__body {
+  width: 100%;
+  height: 300px;
+  background-color: aqua;
+  overflow: auto;
+}
+.show_img {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+.show_img .show_img_small {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+}
+.show_img .show_img_big {
+  display: none;
+  position: absolute;
+  top: -25px;
+  left: 25px;
+  width: 150px;
+  height: 150px;
+  z-index: 99;
+  border: 3px solid #fff;
+  border-radius: 6px;
+}
+.show_img:hover .show_img_big {
+  display: block;
+}
+</style>
