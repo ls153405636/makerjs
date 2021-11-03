@@ -2,7 +2,7 @@ import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
-import { D2Config } from '../config'
+import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
 
@@ -34,6 +34,7 @@ export class HangingBoard extends ChildWidget {
     hangingBoard.drawRect(0, 0, this.width, this.height)
 
     hangingBoardContainer.addChild(changeHangingBoard, hangingBoard)
+    hangingBoardContainer.zIndex = Z_INDEX.HANGING_BOARD_ZINDEX
     this.sprite = hangingBoardContainer
   }
 

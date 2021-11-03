@@ -85,7 +85,6 @@ export class SmallColumn extends ChildWidget {
     this.sprite.children[0].visible = false
     this.sprite.children[1].visible = false
     this.sprite.children[2].visible = true
-    this.sprite.tint = 0xffffff
     this.isSelected = false
   }
 
@@ -102,7 +101,6 @@ export class SmallColumn extends ChildWidget {
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = true
     this.sprite.children[2].visible = false
-    this.sprite.tint = 0x4478f4
   }
   // 鼠标离开小柱效果
   cancelHover() {
@@ -110,7 +108,6 @@ export class SmallColumn extends ChildWidget {
       this.sprite.children[0].visible = false
       this.sprite.children[1].visible = false
       this.sprite.children[2].visible = true
-      this.sprite.tint = 0xffffff
     }
   }
 

@@ -68,7 +68,7 @@ export class Stair extends BaseWidget {
     for (const gd of this.girders) {
       gd.destroy()
     }
-    for (const hb of this.girders) {
+    for (const hb of this.hangingBoard) {
       hb.destroy()
     }
     super.destroy()

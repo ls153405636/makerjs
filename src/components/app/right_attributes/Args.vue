@@ -56,6 +56,7 @@
                 <el-input
                   v-model="item1.value"
                   @blur="updateArgs(item1.value, index, item1.type, key)"
+                  @keydown.enter.prevent="enterBlur($event)"
                 ></el-input>
               </el-form-item>
 

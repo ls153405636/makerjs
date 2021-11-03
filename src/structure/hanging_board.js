@@ -23,10 +23,13 @@ export class HangingBoard extends Info {
 
   getArgs() {
     return {
-      width: { name: '宽度', value: this.width, type: 'input' },
       depth: { name: '深度', value: this.depth, type: 'input' },
       height: { name: '高度', value: this.height, type: 'input' },
     }
+  }
+
+  rebuild() {
+    this.width = this.parent.stepLength
   }
 
   update(vArgItems) {

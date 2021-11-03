@@ -72,6 +72,7 @@ export class Stair extends Info {
     this.createBigColumns()
     this.createHandrails()
     this.createGirders()
+    this.hangingBoard && this.hangingBoard.rebuild()
     this.updateCanvas()
   }
 
