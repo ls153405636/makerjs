@@ -188,14 +188,18 @@ export class Stair extends Info {
     if (this.bigColumns.length) {
       args.bigColParameters.value = this.bigColumns[0].getArgs()
     }
+    if (this.hangingBoard) {
+      args.hangingBoard = { name: '移除挂板', type: 'button' }
+    } else {
+      args.hangingBoard = { name: '添加挂板', type: 'button' }
+    }
     return args
   }
 
   computeSize() {
     this.width = this.stepLength
     this.depth =
-      this.stepWidth * (this.stepNum - this.stepNumRule + 1) +
-      this.hangYOffset
+      this.stepWidth * (this.stepNum - this.stepNumRule + 1) + this.hangYOffset
     this.height = this.parent.hole.floorHeight
   }
 

@@ -16,6 +16,9 @@
         v-if="cur_type === cts.CEMENT_COMP"
       ></right-cement-comp>
       <right-tread v-if="cur_type === cts.TREAD"></right-tread>
+      <right-hanging-board
+        v-if="cur_type === cts.HANGING_BOARD"
+      ></right-hanging-board>
     </el-scrollbar>
   </div>
 </template>
@@ -34,6 +37,7 @@ import rightSmallColumn from './right_attributes/SmallColumn.vue'
 import rightInlay from './right_attributes/Inlay.vue'
 import rightCementComp from './right_attributes/CementComp.vue'
 import rightTread from './right_attributes/Tread.vue'
+import rightHangingBoard from './right_attributes/HangingBoard.vue'
 
 export default {
   name: 'componentRight',
@@ -49,6 +53,7 @@ export default {
     rightInlay,
     rightCementComp,
     rightTread,
+    rightHangingBoard,
   },
   props: {
     rightFlight,
@@ -62,6 +67,7 @@ export default {
     rightInlay,
     rightCementComp,
     rightTread,
+    rightHangingBoard,
   },
   data() {
     return {

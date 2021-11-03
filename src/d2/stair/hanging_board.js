@@ -1,3 +1,6 @@
+import { Command } from '../../common/command'
+import { COMP_TYPES } from '../../common/common_config'
+import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
 import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
@@ -32,6 +35,10 @@ export class HangingBoard extends ChildWidget {
 
     hangingBoardContainer.addChild(changeHangingBoard, hangingBoard)
     this.sprite = hangingBoardContainer
+  }
+
+  getSprite() {
+    return this.sprite
   }
 
   // 取消 hangingBoard 选中效果
@@ -70,11 +77,13 @@ export class HangingBoard extends ChildWidget {
         if (this.isSelected) {
           return
         }
-        if (D2Config.SELECTED) {
-          D2Config.SELECTED.cancelSelected()
-        }
-        _this.setSelected()
-        D2Config.SELECTED = this
+        let core = new Core()
+        core.execute(
+          new Command(core.cmds.SelecteCmd, {
+            uuid: this.uuid,
+            type: COMP_TYPES.HANGING_BOARD,
+          })
+        )
       })
       .on('mouseout', () => {
         _this.cancelHover()

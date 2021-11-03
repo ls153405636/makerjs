@@ -10,6 +10,7 @@
         <el-input
           v-model.lazy="arg.value"
           @blur="updateArgs(arg.value, index, arg.type)"
+          @keydown.enter.prevent="enterBlur($event)"
         ></el-input>
       </el-form-item>
 
@@ -126,7 +127,7 @@ export default defineComponent({
       console.log(file)
     },
 
-    updateArgs(value, key, type, secondKey) {
+    updateArgs(value, key, type, secondKey, event) {
       if (type === 'input') {
         value = Number(value)
       }
@@ -141,10 +142,14 @@ export default defineComponent({
       let core = new Core()
       core.execute(new Command(core.cmds.EleUpdateCmd, argItems))
     },
+    enterBlur(event) {
+      event.target.blur()
+    },
   },
   computed: {
     ...mapState('right_attribute', ['cur_args']),
   },
+  directives: {},
   props: {
     args: Object,
   },

@@ -10,6 +10,7 @@ export const COMP_TYPES = {
   HANDRAIL: 9,
   INLAY: 10,
   CEMENT_COMP: 11,
+  HANGING_BOARD: 12,
 }
 
 export const CUR_DATA = {
