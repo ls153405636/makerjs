@@ -21,11 +21,11 @@ export class Core {
     this.history.execute(cmd)
   }
 
-  undo(cmd) {
-    this.history.undo(cmd)
+  undo() {
+    this.history.undo()
   }
 
-  redo(cmd) {
-    this.history.redo(cmd)
+  redo() {
+    this.history.redo()
   }
 }
