@@ -34,7 +34,7 @@ export class Wall extends Info {
     this.edge = utilEdge.extendP2(this.endExtend)
     let nor = utilEdge.getNormal()
     this.normal = new Types.Vector3({ x: nor.x, y: nor.y })
-    this.outEdge = utilEdge.offSet(this.depth)
+    this.outEdge = new Edge(this.edge).offSet(this.depth)
     this.components = new Map()
     this.updateCanvas('Wall')
   }

@@ -6,7 +6,7 @@ import wFirst from '../assets/wfirst.png'
 import wSecond from '../assets/wsecond.png'
 import wNone from '../assets/wboth11.png'
 import Victor from 'victor'
-import { D2Config } from './config'
+import { D2Config, Z_INDEX } from './config'
 import { Inlay } from './component/inlay'
 import { CementComp } from './component/cement_comp'
 import { Core } from '../common/core'
@@ -55,8 +55,8 @@ export class Wall extends BaseWidget {
   }
 
   /**重写父类销毁函数 */
-  destroy () {
-    this.components.forEach(c => {
+  destroy() {
+    this.components.forEach((c) => {
       c.destroy()
     })
     this.lineSprite.destroy()
@@ -65,15 +65,15 @@ export class Wall extends BaseWidget {
   }
 
   /**获取当前组件的类型 */
-  getWidgetType () {
+  getWidgetType() {
     return COMP_TYPES.WALL
   }
 
   /**
    * 重写父类初始化函数
-   * @param {Types.Wall} vPB 
+   * @param {Types.Wall} vPB
    */
-  init (vPB) {
+  init(vPB) {
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
@@ -214,6 +214,7 @@ export class Wall extends BaseWidget {
       wall.alpha = this.alpha
     }
     wall.endFill()
+    wall.zIndex = Z_INDEX.WALL_ZINDEX
     wall.addChild(tilingSprite)
 
     // 标注线绘制
@@ -249,6 +250,7 @@ export class Wall extends BaseWidget {
     lineText.rotation = newTextRotation
 
     lineContainer.addChild(dobuleLineLeft, dobuleLineRight, line)
+    lineContainer.zIndex = 0
     this.sprite = wall
     this.lineSprite = lineContainer
     this.textSprite = lineText

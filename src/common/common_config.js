@@ -8,6 +8,9 @@ export const COMP_TYPES = {
   GIRDER: 7,
   TREAD: 8,
   HANDRAIL: 9,
+  INLAY: 10,
+  CEMENT_COMP: 11,
+  HANGING_BOARD: 12,
 }
 
 export const CUR_DATA = {

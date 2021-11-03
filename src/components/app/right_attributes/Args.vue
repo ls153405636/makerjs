@@ -1,11 +1,16 @@
 <template>
   <div class="right-args">
-    <el-form v-for="(arg, index) in cur_args" :key="index">
+    <el-form
+      v-for="(arg, index) in cur_args"
+      :key="index"
+      @submit.native.prevent
+    >
       <!-- 输入 -->
       <el-form-item v-if="arg.type === 'input'" :label="arg.name">
         <el-input
-          v-model="arg.value"
+          v-model.lazy="arg.value"
           @blur="updateArgs(arg.value, index, arg.type)"
+          @keydown.enter.prevent="enterBlur($event)"
         ></el-input>
       </el-form-item>
 
@@ -25,6 +30,22 @@
         </el-select>
       </el-form-item>
 
+      <!-- 开关 -->
+      <el-form-item v-if="arg.type === 'switch'" :label="arg.name">
+        <el-switch
+          v-model="arg.value"
+          @change="updateArgs(arg.value, index, arg.type, key)"
+        ></el-switch>
+      </el-form-item>
+
+      <!-- 图片上传 -->
+      <el-form-item v-if="arg.type === 'replace'" :label="arg.name">
+        <div class="show_img" @click="openEdit()">
+          <img class="show_img_small" :src="url" />
+          <img class="show_img_big" :src="url" alt="" />
+        </div>
+      </el-form-item>
+
       <!-- 展开 -->
       <div v-if="arg.type === 'group'" class="demo-collapse">
         <el-collapse>
@@ -32,7 +53,11 @@
             <el-form v-for="(item1, key) in arg.value" :key="key">
               <!-- 展开-输入 -->
               <el-form-item v-if="item1.type === 'input'" :label="item1.name">
-                <el-input v-model="item1.value" @blur="updateArgs(item1.value, index, item1.type, key)"></el-input>
+                <el-input
+                  v-model="item1.value"
+                  @blur="updateArgs(item1.value, index, item1.type, key)"
+                  @keydown.enter.prevent="enterBlur($event)"
+                ></el-input>
               </el-form-item>
 
               <!-- 展开-选择 -->
@@ -40,7 +65,9 @@
                 <el-select
                   v-model="item1.value.value"
                   :label="item1.value.label"
-                  @change="updateArgs(item1.value.value, index, item1.type, key)"
+                  @change="
+                    updateArgs(item1.value.value, index, item1.type, key)
+                  "
                 >
                   <el-option
                     v-for="item in item1.options"
@@ -53,21 +80,18 @@
 
               <!-- 开关 -->
               <el-form-item v-if="item1.type === 'switch'" :label="item1.name">
-                <el-switch v-model="item1.value" @change="updateArgs(item1.value, index, item1.type, key)"></el-switch>
+                <el-switch
+                  v-model="item1.value"
+                  @change="updateArgs(item1.value, index, item1.type, key)"
+                ></el-switch>
               </el-form-item>
 
               <!-- 图片上传 -->
               <el-form-item v-if="item1.type === 'replace'" :label="item1.name">
-                <el-upload
-                  class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :file-list="fileList"
-                  list-type="picture"
-                >
-                  <el-button size="small" type="primary">上传材质</el-button>
-                </el-upload>
+                <div class="show_img" @click="openEdit()">
+                  <img class="show_img_small" :src="url" />
+                  <img class="show_img_big" :src="url" alt="" />
+                </div>
               </el-form-item>
             </el-form>
           </el-collapse-item>
@@ -84,21 +108,19 @@ import { Command } from '../../../common/command'
 import { Core } from '../../../common/core'
 export default defineComponent({
   name: 'args',
-  setup() {},
   data() {
+    const url = ref(
+      'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/dls.jpg'
+    )
     return {
-      value: ref(''),
-
-      fileList: [
-        {
-          name: '材质1.jpeg',
-          url:
-            'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/dls.jpg',
-        },
-      ],
+      url,
     }
   },
   methods: {
+    openEdit() {
+      const TextureEdit = document.getElementById('right-texture-edit')
+      TextureEdit.style.display = 'block'
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList)
     },
@@ -106,7 +128,7 @@ export default defineComponent({
       console.log(file)
     },
 
-    updateArgs(value, key, type, secondKey) {
+    updateArgs(value, key, type, secondKey, event) {
       if (type === 'input') {
         value = Number(value)
       }
@@ -121,10 +143,14 @@ export default defineComponent({
       let core = new Core()
       core.execute(new Command(core.cmds.EleUpdateCmd, argItems))
     },
+    enterBlur(event) {
+      event.target.blur()
+    },
   },
   computed: {
     ...mapState('right_attribute', ['cur_args']),
   },
+  directives: {},
   props: {
     args: Object,
   },
@@ -136,6 +162,48 @@ export default defineComponent({
     //   }
     // }
   },
+  directives: {
+    focus: {
+      // 指令的定义
+      mounted(el) {
+        el.focus()
+      },
+    },
+  },
 })
 </script>
-<style></style>
+<style scoped>
+.el-card__body {
+  width: 100%;
+  height: 300px;
+  background-color: aqua;
+  overflow: auto;
+}
+.show_img {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+.show_img .show_img_small {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+}
+.show_img .show_img_big {
+  display: none;
+  position: absolute;
+  top: -25px;
+  left: 25px;
+  width: 150px;
+  height: 150px;
+  z-index: 99;
+  border: 3px solid #fff;
+  border-radius: 6px;
+}
+.show_img:hover .show_img_big {
+  display: block;
+}
+</style>
