@@ -8,6 +8,17 @@ export const D2Config = {
   WIDGETS: new Map(),
 }
 
-const Z_INDEX = {}
+export const Z_INDEX = {
+  WALL_ZINDEX: 1,
+  COMPONENT_ZINDEX: 2,
+  STAIR_ZINDEX: 3,
+  FLIGHT_ZINDEX: 4,
+  TREAD_ZINDEX: 5,
+  HANDRAIL_ZINDEX: 6,
+  GIRDER_ZINDEX: 7,
+  SMALL_COLUMN_ZINDEX: 8,
+  BIG_COLUMN_ZINDEX: 9,
+}
 
 window.D2Config = D2Config
+window.D2Config = Z_INDEX

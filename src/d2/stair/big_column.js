@@ -1,7 +1,7 @@
 import { Types } from '../../types/stair_v2'
 import { ChildWidget } from './child_widget'
 import d2_tool from '../d2_tool'
-import { D2Config } from '../config'
+import { D2Config, Z_INDEX } from '../config'
 import { Core } from '../../common/core'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
@@ -75,7 +75,7 @@ export class BigColumn extends ChildWidget {
       changeBigColumnIn,
       bigColumnIn
     )
-
+    bigColContainer.zIndex = Z_INDEX.BIG_COLUMN_ZINDEX
     this.sprite = bigColContainer
   }
 

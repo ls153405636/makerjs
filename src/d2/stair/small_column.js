@@ -1,6 +1,6 @@
 import { Types } from '../../types/stair_v2'
 import { ChildWidget } from './child_widget'
-import { D2Config } from '../config'
+import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { Core } from '../../common/core'
 import { Command } from '../../common/command'
@@ -66,7 +66,7 @@ export class SmallColumn extends ChildWidget {
     smallColumn.endFill()
 
     smallColumnContainer.addChild(SmallColumnBg, changeSmallColumn, smallColumn)
-
+    smallColumnContainer.zIndex = Z_INDEX.SMALL_COLUMN_ZINDEX
     this.sprite = smallColumnContainer
   }
 

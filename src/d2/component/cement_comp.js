@@ -1,7 +1,7 @@
 import { Types } from '../../types/stair_v2'
 import { BaseWidget } from '../base_widget'
 import d2_tool from '../d2_tool'
-import { D2Config } from '../config'
+import { D2Config, Z_INDEX } from '../config'
 import { Core } from '../../common/core'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
@@ -85,6 +85,7 @@ export class CementComp extends BaseWidget {
     )
 
     compContainer.addChild(changeComp, comp, text)
+    compContainer.zIndex = Z_INDEX.COMPONENT_ZINDEX
     this.sprite = compContainer
   }
 

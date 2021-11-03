@@ -2,7 +2,7 @@ import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
-import { D2Config } from '../config'
+import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
 
@@ -55,6 +55,7 @@ export class Girder extends ChildWidget {
     girder.drawPolygon(path)
 
     girderContainer.addChild(changeGirder1, changeGirder, girder)
+    girderContainer.zIndex = Z_INDEX.GIRDER_ZINDEX
 
     this.sprite = girderContainer
   }
