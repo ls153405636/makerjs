@@ -29,7 +29,25 @@ export namespace Types {
     /** StairType enum. */
     enum StairType {
         sph = 0,
-        sstright = 1
+        sstright = 1,
+        sl_type = 2
+    }
+
+    /** Side enum. */
+    enum Side {
+        si_ph = 0,
+        si_left = 1,
+        si_right = 2
+    }
+
+    /** LandingCutType enum. */
+    enum LandingCutType {
+        lct_ph = 0,
+        lct_first = 1,
+        lct_second = 2,
+        lct_third = 3,
+        lct_fourth = 4,
+        lct_fifth = 5
     }
 
     /** StepNumRule enum. */
@@ -1062,6 +1080,9 @@ export namespace Types {
 
         /** Stair position */
         position?: (Types.IVector3|null);
+
+        /** Stair floadSide */
+        floadSide?: (Types.Side|null);
     }
 
     /** Represents a Stair. */
@@ -1135,6 +1156,9 @@ export namespace Types {
 
         /** Stair position. */
         public position?: (Types.IVector3|null);
+
+        /** Stair floadSide. */
+        public floadSide: Types.Side;
 
         /**
          * Creates a new Stair instance using the specified properties.
@@ -1767,6 +1791,24 @@ export namespace Types {
 
     /** Properties of a Landing. */
     interface ILanding {
+
+        /** Landing uuid */
+        uuid?: (string|null);
+
+        /** Landing type */
+        type?: (Types.LandingCutType|null);
+
+        /** Landing treads */
+        treads?: (Types.ITread[]|null);
+
+        /** Landing risers */
+        risers?: (Types.IRiser[]|null);
+
+        /** Landing oppoBigCol */
+        oppoBigCol?: (Types.IBigColumn|null);
+
+        /** Landing corBigCol */
+        corBigCol?: (Types.IBigColumn|null);
     }
 
     /** Represents a Landing. */
@@ -1777,6 +1819,24 @@ export namespace Types {
          * @param [properties] Properties to set
          */
         constructor(properties?: Types.ILanding);
+
+        /** Landing uuid. */
+        public uuid: string;
+
+        /** Landing type. */
+        public type: Types.LandingCutType;
+
+        /** Landing treads. */
+        public treads: Types.ITread[];
+
+        /** Landing risers. */
+        public risers: Types.IRiser[];
+
+        /** Landing oppoBigCol. */
+        public oppoBigCol?: (Types.IBigColumn|null);
+
+        /** Landing corBigCol. */
+        public corBigCol?: (Types.IBigColumn|null);
 
         /**
          * Creates a new Landing instance using the specified properties.

@@ -34,6 +34,22 @@ enum AgainstWallType {
 enum StairType {
   sph      = 0;
   sstright = 1;  //直梯
+  sl_type = 2; //L型梯
+}
+
+enum Side {
+  si_ph  = 0;
+  si_left = 1;
+  si_right = 2;
+}
+
+enum LandingCutType {
+  lct_ph = 0;
+  lct_first = 1;
+  lct_second = 2;
+  lct_third = 3;
+  lct_fourth = 4;
+  lct_fifth = 5;
 }
 
 //步数规则
@@ -178,6 +194,7 @@ message Stair {
   HangingBoard       hangingBoard             = 21;  //挂板
   float              stepHeight               = 25;  //步高
   Vector3            position                 = 26;  //为包围框左上角顶点的坐标
+  Side               floadSide                = 27;  //折梯的转折方向
 }
 
 //挂板
@@ -225,6 +242,12 @@ message TreadParameters {
 
 //休息平台
 message Landing {
+  string uuid = 1;
+  LandingCutType type = 2;
+  repeated Tread treads = 3;
+  repeated Riser risers = 4;
+  BigColumn  oppoBigCol = 5; //对角大柱
+  BigColumn  corBigCol = 6; //转角大柱
 }
 
 //立板

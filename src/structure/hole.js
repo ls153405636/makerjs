@@ -46,6 +46,18 @@ export class RectHole extends Info {
       edges: this.outline.edges,
     })
   }
+
+  getEdgeByPos (vPosType) {
+    if (vPosType === 'bot') {
+      return new Types.Edge(this.outline.edges[2]) 
+    } else if (vPosType === 'top') {
+      return new Types.Edge(this.outline.edges[0])
+    } else if (vPosType === 'left') {
+      return new Types.Edge(this.outline.edges[3])
+    } else if (vPosType === 'right') {
+      return new Types.Edge(this.outline.edges[1])
+    }
+  }
 }
 
 export class LHole extends RectHole {

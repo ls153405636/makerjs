@@ -76,11 +76,51 @@ export const Types = $root.Types = (() => {
      * @enum {number}
      * @property {number} sph=0 sph value
      * @property {number} sstright=1 sstright value
+     * @property {number} sl_type=2 sl_type value
      */
     Types.StairType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "sph"] = 0;
         values[valuesById[1] = "sstright"] = 1;
+        values[valuesById[2] = "sl_type"] = 2;
+        return values;
+    })();
+
+    /**
+     * Side enum.
+     * @name Types.Side
+     * @enum {number}
+     * @property {number} si_ph=0 si_ph value
+     * @property {number} si_left=1 si_left value
+     * @property {number} si_right=2 si_right value
+     */
+    Types.Side = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "si_ph"] = 0;
+        values[valuesById[1] = "si_left"] = 1;
+        values[valuesById[2] = "si_right"] = 2;
+        return values;
+    })();
+
+    /**
+     * LandingCutType enum.
+     * @name Types.LandingCutType
+     * @enum {number}
+     * @property {number} lct_ph=0 lct_ph value
+     * @property {number} lct_first=1 lct_first value
+     * @property {number} lct_second=2 lct_second value
+     * @property {number} lct_third=3 lct_third value
+     * @property {number} lct_fourth=4 lct_fourth value
+     * @property {number} lct_fifth=5 lct_fifth value
+     */
+    Types.LandingCutType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "lct_ph"] = 0;
+        values[valuesById[1] = "lct_first"] = 1;
+        values[valuesById[2] = "lct_second"] = 2;
+        values[valuesById[3] = "lct_third"] = 3;
+        values[valuesById[4] = "lct_fourth"] = 4;
+        values[valuesById[5] = "lct_fifth"] = 5;
         return values;
     })();
 
@@ -2662,6 +2702,7 @@ export const Types = $root.Types = (() => {
          * @property {Types.IHangingBoard|null} [hangingBoard] Stair hangingBoard
          * @property {number|null} [stepHeight] Stair stepHeight
          * @property {Types.IVector3|null} [position] Stair position
+         * @property {Types.Side|null} [floadSide] Stair floadSide
          */
 
         /**
@@ -2854,6 +2895,14 @@ export const Types = $root.Types = (() => {
         Stair.prototype.position = null;
 
         /**
+         * Stair floadSide.
+         * @member {Types.Side} floadSide
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.floadSide = 0;
+
+        /**
          * Creates a new Stair instance using the specified properties.
          * @function create
          * @memberof Types.Stair
@@ -2925,6 +2974,8 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 25, wireType 5 =*/205).float(message.stepHeight);
             if (message.position != null && Object.hasOwnProperty.call(message, "position"))
                 $root.Types.Vector3.encode(message.position, writer.uint32(/* id 26, wireType 2 =*/210).fork()).ldelim();
+            if (message.floadSide != null && Object.hasOwnProperty.call(message, "floadSide"))
+                writer.uint32(/* id 27, wireType 0 =*/216).int32(message.floadSide);
             return writer;
         };
 
@@ -3034,6 +3085,9 @@ export const Types = $root.Types = (() => {
                 case 26:
                     message.position = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
+                case 27:
+                    message.floadSide = reader.int32();
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -3084,6 +3138,7 @@ export const Types = $root.Types = (() => {
                     return "type: enum value expected";
                 case 0:
                 case 1:
+                case 2:
                     break;
                 }
             if (message.againstWallType != null && message.hasOwnProperty("againstWallType"))
@@ -3198,6 +3253,15 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "position." + error;
             }
+            if (message.floadSide != null && message.hasOwnProperty("floadSide"))
+                switch (message.floadSide) {
+                default:
+                    return "floadSide: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
             return null;
         };
 
@@ -3227,6 +3291,10 @@ export const Types = $root.Types = (() => {
             case "sstright":
             case 1:
                 message.type = 1;
+                break;
+            case "sl_type":
+            case 2:
+                message.type = 2;
                 break;
             }
             switch (object.againstWallType) {
@@ -3354,6 +3422,20 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Stair.position: object expected");
                 message.position = $root.Types.Vector3.fromObject(object.position);
             }
+            switch (object.floadSide) {
+            case "si_ph":
+            case 0:
+                message.floadSide = 0;
+                break;
+            case "si_left":
+            case 1:
+                message.floadSide = 1;
+                break;
+            case "si_right":
+            case 2:
+                message.floadSide = 2;
+                break;
+            }
             return message;
         };
 
@@ -3394,6 +3476,7 @@ export const Types = $root.Types = (() => {
                 object.hangingBoard = null;
                 object.stepHeight = 0;
                 object.position = null;
+                object.floadSide = options.enums === String ? "si_ph" : 0;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -3455,6 +3538,8 @@ export const Types = $root.Types = (() => {
                 object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
             if (message.position != null && message.hasOwnProperty("position"))
                 object.position = $root.Types.Vector3.toObject(message.position, options);
+            if (message.floadSide != null && message.hasOwnProperty("floadSide"))
+                object.floadSide = options.enums === String ? $root.Types.Side[message.floadSide] : message.floadSide;
             return object;
         };
 
@@ -4914,6 +4999,12 @@ export const Types = $root.Types = (() => {
          * Properties of a Landing.
          * @memberof Types
          * @interface ILanding
+         * @property {string|null} [uuid] Landing uuid
+         * @property {Types.LandingCutType|null} [type] Landing type
+         * @property {Array.<Types.ITread>|null} [treads] Landing treads
+         * @property {Array.<Types.IRiser>|null} [risers] Landing risers
+         * @property {Types.IBigColumn|null} [oppoBigCol] Landing oppoBigCol
+         * @property {Types.IBigColumn|null} [corBigCol] Landing corBigCol
          */
 
         /**
@@ -4925,11 +5016,61 @@ export const Types = $root.Types = (() => {
          * @param {Types.ILanding=} [properties] Properties to set
          */
         function Landing(properties) {
+            this.treads = [];
+            this.risers = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * Landing uuid.
+         * @member {string} uuid
+         * @memberof Types.Landing
+         * @instance
+         */
+        Landing.prototype.uuid = "";
+
+        /**
+         * Landing type.
+         * @member {Types.LandingCutType} type
+         * @memberof Types.Landing
+         * @instance
+         */
+        Landing.prototype.type = 0;
+
+        /**
+         * Landing treads.
+         * @member {Array.<Types.ITread>} treads
+         * @memberof Types.Landing
+         * @instance
+         */
+        Landing.prototype.treads = $util.emptyArray;
+
+        /**
+         * Landing risers.
+         * @member {Array.<Types.IRiser>} risers
+         * @memberof Types.Landing
+         * @instance
+         */
+        Landing.prototype.risers = $util.emptyArray;
+
+        /**
+         * Landing oppoBigCol.
+         * @member {Types.IBigColumn|null|undefined} oppoBigCol
+         * @memberof Types.Landing
+         * @instance
+         */
+        Landing.prototype.oppoBigCol = null;
+
+        /**
+         * Landing corBigCol.
+         * @member {Types.IBigColumn|null|undefined} corBigCol
+         * @memberof Types.Landing
+         * @instance
+         */
+        Landing.prototype.corBigCol = null;
 
         /**
          * Creates a new Landing instance using the specified properties.
@@ -4955,6 +5096,20 @@ export const Types = $root.Types = (() => {
         Landing.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.type);
+            if (message.treads != null && message.treads.length)
+                for (let i = 0; i < message.treads.length; ++i)
+                    $root.Types.Tread.encode(message.treads[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.risers != null && message.risers.length)
+                for (let i = 0; i < message.risers.length; ++i)
+                    $root.Types.Riser.encode(message.risers[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.oppoBigCol != null && Object.hasOwnProperty.call(message, "oppoBigCol"))
+                $root.Types.BigColumn.encode(message.oppoBigCol, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.corBigCol != null && Object.hasOwnProperty.call(message, "corBigCol"))
+                $root.Types.BigColumn.encode(message.corBigCol, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             return writer;
         };
 
@@ -4989,6 +5144,28 @@ export const Types = $root.Types = (() => {
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 1:
+                    message.uuid = reader.string();
+                    break;
+                case 2:
+                    message.type = reader.int32();
+                    break;
+                case 3:
+                    if (!(message.treads && message.treads.length))
+                        message.treads = [];
+                    message.treads.push($root.Types.Tread.decode(reader, reader.uint32()));
+                    break;
+                case 4:
+                    if (!(message.risers && message.risers.length))
+                        message.risers = [];
+                    message.risers.push($root.Types.Riser.decode(reader, reader.uint32()));
+                    break;
+                case 5:
+                    message.oppoBigCol = $root.Types.BigColumn.decode(reader, reader.uint32());
+                    break;
+                case 6:
+                    message.corBigCol = $root.Types.BigColumn.decode(reader, reader.uint32());
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -5024,6 +5201,49 @@ export const Types = $root.Types = (() => {
         Landing.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                if (!$util.isString(message.uuid))
+                    return "uuid: string expected";
+            if (message.type != null && message.hasOwnProperty("type"))
+                switch (message.type) {
+                default:
+                    return "type: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    break;
+                }
+            if (message.treads != null && message.hasOwnProperty("treads")) {
+                if (!Array.isArray(message.treads))
+                    return "treads: array expected";
+                for (let i = 0; i < message.treads.length; ++i) {
+                    let error = $root.Types.Tread.verify(message.treads[i]);
+                    if (error)
+                        return "treads." + error;
+                }
+            }
+            if (message.risers != null && message.hasOwnProperty("risers")) {
+                if (!Array.isArray(message.risers))
+                    return "risers: array expected";
+                for (let i = 0; i < message.risers.length; ++i) {
+                    let error = $root.Types.Riser.verify(message.risers[i]);
+                    if (error)
+                        return "risers." + error;
+                }
+            }
+            if (message.oppoBigCol != null && message.hasOwnProperty("oppoBigCol")) {
+                let error = $root.Types.BigColumn.verify(message.oppoBigCol);
+                if (error)
+                    return "oppoBigCol." + error;
+            }
+            if (message.corBigCol != null && message.hasOwnProperty("corBigCol")) {
+                let error = $root.Types.BigColumn.verify(message.corBigCol);
+                if (error)
+                    return "corBigCol." + error;
+            }
             return null;
         };
 
@@ -5038,7 +5258,66 @@ export const Types = $root.Types = (() => {
         Landing.fromObject = function fromObject(object) {
             if (object instanceof $root.Types.Landing)
                 return object;
-            return new $root.Types.Landing();
+            let message = new $root.Types.Landing();
+            if (object.uuid != null)
+                message.uuid = String(object.uuid);
+            switch (object.type) {
+            case "lct_ph":
+            case 0:
+                message.type = 0;
+                break;
+            case "lct_first":
+            case 1:
+                message.type = 1;
+                break;
+            case "lct_second":
+            case 2:
+                message.type = 2;
+                break;
+            case "lct_third":
+            case 3:
+                message.type = 3;
+                break;
+            case "lct_fourth":
+            case 4:
+                message.type = 4;
+                break;
+            case "lct_fifth":
+            case 5:
+                message.type = 5;
+                break;
+            }
+            if (object.treads) {
+                if (!Array.isArray(object.treads))
+                    throw TypeError(".Types.Landing.treads: array expected");
+                message.treads = [];
+                for (let i = 0; i < object.treads.length; ++i) {
+                    if (typeof object.treads[i] !== "object")
+                        throw TypeError(".Types.Landing.treads: object expected");
+                    message.treads[i] = $root.Types.Tread.fromObject(object.treads[i]);
+                }
+            }
+            if (object.risers) {
+                if (!Array.isArray(object.risers))
+                    throw TypeError(".Types.Landing.risers: array expected");
+                message.risers = [];
+                for (let i = 0; i < object.risers.length; ++i) {
+                    if (typeof object.risers[i] !== "object")
+                        throw TypeError(".Types.Landing.risers: object expected");
+                    message.risers[i] = $root.Types.Riser.fromObject(object.risers[i]);
+                }
+            }
+            if (object.oppoBigCol != null) {
+                if (typeof object.oppoBigCol !== "object")
+                    throw TypeError(".Types.Landing.oppoBigCol: object expected");
+                message.oppoBigCol = $root.Types.BigColumn.fromObject(object.oppoBigCol);
+            }
+            if (object.corBigCol != null) {
+                if (typeof object.corBigCol !== "object")
+                    throw TypeError(".Types.Landing.corBigCol: object expected");
+                message.corBigCol = $root.Types.BigColumn.fromObject(object.corBigCol);
+            }
+            return message;
         };
 
         /**
@@ -5050,8 +5329,39 @@ export const Types = $root.Types = (() => {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        Landing.toObject = function toObject() {
-            return {};
+        Landing.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults) {
+                object.treads = [];
+                object.risers = [];
+            }
+            if (options.defaults) {
+                object.uuid = "";
+                object.type = options.enums === String ? "lct_ph" : 0;
+                object.oppoBigCol = null;
+                object.corBigCol = null;
+            }
+            if (message.uuid != null && message.hasOwnProperty("uuid"))
+                object.uuid = message.uuid;
+            if (message.type != null && message.hasOwnProperty("type"))
+                object.type = options.enums === String ? $root.Types.LandingCutType[message.type] : message.type;
+            if (message.treads && message.treads.length) {
+                object.treads = [];
+                for (let j = 0; j < message.treads.length; ++j)
+                    object.treads[j] = $root.Types.Tread.toObject(message.treads[j], options);
+            }
+            if (message.risers && message.risers.length) {
+                object.risers = [];
+                for (let j = 0; j < message.risers.length; ++j)
+                    object.risers[j] = $root.Types.Riser.toObject(message.risers[j], options);
+            }
+            if (message.oppoBigCol != null && message.hasOwnProperty("oppoBigCol"))
+                object.oppoBigCol = $root.Types.BigColumn.toObject(message.oppoBigCol, options);
+            if (message.corBigCol != null && message.hasOwnProperty("corBigCol"))
+                object.corBigCol = $root.Types.BigColumn.toObject(message.corBigCol, options);
+            return object;
         };
 
         /**
