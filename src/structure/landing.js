@@ -2,7 +2,6 @@ import { Types } from "../types/stair_v2";
 import { Edge } from "../utils/edge";
 import { ChildInfo } from "./child_info";
 import { Default } from "./config";
-import tool from "./tool";
 
 
 export class Landing extends ChildInfo {
@@ -44,6 +43,7 @@ export class Landing extends ChildInfo {
     vBorder.edges.forEach(e => {
       this.pois.push(e.p1)
     })
+    this.stepNum = Landing.STEP_NUM_MAP[this.type]
     this.treadIndex = vTreadIndex
     this.edges = vBorder.edges
     this.lastStepWidth = vLastStepWidth
@@ -63,40 +63,70 @@ export class Landing extends ChildInfo {
 
   createTreads() {
     let treads = []
+    let edgesArr = []
     if (this.type === Types.LandingCutType.lct_first) {
-      treads.push(new Types.Tread({
-        index: this.treadIndex + 1,
-        stepOutline: this.border
-      }))
+      edgesArr = [this.edges]
     } else if (this.type === Types.LandingCutType.lct_second) {
-      
+      edgesArr = this.createEdgesArrForSecond()
     }
   }
 
-  createTreadsForSecond(){
-    let cL = new Edge(this.sideEdgeL).getCenter() //上段楼梯侧边终点
-    let cN = new Edge(this.sideEdgeN).getCenter() //下段楼梯侧边终点
+  createEdgesArrForSecond(){
+    let bpL = new Edge(this.sideEdgeL).getCenter() //上段楼梯侧边断点
+    let bpN = new Edge(this.sideEdgeN).getCenter() //下段楼梯侧边断点
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[Math.abs(this.corIndex - 2)] //对角点
-    let treads = []
     let edgesArr = []
     let t = Types.EdgeType.estraight //默认的线段类型
     if (this.lastEdgeIndex === this.corIndex) {
       let pL = this.edgeL.p2 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p1 //下段楼梯对应边的另个端点
       edgesArr[0] = [
-        new Types.Edge({p1:cL, p2:cor, type:t}),
+        new Types.Edge({p1:bpL, p2:cor, type:t}),
         new Types.Edge({p1:cor, p2:pL, type:t}),
-        new Types.Edge({p1:pL, p2:cL, type:t}),
+        new Types.Edge({p1:pL, p2:bpL, type:t}),
       ]
       edgesArr[1] = [
-        new Types.Edge({p1:oppo, p2:cN})
+        new Types.Edge({p1:oppo, p2:bpN, type:t}),
+        new Types.Edge({p1:bpN, p2:cor, type:t}),
+        new Types.Edge({p1:cor, p2:bpL, type:t}),
+        new Types.Edge({p1:bpL, p2:oppo, type:t})
+      ]
+      edgesArr[2] = [
+        new Types.Edge({p1:bpN, p2:pN, type:t}),
+        new Types.Edge({p1:pN, p2:cor, type:t}),
+        new Types.Edge({p1:cor, p2:bpN, type:t})
+      ]
+    } else {
+      let pL = this.edgeL.p1 //上段楼梯对应边的另个端点
+      let pN = this.edgeN.p2 //下段楼梯对应边的另个端点
+       edgesArr[0] = [
+        new Types.Edge({p1:cor, p2:bpL, type:t}),
+        new Types.Edge({p1:bpL, p2:pL, type:t}),
+        new Types.Edge({p1:pL, p2:cor, type:t}),
+       ]
+       edgesArr[1] = [
+        new Types.Edge({p1:cor, p2:bpN, type:t}),
+        new Types.Edge({p1:bpN, p2:oppo, type:t}),
+        new Types.Edge({p1:oppo, p2:bpL, type:t}),
+        new Types.Edge({p1:bpL, p2:cor, type:t})
+      ]
+      edgesArr[2] = [
+        new Types.Edge({p1:cor, p2:pN, type:t}),
+        new Types.Edge({p1:pN, p2:bpN, type:t}),
+        new Types.Edge({p1:cor, p2:bpN, type:t})
       ]
     }
+    return edgesArr
   }
 
   createTreadsForThird(){
-
+    if (this.lastEdgeIndex === this.corIndex) {
+      let bpl = new Edge(this.edgeL).extendP1(-this.lastStepWidth).p1
+    } else {
+      let bpl = new Edge(this.edgeL).extendP2(-this.lastStepWidth).p2
+    }
+    
   }
 
   createTreadsForFourth(){

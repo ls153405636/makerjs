@@ -115,10 +115,13 @@ export class Edge {
   }
 
   /**
-   * @return {Types.Outline}
+   * @return {Types.Vector3}
    */
   getCenter () {
-
+    return new Types.Vector3({
+      x:(this.p1.x + this.p2.x) / 2,
+      y:(this.p1.y + this.p2.y) / 2
+    })
   }
 
   writePB () {
