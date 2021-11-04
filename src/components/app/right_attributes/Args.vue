@@ -131,7 +131,7 @@ export default defineComponent({
       console.log(file)
     },
 
-    updateArgs(value, key, type, secondKey, event) {
+    updateArgs(value, key, type, secondKey) {
       if (type === 'input') {
         value = Number(value)
       }

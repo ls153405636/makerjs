@@ -2,6 +2,7 @@ import { D2Config } from '../d2/config'
 import { Types } from '../types/stair_v2'
 import { StructConfig } from './config'
 import { RectHole } from './hole'
+import { LHole } from './hole'
 import { Stair } from './stair'
 
 // const tempPages = {
@@ -28,6 +29,9 @@ export class Structure {
   initHole(vType) {
     if (vType === 'rect') {
       this.hole = new RectHole(this)
+    }
+    if (vType === 'L') {
+      this.hole = new LHole(this)
     }
     return this
   }
