@@ -30,6 +30,12 @@ export default {
     removeComponent(vType) {
       let core = new Core()
       core.execute(new Command(core.cmds.EleDelCmd, { type: vType }))
+      core.execute(
+        new Command(core.cmds.SelecteCmd, {
+          uuid: null,
+          type: null,
+        })
+      )
     },
   },
   props: {

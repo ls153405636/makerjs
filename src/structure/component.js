@@ -77,7 +77,6 @@ export class Inlay extends Component {
 
   getArgs() {
     return {
-      depth: { name: '宽度', value: this.depth, type: 'input' },
       width: { name: '长度', value: this.width, type: 'input' },
       height: { name: '高度', value: this.height, type: 'input' },
       disToStart: {

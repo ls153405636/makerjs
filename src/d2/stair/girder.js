@@ -40,18 +40,19 @@ export class Girder extends ChildWidget {
       )
     }
     const changeGirder1 = new PIXI.Graphics()
-    changeGirder1.lineStyle(1, 0xff88ff)
+    changeGirder1.lineStyle(1, 0x4478f4)
     changeGirder1.beginFill(0xffffff)
-    changeGirder1.alpha = 0
     changeGirder1.drawPolygon(path)
 
     const changeGirder = new PIXI.Graphics()
     changeGirder.visible = false
-    changeGirder.lineStyle(1, 0xff88ff)
+    changeGirder.lineStyle(1, 0x4478f4)
+    changeGirder1.beginFill(0xffffff)
     changeGirder.drawPolygon(path)
 
     const girder = new PIXI.Graphics()
     girder.lineStyle(1, 0x2d3037)
+    girder.beginFill(0xffffff)
     girder.drawPolygon(path)
 
     girderContainer.addChild(changeGirder1, changeGirder, girder)

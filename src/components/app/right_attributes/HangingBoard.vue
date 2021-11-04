@@ -32,6 +32,13 @@ export default {
     delHangingBoard() {
       let core = new Core()
       core.execute(new Command(core.cmds.EleDelCmd, {}))
+
+      core.execute(
+        new Command(core.cmds.SelecteCmd, {
+          uuid: null,
+          type: null,
+        })
+      )
     },
   },
   props: {

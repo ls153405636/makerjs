@@ -8,7 +8,7 @@
       </template>
       <right-args></right-args>
       <el-row>
-        <el-button>隐藏扶手</el-button>
+        <!-- <el-button>隐藏扶手</el-button> -->
       </el-row>
     </el-card>
   </div>
