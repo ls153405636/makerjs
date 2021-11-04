@@ -7,11 +7,15 @@
         </div>
       </template>
       <right-args></right-args>
+      <el-button @click="delHangingBoard()">移除挂板</el-button>
     </el-card>
   </div>
 </template>
 
 <script>
+import { Command } from '../../../common/command'
+import { COMP_TYPES } from '../../../common/common_config'
+import { Core } from '../../../common/core'
 import rightArgs from './Args.vue'
 export default {
   name: 'rightHangingBoard',
@@ -19,9 +23,17 @@ export default {
     rightArgs,
   },
   data() {
-    return {}
+    return {
+      // value: '移除挂板'
+    }
   },
-  methods: {},
+  computed: {},
+  methods: {
+    delHangingBoard() {
+      let core = new Core()
+      core.execute(new Command(core.cmds.EleDelCmd, {}))
+    },
+  },
   props: {
     args: Object,
   },

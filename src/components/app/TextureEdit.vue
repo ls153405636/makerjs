@@ -57,6 +57,7 @@ export default defineComponent({
     }
   },
   methods: {
+    onSubmit() {},
     closeEdit() {
       const TextureEdit = document.getElementById('right-texture-edit')
       TextureEdit.style.display = 'none'

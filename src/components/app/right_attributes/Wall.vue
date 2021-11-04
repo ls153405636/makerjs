@@ -73,9 +73,8 @@ export default {
   width: 100%;
   margin-bottom: 20px;
 }
-.el-row .el-button--default /deep/ {
+.el-row .el-button--default {
   width: 88px;
-  /* height: 50px; */
   margin-bottom: 10px;
 }
 </style>

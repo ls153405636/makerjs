@@ -17,8 +17,8 @@ export class Hole extends BaseWidget {
   }
 
   /**重写父类销毁函数，洞口销毁时，所有墙体需要跟着销毁 */
-  destroy () {
-    D2Config.WIDGETS.forEach(w => {
+  destroy() {
+    D2Config.WIDGETS.forEach((w) => {
       if (w.getWidgetType() === COMP_TYPES.WALL) {
         w.destroy()
       }
@@ -26,7 +26,7 @@ export class Hole extends BaseWidget {
     super.destroy()
   }
 
-  init (vPB) {
+  init(vPB) {
     this.edges = vPB.edges
     this.draw()
     this.addEvent()
@@ -40,7 +40,7 @@ export class Hole extends BaseWidget {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
     }
-    // hole.beginFill(0xffff55, 1)
+    hole.lineStyle(2, 0x000000, 1, 0)
     hole.drawPolygon(path)
     hole.endFill()
 

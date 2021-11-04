@@ -22,6 +22,10 @@ export class Component extends Info {
     StructConfig.INFOS.set(this.uuid, this)
     this.parent.addComponent(this)
   }
+  delInfo() {
+    StructConfig.INFOS.delete(this.uuid)
+    this.parent.delComponent(this)
+  }
 
   computePosition() {
     let utilEdge = new Edge(this.parent.edge)

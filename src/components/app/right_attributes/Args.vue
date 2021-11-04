@@ -116,6 +116,9 @@ export default defineComponent({
       url,
     }
   },
+  computed: {
+    ...mapState('right_attribute', ['cur_args']),
+  },
   methods: {
     openEdit() {
       const TextureEdit = document.getElementById('right-texture-edit')
@@ -147,9 +150,7 @@ export default defineComponent({
       event.target.blur()
     },
   },
-  computed: {
-    ...mapState('right_attribute', ['cur_args']),
-  },
+
   directives: {},
   props: {
     args: Object,

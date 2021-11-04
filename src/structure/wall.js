@@ -44,7 +44,10 @@ export class Wall extends Info {
     this.updateCanvas()
   }
 
-  delComponent(vInfo) {}
+  delComponent(vInfo) {
+    this.components.delete(vInfo.uuid, vInfo)
+    this.updateCanvas()
+  }
 
   getArgs() {
     let f = tool.getItemFromOptions

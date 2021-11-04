@@ -8,13 +8,15 @@
       </template>
       <right-args></right-args>
       <el-row>
-        <el-button @click="removeComponent(1)">移除</el-button>
+        <el-button @click="removeComponent()">移除</el-button>
       </el-row>
     </el-card>
   </div>
 </template>
 
 <script>
+import { Command } from '../../../common/command'
+import { Core } from '../../../common/core'
 import rightArgs from './Args.vue'
 export default {
   name: 'rightCementComp',
@@ -25,8 +27,9 @@ export default {
     return {}
   },
   methods: {
-    removeComponent(type) {
-      console.log(type)
+    removeComponent(vType) {
+      let core = new Core()
+      core.execute(new Command(core.cmds.EleDelCmd, { type: vType }))
     },
   },
   props: {

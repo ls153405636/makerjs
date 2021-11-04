@@ -16,8 +16,7 @@
           <i class="iconfont icon-down"></i>
         </div>
         <div class="slider-demo-block">
-          <span class="demonstration"></span>
-          <el-slider v-model="value2" max="300"></el-slider>
+          <el-slider v-model="value"></el-slider>
         </div>
         <div class="vector-two-right">
           <i class="iconfont icon-up"></i>
@@ -28,10 +27,20 @@
 </template>
 
 <script>
-export default {
+import { ref, defineComponent } from 'vue'
+export default defineComponent({
   name: 'componentBottom',
-  date() {
-    return {}
+  data() {
+    const value = ref(0)
+
+    const formatTooltip = (val) => {
+      return val / 100
+    }
+
+    return {
+      value,
+      formatTooltip,
+    }
   },
   methods: {
     addStair() {
@@ -39,7 +48,7 @@ export default {
       stairInit.style.display = 'block'
     },
   },
-}
+})
 </script>
 
 <style>

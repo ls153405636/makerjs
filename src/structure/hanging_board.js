@@ -12,13 +12,13 @@ export class HangingBoard extends Info {
   }
 
   addInfo() {
-    this.parent.addHangingBoard(this)
     StructConfig.INFOS.set(this.uuid, this)
+    this.parent.addHangingBoard(this)
   }
 
   delInfo() {
-    this.parent.addHangingBoard(null)
     StructConfig.INFOS.delete(this.uuid)
+    this.parent.addHangingBoard(null)
   }
 
   getArgs() {

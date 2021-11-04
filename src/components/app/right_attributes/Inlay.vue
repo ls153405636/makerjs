@@ -27,8 +27,9 @@ export default {
     return {}
   },
   methods: {
-    removeComponent() {
-      console.log(1)
+    removeComponent(vType) {
+      let core = new Core()
+      core.execute(new Command(core.cmds.EleDelCmd, { type: vType }))
     },
   },
   props: {

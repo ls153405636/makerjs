@@ -6,13 +6,13 @@
           <span>楼梯参数</span>
         </div>
       </template>
-      <right-args></right-args>
       <el-button
         v-if="cur_args.hangingBoard != undefined"
         @click="addHangingBoard()"
       >
         {{ cur_args.hangingBoard.name }}
       </el-button>
+      <right-args></right-args>
     </el-card>
   </div>
 </template>
@@ -35,9 +35,11 @@ export default {
   },
   methods: {
     addHangingBoard() {
+      let core = new Core()
       if (this.cur_args.hangingBoard.name === '添加挂板') {
-        let core = new Core()
         core.execute(new Command(core.cmds.EleAddCmd, { type: '挂板' }))
+      } else {
+        core.execute(new Command(core.cmds.EleDelCmd, { type: '挂板' }))
       }
     },
   },
@@ -46,3 +48,8 @@ export default {
   },
 }
 </script>
+<style scoped>
+.el-button {
+  margin-bottom: 20px;
+}
+</style>
