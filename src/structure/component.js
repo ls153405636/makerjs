@@ -77,7 +77,7 @@ export class Inlay extends Component {
 
   getArgs() {
     return {
-      width: { name: '长度', value: this.width, type: 'input' },
+      width: { name: '宽度', value: this.width, type: 'input' },
       height: { name: '高度', value: this.height, type: 'input' },
       disToStart: {
         name: '距端点的距离',
@@ -103,7 +103,7 @@ export class Cloumn extends Component {
       width: { name: '宽度', value: this.width, type: 'input' },
       depth: { name: '深度', value: this.depth, type: 'input' },
       height: { name: '高度', value: this.height, type: 'input' },
-      interval: { name: '间隙', value: this.interval, type: 'input' },
+      interval: { name: '与墙体间的间隙', value: this.interval, type: 'input' },
       disToStart: {
         name: '距端点的距离',
         value: this.disToStart,
@@ -129,7 +129,7 @@ export class Beam extends Component {
       width: { name: '宽度', value: this.width, type: 'input' },
       depth: { name: '深度', value: this.depth, type: 'input' },
       height: { name: '高度', value: this.height, type: 'input' },
-      interval: { name: '间隙', value: this.interval, type: 'input' },
+      interval: { name: '与墙体间的间隙', value: this.interval, type: 'input' },
     }
   }
 }
