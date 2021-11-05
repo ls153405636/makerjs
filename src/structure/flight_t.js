@@ -13,7 +13,6 @@ export class Flight extends ChildInfo {
     super (vParent)
     this.stepLength = Default.STEP_LENGTH
     this.stepWidth = Default.STEP_WIDTH
-    this.lastStepWidth = Default.STEP_WIDTH
     this.stepNumRule = vStepNumRule
     this.stepNum = vStepNum
     this.index = vIndex
@@ -28,8 +27,8 @@ export class Flight extends ChildInfo {
   }
 
   getTotalLength () {
-    let step_num = this.stepNum + this.stepNumRule - 1
-    return this.stepLength * (step_num - 1) + this.lastStepWidth
+    let step_num = this.stepNum - this.stepNumRule + 1
+    return this.stepWidth * step_num
   }
 
   update (vArgItems) {
@@ -50,7 +49,6 @@ export class Flight extends ChildInfo {
         type: 'select',
         options: Flight.NUM_RULE_OPTIONS,
       }
-      args.lastStepWidth = {name:'末级步宽', value:this.lastStepWidth, type:'input'}
     }
     args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
     return args
@@ -74,9 +72,9 @@ export class Flight extends ChildInfo {
     let utilEdge = new Edge(this.startEdge)
     let lengthVec = utilEdge.getVec()
     let widthVec = lengthVec.clone().rotateAround(new THREE.Vector2(0, 0), Math.PI / 2)
-    let p1 = utilEdge.extendP1(-xOffset)
-    widthSum = 0
-    for (let i = this.treadIndex; i < step_num + this.treadIndex; i++) {
+    let p1 = utilEdge.extendP1(-xOffset).p1
+    let widthSum = 0
+    for (let i = 0; i < step_num; i++) {
       let tread = new Types.Tread({
         index: step_num - i + this.treadIndex,
       })
@@ -84,19 +82,19 @@ export class Flight extends ChildInfo {
       tread.stepOutline = tool.createRectOutline(
         new Types.Vector3({ x: ori.x, y: ori.y }),
         this.stepLength - 2 * xOffset,
-        i === 0 ? this.lastStepWidth : this.stepWidth,
+        this.stepWidth,
         lengthVec,
         widthVec
       )
       pb.treads.push(tread)
-      widthSum = widthSum + i === 0 ? this.lastStepWidth : this.stepWidth
+      widthSum = widthSum + this.stepWidth
     }
     pb.treads.reverse()
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      let ori = new THREE.Vector2(p1.x, p1.y).addScaledVector(widthVec, -this.stepWidth * i)
+      let ori = new THREE.Vector2(p1.x, p1.y).addScaledVector(widthVec, -this.stepWidth)
       pb.treads.push(
         new Types.Tread({
-          index: this.stepNum,
+          index: this.stepNum + this.treadIndex,
           isLast: true,
           stepOutline: tool.createRectOutline(
             new Types.Vector3({ x: ori.x, y: ori.y }),

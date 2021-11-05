@@ -3,9 +3,16 @@ import { Default } from './config'
 import { Types } from '../types/stair_v2'
 import { Landing } from "./landing"
 import { Flight } from "./flight_t"
+import tool from "./tool"
+import { Girder } from "./girder"
 
 
 class Stair extends Info {
+  static NOSS_TYPE_OPTIONS = [
+    { value: Types.NossingType.nno, label: '无加边' },
+    { value: Types.NossingType.ncommon, label: '普通加边' },
+    { value: Types.NossingType.nluxury, label: '豪华加边' },
+  ]
   constructor(vParnet, againstWall = Types.AgainstWallType.aw_left) {
     super(vParnet)
     this.againstWallType = againstWall
@@ -18,6 +25,8 @@ class Stair extends Info {
     this.bigColumns = []
     this.handrails = []
     this.girders = []
+    this.smallColumns = []
+    this.hangYOffset = 0
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
       nossingType: Default.TREAD_NOSSING_TYPE,
@@ -47,6 +56,142 @@ class Stair extends Info {
       }),
     })
   }
+
+  getArgs() {
+    let f = tool.getItemFromOptions
+    let args = {
+      startBeamDepth: {
+        name: '起步梁厚',
+        value: this.startBeamDepth,
+        type: 'input',
+      },
+      exitBeamDepth: {
+        name: '出口梁厚',
+        value: this.exitBeamDepth,
+        type: 'input',
+      },
+      stepNumRule: {
+        name: '步数规则',
+        value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
+        type: 'select',
+        options: Flight.NUM_RULE_OPTIONS,
+      },
+      stepNum: { name: '步数', value: this.stepNum, type: 'input' },
+      treadParameters: { name: '踏板参数', type: 'group' },
+      riserParameters: { name: '立板参数', type: 'group' },
+      girderParameters: { name: '大梁参数', type: 'group' },
+      handrailParameters: { name: '扶手参数', type: 'group' },
+      smallColParameters: { name: '小柱参数', type: 'group' },
+      bigColParameters: { name: '大柱参数', type: 'group' },
+    }
+    let targs = this.treadParameters
+    args.treadParameters.value = {
+      depth: { name: '厚度', value: targs.depth, type: 'input' },
+      doubleFaceMaterial: {
+        name: '双面漆',
+        value: targs.doubleFaceMaterial,
+        type: 'switch',
+      },
+      nossingType: {
+        name: '加边类型',
+        value: f(targs.nossingType, Stair.NOSS_TYPE_OPTIONS),
+        type: 'select',
+        options: Stair.NOSS_TYPE_OPTIONS,
+      },
+      sideNossing: {
+        name: '飘边厚度',
+        value: targs.sideNossing,
+        type: 'input',
+      },
+      material: { name: '材质', value: '', type: 'replace' },
+    }
+    if (targs.nossingType !== Types.NossingType.nno) {
+      args.treadParameters.value.nossing = {
+        name: '加边厚度',
+        value: targs.nossing,
+        type: 'input',
+      }
+    }
+    let rargs = this.riserParameters
+    args.riserParameters.value = {
+      riserExist: { name: '立板有无', value: rargs.riserExist, type: 'switch' },
+    }
+    if (rargs.riserExist) {
+      args.riserParameters.value.depth = {
+        name: '厚度',
+        value: rargs.depth,
+        type: 'input',
+      }
+      args.riserParameters.value.doubleFaceMaterial = {
+        name: '双面漆',
+        value: rargs.doubleFaceMaterial,
+        type: 'switch',
+      }
+      args.riserParameters.value.material = {
+        name: '材质',
+        value: '',
+        type: 'replace',
+      }
+    }
+    let gargs = this.girderParameters
+    args.girderParameters.value = {
+      type: {
+        name: '类型',
+        value: f(gargs.type, Girder.GIRDER_TYPE_OPTIONS),
+        type: 'select',
+        options: Girder.GIRDER_TYPE_OPTIONS,
+      },
+      height: { name: '高度', value: gargs.height, type: 'input' },
+      depth: { name: '厚度', value: gargs.depth, type: 'input' },
+      material: { name: '材质', value: '', type: 'replace' },
+    }
+    if (this.handrails.length) {
+      args.handrailParameters.value = this.handrails[0].getArgs()
+    }
+    if (this.smallColumns.length) {
+      args.smallColParameters.value = this.smallColumns[0].getArgs()
+    }
+    if (this.bigColumns.length) {
+      args.bigColParameters.value = this.bigColumns[0].getArgs()
+    }
+    return args
+  }
+
+  writePB() {
+    let pb = new Types.Stair({
+      uuid: this.uuid,
+      startBeamDepth: this.startBeamDepth,
+      exitBeamDepth: this.exitBeamDepth,
+      type: this.type,
+      againstWallType: this.againstWallType,
+      treadParameters: this.treadParameters,
+      riserParameters: this.riserParameters,
+      stepParameters: new Types.StepParameters({
+        stepNumRule: this.stepNumRule,
+        stepNum: this.stepNum,
+      }),
+      flights: this.writeItemArrayPB(this.flights),
+      smallColumns: this.writeItemArrayPB(this.smallColumns),
+      bigColumns: this.writeItemArrayPB(this.bigColumns),
+      handrails: this.writeItemArrayPB(this.handrails),
+      girders: this.writeItemArrayPB(this.girders),
+      landings: this.writeItemArrayPB(this.landings),
+      position: this.position,
+    })
+    if (this.hangingBoard) {
+      pb.hangingBoard = this.hangingBoard
+    }
+    console.log('楼梯pb:', pb)
+    return pb
+  }
+
+  writeItemArrayPB(vInfoArr) {
+    let pbArr = []
+    for (const info of vInfoArr) {
+      pbArr.push(info.writePB())
+    }
+    return pbArr
+  }
 }
 
 export class LTypeStair extends Stair {
@@ -55,6 +200,9 @@ export class LTypeStair extends Stair {
     this.floadSide = floadSide
     this.createFlights()
     this.createLandings()
+    this.computeSize()
+    this.computePosition()
+    this.updateCanvas('Stair')
   }
 
   rebuild () {
@@ -63,6 +211,7 @@ export class LTypeStair extends Stair {
     this.computeSize()
     this.computePosition()
     this.rebuildFlights()
+    this.rebuildLangdings()
   }
 
   computePosition () {
@@ -75,6 +224,8 @@ export class LTypeStair extends Stair {
         this.position.y = rightEdge.p2.y - this.depth
       } else if (this.againstWallType === Types.AgainstWallType.aw_no) {
         this.position.y = (rightEdge.p1.y + rightEdge.p2.y) / 2
+      } else {
+        this.position.y = topEdge.p2.y
       }
     } else {
       let leftEdge = this.parent.hole.getEdgeByPos('left')
@@ -82,6 +233,8 @@ export class LTypeStair extends Stair {
         this.position.y = leftEdge.p2.y - this.depth
       } else if (this.againstWallType === Types.AgainstWallType.aw_no) {
         this.position.y = (leftEdge.p1.y + leftEdge.p2.y) / 2
+      } else {
+        this.position.y = topEdge.p1.y
       }
     }
     
@@ -109,23 +262,23 @@ export class LTypeStair extends Stair {
 
   createFlights() {
     let step_num = this.stepNum + 1 - this.stepNumRule
-    let fStepNum = step_num - Landing.STEP_NUM_MAP.get(this.landings[0].type)
+    let fStepNum = step_num - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
     let firstNum = Math.floor(fStepNum / 2)
     let secondNum = fStepNum - firstNum
     let edges = this.getFlightStartEdge(Default.STEP_LENGTH, Default.STEP_LENGTH,  Default.STEP_WIDTH, secondNum)
-    let flight1 = new Flight({vParnet: this, 
+    let flight1 = new Flight({vParent: this, 
                               vStepNum:firstNum, 
                               vStepNumRule:Types.StepNumRule.snr_n, 
                               vIndex:0, 
                               vStartEdge:edges[0], 
                               vTreadIndex:0, 
                               isLast:false})
-    let flight2 = new Flight({vParnet: this, 
+    let flight2 = new Flight({vParent: this, 
                               vStepNum:secondNum+this.stepNumRule-1, 
                               vStepNumRule:this.stepNumRule, 
                               vIndex:1, 
                               vStartEdge:edges[1], 
-                              vTreadIndex:step_num-secondNum+this.stepNumRule-1, 
+                              vTreadIndex:step_num-secondNum, 
                               isLast:true})
     this.flights.push(flight1, flight2)
   }
@@ -175,11 +328,35 @@ export class LTypeStair extends Stair {
   }
 
   createLandings() {
-    this.landings.push(new Landing(this))
+    let f1 = this.flights[0]
+    let ori = new Types.Vector3()
+    let nextIndex = 1
+    if (this.floadSide === Types.Side.si_left) {
+      ori.x = f2.getTotalLength()
+      nextIndex = 3
+    }
+    let border = tool.createRectOutline(ori, Default.STEP_LENGTH, Default.STEP_LENGTH)
+    this.landings.push(new Landing({vParent:this, 
+                                    vTreadIndex:f1.stepNum + 1, 
+                                    vBorder:border, 
+                                    vLastEdgeIndex:2, 
+                                    vNextEdgeIndex:nextIndex, 
+                                    vLastStepWidth:Default.STEP_WIDTH, 
+                                    vNextStepWidth:Default.STEP_WIDTH}))
   }
 
-  rebuildLangding () {
-    
+  rebuildLangdings () {
+    let f1 = this.flights[0]
+    let f2 = this.flights[1]
+    let ori = new Types.Vector3()
+    if (this.floadSide === Types.Side.si_left) {
+      ori.x = f2.getTotalLength()
+    }
+    let border = tool.createRectOutline(ori, f1.stepLength, f2.stepLength)
+    this.landings[0].rebuild({vTreadIndex:f1.stepNum+1, 
+                              vBorder:border, 
+                              vLastStepWidth: f1.stepWidth, 
+                              vNextStepWidth: f2.stepWidth})
   }
 
 }
