@@ -61,8 +61,7 @@ export class LHole extends Hole {
     this.topWidth = Default.L_HOLE_T_WIDTH
     this.botLength = Default.L_HOLE_B_LENGTH
     this.botWidth = Default.L_HOLE_B_WIDTH
-    this.left = 1
-    this.right = 2
+    this.direction = 1
     this.rebuild()
   }
 
@@ -76,7 +75,7 @@ export class LHole extends Hole {
     this.outline = new Types.Outline()
     let edges = []
 
-    if (this.getArgs().direction.value.value === this.left) {
+    if (this.direction == 1) {
       edges.push(
         new Types.Edge({
           p1: new Types.Vector3({ x: this.ori.x, y: this.ori.y }),
@@ -240,12 +239,12 @@ export class LHole extends Hole {
   getArgs() {
     return {
       direction: {
-        name: '转向方向',
+        name: '对齐方向',
         options: {
-          0: { value: this.left, label: '左' },
-          1: { value: this.right, label: '右' },
+          0: { value: 1, label: '左' },
+          1: { value: 2, label: '右' },
         },
-        value: { value: this.left, label: '左' },
+        value: { value: this.direction, label: '左' },
         type: 'select',
       },
       topLength: { name: '上边长', value: this.topLength, type: 'input' },
