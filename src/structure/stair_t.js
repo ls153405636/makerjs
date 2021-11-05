@@ -1,11 +1,10 @@
-import { Info } from "./info"
+import { Info } from './info'
 import { Default } from './config'
 import { Types } from '../types/stair_v2'
-import { Landing } from "./landing"
-import { Flight } from "./flight_t"
-import tool from "./tool"
-import { Girder } from "./girder"
-
+import { Landing } from './landing'
+import { Flight } from './flight_t'
+import tool from './tool'
+import { Girder } from './girder'
 
 class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -196,7 +195,7 @@ class Stair extends Info {
 
 export class LTypeStair extends Stair {
   constructor(vParnet, againstWall, floadSide = Types.Side.si_right) {
-    super(vParnet, againstWall) 
+    super(vParnet, againstWall)
     this.floadSide = floadSide
     this.createFlights()
     this.createLandings()
@@ -205,16 +204,19 @@ export class LTypeStair extends Stair {
     this.updateCanvas('Stair')
   }
 
-  rebuild () {
+  rebuild() {
     this.stepNumRule = this.flights[1].stepNumRule
-    this.stepNum = this.flights[0].stepNum + this.flights[1].stepNum + this.landings[0].stepNum
+    this.stepNum =
+      this.flights[0].stepNum +
+      this.flights[1].stepNum +
+      this.landings[0].stepNum
     this.computeSize()
     this.computePosition()
     this.rebuildFlights()
     this.rebuildLangdings()
   }
 
-  computePosition () {
+  computePosition() {
     let topEdge = this.parent.hole.getEdgeByPos('top')
     this.position = new Types.Vector3()
     if (this.floadSide === Types.Side.si_right) {
@@ -237,10 +239,9 @@ export class LTypeStair extends Stair {
         this.position.y = topEdge.p1.y
       }
     }
-    
   }
 
-  computeSize () {
+  computeSize() {
     let f1 = this.flights[0]
     let f2 = this.flights[1]
     this.height = this.parent.hole.floorHeight
@@ -252,9 +253,9 @@ export class LTypeStair extends Stair {
     if (vKey2 && ['model', 'material'].includes(vKey2)) {
       console.log(1)
     } else if (vKey1 === 'stepNum') {
-
+      console.log(1)
     } else if (vKey1 === 'stepNumRule') {
-
+      console.log(1)
     } else {
       super.updateItem(vValue, vKey1, vKey2)
     }
@@ -265,21 +266,30 @@ export class LTypeStair extends Stair {
     let fStepNum = step_num - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
     let firstNum = Math.floor(fStepNum / 2)
     let secondNum = fStepNum - firstNum
-    let edges = this.getFlightStartEdge(Default.STEP_LENGTH, Default.STEP_LENGTH,  Default.STEP_WIDTH, secondNum)
-    let flight1 = new Flight({vParent: this, 
-                              vStepNum:firstNum, 
-                              vStepNumRule:Types.StepNumRule.snr_n, 
-                              vIndex:0, 
-                              vStartEdge:edges[0], 
-                              vTreadIndex:0, 
-                              isLast:false})
-    let flight2 = new Flight({vParent: this, 
-                              vStepNum:secondNum+this.stepNumRule-1, 
-                              vStepNumRule:this.stepNumRule, 
-                              vIndex:1, 
-                              vStartEdge:edges[1], 
-                              vTreadIndex:step_num-secondNum, 
-                              isLast:true})
+    let edges = this.getFlightStartEdge(
+      Default.STEP_LENGTH,
+      Default.STEP_LENGTH,
+      Default.STEP_WIDTH,
+      secondNum
+    )
+    let flight1 = new Flight({
+      vParent: this,
+      vStepNum: firstNum,
+      vStepNumRule: Types.StepNumRule.snr_n,
+      vIndex: 0,
+      vStartEdge: edges[0],
+      vTreadIndex: 0,
+      isLast: false,
+    })
+    let flight2 = new Flight({
+      vParent: this,
+      vStepNum: secondNum + this.stepNumRule - 1,
+      vStepNumRule: this.stepNumRule,
+      vIndex: 1,
+      vStartEdge: edges[1],
+      vTreadIndex: step_num - secondNum,
+      isLast: true,
+    })
     this.flights.push(flight1, flight2)
   }
 
@@ -288,40 +298,45 @@ export class LTypeStair extends Stair {
     let f2 = this.flights[1]
     let num2 = f2.stepNum + f2.stepNumRule - 1
     let num = this.stepNum + 1 - this.stepNumRule
-    let edges = this.getFlightStartEdge(f1.stepLength, f2.stepLength, f2.stepWidth, num2)
+    let edges = this.getFlightStartEdge(
+      f1.stepLength,
+      f2.stepLength,
+      f2.stepWidth,
+      num2
+    )
     f1.rebuild({
       vStartEdge: edges[0],
-      vTreadIndex: 0
+      vTreadIndex: 0,
     })
     f2.rebuild({
       vStartEdge: edges[1],
-      vTreadIndex: num-num2+this.stepNumRule-1
+      vTreadIndex: num - num2 + this.stepNumRule - 1,
     })
   }
 
-  getFlightStartEdge (vLength1, vLength2, vWidth2, vNum2) {
+  getFlightStartEdge(vLength1, vLength2, vWidth2, vNum2) {
     let edges = []
     if (this.floadSide === Types.Side.si_right) {
       edges[0] = new Types.Edge({
-        p1: new Types.Vector3({y:vLength2}),
-        p2: new Types.Vector3({x:vLength1, y:vLength2}),
-        type: Types.EdgeType.estraight
+        p1: new Types.Vector3({ y: vLength2 }),
+        p2: new Types.Vector3({ x: vLength1, y: vLength2 }),
+        type: Types.EdgeType.estraight,
       })
       edges[1] = new Types.Edge({
-        p1: new Types.Vector3({x:vLength1 + vWidth2 * vNum2}),
-        p2: new Types.Vector3({x:vLength1 + vWidth2 * vNum2, y:vLength2}),
-        type: Types.EdgeType.estraight
+        p1: new Types.Vector3({ x: vLength1 + vWidth2 * vNum2 }),
+        p2: new Types.Vector3({ x: vLength1 + vWidth2 * vNum2, y: vLength2 }),
+        type: Types.EdgeType.estraight,
       })
     } else {
       edges[0] = new Types.Edge({
-        p1: new Types.Vector3({x:vWidth2 * vNum2, y:vLength2}),
-        p2: new Types.Vector3({x:vWidth2 * vNum2 + vLength1, y:vLength2}),
-        type: Types.EdgeType.estraight
+        p1: new Types.Vector3({ x: vWidth2 * vNum2, y: vLength2 }),
+        p2: new Types.Vector3({ x: vWidth2 * vNum2 + vLength1, y: vLength2 }),
+        type: Types.EdgeType.estraight,
       })
       edges[1] = new Types.Edge({
         p1: new Types.Vector3(),
-        p2: new Types.Vector3({y:vLength2}),
-        type: Types.EdgeType.estraight
+        p2: new Types.Vector3({ y: vLength2 }),
+        type: Types.EdgeType.estraight,
       })
     }
     return edges
@@ -345,7 +360,7 @@ export class LTypeStair extends Stair {
                                     vNextStepWidth:Default.STEP_WIDTH}))
   }
 
-  rebuildLangdings () {
+  rebuildLangdings() {
     let f1 = this.flights[0]
     let f2 = this.flights[1]
     let ori = new Types.Vector3()
@@ -358,5 +373,4 @@ export class LTypeStair extends Stair {
                               vLastStepWidth: f1.stepWidth, 
                               vNextStepWidth: f2.stepWidth})
   }
-
 }

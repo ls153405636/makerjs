@@ -1,3 +1,4 @@
+import { f } from '../../../dist/assets/vendor.52b9c170'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
@@ -21,13 +22,15 @@ export class Tread extends ChildWidget {
 
   draw() {
     // 中心位置计算
-    let positionX
-    let positionY
+    let positionX = 0
+    let positionY = 0
     for (let i = 0; i < this.edges.length; i++) {
       let f = this.edges[i]
-      positionX = f.p1.x
-      positionY = f.p1.y
+      positionX += f.p1.x
+      positionY += f.p1.y
     }
+    positionX = positionX / this.edges.length
+    positionY = positionY / this.edges.length
 
     let treadContainer = new PIXI.Container()
     // 踏板绘制
@@ -60,8 +63,8 @@ export class Tread extends ChildWidget {
     let stepNum = new PIXI.Text(this.index, { fontSize: 56 })
     stepNum.scale.set(0.25)
     stepNum.position.set(
-      positionX / D2Config.SCREEN_RATE + tread.width / 2,
-      positionY / D2Config.SCREEN_RATE - tread.height / 2
+      positionX / D2Config.SCREEN_RATE,
+      positionY / D2Config.SCREEN_RATE
     )
     stepNum.anchor.set(0.5, 0.5)
     treadContainer.addChild(changeTread, tread, stepNum)
