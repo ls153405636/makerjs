@@ -11,12 +11,13 @@ export class Tread extends ChildWidget {
    * @param {Types.Tread} vPB
    */
   constructor(vPB, vParent) {
-    super(vPB.uuid, vParent.uuid)
+    super(vPB.uuid)
     this.edges = vPB.stepOutline.edges
     this.index = vPB.index
     this.parent = vParent
     this.draw()
     this.addEvent()
+    // console.log(this.edges)
   }
 
   draw() {
@@ -25,8 +26,9 @@ export class Tread extends ChildWidget {
     let positionY
     for (let i = 0; i < this.edges.length; i++) {
       let f = this.edges[i]
-      positionX = f.p1.x
-      positionY = f.p1.y
+      positionX = (f.p1.x + f.p2.x) / 2
+      positionY = (f.p1.y + f.p2.y) / 2
+      console.log(positionX, positionY)
     }
 
     let treadContainer = new PIXI.Container()
@@ -61,7 +63,7 @@ export class Tread extends ChildWidget {
     stepNum.scale.set(0.25)
     stepNum.position.set(
       positionX / D2Config.SCREEN_RATE + tread.width / 2,
-      positionY / D2Config.SCREEN_RATE - tread.height / 2
+      positionY / D2Config.SCREEN_RATE
     )
     stepNum.anchor.set(0.5, 0.5)
     treadContainer.addChild(changeTread, tread, stepNum)
@@ -77,10 +79,6 @@ export class Tread extends ChildWidget {
    * 踏板只需要添加到父级，不需要添加到画布
    * 所以此处用空函数重写
    */
-
-  getSprite() {
-    return this.sprite
-  }
 
   // 取消踏板选中效果
   cancelSelected() {
@@ -130,8 +128,7 @@ export class Tread extends ChildWidget {
               type: COMP_TYPES.TREAD,
             })
           )
-        }
-        if (!D2Config.IS_SINGLE_SELECTED) {
+        } else {
           core.execute(
             new Command(core.cmds.SelecteCmd, {
               uuid: this.parent.uuid,
