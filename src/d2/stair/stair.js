@@ -29,8 +29,12 @@ export class Stair extends BaseWidget {
     this.handrails = []
     this.hangingBoard = []
     this.girders = []
+    this.landings = []
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
+    }
+    for (const l of vPB.landings) {
+      this.landings.push(new Flight(l, this))
     }
     for (const hdl of vPB.handrails) {
       this.handrails.push(new Handrail(hdl))
@@ -82,6 +86,7 @@ export class Stair extends BaseWidget {
     this.addSprites(this.girders)
     this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)
+    this.addSprites(this.landings)
 
     /** 需设置整体精灵图的位置*/
     this.sprite.position.set(this.position.x, this.position.y)

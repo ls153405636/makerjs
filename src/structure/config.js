@@ -39,5 +39,5 @@ export const Default = {
   HAND_HEIGHT: 870,
   HAND_SPEC: '60*80',
   HANG_BOARD_DEPTH: 40,
-  LANDING_TYPE: Types.LandingCutType.lct_first,
+  LANDING_TYPE: Types.LandingCutType.lct_second,
 }

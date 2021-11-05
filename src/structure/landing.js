@@ -51,8 +51,8 @@ export class Landing extends ChildInfo {
     this.nextStepWidth = vNextStepWidth
     this.edgeL = this.edges[this.lastEdgeIndex]
     this.edgeN = this.edges[this.nextEdgeIndex]
-    this.sideEdgeL = this.edges[Math.abs(this.nextEdgeIndex - 2)]
-    this.sideEdgeN = this.edges[Math.abs(this.lastEdgeIndex - 2)]
+    this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
+    this.sideEdgeN = this.edges[(this.lastEdgeIndex + 2)%4]
   }
 
   writePB() {
@@ -67,7 +67,7 @@ export class Landing extends ChildInfo {
     let treads = []
     let outlines = []
     if (this.type === Types.LandingCutType.lct_first) {
-      outlines = [this.createOutlineByPois(this.pois)]
+      outlines = [tool.createOutlineByPois(this.pois)]
     } else if (this.type === Types.LandingCutType.lct_second) {
       outlines = this.createSecondOutlines()
     } else {
@@ -84,7 +84,7 @@ export class Landing extends ChildInfo {
 
   createSecondOutlines(){
     let cor = this.pois[this.corIndex] //转角点
-    let oppo = this.pois[Math.abs(this.corIndex - 2)] //对角点
+    let oppo = this.pois[(this.corIndex+2)%4] //对角点
     let outlines = []
     let sideDisL = new Edge(this.edgeL).getLength() * Math.tan(Math.PI / 6) //上段楼梯侧边断点的偏移距离
     let sideDisN = new Edge(this.edgeN).getLength() * Math.tan(Math.PI / 6) //下段楼梯侧边断点的偏移距离
@@ -112,7 +112,7 @@ export class Landing extends ChildInfo {
     let outlines = []
     let inEdgeL = new Edge(this.edgeL).offSet(this.lastStepWidth, false)
     let cor = this.pois[this.corIndex] //转角点
-    let oppo = this.pois[Math.abs(this.corIndex - 2)] //对角点
+    let oppo = this.pois[(this.corIndex+2)%4] //对角点
     if (this.lastEdgeIndex === this.corIndex) {
       let bpL = new Edge(this.sideEdgeL).extendP1(-this.lastStepWidth).p1
       let bpN = new Edge(this.sideEdgeN).extendP2(-this.nextStepWidth).p2

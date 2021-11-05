@@ -15,8 +15,8 @@ export class Flight extends BaseWidget {
       this.treads.push(new Tread(t, this))
     }
     this.tread = vPB.treads
-    this.stepLength = d2_tool.translateValue(vPB.stepParameters.stepLength)
-    this.stepWidth = d2_tool.translateValue(vPB.stepParameters.stepWidth)
+    // this.stepLength = d2_tool.translateValue(vPB.stepParameters.stepLength)
+    // this.stepWidth = d2_tool.translateValue(vPB.stepParameters.stepWidth)
     this.draw()
   }
 

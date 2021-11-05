@@ -337,7 +337,7 @@ export class LTypeStair extends Stair {
     }
     let border = tool.createRectOutline(ori, Default.STEP_LENGTH, Default.STEP_LENGTH)
     this.landings.push(new Landing({vParent:this, 
-                                    vTreadIndex:f1.stepNum + 1, 
+                                    vTreadIndex:f1.stepNum, 
                                     vBorder:border, 
                                     vLastEdgeIndex:2, 
                                     vNextEdgeIndex:nextIndex, 
@@ -353,7 +353,7 @@ export class LTypeStair extends Stair {
       ori.x = f2.getTotalLength()
     }
     let border = tool.createRectOutline(ori, f1.stepLength, f2.stepLength)
-    this.landings[0].rebuild({vTreadIndex:f1.stepNum+1, 
+    this.landings[0].rebuild({vTreadIndex:f1.stepNum, 
                               vBorder:border, 
                               vLastStepWidth: f1.stepWidth, 
                               vNextStepWidth: f2.stepWidth})
