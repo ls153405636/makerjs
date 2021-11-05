@@ -34,7 +34,7 @@
       <el-form-item v-if="arg.type === 'switch'" :label="arg.name">
         <el-switch
           v-model="arg.value"
-          @change="updateArgs(arg.value, index, arg.type)"
+          @change="updateArgs(arg.value, index, arg.type, key)"
         ></el-switch>
       </el-form-item>
 
