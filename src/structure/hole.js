@@ -61,6 +61,8 @@ export class LHole extends Hole {
     this.topWidth = Default.L_HOLE_T_WIDTH
     this.botLength = Default.L_HOLE_B_LENGTH
     this.botWidth = Default.L_HOLE_B_WIDTH
+    this.left = 1
+    this.right = 2
     this.rebuild()
   }
 
@@ -73,78 +75,161 @@ export class LHole extends Hole {
 
     this.outline = new Types.Outline()
     let edges = []
-    edges.push(
-      new Types.Edge({
-        p1: new Types.Vector3({ x: this.ori.x, y: this.ori.y }),
-        p2: new Types.Vector3({
-          x: this.ori.x + this.topLength,
-          y: this.ori.y,
-        }),
-        type: Types.EdgeType.estraight,
-      })
-    )
-    edges.push(
-      new Types.Edge({
-        p1: new Types.Vector3({
-          x: this.ori.x + this.topLength,
-          y: this.ori.y,
-        }),
-        p2: new Types.Vector3({
-          x: this.ori.x + this.topLength,
-          y: this.ori.y + this.topWidth,
-        }),
-        type: Types.EdgeType.estraight,
-      })
-    )
-    edges.push(
-      new Types.Edge({
-        p1: new Types.Vector3({
-          x: this.ori.x + this.topLength,
-          y: this.ori.y + this.topWidth,
-        }),
-        p2: new Types.Vector3({
-          x: this.ori.x + this.botLength,
-          y: this.ori.y + this.topWidth,
-        }),
-        type: Types.EdgeType.estraight,
-      })
-    )
-    edges.push(
-      new Types.Edge({
-        p1: new Types.Vector3({
-          x: this.ori.x + this.botLength,
-          y: this.ori.y + this.topWidth,
-        }),
-        p2: new Types.Vector3({
-          x: this.ori.x + this.botLength,
-          y: this.ori.y + this.topWidth + this.botWidth,
-        }),
-        type: Types.EdgeType.estraight,
-      })
-    )
-    edges.push(
-      new Types.Edge({
-        p1: new Types.Vector3({
-          x: this.ori.x + this.botLength,
-          y: this.ori.y + this.topWidth + this.botWidth,
-        }),
-        p2: new Types.Vector3({
-          x: this.ori.x,
-          y: this.ori.y + this.topWidth + this.botWidth,
-        }),
-        type: Types.EdgeType.estraight,
-      })
-    )
-    edges.push(
-      new Types.Edge({
-        p1: new Types.Vector3({
-          x: this.ori.x,
-          y: this.ori.y + this.topWidth + this.botWidth,
-        }),
-        p2: new Types.Vector3({ x: this.ori.x, y: this.ori.y }),
-        type: Types.EdgeType.estraight,
-      })
-    )
+
+    if (this.getArgs().direction.value.value === this.left) {
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({ x: this.ori.x, y: this.ori.y }),
+          p2: new Types.Vector3({
+            x: this.ori.x + this.topLength,
+            y: this.ori.y,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + this.topLength,
+            y: this.ori.y,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x + this.topLength,
+            y: this.ori.y + this.topWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + this.topLength,
+            y: this.ori.y + this.topWidth,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y + this.topWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y + this.topWidth,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          p2: new Types.Vector3({ x: this.ori.x, y: this.ori.y }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+    } else {
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + (this.botLength - this.topLength),
+            y: this.ori.y,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + this.botLength,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x,
+            y: this.ori.y + this.topWidth + this.botWidth,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x,
+            y: this.ori.y + this.topWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x,
+            y: this.ori.y + this.topWidth,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x + (this.botLength - this.topLength),
+            y: this.ori.y + this.topWidth,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+      edges.push(
+        new Types.Edge({
+          p1: new Types.Vector3({
+            x: this.ori.x + (this.botLength - this.topLength),
+            y: this.ori.y + this.topWidth,
+          }),
+          p2: new Types.Vector3({
+            x: this.ori.x + (this.botLength - this.topLength),
+            y: this.ori.y,
+          }),
+          type: Types.EdgeType.estraight,
+        })
+      )
+    }
+
     this.outline.edges = edges
 
     this.walls = []
@@ -154,19 +239,19 @@ export class LHole extends Hole {
 
   getArgs() {
     return {
+      direction: {
+        name: '转向方向',
+        options: {
+          0: { value: this.left, label: '左' },
+          1: { value: this.right, label: '右' },
+        },
+        value: { value: this.left, label: '左' },
+        type: 'select',
+      },
       topLength: { name: '上边长', value: this.topLength, type: 'input' },
       topWidth: { name: '上边宽', value: this.topWidth, type: 'input' },
       botLength: { name: '下边长', value: this.botLength, type: 'input' },
       botWidth: { name: '下边宽', value: this.botWidth, type: 'input' },
-      direction: {
-        type: 'select',
-        name: '方向',
-        options: {
-          0: { value: '1', label: '左' },
-          1: { value: '2', label: '右', disabled: true },
-        },
-        value: { value: '1', label: '左' },
-      },
       floorHeight: { name: '层高', value: this.floorHeight, type: 'input' },
     }
   }

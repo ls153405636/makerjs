@@ -34,7 +34,7 @@
       <el-form-item v-if="arg.type === 'switch'" :label="arg.name">
         <el-switch
           v-model="arg.value"
-          @change="updateArgs(arg.value, index, arg.type, key)"
+          @change="updateArgs(arg.value, index, arg.type)"
         ></el-switch>
       </el-form-item>
 
@@ -132,6 +132,7 @@ export default defineComponent({
     },
 
     updateArgs(value, key, type, secondKey) {
+      console.log(value, key, type, secondKey)
       if (type === 'input') {
         value = Number(value)
       }
