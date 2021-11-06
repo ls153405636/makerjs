@@ -144,7 +144,7 @@ export class Landing extends ChildInfo {
         outlines.push(tool.createOutlineByPois([cor, pN, bpN, cutP]))
       } else {
         outlines.push(tool.createOutlineByPois([cor, cutP, bpL, pL]))
-        outlines.push(tool.createOutlineByPois([cutP, bpN, oppo, bpl]))
+        outlines.push(tool.createOutlineByPois([cutP, bpN, oppo, bpL]))
         outlines.push(tool.createOutlineByPois([cor, pN, bpN, cutP]))
       }
     }

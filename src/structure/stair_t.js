@@ -194,7 +194,7 @@ class Stair extends Info {
 }
 
 export class LTypeStair extends Stair {
-  constructor(vParnet, againstWall, floadSide = Types.Side.si_right) {
+  constructor(vParnet, againstWall, floadSide = Types.Side.si_left) {
     super(vParnet, againstWall)
     this.floadSide = floadSide
     this.createFlights()
@@ -231,6 +231,7 @@ export class LTypeStair extends Stair {
       }
     } else {
       let leftEdge = this.parent.hole.getEdgeByPos('left')
+      this.position.x = topEdge.p1.x
       if (this.againstWallType === Types.AgainstWallType.aw_left) {
         this.position.y = leftEdge.p2.y - this.depth
       } else if (this.againstWallType === Types.AgainstWallType.aw_no) {
@@ -344,6 +345,7 @@ export class LTypeStair extends Stair {
 
   createLandings() {
     let f1 = this.flights[0]
+    let f2 = this.flights[1]
     let ori = new Types.Vector3()
     let nextIndex = 1
     if (this.floadSide === Types.Side.si_left) {
