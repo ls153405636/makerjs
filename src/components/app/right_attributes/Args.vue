@@ -132,7 +132,6 @@ export default defineComponent({
     },
 
     updateArgs(value, key, type, secondKey) {
-      console.log(value, key, type, secondKey)
       if (type === 'input') {
         value = Number(value)
       }
