@@ -19,8 +19,9 @@
           <div v-for="(hole, index) in hole_types" :key="index">
             <div
               class="hole-type"
-              :class="hole.value == 'rect' ? 'activeClass' : ' '"
-              @click="clickStyle"
+              :value="hole.value"
+              :class="{ activeClass: index == current }"
+              @click="clickStyle(index, hole.value)"
             >
               <div class="draw-hole">
                 <img :src="hole.imgPath" alt="" />
@@ -61,6 +62,7 @@ export default {
   name: 'componentHoleInit',
   data() {
     return {
+      current: 0,
       updateText: [
         {
           describe: '优化楼梯模梯模梯模模型',
@@ -100,18 +102,34 @@ export default {
     }
   },
   methods: {
-    clickStyle() {
-      document.getElementsByClassName('pic')
+    clickStyle(index, value) {
+      this.current = index
+      this.cur_hole_type = value
     },
     createStair() {
-      let holeInit = document.getElementById('component-hole-init')
-      holeInit.style.display = 'none'
-      let core = new Core()
-      core.execute(new Command(core.cmds.HoleInitCmd, { type: 'rect' }))
+      if (this.current === 2 || this.current === 3) {
+        alert('尚未开发完成')
+      } else {
+        let holeInit = document.getElementById('component-hole-init')
+        holeInit.style.display = 'none'
+        let core = new Core()
+        if (this.current == 0) {
+          core.execute(new Command(core.cmds.HoleInitCmd, { type: 'rect' }))
+        }
+        if (this.current == 1) {
+          core.execute(new Command(core.cmds.HoleInitCmd, { type: 'L' }))
+        }
+        if (this.current == 2) {
+          core.execute(new Command(core.cmds.HoleInitCmd, { type: 'trape' }))
+        }
+        if (this.current == 3) {
+          core.execute(new Command(core.cmds.HoleInitCmd, { type: 'circle' }))
+        }
+      }
     },
   },
   computed: {
-    ...mapState('init', ['hole_types']),
+    ...mapState('init', ['hole_types', 'cur_hole_type']),
   },
 }
 </script>
@@ -180,9 +198,9 @@ export default {
   font: normal bold 18px/30px Source Han Sans CN;
   cursor: pointer;
 }
-/* .add-hole-main .hole-main-right .hole-types .hole-type:hover {
+.add-hole-main .hole-main-right .hole-types .hole-type:hover {
   border: 1px solid rgba(26, 87, 230, 1);
-} */
+}
 .add-hole-main .hole-main-right .hole-types .activeClass {
   border: 1px solid rgba(26, 87, 230, 1);
 }

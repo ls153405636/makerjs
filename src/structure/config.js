@@ -8,7 +8,7 @@ export const StructConfig = {
   CENTER: new THREE.Vector2(),
   ROTATE_CENTER: new THREE.Vector2(),
   INFOS: new Map(),
-  SELECTED: null
+  SELECTED: null,
 }
 
 export const Default = {
@@ -16,6 +16,10 @@ export const Default = {
   WALL_DEPTH: 240,
   HOLE_LENGTH: 4000,
   HOLE_WIDTH: 3000,
+  L_HOLE_T_LENGTH: 2000,
+  L_HOLE_T_WIDTH: 2000,
+  L_HOLE_B_LENGTH: 4000,
+  L_HOLE_B_WIDTH: 2000,
   INLAY_WIDTH: 600,
   INLAY_HEIGHT: 2000,
   CEMENT_SIZE: 300,

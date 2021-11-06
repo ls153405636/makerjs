@@ -8,7 +8,9 @@
       </template>
       <span class="add-parts">添加结构部件</span>
       <el-row>
-        <el-button id="door" @click="addComponent(1)" size="medium">门</el-button>
+        <el-button id="door" @click="addComponent(1)" size="medium"
+          >门</el-button
+        >
         <el-button id="window" @click="addComponent(2)" size="medium"
           >窗</el-button
         >
@@ -46,7 +48,7 @@ export default {
   methods: {
     addComponent(vType) {
       let core = new Core()
-      core.execute(new Command(core.cmds.EleAddCmd, {type: vType}))
+      core.execute(new Command(core.cmds.EleAddCmd, { type: vType }))
       document.getElementById('door').blur()
       document.getElementById('window').blur()
       document.getElementById('door-hole').blur()
@@ -59,7 +61,7 @@ export default {
   },
 }
 </script>
-<style>
+<style scoped>
 .add-parts {
   display: block;
   line-height: 50px;
@@ -70,7 +72,6 @@ export default {
   flex-wrap: wrap;
   width: 100%;
   margin-bottom: 20px;
-  /* background-color: aqua; */
 }
 .el-row .el-button--default {
   width: 88px;

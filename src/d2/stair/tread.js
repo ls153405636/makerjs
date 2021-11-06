@@ -18,6 +18,7 @@ export class Tread extends ChildWidget {
     this.parent = vParent
     this.draw()
     this.addEvent()
+    // console.log(this.edges)
   }
 
   draw() {

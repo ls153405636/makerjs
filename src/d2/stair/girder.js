@@ -2,7 +2,7 @@ import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
-import { D2Config } from '../config'
+import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
 
@@ -22,32 +22,6 @@ export class Girder extends ChildWidget {
   draw() {
     const girderContainer = new PIXI.Container()
 
-    const changeGirder = new PIXI.Graphics()
-    changeGirder.visible = false
-    changeGirder.lineStyle(1, 0x4478f4)
-    changeGirder.beginFill(0xffffff)
-    const path1 = []
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-      path1.push(
-        this.inEdges[this.inEdges.length - 1].p2.x / D2Config.SCREEN_RATE,
-        this.inEdges[this.inEdges.length - 1].p2.y / D2Config.SCREEN_RATE
-      )
-    }
-    for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let f = this.outEdges[i]
-      path1.push(f.p2.x / D2Config.SCREEN_RATE, f.p2.y / D2Config.SCREEN_RATE)
-      path1.push(
-        this.outEdges[0].p1.x / D2Config.SCREEN_RATE,
-        this.outEdges[0].p1.y / D2Config.SCREEN_RATE
-      )
-    }
-    changeGirder.drawPolygon(path1)
-
-    const girder = new PIXI.Graphics()
-    girder.lineStyle(1, 0x2d3037)
-    girder.beginFill(0xffffff)
     const path = []
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
@@ -65,37 +39,52 @@ export class Girder extends ChildWidget {
         this.outEdges[0].p1.y / D2Config.SCREEN_RATE
       )
     }
+    const changeGirder1 = new PIXI.Graphics()
+    changeGirder1.lineStyle(1, 0x4478f4)
+    changeGirder1.beginFill(0xffffff)
+    changeGirder1.drawPolygon(path)
+
+    const changeGirder = new PIXI.Graphics()
+    changeGirder.visible = false
+    changeGirder.lineStyle(1, 0x4478f4)
+    changeGirder1.beginFill(0xffffff)
+    changeGirder.drawPolygon(path)
+
+    const girder = new PIXI.Graphics()
+    girder.lineStyle(1, 0x2d3037)
+    girder.beginFill(0xffffff)
     girder.drawPolygon(path)
 
-    girderContainer.addChild(changeGirder, girder)
+    girderContainer.addChild(changeGirder1, changeGirder, girder)
+    girderContainer.zIndex = Z_INDEX.GIRDER_ZINDEX
 
     this.sprite = girderContainer
   }
 
   // 取消 girder 选中效果
   cancelSelected() {
-    this.sprite.children[0].visible = false
-    this.sprite.children[1].visible = true
+    this.sprite.children[1].visible = false
+    this.sprite.children[2].visible = true
     this.isSelected = false
   }
   //  girder 选中效果
   setSelected() {
-    this.sprite.children[0].visible = true
-    this.sprite.children[1].visible = false
+    this.sprite.children[1].visible = true
+    this.sprite.children[2].visible = false
     this.isSelected = true
   }
   // 鼠标进入 girder 效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].visible = true
-      this.sprite.children[1].visible = false
+      this.sprite.children[1].visible = true
+      this.sprite.children[2].visible = false
     }
   }
   // 鼠标离开 girder 效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].visible = false
-      this.sprite.children[1].visible = true
+      this.sprite.children[1].visible = false
+      this.sprite.children[2].visible = true
     }
   }
 
