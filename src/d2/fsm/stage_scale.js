@@ -2,6 +2,7 @@ import { Point } from '../../graphics/point'
 import { events } from './state_event'
 import { RunContext } from './context'
 import { with_log } from './fsm_util'
+import store from '../../store'
 
 export class stage_scale_context {
   static actions = {
@@ -55,6 +56,10 @@ export class stage_scale_context {
 
     RunContext.context.app.stage.position.set(px, py)
     RunContext.context.app.stage.scale.set(n, n)
+
+    store.commit('change_zoom/saveZoom', {
+      scale_number: n,
+    })
   }
 }
 
