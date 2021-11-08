@@ -196,9 +196,6 @@ export class Wall extends BaseWidget {
     tilingSprite.position.set(this.position.x, this.position.y)
 
     // 墙体绘制
-    const wall = new PIXI.Graphics()
-    wall.lineStyle(1, 0x929292)
-    wall.beginFill(0xe5e5e5, 1)
     const path = [
       this.p1.x,
       this.p1.y,
@@ -209,13 +206,30 @@ export class Wall extends BaseWidget {
       this.outP1.x,
       this.outP1.y,
     ]
+
+    const wallContainer = new PIXI.Container()
+
+    const wall_line = new PIXI.Graphics()
+    wall_line.visible = false
+    wall_line.lineStyle(0.5, 0xdc143c)
+    wall_line.drawPolygon(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
+
+    wall_line.endFill()
+
+    const wall = new PIXI.Graphics()
+    wall.lineStyle(1, 0x929292)
+    wall.beginFill(0xe5e5e5, 1)
     wall.drawPolygon(path)
+    wall.endFill()
+
+    wall.addChild(tilingSprite)
+    wallContainer.addChild(wall_line, wall)
+    wallContainer.zIndex = Z_INDEX.WALL_ZINDEX
     if (this.type === 4) {
       wall.alpha = this.alpha
+      wall_line.visible = true
+      wallContainer.zIndex = Z_INDEX.WALL_LINE_ZINDEX
     }
-    wall.endFill()
-    wall.zIndex = Z_INDEX.WALL_ZINDEX
-    wall.addChild(tilingSprite)
 
     // 标注线绘制
     const lineContainer = new PIXI.Container()
@@ -251,42 +265,44 @@ export class Wall extends BaseWidget {
 
     lineContainer.addChild(dobuleLineLeft, dobuleLineRight, line)
     lineContainer.zIndex = 0
-    this.sprite = wall
+
+    this.sprite = wallContainer
     this.lineSprite = lineContainer
     this.textSprite = lineText
   }
 
   // 取消墙体选中效果
   cancelSelected() {
-    this.sprite.tint = 0xffffff
+    this.sprite.children[1].tint = 0xffffff
     this.isSelected = false
     if (this.type === 4) {
-      this.sprite.alpha = this.alpha
+      this.sprite.children[1].alpha = this.alpha
     } else {
-      this.sprite.alpha = 1
+      this.sprite.children[1].alpha = 1
     }
   }
   // 墙体选中效果
   setSelected() {
-    this.sprite.tint = 0x818796
+    this.sprite.children[1].tint = 0x818796
     this.isSelected = true
-    this.sprite.alpha = 1
+    this.sprite.children[1].alpha = 1
   }
   // 鼠标进入墙体效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0x818796
-      this.sprite.alpha = 1
+      this.sprite.children[1].tint = 0x818796
+      this.sprite.children[0].tint = 0xffffff
+      this.sprite.children[1].alpha = 1
     }
   }
   // 鼠标离开墙体效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.tint = 0xffffff
+      this.sprite.children[1].tint = 0xffffff
       if (this.type === 4) {
-        this.sprite.alpha = this.alpha
+        this.sprite.children[1].alpha = this.alpha
       } else {
-        this.sprite.alpha = 1
+        this.sprite.children[1].alpha = 1
       }
     }
   }

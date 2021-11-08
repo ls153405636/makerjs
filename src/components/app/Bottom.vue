@@ -43,7 +43,7 @@ export default defineComponent({
   data() {
     const value = ref(100)
     const formatTooltip = (val) => {
-      return val / 100
+      return val + '%'
     }
 
     return {
