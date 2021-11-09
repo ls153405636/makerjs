@@ -4,10 +4,10 @@ import { ChildInfo } from './child_info'
 export class Handrail extends ChildInfo {
   constructor(vParent, vRoute, vWidth) {
     super(vParent)
-    this.rebuild(vRoute, vWidth)
+    this.rebuildByParent(vRoute, vWidth)
   }
 
-  rebuild(vRoute, vWidth) {
+  rebuildByParent(vRoute, vWidth) {
     this.route = vRoute
     this.width = vWidth
   }
@@ -22,7 +22,7 @@ export class Handrail extends ChildInfo {
   }
 
   update(vArgItems) {
-    super.update(vArgItems, 'handrailParameters')
+    super.updateParent(vArgItems, 'handrailParameters')
   }
 
   writePB() {

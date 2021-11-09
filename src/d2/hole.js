@@ -33,24 +33,24 @@ export class Hole extends BaseWidget {
   }
 
   draw() {
-    let hole = new PIXI.Graphics()
-    // 绘制多边形
-    let path = []
-    for (let i = 0; i < this.edges.length; i++) {
-      let e = this.edges[i]
-      path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-    }
-    hole.lineStyle(2, 0x000000, 1, 0)
-    hole.drawPolygon(path)
-    hole.endFill()
+    // let hole = new PIXI.Graphics()
+    // // 绘制多边形
+    // let path = []
+    // for (let i = 0; i < this.edges.length; i++) {
+    //   let e = this.edges[i]
+    //   path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+    // }
+    // hole.lineStyle(2, 0x000000, 1, 0)
+    // hole.drawPolygon(path)
+    // hole.endFill()
 
-    this.sprite = hole
+    // this.sprite = hole
   }
 
   addEvent() {
-    this.sprite.interactive = true
-    this.sprite.on('click', () => {
-      console.log('hole')
-    })
+    // this.sprite.interactive = true
+    // this.sprite.on('click', () => {
+    //   console.log('hole')
+    // })
   }
 }

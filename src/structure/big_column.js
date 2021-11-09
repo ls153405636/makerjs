@@ -19,10 +19,10 @@ export class BigColumn extends ChildInfo {
   ]
   constructor(vParent, vPosition, vSize) {
     super(vParent)
-    this.rebuild(vPosition, vSize)
+    this.rebuildByParent(vPosition, vSize)
   }
 
-  rebuild (vPosition, vSize) {
+  rebuildByParent (vPosition, vSize) {
     this.position = vPosition
     this.size = vSize
   }

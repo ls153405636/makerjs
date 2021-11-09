@@ -11,6 +11,7 @@
           >进入可视化编辑</el-button
         >
       </el-row>
+      <right-args></right-args>
     </el-card>
   </div>
 </template>

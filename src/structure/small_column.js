@@ -67,7 +67,7 @@ export class SmallColumn extends ChildInfo {
   }
 
   update (vArgItems) {
-    super.update(vArgItems, 'smallColParameters')
+    super.updateParent(vArgItems, 'smallColParameters')
   }
 
   writePB() {

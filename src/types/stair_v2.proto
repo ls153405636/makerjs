@@ -99,6 +99,11 @@ enum GirderType {
   gsaw  = 2;  //锯齿型
 }
 
+enum TreadType {
+  tph  = 0;
+  trect = 1;
+}
+
 //三维向量
 message Vector3{
 	float x = 1;
@@ -220,6 +225,12 @@ message Tread {
   Outline stepOutline = 2;  //踏板边缘轮廓
   float   index       = 3;  //索引
   bool    isLast      = 4;  //是否为n+1步中作为楼面的最后一级
+  float   stepLength  = 5;  //步长
+  float   stepWidth   = 6;  //步宽
+  float   stepHeight  = 7;  //步高
+  bool    inheritL    = 8;  //是否继承上级步长
+  bool    inheritH    = 9;  //是否继承上级步高
+  bool    inheritW    = 10; //是否继承上级步宽
 }
 
 //踏步参数

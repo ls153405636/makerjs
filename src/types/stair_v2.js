@@ -230,6 +230,20 @@ export const Types = $root.Types = (() => {
         return values;
     })();
 
+    /**
+     * TreadType enum.
+     * @name Types.TreadType
+     * @enum {number}
+     * @property {number} tph=0 tph value
+     * @property {number} trect=1 trect value
+     */
+    Types.TreadType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "tph"] = 0;
+        values[valuesById[1] = "trect"] = 1;
+        return values;
+    })();
+
     Types.Vector3 = (function() {
 
         /**
@@ -4146,6 +4160,12 @@ export const Types = $root.Types = (() => {
          * @property {Types.IOutline|null} [stepOutline] Tread stepOutline
          * @property {number|null} [index] Tread index
          * @property {boolean|null} [isLast] Tread isLast
+         * @property {number|null} [stepLength] Tread stepLength
+         * @property {number|null} [stepWidth] Tread stepWidth
+         * @property {number|null} [stepHeight] Tread stepHeight
+         * @property {boolean|null} [inheritL] Tread inheritL
+         * @property {boolean|null} [inheritH] Tread inheritH
+         * @property {boolean|null} [inheritW] Tread inheritW
          */
 
         /**
@@ -4196,6 +4216,54 @@ export const Types = $root.Types = (() => {
         Tread.prototype.isLast = false;
 
         /**
+         * Tread stepLength.
+         * @member {number} stepLength
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.stepLength = 0;
+
+        /**
+         * Tread stepWidth.
+         * @member {number} stepWidth
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.stepWidth = 0;
+
+        /**
+         * Tread stepHeight.
+         * @member {number} stepHeight
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.stepHeight = 0;
+
+        /**
+         * Tread inheritL.
+         * @member {boolean} inheritL
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.inheritL = false;
+
+        /**
+         * Tread inheritH.
+         * @member {boolean} inheritH
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.inheritH = false;
+
+        /**
+         * Tread inheritW.
+         * @member {boolean} inheritW
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.inheritW = false;
+
+        /**
          * Creates a new Tread instance using the specified properties.
          * @function create
          * @memberof Types.Tread
@@ -4227,6 +4295,18 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 3, wireType 5 =*/29).float(message.index);
             if (message.isLast != null && Object.hasOwnProperty.call(message, "isLast"))
                 writer.uint32(/* id 4, wireType 0 =*/32).bool(message.isLast);
+            if (message.stepLength != null && Object.hasOwnProperty.call(message, "stepLength"))
+                writer.uint32(/* id 5, wireType 5 =*/45).float(message.stepLength);
+            if (message.stepWidth != null && Object.hasOwnProperty.call(message, "stepWidth"))
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.stepWidth);
+            if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
+                writer.uint32(/* id 7, wireType 5 =*/61).float(message.stepHeight);
+            if (message.inheritL != null && Object.hasOwnProperty.call(message, "inheritL"))
+                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.inheritL);
+            if (message.inheritH != null && Object.hasOwnProperty.call(message, "inheritH"))
+                writer.uint32(/* id 9, wireType 0 =*/72).bool(message.inheritH);
+            if (message.inheritW != null && Object.hasOwnProperty.call(message, "inheritW"))
+                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.inheritW);
             return writer;
         };
 
@@ -4272,6 +4352,24 @@ export const Types = $root.Types = (() => {
                     break;
                 case 4:
                     message.isLast = reader.bool();
+                    break;
+                case 5:
+                    message.stepLength = reader.float();
+                    break;
+                case 6:
+                    message.stepWidth = reader.float();
+                    break;
+                case 7:
+                    message.stepHeight = reader.float();
+                    break;
+                case 8:
+                    message.inheritL = reader.bool();
+                    break;
+                case 9:
+                    message.inheritH = reader.bool();
+                    break;
+                case 10:
+                    message.inheritW = reader.bool();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4322,6 +4420,24 @@ export const Types = $root.Types = (() => {
             if (message.isLast != null && message.hasOwnProperty("isLast"))
                 if (typeof message.isLast !== "boolean")
                     return "isLast: boolean expected";
+            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
+                if (typeof message.stepLength !== "number")
+                    return "stepLength: number expected";
+            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
+                if (typeof message.stepWidth !== "number")
+                    return "stepWidth: number expected";
+            if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
+                if (typeof message.stepHeight !== "number")
+                    return "stepHeight: number expected";
+            if (message.inheritL != null && message.hasOwnProperty("inheritL"))
+                if (typeof message.inheritL !== "boolean")
+                    return "inheritL: boolean expected";
+            if (message.inheritH != null && message.hasOwnProperty("inheritH"))
+                if (typeof message.inheritH !== "boolean")
+                    return "inheritH: boolean expected";
+            if (message.inheritW != null && message.hasOwnProperty("inheritW"))
+                if (typeof message.inheritW !== "boolean")
+                    return "inheritW: boolean expected";
             return null;
         };
 
@@ -4348,6 +4464,18 @@ export const Types = $root.Types = (() => {
                 message.index = Number(object.index);
             if (object.isLast != null)
                 message.isLast = Boolean(object.isLast);
+            if (object.stepLength != null)
+                message.stepLength = Number(object.stepLength);
+            if (object.stepWidth != null)
+                message.stepWidth = Number(object.stepWidth);
+            if (object.stepHeight != null)
+                message.stepHeight = Number(object.stepHeight);
+            if (object.inheritL != null)
+                message.inheritL = Boolean(object.inheritL);
+            if (object.inheritH != null)
+                message.inheritH = Boolean(object.inheritH);
+            if (object.inheritW != null)
+                message.inheritW = Boolean(object.inheritW);
             return message;
         };
 
@@ -4369,6 +4497,12 @@ export const Types = $root.Types = (() => {
                 object.stepOutline = null;
                 object.index = 0;
                 object.isLast = false;
+                object.stepLength = 0;
+                object.stepWidth = 0;
+                object.stepHeight = 0;
+                object.inheritL = false;
+                object.inheritH = false;
+                object.inheritW = false;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -4378,6 +4512,18 @@ export const Types = $root.Types = (() => {
                 object.index = options.json && !isFinite(message.index) ? String(message.index) : message.index;
             if (message.isLast != null && message.hasOwnProperty("isLast"))
                 object.isLast = message.isLast;
+            if (message.stepLength != null && message.hasOwnProperty("stepLength"))
+                object.stepLength = options.json && !isFinite(message.stepLength) ? String(message.stepLength) : message.stepLength;
+            if (message.stepWidth != null && message.hasOwnProperty("stepWidth"))
+                object.stepWidth = options.json && !isFinite(message.stepWidth) ? String(message.stepWidth) : message.stepWidth;
+            if (message.stepHeight != null && message.hasOwnProperty("stepHeight"))
+                object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
+            if (message.inheritL != null && message.hasOwnProperty("inheritL"))
+                object.inheritL = message.inheritL;
+            if (message.inheritH != null && message.hasOwnProperty("inheritH"))
+                object.inheritH = message.inheritH;
+            if (message.inheritW != null && message.hasOwnProperty("inheritW"))
+                object.inheritW = message.inheritW;
             return object;
         };
 

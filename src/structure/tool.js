@@ -54,9 +54,18 @@ export function getItemFromOptions(vValue, vOptions) {
   return item
 }
 
+export function writeItemArrayPB(vInfoArr) {
+  let pbArr = []
+  for (const info of vInfoArr) {
+    pbArr.push(info.writePB())
+  }
+  return pbArr
+}
+
 export default {
   parseSpecification,
   createRectOutline,
   getItemFromOptions,
-  createOutlineByPois
+  createOutlineByPois,
+  writeItemArrayPB
 }

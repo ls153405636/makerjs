@@ -12,11 +12,6 @@ export class StrucSelecteCmd extends Action {
   }
 
   execute() {
-    if (this.type === COMP_TYPES.TREAD) {
-      StructConfig.SELECTED = null
-      store.commit('right_attribute/setCurType', this.type)
-      return
-    }
     this.info = StructConfig.INFOS.get(this.uuid)
     if (!this.info) {
       this.info = new Structure().stair || new Structure().hole

@@ -1,46 +1,54 @@
 import { Types } from "../types/stair_v2";
-import { Edge } from "../utils/edge";
 import { ChildInfo } from "./child_info";
 import { Default } from "./config";
 import tool from "./tool";
+import { Tread } from "./tread";
 
 export class Flight extends ChildInfo {
   static NUM_RULE_OPTIONS = [
     { value: Types.StepNumRule.snr_n, label: 'n步' },
     { value: Types.StepNumRule.snr_n_add_1, label: 'n+1步' },
   ]
-  constructor ({vParent, vStepNum, vStepNumRule, vIndex, vStartEdge, vTreadIndex, isLast}) {
+  constructor ({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vPos, vLVec, vWVec, vLength}) {
     super (vParent)
     this.stepLength = Default.STEP_LENGTH
-    this.stepWidth = Default.STEP_WIDTH
-    this.stepNumRule = vStepNumRule
-    this.stepNum = vStepNum
-    this.index = vIndex
-    this.startEdge = vStartEdge
-    this.treadIndex = vTreadIndex
+    this.length = vLength
     this.isLast = isLast
+    this.index = vIndex
+    this.treads = []
+    this.stepNum = vStepNum
+    this.stepNumRule = vStepNumRule
+    this.rebuildByParent({vTreadIndex, vPos, vLVec, vWVec})
   }
 
-  rebuild ({vStartEdge, vTreadIndex}) {
-    this.startEdge = vStartEdge
+  /**
+   * 根据父级数据更新楼梯段
+   * @param {Object} param0
+   * 所有index均为在程序数组中从0开始的index
+   */
+  rebuildByParent({vTreadIndex, vPos, vLVec, vWVec}) {
     this.treadIndex = vTreadIndex
+    this.pos = vPos
+    this.lVec = vLVec
+    this.wVec = vWVec
+    this.stepHeight = this.parent.stepHeight
+    this.computeStepWidth()
+    this.updateTreads()
   }
 
-  getTotalLength () {
-    let step_num = this.stepNum - this.stepNumRule + 1
-    return this.stepWidth * step_num
+  updateItem(vValue, vKey, vSecondKey) {
+    if (['stepNum','stepNumRule'].includes(vKey)) {
+      this.treads = []
+    }
+    super.updateItem(vValue, vKey, vSecondKey)
   }
 
-  update (vArgItems) {
-    super.update(vArgItems)
-    this.parent.rebuild()
-  }
 
   getArgs () {
     let f = tool.getItemFromOptions
     let args = {
+      length:{name:'总长', value:this.length, type:'input'},
       stepLength:{name:'步长', value:this.stepLength, type:'input'},
-      stepWidth:{name:'步宽', value:this.stepWidth, type:'input'},
     }
     if (this.isLast) {
       args.stepNumRule = {
@@ -54,58 +62,93 @@ export class Flight extends ChildInfo {
     return args
   }
 
+  
+
+  updateTreads () {
+    let step_num = this.stepNum + 1 - this.stepNumRule
+    let yOffset = this.parent.hangYOffset
+    let widthSum = 0
+    let commonParas = {vParent:this,
+                      vIsLast:false}
+    for (let i = 0; i < step_num; i++) {
+      let index = step_num - i + this.treadIndex
+      let pos = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(this.wVec, yOffset + widthSum)
+      let paras = {...commonParas,
+                  vIndex:index,
+                  vPos:pos,
+                  vIsLast:false}
+      if (this.treads[step_num - i - 1]) {
+        this.treads[step_num - i - 1].rebuildByParent(paras)
+        widthSum = widthSum + this.treads[step_num - i - 1].stepWidth
+      } else {
+        this.treads[step_num - i - 1] = new Tread(paras)
+        widthSum = widthSum + this.stepWidth
+      }
+    }
+    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
+      let pos  = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(this.wVec, -this.stepWidth)
+      let paras = {...commonParas,
+                  vPos:pos,
+                  vIndex:this.stepNum + this.treadIndex,
+                  vIsLast:true}
+      if (this.treads[step_num]) {
+        this.treads[step_num].rebuildByParent(paras)
+      } else {
+        this.treads[step_num] = new Tread(paras)
+      }
+    }
+  }
+
+  computeStepWidth () {
+    if (this.treads.length) {
+      let step_num = 0
+      let widthSum = this.length
+      for (const t of this.treads) {
+        if (t.isLast) {
+          continue
+        }
+        if (t.inheritW) {
+          step_num++
+        } else {
+          widthSum = widthSum - t.stepWidth
+        }
+      }
+      this.stepWidth = widthSum / step_num
+    } else {
+      let step_num = this.stepNum + 1 - this.stepNumRule
+      this.stepWidth = this.length / step_num
+    }
+  }
+
+  /**
+   * 根据所引获取楼梯段戒指到此级的长度
+   * @param {Number} vNum 为踏板在楼梯段的treads数组中的索引
+   * @returns 
+   */
+  getLengthByNum (vNum) {
+    let step_num = this.stepNum + 1 - this.stepNumRule
+    let i = step_num - 1
+    let length = 0
+    for (; i>=vNum; i--) {
+      length = length + this.treads[i].stepWidth
+    }
+    return length
+  }
+
+  getTreadByNum (vNum) {
+    return this.treads[vNum]
+  }
 
   writePB () {
-    let step_num = this.stepNum + 1 - this.stepNumRule
-    let gArgs = this.parent.girderParameters
-    let yOffset = this.parent.hangYOffset
-    let xOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
-    let pb = new Types.Flight({
+    return new Types.Flight({
       uuid: this.uuid,
-      stepParameters: new Types.StepParameters({
+      stepParameters:new Types.StepParameters({
         stepLength: this.stepLength,
         stepWidth: this.stepWidth,
         stepNumRule: this.stepNumRule,
         stepNum: this.stepNum,
       }),
+      treads: tool.writeItemArrayPB(this.treads)
     })
-    let utilEdge = new Edge(this.startEdge)
-    let lengthVec = utilEdge.getVec()
-    let widthVec = lengthVec.clone().rotateAround(new THREE.Vector2(0, 0), Math.PI / 2)
-    let p1 = utilEdge.extendP1(-xOffset).p1
-    let widthSum = 0
-    for (let i = 0; i < step_num; i++) {
-      let tread = new Types.Tread({
-        index: step_num - i + this.treadIndex,
-      })
-      let ori = new THREE.Vector2(p1.x, p1.y).addScaledVector(widthVec, yOffset + widthSum)
-      tread.stepOutline = tool.createRectOutline(
-        new Types.Vector3({ x: ori.x, y: ori.y }),
-        this.stepLength - 2 * xOffset,
-        this.stepWidth,
-        lengthVec,
-        widthVec
-      )
-      pb.treads.push(tread)
-      widthSum = widthSum + this.stepWidth
-    }
-    pb.treads.reverse()
-    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      let ori = new THREE.Vector2(p1.x, p1.y).addScaledVector(widthVec, -this.stepWidth)
-      pb.treads.push(
-        new Types.Tread({
-          index: this.stepNum + this.treadIndex,
-          isLast: true,
-          stepOutline: tool.createRectOutline(
-            new Types.Vector3({ x: ori.x, y: ori.y }),
-            this.stepLength - 2 * xOffset,
-            this.stepWidth,
-            lengthVec,
-            widthVec
-          ),
-        })
-      )
-    }
-    return pb
   }
 }

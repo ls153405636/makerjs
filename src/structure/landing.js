@@ -13,6 +13,13 @@ export class Landing extends ChildInfo {
     [Types.LandingCutType.lct_fourth, 2],
     [Types.LandingCutType.lct_fifth, 3]
   ])
+  static CUT_TYPE_MAP = [
+    {value:Types.LandingCutType.lct_first, label:'方案1'},
+    {value:Types.LandingCutType.lct_second, label:'方案2'},
+    {value:Types.LandingCutType.lct_third, label:'方案3'},
+    {value:Types.LandingCutType.lct_fourth, label:'方案4'},
+    {value:Types.LandingCutType.lct_fifth, label:'方案5'}
+  ]
   /**
    * 
    * @param {Object} param0 
@@ -28,7 +35,7 @@ export class Landing extends ChildInfo {
     this.oppoIndex = Math.abs(this.corIndex - 2)
     this.lastEdgeIndex = vLastEdgeIndex
     this.nextEdgeIndex = vNextEdgeIndex
-    this.rebuild({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth})
+    this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth})
   }
 
   /**
@@ -39,7 +46,7 @@ export class Landing extends ChildInfo {
    * @param {Number} param0.vLastStepWidth 上段楼梯的步宽
    * @param {Number} param0.vNextStepWidth 下段楼梯的步宽
    */
-  rebuild ({vTreadIndex, vBorder, vLastStepWidth, vNextStepWidth}) {
+  rebuildByParent ({vTreadIndex, vBorder, vLastStepWidth, vNextStepWidth}) {
     this.pois = []
     vBorder.edges.forEach(e => {
       this.pois.push(e.p1)
@@ -53,6 +60,13 @@ export class Landing extends ChildInfo {
     this.edgeN = this.edges[this.nextEdgeIndex]
     this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
     this.sideEdgeN = this.edges[(this.lastEdgeIndex + 2)%4]
+  }
+  
+  getArgs() {
+    let f = tool.getItemFromOptions(this.type, Landing.CUT_TYPE_MAP)
+    return {
+      type:{name:'分割方案', value:f(this.type), type:'select', options:Landing.CUT_TYPE_MAP}
+    }
   }
 
   writePB() {
@@ -149,10 +163,6 @@ export class Landing extends ChildInfo {
       }
     }
     return outlines
-  }
-
-  createOutlineByPois(vPois) {
-    
   }
 
 }

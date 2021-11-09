@@ -97,6 +97,12 @@ export namespace Types {
         gsaw = 2
     }
 
+    /** TreadType enum. */
+    enum TreadType {
+        tph = 0,
+        trect = 1
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 
@@ -1467,6 +1473,24 @@ export namespace Types {
 
         /** Tread isLast */
         isLast?: (boolean|null);
+
+        /** Tread stepLength */
+        stepLength?: (number|null);
+
+        /** Tread stepWidth */
+        stepWidth?: (number|null);
+
+        /** Tread stepHeight */
+        stepHeight?: (number|null);
+
+        /** Tread inheritL */
+        inheritL?: (boolean|null);
+
+        /** Tread inheritH */
+        inheritH?: (boolean|null);
+
+        /** Tread inheritW */
+        inheritW?: (boolean|null);
     }
 
     /** Represents a Tread. */
@@ -1489,6 +1513,24 @@ export namespace Types {
 
         /** Tread isLast. */
         public isLast: boolean;
+
+        /** Tread stepLength. */
+        public stepLength: number;
+
+        /** Tread stepWidth. */
+        public stepWidth: number;
+
+        /** Tread stepHeight. */
+        public stepHeight: number;
+
+        /** Tread inheritL. */
+        public inheritL: boolean;
+
+        /** Tread inheritH. */
+        public inheritH: boolean;
+
+        /** Tread inheritW. */
+        public inheritW: boolean;
 
         /**
          * Creates a new Tread instance using the specified properties.

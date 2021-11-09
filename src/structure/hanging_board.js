@@ -1,9 +1,8 @@
 import { Types } from '../types/stair_v2'
 import { ChildInfo } from './child_info'
 import { Default, StructConfig } from './config'
-import { Info } from './info'
 
-export class HangingBoard extends Info {
+export class HangingBoard extends ChildInfo {
   constructor(vParent) {
     super(vParent)
     this.depth = Default.HANG_BOARD_DEPTH
@@ -28,13 +27,8 @@ export class HangingBoard extends Info {
     }
   }
 
-  rebuild() {
+  rebuildByParent() {
     this.width = this.parent.stepLength
-  }
-
-  update(vArgItems) {
-    super.update(vArgItems)
-    this.parent.rebuild()
   }
 
   writePB() {

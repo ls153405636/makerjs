@@ -9,10 +9,10 @@ export class Girder extends ChildInfo {
   ]
   constructor (vParent, vInEdges, vOutEdges) {
     super(vParent)
-    this.rebuild(vInEdges, vOutEdges)
+    this.rebuildByParent(vInEdges, vOutEdges)
   }
 
-  rebuild (vInEdges, vOutEdges) {
+  rebuildByParent (vInEdges, vOutEdges) {
     this.inRoute = new Types.Outline({ edges: vInEdges })
     this.outRoute = new Types.Outline({ edges: vOutEdges })
   }
@@ -34,7 +34,7 @@ export class Girder extends ChildInfo {
   }
 
   update (vArgItems) {
-    super.update(vArgItems, 'girderParameters')
+    super.updateParent(vArgItems, 'girderParameters')
   }
 
   writePB () {

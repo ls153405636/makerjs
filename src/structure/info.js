@@ -32,15 +32,9 @@ export class Info {
    */
   update(vArgItems) {
     for (const [key1, value1] of vArgItems) {
-      if (this[key1] == undefined) {
-        continue
-      }
       if (value1 instanceof Map) {
-        let curInfo = this[key1]
         for (const [key2, value2] of value1) {
-          if (curInfo[key2] != undefined) {
             this.updateItem(value2, key1, key2)
-          }
         }
       } else {
         this.updateItem(value1, key1)
@@ -56,8 +50,14 @@ export class Info {
    * @param {String} vSecondKey 
    */
   updateItem (vValue, vKey, vSecondKey) {
+    if (this[vKey] == undefined) {
+      return
+    }
     if (vSecondKey) {
-      this[vKey][vSecondKey] = vValue
+      let curInfo = this[vKey]
+      if (curInfo[vSecondKey] != undefined) {
+        this[vKey][vSecondKey] = vValue
+      }
     } else {
       this[vKey] = vValue
     }

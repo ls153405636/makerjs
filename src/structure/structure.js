@@ -3,8 +3,7 @@ import { Types } from '../types/stair_v2'
 import { StructConfig } from './config'
 import { RectHole } from './hole'
 import { LHole } from './hole'
-import { Stair } from './stair'
-import { LTypeStair } from './stair_t'
+import { StraightStair } from './straight_stair'
 
 // const tempPages = {
 //   hole: {
@@ -40,7 +39,8 @@ export class Structure {
   initStair({ type = Types.StairType.sstright, againstWall }) {
     if (type === Types.StairType.sstright) {
       //this.stair = new Stair(this, againstWall)
-      this.stair = new LTypeStair(this, againstWall)
+      //this.stair = new LTypeStair(this, againstWall)
+      this.stair = new StraightStair(this, againstWall)
     }
     return this
   }
