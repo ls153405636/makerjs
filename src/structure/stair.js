@@ -56,10 +56,14 @@ export class Stair extends Info {
   }
 
   computeStepHeight() {
+    let step_num = 0
     if (this.flights.length) {
-      let step_num = 0
       let totalHeight = this.height
       for (const f of this.flights) {
+        if (f.treads.length === 0) {
+          step_num = 0
+          break
+        }
         for (const t of f.treads) {
           if (t.inheritH) {
             step_num ++
@@ -67,11 +71,13 @@ export class Stair extends Info {
             totalHeight = totalHeight - t.stepHeight
           }
         }
-        this.stepHeight = totalHeight / step_num
       }
-    } else {
+      this.stepHeight = totalHeight / step_num
+    } 
+    if (step_num === 0) {
       this.stepHeight = this.height / this.stepNum
     }
+    this.stepHeight = Number(this.stepHeight.toFixed(2))
   }
 
   /**
@@ -98,6 +104,7 @@ export class Stair extends Info {
         value: this.exitBeamDepth,
         type: 'input',
       },
+      stepHeightD: {name:'步高', value:this.stepHeight, type:'input', disbaled:true},
       stepNumRule: {
         name: '步数规则',
         value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
@@ -181,6 +188,17 @@ export class Stair extends Info {
     }
     if (this.bigColumns.length) {
       args.bigColParameters.value = this.bigColumns[0].getArgs()
+    }
+    args.hangingBoard = {name:'添加挂板'}
+    if(this.hangingBoard) {
+      args.hangingBoard.name = '移除挂板'
+    }
+    for (const f of this.flights) {
+      for (const p of f.treads) {
+        if (p.stepHeight !== this.stepHeight) {
+          args.stepHeightD.value = args.stepHeightD.value + '/' + p.stepHeight
+        }
+      }
     }
     return args
   }

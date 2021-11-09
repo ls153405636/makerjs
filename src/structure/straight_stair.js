@@ -29,7 +29,7 @@ export class StraightStair extends Stair  {
     this.createBigColumns()
     this.createHandrails()
     this.createGirders()
-    this.hangingBoard && this.hangingBoard.rebuild()
+    this.hangingBoard && this.hangingBoard.rebuildByParent()
     this.updateCanvas('Stair')
   }                                                                     
 

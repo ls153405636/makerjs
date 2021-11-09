@@ -49,6 +49,7 @@ export class Flight extends ChildInfo {
     let args = {
       length:{name:'总长', value:this.length, type:'input'},
       stepLength:{name:'步长', value:this.stepLength, type:'input'},
+      stepWidthD:{name:'步宽', value:this.stepWidth, type:'input', disabled:true},
     }
     if (this.isLast) {
       args.stepNumRule = {
@@ -59,6 +60,11 @@ export class Flight extends ChildInfo {
       }
     }
     args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
+    for (const t of this.treads) {
+      if (t.stepWidth !== this.stepWidth) {
+        args.stepWidthD.value = args.stepWidthD.value + '/' + t.stepWidth
+      }
+    }
     return args
   }
 
@@ -85,7 +91,7 @@ export class Flight extends ChildInfo {
       }
     }
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      let pos  = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(this.wVec, -this.stepWidth)
+      let pos  = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(this.wVec, -this.stepWidth-this.parent.hangOffset)
       let paras = {...commonParas,
                   vPos:pos,
                   vIndex:this.stepNum + this.treadIndex,
@@ -117,6 +123,7 @@ export class Flight extends ChildInfo {
       let step_num = this.stepNum + 1 - this.stepNumRule
       this.stepWidth = this.length / step_num
     }
+    this.stepWidth = Number(this.stepWidth.toFixed(2))
   }
 
   /**

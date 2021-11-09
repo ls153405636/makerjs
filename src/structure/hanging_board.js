@@ -6,7 +6,7 @@ export class HangingBoard extends ChildInfo {
   constructor(vParent) {
     super(vParent)
     this.depth = Default.HANG_BOARD_DEPTH
-    this.width = this.parent.stepLength
+    this.width = this.parent.width
     this.height = this.parent.stepHeight + 30
   }
 
@@ -28,7 +28,7 @@ export class HangingBoard extends ChildInfo {
   }
 
   rebuildByParent() {
-    this.width = this.parent.stepLength
+    this.width = this.parent.width
   }
 
   writePB() {
