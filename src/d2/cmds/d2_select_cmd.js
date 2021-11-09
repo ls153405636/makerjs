@@ -10,7 +10,7 @@ export class D2SelectCmd extends Action {
   }
 
   execute() {
-    if (D2Config.SELECTED) {
+    if (D2Config.SELECTED && D2Config.WIDGETS.has(D2Config.SELECTED.uuid)) {
       if (CUR_DATA.SELECTED_TYPE === COMP_TYPES.SMALL_COLUMN) {
         D2Config.SELECTED.cancelSmallColSelected()
       } else {

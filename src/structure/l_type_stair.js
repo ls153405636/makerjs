@@ -1,31 +1,43 @@
 import { Types } from "../types/stair_v2"
 import { Edge } from "../utils/edge"
 import { Default } from "./config"
-import { Flight } from "./flight_t"
+import { Flight } from "./flight"
+import { Landing } from "./landing"
 import { Stair } from "./stair"
+import tool from "./tool"
 
 
 export class LTypeStair extends Stair {
-  constructor(vParnet, vAgainstWall, vFloadSide = Types.Side.si_left) {
+  constructor(vParnet, vAgainstWall, vFloadSide) {
     super(vParnet, vAgainstWall)
-    this.floadSide = vFloadSide
+    if (vFloadSide) {
+      this.floadSide = vFloadSide
+    } else {
+      if (this.againstWallType === Types.AgainstWallType.aw_left) {
+        this.floadSide = Types.Side.si_right
+      } else {
+        this.floadSide = Types.Side.si_left
+      }
+    }
+    
+    this.rebuild()
   }
 
   rebuild() {
     this.smallColumns = []
-    this.hangYOffset = this.hangingBoard?.depth || 0
+    this.hangOffset = this.hangingBoard?.depth || 0
     this.computeSize()
     this.computePosition()
     this.computeStepHeight()
     this.computeSideOffset()
-
+    this.updateFlights()
+    this.updateLandings()
     this.stepNumRule = this.flights[1].stepNumRule
     this.stepNum =
       this.flights[0].stepNum +
       this.flights[1].stepNum +
       this.landings[0].stepNum
-    this.rebuildFlights()
-    this.rebuildLangdings()
+    this.updateCanvas('Stair')
   }
 
   computePosition() {
@@ -73,26 +85,32 @@ export class LTypeStair extends Stair {
     } else {
       let f1 = this.flights[0]
       let f2 = this.flights[1]
-      this.width = f1.stepLength + f2.length
+      this.width = f1.stepLength + f2.length + this.hangOffset
       this.depth = f2.stepLength + f1.length
     }
   }
 
   updateFlights () {
+    let f1 = this.flights[0]
+    let f2 = this.flights[1]
+    let gArgs = this.girderParameters
+    let sL1 = f1 ? f1.stepLength : Default.STEP_LENGTH
+    let sL2 = f2 ? f2.stepLength : Default.STEP_LENGTH
+    let xOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
     let wVec1 = new Types.Vector3({y:1})
     let wVec2X = this.floadSide === Types.Side.si_right ? -1 : 1
     let wVec2 = new Types.Vector3({x:wVec2X})
     let lVec1 = new Types.Vector3({x:1})
     let lVec2 = new Types.Vector3({y:1}) 
-    let pos2 = new Types.Vector3()
-    if (this.floadSide === Types.Side.si_right) {
-      pos2.x = this.width
+    let pos2 = new Types.Vector3({x:this.width - this.hangOffset, y:xOffset})
+    let pos1 = new Types.Vector3({x:xOffset, y:sL2})
+    if (this.floadSide === Types.Side.si_left) {
+      pos2.x = this.hangOffset
+      pos1.x = this.width - sL1 + xOffset
     }
     if (this.flights.length === 2) {
-      let f1 = this.flights[0]
-      let f2 = this.flights[1]
       f1.rebuildByParent({vTreadIndex:0, 
-                          vPos:new Types.Vector3({y:f2.stepLength}), 
+                          vPos:pos1, 
                           vLVec:lVec1, 
                           vWVec:wVec1})
       f2.rebuildByParent({vTreadIndex:this.stepNum - f2.stepNum, 
@@ -108,7 +126,7 @@ export class LTypeStair extends Stair {
                                     vIndex:0, 
                                     vTreadIndex:0, 
                                     isLast:false, 
-                                    vPos:new Types.Vector3({y:Default.STEP_LENGTH}), 
+                                    vPos:pos1, 
                                     vLVec:lVec1, 
                                     vWVec:wVec1, 
                                     vLength:this.depth - Default.STEP_LENGTH})
@@ -161,7 +179,7 @@ export class LTypeStair extends Stair {
     let ori = new Types.Vector3()
     let nextIndex = 1
     if (this.floadSide === Types.Side.si_left) {
-      ori.x = f2.getTotalLength()
+      ori.x = f2.length
       nextIndex = 3
     }
     let border = tool.createRectOutline(ori, f1.stepLength, f2.stepLength)

@@ -19,6 +19,9 @@
       <right-hanging-board
         v-if="cur_type === cts.HANGING_BOARD"
       ></right-hanging-board>
+      <right-landing
+        v-if="cur_type === cts.LANDING"
+      ></right-landing>
     </el-scrollbar>
   </div>
 </template>
@@ -38,6 +41,7 @@ import rightInlay from './right_attributes/Inlay.vue'
 import rightCementComp from './right_attributes/CementComp.vue'
 import rightTread from './right_attributes/Tread.vue'
 import rightHangingBoard from './right_attributes/HangingBoard.vue'
+import rightLanding from './right_attributes/Landing.vue'
 
 export default {
   name: 'componentRight',
@@ -54,6 +58,7 @@ export default {
     rightCementComp,
     rightTread,
     rightHangingBoard,
+    rightLanding,
   },
   props: {
     rightFlight,
@@ -68,6 +73,7 @@ export default {
     rightCementComp,
     rightTread,
     rightHangingBoard,
+    rightLanding
   },
   data() {
     return {

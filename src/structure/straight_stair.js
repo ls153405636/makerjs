@@ -1,4 +1,4 @@
-import { Flight } from './flight_t'
+import { Flight } from './flight'
 import { Types } from '../types/stair_v2'
 import { BigColumn } from './big_column'
 import { Default } from './config'
@@ -17,7 +17,7 @@ export class StraightStair extends Stair  {
 
   rebuild() {
     this.smallColumns = []
-    this.hangYOffset = this.hangingBoard?.depth || 0
+    this.hangOffset = this.hangingBoard?.depth || 0
     this.computeSize()
     this.computePosition()
     this.computeStepHeight()
@@ -41,7 +41,7 @@ export class StraightStair extends Stair  {
     }
     let hole = this.parent.hole
     if (this.flights[0]) {
-      this.depth = this.flights[0].length
+      this.depth = this.flights[0].length + this.hangOffset
     } else if (this.againstWallType === Types.AgainstWallType.aw_left){
       this.depth = new Edge(hole.getEdgeByPos('left')).getLength()
     } else if (this.againstWallType === Types.AgainstWallType.aw_right){
@@ -93,7 +93,7 @@ export class StraightStair extends Stair  {
   updateFlights() {
     let gArgs = this.girderParameters
     let xOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
-    let pos = new Types.Vector3({x:xOffset})
+    let pos = new Types.Vector3({x:xOffset, y:this.hangOffset})
     let paras = {vParent:this, 
                 vStepNum: this.stepNum, 
                 vStepNumRule: this.stepNumRule, 
@@ -118,7 +118,7 @@ export class StraightStair extends Stair  {
     let i = Math.abs(1 - this.bigColParameters.posType)
     let step_num = this.stepNum + 1 - this.stepNumRule
     let size = tool.parseSpecification(args.specification)
-    let angle = Math.tanh(this.height / (this.depth - this.hangYOffset))
+    let angle = Math.tanh(this.height / (this.depth - this.hangOffset))
     for (; i < step_num; i++) {
       let position1 = new Types.Vector3()
       let position2 = new Types.Vector3()
@@ -126,7 +126,7 @@ export class StraightStair extends Stair  {
       position2.z = position1.z = this.stepHeight * (i + 1)
       let length1 = 0
       let length2 = 0
-      let border = this.hangYOffset + this.flights[0].getLengthByNum(i)
+      let border = this.hangOffset + this.flights[0].getLengthByNum(i)
       let stepWidth = this.flights[0].getTreadByNum(i).stepWidth
       if (args.arrangeRule === Types.ArrangeRule.arrThree) {
         let index = i % 2
@@ -216,13 +216,13 @@ export class StraightStair extends Stair  {
     let leftInEdges = [
       new Types.Edge({
         p1: new Types.Vector3({ x: args.depth, y: this.depth }),
-        p2: new Types.Vector3({ x: args.depth, y: this.hangYOffset }),
+        p2: new Types.Vector3({ x: args.depth, y: this.hangOffset }),
       }),
     ]
     let leftOutEdges = [
       new Types.Edge({
         p1: new Types.Vector3({ x: 0, y: this.depth }),
-        p2: new Types.Vector3({ x: 0, y: this.hangYOffset }),
+        p2: new Types.Vector3({ x: 0, y: this.hangOffset }),
       }),
     ]
     let rightInEdges = [
@@ -233,14 +233,14 @@ export class StraightStair extends Stair  {
         }),
         p2: new Types.Vector3({
           x: this.width - args.depth,
-          y: this.hangYOffset,
+          y: this.hangOffset,
         }),
       }),
     ]
     let rightOutEdges = [
       new Types.Edge({
         p1: new Types.Vector3({ x: this.width, y: this.depth }),
-        p2: new Types.Vector3({ x: this.width, y: this.hangYOffset }),
+        p2: new Types.Vector3({ x: this.width, y: this.hangOffset }),
       }),
     ]
     if (this.girders.length === 2) {

@@ -33,6 +33,9 @@ export class Stair extends BaseWidget {
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
     }
+    /**目前休息平台架构与楼梯段完全一样
+     * 所以暂时使用flight类，若后续有新需求，再用新类
+     */
     for (const l of vPB.landings) {
       this.landings.push(new Flight(l, this))
     }
@@ -74,6 +77,9 @@ export class Stair extends BaseWidget {
     }
     for (const hb of this.hangingBoard) {
       hb.destroy()
+    }
+    for (const l of this.landings) {
+      l.destroy()
     }
     super.destroy()
   }

@@ -16,6 +16,7 @@ export class Tread extends ChildWidget {
     this.edges = vPB.stepOutline.edges
     this.index = vPB.index
     this.parent = vParent
+    this.type = vPB.type
     this.draw()
     this.addEvent()
     // console.log(this.edges)
@@ -131,10 +132,11 @@ export class Tread extends ChildWidget {
             })
           )
         } else {
+          /**暂时根据踏板类型来判断是否选中的是休台，当前项目中，楼梯段踏板一定是标准矩形 */
           core.execute(
             new Command(core.cmds.SelecteCmd, {
               uuid: this.parent.uuid,
-              type: COMP_TYPES.FLIGHT,
+              type: this.type === Types.TreadType.trect ? COMP_TYPES.FLIGHT : COMP_TYPES.LANDING,
             })
           )
         }

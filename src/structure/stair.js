@@ -1,7 +1,7 @@
 import { Info } from './info'
 import { Default } from './config'
 import { Types } from '../types/stair_v2'
-import { Flight } from './flight_t'
+import { Flight } from './flight'
 import tool from './tool'
 import { Girder } from './girder'
 
@@ -24,7 +24,7 @@ export class Stair extends Info {
     this.handrails = []
     this.girders = []
     this.smallColumns = []
-    this.hangYOffset = 0
+    this.hangOffset = 0
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
       nossingType: Default.TREAD_NOSSING_TYPE,

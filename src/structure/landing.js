@@ -51,7 +51,7 @@ export class Landing extends ChildInfo {
     vBorder.edges.forEach(e => {
       this.pois.push(e.p1)
     })
-    this.stepNum = Landing.STEP_NUM_MAP[this.type]
+    this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
     this.treadIndex = vTreadIndex
     this.edges = vBorder.edges
     this.lastStepWidth = vLastStepWidth
@@ -63,9 +63,9 @@ export class Landing extends ChildInfo {
   }
   
   getArgs() {
-    let f = tool.getItemFromOptions(this.type, Landing.CUT_TYPE_MAP)
+    let f = tool.getItemFromOptions
     return {
-      type:{name:'分割方案', value:f(this.type), type:'select', options:Landing.CUT_TYPE_MAP}
+      type:{name:'分割方案', value:f(this.type, Landing.CUT_TYPE_MAP), type:'select', options:Landing.CUT_TYPE_MAP}
     }
   }
 
