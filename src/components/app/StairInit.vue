@@ -103,6 +103,7 @@ export default defineComponent({
       core.execute(
         new Command(core.cmds.StairInitCmd, {
           againstWall: this.stair_against_wall_options.value.value,
+          type: this.stair_shape_options.value.value,
         })
       )
     },

@@ -8,6 +8,7 @@
       <!-- 输入 -->
       <el-form-item v-if="arg.type === 'input'" :label="arg.name">
         <el-input
+          :disabled="arg.disabled"
           v-model.lazy="arg.value"
           @blur="updateArgs(arg.value, index, arg.type)"
           @keydown.enter.prevent="enterBlur($event)"
@@ -54,6 +55,7 @@
               <!-- 展开-输入 -->
               <el-form-item v-if="item1.type === 'input'" :label="item1.name">
                 <el-input
+                  :disabled="item1.disabled"
                   v-model="item1.value"
                   @blur="updateArgs(item1.value, index, item1.type, key)"
                   @keydown.enter.prevent="enterBlur($event)"
@@ -177,12 +179,13 @@ export default defineComponent({
 .el-card__body {
   width: 100%;
   height: 300px;
-  background-color: aqua;
   overflow: auto;
 }
 .show_img {
   width: 100px;
+  margin-left: 150px;
   height: 100px;
+  background-color: blue;
   cursor: pointer;
 }
 .show_img .show_img_small {
