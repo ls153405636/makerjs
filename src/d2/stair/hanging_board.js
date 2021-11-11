@@ -25,7 +25,7 @@ export class HangingBoard extends ChildWidget {
     const changeHangingBoard = new PIXI.Graphics()
     changeHangingBoard.visible = false
     changeHangingBoard.lineStyle(1, 0x4478f4)
-    changeHangingBoard.beginFill(0xffffff)
+    changeHangingBoard.beginFill(0xe9efff)
     changeHangingBoard.drawRect(0, 0, this.width, this.height)
 
     const hangingBoard = new PIXI.Graphics()

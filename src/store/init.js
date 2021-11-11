@@ -41,6 +41,7 @@ const state = {
     name: '楼梯形状',
     options: {
       0: { value: Types.StairType.sstright, label: '直梯' },
+      1: { value: Types.StairType.sl_type, label: 'L梯' },
     },
     value: { value: Types.StairType.sstright, label: '直梯' },
   },
