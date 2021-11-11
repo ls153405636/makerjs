@@ -24,7 +24,7 @@ export const Default = {
   INLAY_HEIGHT: 2000,
   CEMENT_SIZE: 300,
   STEP_NUM_RULE: Types.StepNumRule.snr_n_add_1,
-  STEP_NUM: 15,
+  STEP_NUM: 17,
   STEP_LENGTH: 900,
   STEP_WIDTH: 259,
   TREAD_DEPTH: 30,
@@ -43,5 +43,5 @@ export const Default = {
   HAND_HEIGHT: 870,
   HAND_SPEC: '60*80',
   HANG_BOARD_DEPTH: 40,
-  LANDING_TYPE: Types.LandingCutType.lct_second,
+  LANDING_TYPE: Types.LandingCutType.lct_fifth,
 }

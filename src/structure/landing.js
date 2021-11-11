@@ -1,5 +1,7 @@
 import { Types } from "../types/stair_v2";
 import { Edge } from "../utils/edge";
+import { Outline } from "../utils/outline";
+import { BigColumn } from "./big_column";
 import { ChildInfo } from "./child_info";
 import { Default } from "./config";
 import tool from "./tool";
@@ -60,12 +62,19 @@ export class Landing extends ChildInfo {
     this.edgeN = this.edges[this.nextEdgeIndex]
     this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
     this.sideEdgeN = this.edges[(this.lastEdgeIndex + 2)%4]
+    this.updateCorBigCol()
   }
   
   getArgs() {
     let f = tool.getItemFromOptions
+    let options = [...Landing.CUT_TYPE_MAP]
+    let gArgs = this.parent.girderParameters
+    if (gArgs.type === Types.GirderType.gslab) {
+      options.splice(1,1)
+    }
     return {
-      type:{name:'分割方案', value:f(this.type, Landing.CUT_TYPE_MAP), type:'select', options:Landing.CUT_TYPE_MAP}
+      type:{name:'分割方案', value:f(this.type, Landing.CUT_TYPE_MAP), type:'select', options:options},
+
     }
   }
 
@@ -75,6 +84,38 @@ export class Landing extends ChildInfo {
       type:this.type,
       treads: this.createTreads()
     })
+  }
+
+  addBigCol (vInfo, vPosName) {
+    this[vPosName] = vInfo
+  }
+
+  
+
+  updateCorBigCol () {
+    let size = this.corBigCol?.size || tool.parseSpecification(Default.BIG_COL_SPEC)
+    let gArgs = this.parent.girderParameters
+    let utilOutline = new Outline(new Types.Outline({edges:this.edges}))
+    let xOffset
+    let yOffset
+    if (gArgs.type === Types.GirderType.gsaw) {
+      xOffset = size.x / 2
+      yOffset = size.y / 2
+    } else {
+      xOffset = yOffset = gArgs.depth / 2
+    }
+    let xCor = utilOutline.offset(xOffset, false).edges[this.corIndex].p1
+    let yCor = utilOutline.offset(yOffset, false).edges[this.corIndex].p1
+    let pos = new Types.Vector3({x:xCor.x, y:yCor.y})
+    if (this.corBigCol) {
+      this.corBigCol.rebuildByParent(pos)
+    } else {
+      this.corBigCol = new BigColumn({vParent:this,
+                                      vPosition:pos,
+                                      vIsProp:true,
+                                      vPosName:'corBigCol'})
+      return this.corBigCol
+    }
   }
 
   createTreads() {
@@ -96,6 +137,7 @@ export class Landing extends ChildInfo {
     return treads
   }
 
+  //创建二类分割梯板轮廓
   createSecondOutlines(){
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[(this.corIndex+2)%4] //对角点
@@ -122,6 +164,7 @@ export class Landing extends ChildInfo {
     return outlines
   }
 
+  //创建三四五类分割梯板轮廓
   createInCutOutlines() {
     let outlines = []
     let inEdgeL = new Edge(this.edgeL).offSet(this.lastStepWidth, false)

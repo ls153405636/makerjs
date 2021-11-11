@@ -33,8 +33,8 @@ export class Structure {
 
   initStair({ type = Types.StairType.sstright, againstWall }) {
     if (type === Types.StairType.sstright) {
-      //this.stair = new LTypeStair(this, againstWall)
-      this.stair = new StraightStair(this, againstWall)
+      this.stair = new LTypeStair(this, againstWall)
+      //this.stair = new StraightStair(this, againstWall)
     }
     return this
   }

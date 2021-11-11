@@ -433,6 +433,216 @@ export namespace Types {
         public toJSON(): { [k: string]: any };
     }
 
+    /** Properties of a Border. */
+    interface IBorder {
+
+        /** Border out */
+        out?: (Types.ISideEdges[]|null);
+
+        /** Border in */
+        "in"?: (Types.ISideEdges[]|null);
+
+        /** Border front */
+        front?: (Types.ISideEdges[]|null);
+
+        /** Border back */
+        back?: (Types.ISideEdges[]|null);
+    }
+
+    /** Represents a Border. */
+    class Border implements IBorder {
+
+        /**
+         * Constructs a new Border.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IBorder);
+
+        /** Border out. */
+        public out: Types.ISideEdges[];
+
+        /** Border in. */
+        public in: Types.ISideEdges[];
+
+        /** Border front. */
+        public front: Types.ISideEdges[];
+
+        /** Border back. */
+        public back: Types.ISideEdges[];
+
+        /**
+         * Creates a new Border instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns Border instance
+         */
+        public static create(properties?: Types.IBorder): Types.Border;
+
+        /**
+         * Encodes the specified Border message. Does not implicitly {@link Types.Border.verify|verify} messages.
+         * @param message Border message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IBorder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified Border message, length delimited. Does not implicitly {@link Types.Border.verify|verify} messages.
+         * @param message Border message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IBorder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a Border message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns Border
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Border;
+
+        /**
+         * Decodes a Border message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns Border
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Border;
+
+        /**
+         * Verifies a Border message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a Border message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns Border
+         */
+        public static fromObject(object: { [k: string]: any }): Types.Border;
+
+        /**
+         * Creates a plain object from a Border message. Also converts values to other types if specified.
+         * @param message Border
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.Border, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this Border to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a SideEdges. */
+    interface ISideEdges {
+
+        /** SideEdges edges */
+        edges?: (Types.IEdge[]|null);
+
+        /** SideEdges totalEdge */
+        totalEdge?: (Types.IEdge|null);
+
+        /** SideEdges girders */
+        girders?: (Types.IGirder[]|null);
+    }
+
+    /** Represents a SideEdges. */
+    class SideEdges implements ISideEdges {
+
+        /**
+         * Constructs a new SideEdges.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ISideEdges);
+
+        /** SideEdges edges. */
+        public edges: Types.IEdge[];
+
+        /** SideEdges totalEdge. */
+        public totalEdge?: (Types.IEdge|null);
+
+        /** SideEdges girders. */
+        public girders: Types.IGirder[];
+
+        /**
+         * Creates a new SideEdges instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SideEdges instance
+         */
+        public static create(properties?: Types.ISideEdges): Types.SideEdges;
+
+        /**
+         * Encodes the specified SideEdges message. Does not implicitly {@link Types.SideEdges.verify|verify} messages.
+         * @param message SideEdges message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ISideEdges, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SideEdges message, length delimited. Does not implicitly {@link Types.SideEdges.verify|verify} messages.
+         * @param message SideEdges message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ISideEdges, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SideEdges message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SideEdges
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.SideEdges;
+
+        /**
+         * Decodes a SideEdges message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SideEdges
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.SideEdges;
+
+        /**
+         * Verifies a SideEdges message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SideEdges message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SideEdges
+         */
+        public static fromObject(object: { [k: string]: any }): Types.SideEdges;
+
+        /**
+         * Creates a plain object from a SideEdges message. Also converts values to other types if specified.
+         * @param message SideEdges
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.SideEdges, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SideEdges to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
     /** Properties of a Project. */
     interface IProject {
 
@@ -2484,6 +2694,9 @@ export namespace Types {
 
         /** BigColumn paras */
         paras?: (Types.IBigColParameters|null);
+
+        /** BigColumn isProp */
+        isProp?: (boolean|null);
     }
 
     /** Represents a BigColumn. */
@@ -2509,6 +2722,9 @@ export namespace Types {
 
         /** BigColumn paras. */
         public paras?: (Types.IBigColParameters|null);
+
+        /** BigColumn isProp. */
+        public isProp: boolean;
 
         /**
          * Creates a new BigColumn instance using the specified properties.
@@ -3117,6 +3333,9 @@ export namespace Types {
 
         /** GirderParameters material */
         material?: (Types.IMaterial|null);
+
+        /** GirderParameters fOffsetStep */
+        fOffsetStep?: (number|null);
     }
 
     /** Represents a GirderParameters. */
@@ -3139,6 +3358,9 @@ export namespace Types {
 
         /** GirderParameters material. */
         public material?: (Types.IMaterial|null);
+
+        /** GirderParameters fOffsetStep. */
+        public fOffsetStep: number;
 
         /**
          * Creates a new GirderParameters instance using the specified properties.

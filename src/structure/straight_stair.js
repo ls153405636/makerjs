@@ -39,14 +39,10 @@ export class StraightStair extends Stair  {
     } else {
       this.width = Default.STEP_LENGTH
     }
-    let hole = this.parent.hole
+    //let hole = this.parent.hole
     if (this.flights[0]) {
       this.depth = this.flights[0].length + this.hangOffset
-    } else if (this.againstWallType === Types.AgainstWallType.aw_left){
-      this.depth = new Edge(hole.getEdgeByPos('left')).getLength()
-    } else if (this.againstWallType === Types.AgainstWallType.aw_right){
-      this.depth = new Edge(hole.getEdgeByPos('right')).getLength()
-    } else if (this.againstWallType === Types.AgainstWallType.aw_no){
+    } else {
       this.depth = Default.STEP_WIDTH * (this.stepNum - this.stepNumRule + 1)
     }
     this.height = this.parent.hole.floorHeight
@@ -196,12 +192,12 @@ export class StraightStair extends Stair  {
       y: leftPosition.y,
     })
     if (this.bigColumns.length === 2) {
-      this.bigColumns[0].rebuildByParent(leftPosition, size)
-      this.bigColumns[1].rebuildByParent(rightPosition, size)
+      this.bigColumns[0].rebuildByParent(leftPosition)
+      this.bigColumns[1].rebuildByParent(rightPosition)
     } else {
       this.bigColumns.push(
-        new BigColumn(this, leftPosition, size),
-        new BigColumn(this, rightPosition, size)
+        new BigColumn({vParent:this, vPosition:leftPosition}),
+        new BigColumn({vParent:this, vPosition:rightPosition})
       )
     }
   }

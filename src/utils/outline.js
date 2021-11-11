@@ -22,8 +22,9 @@ export class Outline {
    * @returns {Types.Outline}
    */
   offset (vDis, vPlus) {
-    let newEdges = [], dis1 = vDis, dis2 = vDis
+    let newEdges = []
     for (let i = 0; i < this.edges.length; i++) {
+      let dis1 = vDis, dis2 = vDis
       let e = this.edges[i]
       let lEdge = null, nEdge = null, p1OffsetDir, p2OffsetDir
       let nor = e.getNormal(), vec = e.getVec()

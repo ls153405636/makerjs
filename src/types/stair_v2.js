@@ -1082,6 +1082,624 @@ export const Types = $root.Types = (() => {
         return Outline;
     })();
 
+    Types.Border = (function() {
+
+        /**
+         * Properties of a Border.
+         * @memberof Types
+         * @interface IBorder
+         * @property {Array.<Types.ISideEdges>|null} [out] Border out
+         * @property {Array.<Types.ISideEdges>|null} ["in"] Border in
+         * @property {Array.<Types.ISideEdges>|null} [front] Border front
+         * @property {Array.<Types.ISideEdges>|null} [back] Border back
+         */
+
+        /**
+         * Constructs a new Border.
+         * @memberof Types
+         * @classdesc Represents a Border.
+         * @implements IBorder
+         * @constructor
+         * @param {Types.IBorder=} [properties] Properties to set
+         */
+        function Border(properties) {
+            this.out = [];
+            this["in"] = [];
+            this.front = [];
+            this.back = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * Border out.
+         * @member {Array.<Types.ISideEdges>} out
+         * @memberof Types.Border
+         * @instance
+         */
+        Border.prototype.out = $util.emptyArray;
+
+        /**
+         * Border in.
+         * @member {Array.<Types.ISideEdges>} in
+         * @memberof Types.Border
+         * @instance
+         */
+        Border.prototype["in"] = $util.emptyArray;
+
+        /**
+         * Border front.
+         * @member {Array.<Types.ISideEdges>} front
+         * @memberof Types.Border
+         * @instance
+         */
+        Border.prototype.front = $util.emptyArray;
+
+        /**
+         * Border back.
+         * @member {Array.<Types.ISideEdges>} back
+         * @memberof Types.Border
+         * @instance
+         */
+        Border.prototype.back = $util.emptyArray;
+
+        /**
+         * Creates a new Border instance using the specified properties.
+         * @function create
+         * @memberof Types.Border
+         * @static
+         * @param {Types.IBorder=} [properties] Properties to set
+         * @returns {Types.Border} Border instance
+         */
+        Border.create = function create(properties) {
+            return new Border(properties);
+        };
+
+        /**
+         * Encodes the specified Border message. Does not implicitly {@link Types.Border.verify|verify} messages.
+         * @function encode
+         * @memberof Types.Border
+         * @static
+         * @param {Types.IBorder} message Border message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Border.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.out != null && message.out.length)
+                for (let i = 0; i < message.out.length; ++i)
+                    $root.Types.SideEdges.encode(message.out[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message["in"] != null && message["in"].length)
+                for (let i = 0; i < message["in"].length; ++i)
+                    $root.Types.SideEdges.encode(message["in"][i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.front != null && message.front.length)
+                for (let i = 0; i < message.front.length; ++i)
+                    $root.Types.SideEdges.encode(message.front[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.back != null && message.back.length)
+                for (let i = 0; i < message.back.length; ++i)
+                    $root.Types.SideEdges.encode(message.back[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified Border message, length delimited. Does not implicitly {@link Types.Border.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.Border
+         * @static
+         * @param {Types.IBorder} message Border message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        Border.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a Border message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.Border
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.Border} Border
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Border.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.Border();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    if (!(message.out && message.out.length))
+                        message.out = [];
+                    message.out.push($root.Types.SideEdges.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    if (!(message["in"] && message["in"].length))
+                        message["in"] = [];
+                    message["in"].push($root.Types.SideEdges.decode(reader, reader.uint32()));
+                    break;
+                case 3:
+                    if (!(message.front && message.front.length))
+                        message.front = [];
+                    message.front.push($root.Types.SideEdges.decode(reader, reader.uint32()));
+                    break;
+                case 4:
+                    if (!(message.back && message.back.length))
+                        message.back = [];
+                    message.back.push($root.Types.SideEdges.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a Border message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.Border
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.Border} Border
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        Border.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a Border message.
+         * @function verify
+         * @memberof Types.Border
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        Border.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.out != null && message.hasOwnProperty("out")) {
+                if (!Array.isArray(message.out))
+                    return "out: array expected";
+                for (let i = 0; i < message.out.length; ++i) {
+                    let error = $root.Types.SideEdges.verify(message.out[i]);
+                    if (error)
+                        return "out." + error;
+                }
+            }
+            if (message["in"] != null && message.hasOwnProperty("in")) {
+                if (!Array.isArray(message["in"]))
+                    return "in: array expected";
+                for (let i = 0; i < message["in"].length; ++i) {
+                    let error = $root.Types.SideEdges.verify(message["in"][i]);
+                    if (error)
+                        return "in." + error;
+                }
+            }
+            if (message.front != null && message.hasOwnProperty("front")) {
+                if (!Array.isArray(message.front))
+                    return "front: array expected";
+                for (let i = 0; i < message.front.length; ++i) {
+                    let error = $root.Types.SideEdges.verify(message.front[i]);
+                    if (error)
+                        return "front." + error;
+                }
+            }
+            if (message.back != null && message.hasOwnProperty("back")) {
+                if (!Array.isArray(message.back))
+                    return "back: array expected";
+                for (let i = 0; i < message.back.length; ++i) {
+                    let error = $root.Types.SideEdges.verify(message.back[i]);
+                    if (error)
+                        return "back." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a Border message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.Border
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.Border} Border
+         */
+        Border.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.Border)
+                return object;
+            let message = new $root.Types.Border();
+            if (object.out) {
+                if (!Array.isArray(object.out))
+                    throw TypeError(".Types.Border.out: array expected");
+                message.out = [];
+                for (let i = 0; i < object.out.length; ++i) {
+                    if (typeof object.out[i] !== "object")
+                        throw TypeError(".Types.Border.out: object expected");
+                    message.out[i] = $root.Types.SideEdges.fromObject(object.out[i]);
+                }
+            }
+            if (object["in"]) {
+                if (!Array.isArray(object["in"]))
+                    throw TypeError(".Types.Border.in: array expected");
+                message["in"] = [];
+                for (let i = 0; i < object["in"].length; ++i) {
+                    if (typeof object["in"][i] !== "object")
+                        throw TypeError(".Types.Border.in: object expected");
+                    message["in"][i] = $root.Types.SideEdges.fromObject(object["in"][i]);
+                }
+            }
+            if (object.front) {
+                if (!Array.isArray(object.front))
+                    throw TypeError(".Types.Border.front: array expected");
+                message.front = [];
+                for (let i = 0; i < object.front.length; ++i) {
+                    if (typeof object.front[i] !== "object")
+                        throw TypeError(".Types.Border.front: object expected");
+                    message.front[i] = $root.Types.SideEdges.fromObject(object.front[i]);
+                }
+            }
+            if (object.back) {
+                if (!Array.isArray(object.back))
+                    throw TypeError(".Types.Border.back: array expected");
+                message.back = [];
+                for (let i = 0; i < object.back.length; ++i) {
+                    if (typeof object.back[i] !== "object")
+                        throw TypeError(".Types.Border.back: object expected");
+                    message.back[i] = $root.Types.SideEdges.fromObject(object.back[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a Border message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.Border
+         * @static
+         * @param {Types.Border} message Border
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        Border.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults) {
+                object.out = [];
+                object["in"] = [];
+                object.front = [];
+                object.back = [];
+            }
+            if (message.out && message.out.length) {
+                object.out = [];
+                for (let j = 0; j < message.out.length; ++j)
+                    object.out[j] = $root.Types.SideEdges.toObject(message.out[j], options);
+            }
+            if (message["in"] && message["in"].length) {
+                object["in"] = [];
+                for (let j = 0; j < message["in"].length; ++j)
+                    object["in"][j] = $root.Types.SideEdges.toObject(message["in"][j], options);
+            }
+            if (message.front && message.front.length) {
+                object.front = [];
+                for (let j = 0; j < message.front.length; ++j)
+                    object.front[j] = $root.Types.SideEdges.toObject(message.front[j], options);
+            }
+            if (message.back && message.back.length) {
+                object.back = [];
+                for (let j = 0; j < message.back.length; ++j)
+                    object.back[j] = $root.Types.SideEdges.toObject(message.back[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this Border to JSON.
+         * @function toJSON
+         * @memberof Types.Border
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        Border.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return Border;
+    })();
+
+    Types.SideEdges = (function() {
+
+        /**
+         * Properties of a SideEdges.
+         * @memberof Types
+         * @interface ISideEdges
+         * @property {Array.<Types.IEdge>|null} [edges] SideEdges edges
+         * @property {Types.IEdge|null} [totalEdge] SideEdges totalEdge
+         * @property {Array.<Types.IGirder>|null} [girders] SideEdges girders
+         */
+
+        /**
+         * Constructs a new SideEdges.
+         * @memberof Types
+         * @classdesc Represents a SideEdges.
+         * @implements ISideEdges
+         * @constructor
+         * @param {Types.ISideEdges=} [properties] Properties to set
+         */
+        function SideEdges(properties) {
+            this.edges = [];
+            this.girders = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SideEdges edges.
+         * @member {Array.<Types.IEdge>} edges
+         * @memberof Types.SideEdges
+         * @instance
+         */
+        SideEdges.prototype.edges = $util.emptyArray;
+
+        /**
+         * SideEdges totalEdge.
+         * @member {Types.IEdge|null|undefined} totalEdge
+         * @memberof Types.SideEdges
+         * @instance
+         */
+        SideEdges.prototype.totalEdge = null;
+
+        /**
+         * SideEdges girders.
+         * @member {Array.<Types.IGirder>} girders
+         * @memberof Types.SideEdges
+         * @instance
+         */
+        SideEdges.prototype.girders = $util.emptyArray;
+
+        /**
+         * Creates a new SideEdges instance using the specified properties.
+         * @function create
+         * @memberof Types.SideEdges
+         * @static
+         * @param {Types.ISideEdges=} [properties] Properties to set
+         * @returns {Types.SideEdges} SideEdges instance
+         */
+        SideEdges.create = function create(properties) {
+            return new SideEdges(properties);
+        };
+
+        /**
+         * Encodes the specified SideEdges message. Does not implicitly {@link Types.SideEdges.verify|verify} messages.
+         * @function encode
+         * @memberof Types.SideEdges
+         * @static
+         * @param {Types.ISideEdges} message SideEdges message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SideEdges.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.edges != null && message.edges.length)
+                for (let i = 0; i < message.edges.length; ++i)
+                    $root.Types.Edge.encode(message.edges[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.totalEdge != null && Object.hasOwnProperty.call(message, "totalEdge"))
+                $root.Types.Edge.encode(message.totalEdge, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.girders != null && message.girders.length)
+                for (let i = 0; i < message.girders.length; ++i)
+                    $root.Types.Girder.encode(message.girders[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SideEdges message, length delimited. Does not implicitly {@link Types.SideEdges.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.SideEdges
+         * @static
+         * @param {Types.ISideEdges} message SideEdges message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SideEdges.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SideEdges message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.SideEdges
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.SideEdges} SideEdges
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SideEdges.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.SideEdges();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    if (!(message.edges && message.edges.length))
+                        message.edges = [];
+                    message.edges.push($root.Types.Edge.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.totalEdge = $root.Types.Edge.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    if (!(message.girders && message.girders.length))
+                        message.girders = [];
+                    message.girders.push($root.Types.Girder.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a SideEdges message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.SideEdges
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.SideEdges} SideEdges
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SideEdges.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SideEdges message.
+         * @function verify
+         * @memberof Types.SideEdges
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SideEdges.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.edges != null && message.hasOwnProperty("edges")) {
+                if (!Array.isArray(message.edges))
+                    return "edges: array expected";
+                for (let i = 0; i < message.edges.length; ++i) {
+                    let error = $root.Types.Edge.verify(message.edges[i]);
+                    if (error)
+                        return "edges." + error;
+                }
+            }
+            if (message.totalEdge != null && message.hasOwnProperty("totalEdge")) {
+                let error = $root.Types.Edge.verify(message.totalEdge);
+                if (error)
+                    return "totalEdge." + error;
+            }
+            if (message.girders != null && message.hasOwnProperty("girders")) {
+                if (!Array.isArray(message.girders))
+                    return "girders: array expected";
+                for (let i = 0; i < message.girders.length; ++i) {
+                    let error = $root.Types.Girder.verify(message.girders[i]);
+                    if (error)
+                        return "girders." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a SideEdges message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.SideEdges
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.SideEdges} SideEdges
+         */
+        SideEdges.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.SideEdges)
+                return object;
+            let message = new $root.Types.SideEdges();
+            if (object.edges) {
+                if (!Array.isArray(object.edges))
+                    throw TypeError(".Types.SideEdges.edges: array expected");
+                message.edges = [];
+                for (let i = 0; i < object.edges.length; ++i) {
+                    if (typeof object.edges[i] !== "object")
+                        throw TypeError(".Types.SideEdges.edges: object expected");
+                    message.edges[i] = $root.Types.Edge.fromObject(object.edges[i]);
+                }
+            }
+            if (object.totalEdge != null) {
+                if (typeof object.totalEdge !== "object")
+                    throw TypeError(".Types.SideEdges.totalEdge: object expected");
+                message.totalEdge = $root.Types.Edge.fromObject(object.totalEdge);
+            }
+            if (object.girders) {
+                if (!Array.isArray(object.girders))
+                    throw TypeError(".Types.SideEdges.girders: array expected");
+                message.girders = [];
+                for (let i = 0; i < object.girders.length; ++i) {
+                    if (typeof object.girders[i] !== "object")
+                        throw TypeError(".Types.SideEdges.girders: object expected");
+                    message.girders[i] = $root.Types.Girder.fromObject(object.girders[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SideEdges message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.SideEdges
+         * @static
+         * @param {Types.SideEdges} message SideEdges
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SideEdges.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults) {
+                object.edges = [];
+                object.girders = [];
+            }
+            if (options.defaults)
+                object.totalEdge = null;
+            if (message.edges && message.edges.length) {
+                object.edges = [];
+                for (let j = 0; j < message.edges.length; ++j)
+                    object.edges[j] = $root.Types.Edge.toObject(message.edges[j], options);
+            }
+            if (message.totalEdge != null && message.hasOwnProperty("totalEdge"))
+                object.totalEdge = $root.Types.Edge.toObject(message.totalEdge, options);
+            if (message.girders && message.girders.length) {
+                object.girders = [];
+                for (let j = 0; j < message.girders.length; ++j)
+                    object.girders[j] = $root.Types.Girder.toObject(message.girders[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this SideEdges to JSON.
+         * @function toJSON
+         * @memberof Types.SideEdges
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SideEdges.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return SideEdges;
+    })();
+
     Types.Project = (function() {
 
         /**
@@ -6764,6 +7382,7 @@ export const Types = $root.Types = (() => {
          * @property {Types.IVector3|null} [size] BigColumn size
          * @property {Types.IVector3|null} [rotation] BigColumn rotation
          * @property {Types.IBigColParameters|null} [paras] BigColumn paras
+         * @property {boolean|null} [isProp] BigColumn isProp
          */
 
         /**
@@ -6822,6 +7441,14 @@ export const Types = $root.Types = (() => {
         BigColumn.prototype.paras = null;
 
         /**
+         * BigColumn isProp.
+         * @member {boolean} isProp
+         * @memberof Types.BigColumn
+         * @instance
+         */
+        BigColumn.prototype.isProp = false;
+
+        /**
          * Creates a new BigColumn instance using the specified properties.
          * @function create
          * @memberof Types.BigColumn
@@ -6855,6 +7482,8 @@ export const Types = $root.Types = (() => {
                 $root.Types.Vector3.encode(message.rotation, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             if (message.paras != null && Object.hasOwnProperty.call(message, "paras"))
                 $root.Types.BigColParameters.encode(message.paras, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.isProp != null && Object.hasOwnProperty.call(message, "isProp"))
+                writer.uint32(/* id 6, wireType 0 =*/48).bool(message.isProp);
             return writer;
         };
 
@@ -6903,6 +7532,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 5:
                     message.paras = $root.Types.BigColParameters.decode(reader, reader.uint32());
+                    break;
+                case 6:
+                    message.isProp = reader.bool();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -6962,6 +7594,9 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "paras." + error;
             }
+            if (message.isProp != null && message.hasOwnProperty("isProp"))
+                if (typeof message.isProp !== "boolean")
+                    return "isProp: boolean expected";
             return null;
         };
 
@@ -6999,6 +7634,8 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.BigColumn.paras: object expected");
                 message.paras = $root.Types.BigColParameters.fromObject(object.paras);
             }
+            if (object.isProp != null)
+                message.isProp = Boolean(object.isProp);
             return message;
         };
 
@@ -7021,6 +7658,7 @@ export const Types = $root.Types = (() => {
                 object.size = null;
                 object.rotation = null;
                 object.paras = null;
+                object.isProp = false;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -7032,6 +7670,8 @@ export const Types = $root.Types = (() => {
                 object.rotation = $root.Types.Vector3.toObject(message.rotation, options);
             if (message.paras != null && message.hasOwnProperty("paras"))
                 object.paras = $root.Types.BigColParameters.toObject(message.paras, options);
+            if (message.isProp != null && message.hasOwnProperty("isProp"))
+                object.isProp = message.isProp;
             return object;
         };
 
@@ -8330,6 +8970,7 @@ export const Types = $root.Types = (() => {
          * @property {number|null} [depth] GirderParameters depth
          * @property {Types.GirderType|null} [type] GirderParameters type
          * @property {Types.IMaterial|null} [material] GirderParameters material
+         * @property {number|null} [fOffsetStep] GirderParameters fOffsetStep
          */
 
         /**
@@ -8380,6 +9021,14 @@ export const Types = $root.Types = (() => {
         GirderParameters.prototype.material = null;
 
         /**
+         * GirderParameters fOffsetStep.
+         * @member {number} fOffsetStep
+         * @memberof Types.GirderParameters
+         * @instance
+         */
+        GirderParameters.prototype.fOffsetStep = 0;
+
+        /**
          * Creates a new GirderParameters instance using the specified properties.
          * @function create
          * @memberof Types.GirderParameters
@@ -8411,6 +9060,8 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 3, wireType 0 =*/24).int32(message.type);
             if (message.material != null && Object.hasOwnProperty.call(message, "material"))
                 $root.Types.Material.encode(message.material, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.fOffsetStep != null && Object.hasOwnProperty.call(message, "fOffsetStep"))
+                writer.uint32(/* id 5, wireType 5 =*/45).float(message.fOffsetStep);
             return writer;
         };
 
@@ -8456,6 +9107,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 4:
                     message.material = $root.Types.Material.decode(reader, reader.uint32());
+                    break;
+                case 5:
+                    message.fOffsetStep = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -8512,6 +9166,9 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "material." + error;
             }
+            if (message.fOffsetStep != null && message.hasOwnProperty("fOffsetStep"))
+                if (typeof message.fOffsetStep !== "number")
+                    return "fOffsetStep: number expected";
             return null;
         };
 
@@ -8550,6 +9207,8 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.GirderParameters.material: object expected");
                 message.material = $root.Types.Material.fromObject(object.material);
             }
+            if (object.fOffsetStep != null)
+                message.fOffsetStep = Number(object.fOffsetStep);
             return message;
         };
 
@@ -8571,6 +9230,7 @@ export const Types = $root.Types = (() => {
                 object.depth = 0;
                 object.type = options.enums === String ? "gph" : 0;
                 object.material = null;
+                object.fOffsetStep = 0;
             }
             if (message.height != null && message.hasOwnProperty("height"))
                 object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
@@ -8580,6 +9240,8 @@ export const Types = $root.Types = (() => {
                 object.type = options.enums === String ? $root.Types.GirderType[message.type] : message.type;
             if (message.material != null && message.hasOwnProperty("material"))
                 object.material = $root.Types.Material.toObject(message.material, options);
+            if (message.fOffsetStep != null && message.hasOwnProperty("fOffsetStep"))
+                object.fOffsetStep = options.json && !isFinite(message.fOffsetStep) ? String(message.fOffsetStep) : message.fOffsetStep;
             return object;
         };
 

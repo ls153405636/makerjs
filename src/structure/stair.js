@@ -46,6 +46,7 @@ export class Stair extends Info {
       height: Default.GIRDER_HEIGHT,
       depth: Default.GIRDER_DEPTH,
       type: Default.GIRDER_TYPE,
+      fOffsetStep: 20,
     })
     this.handrailParameters = new Types.HandrailParameters({
       height: Default.HAND_HEIGHT,
@@ -226,6 +227,11 @@ export class Stair extends Info {
     })
     if (this.hangingBoard) {
       pb.hangingBoard = this.hangingBoard
+    }
+    for (const l of this.landings) {
+      if (l.corBigCol) {
+        pb.bigColumns.push(l.corBigCol.writePB())
+      }
     }
     console.log('楼梯pb:', pb)
     return pb

@@ -1,5 +1,6 @@
 import { Types } from '../types/stair_v2'
 import { ChildInfo } from './child_info'
+import { Default } from './config'
 import tool from './tool'
 
 export class BigColumn extends ChildInfo {
@@ -17,39 +18,70 @@ export class BigColumn extends ChildInfo {
     { value: '140*140*1200', label: '140*140*1200' },
     { value: '150*150*1200', label: '150*150*1200' },
   ]
-  constructor(vParent, vPosition, vSize) {
+  constructor({vParent, vPosition, vIsProp=false, vPosName=''}) {
     super(vParent)
-    this.rebuildByParent(vPosition, vSize)
+    this.isProp = vIsProp
+    if (this.isProp) {
+      this.paras = new Types.BigColParameters({
+        specification: Default.BIG_COL_SPEC
+      })
+    } else {
+      this.paras = this.parent.bigColumnPosType
+    }
+    this.posName = vPosName
+    this.rebuildByParent(vPosition, vIsProp)
   }
 
-  rebuildByParent (vPosition, vSize) {
+  addInfo () {
+    this.parent.addBigCol(this, this.posName)
+  }
+
+  delInfo () {
+    this.parent.addBigCol(null, this.posName)
+  }
+
+  rebuildByParent (vPosition) {
     this.position = vPosition
-    this.size = vSize
+    this.size = tool.parseSpecification(this.paras.specification)
   }
 
   getArgs() {
-    let bargs = this.parent.bigColParameters
+    //let bargs = this.parent.bigColParameters
     let f = tool.getItemFromOptions
-    return {
-      posType: {
-        name: '位置类型',
-        value: f(bargs.posType, BigColumn.POS_TYPE_OPTIONS),
-        type: 'select',
-        options: BigColumn.POS_TYPE_OPTIONS,
-      },
+    let args = {
       specification: {
         name: '规格',
-        value: f(bargs.specification, BigColumn.SPEC_OPTIONS),
+        value: f(this.paras.specification, BigColumn.SPEC_OPTIONS),
         type: 'select',
         options: BigColumn.SPEC_OPTIONS,
       },
-      model: { name: '型号', value: '', type: 'replace' },
+      source: { name: '型号', value: '', type: 'replace' },
       material: { name: '材质', value: '', type: 'replace' },
+    }
+    if (!this.isProp) {
+      args.posType = {
+        name: '位置类型',
+        value: f(this.paras.posType, BigColumn.POS_TYPE_OPTIONS),
+        type: 'select',
+        options: BigColumn.POS_TYPE_OPTIONS,
+      }
+    }
+    return args
+  }
+
+
+  update (vArgItems) {
+    if (this.isProp) {
+      super.updateParent(vArgItems, 'bigColParameters')
+    } else {
+      super.update(vArgItems)
     }
   }
 
-  update (vArgItems) {
-    super.update(vArgItems, 'bigColParameters')
+  updateItem (vValue, vKey, vSecondKey) {
+    if (this.paras[vKey]) {
+      this.paras[vKey] = vValue
+    }
   }
 
   writePB() {
@@ -57,6 +89,7 @@ export class BigColumn extends ChildInfo {
       uuid: this.uuid,
       position: this.position,
       size: this.size,
+
     })
   }
 }

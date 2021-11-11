@@ -128,6 +128,21 @@ message Outline {
   bool     isClose    = 2;
 }
 
+//外围边缘分组
+message Border {
+  repeated SideEdges out = 1;
+  repeated SideEdges in = 2;
+  repeated SideEdges front = 3;
+  repeated SideEdges back = 4;
+}
+
+//处于同一条直线上的一侧边集
+message SideEdges {
+  repeated Edge edges = 1;
+  Edge totalEdge = 2;
+  repeated Girder girders = 3;
+}
+
 //一个项目
 message Project {
   string   uuid       = 1;  //项目id
@@ -304,6 +319,7 @@ message BigColumn {
   Vector3          size     = 3;
   Vector3          rotation = 4;
   BigColParameters paras    = 5;
+  bool             isProp   = 6;
 }
 
 //大柱参数
@@ -314,22 +330,26 @@ message BigColParameters {
   string           specification = 4;  // 规格
 }
 
+//模型信息
 message DxfData {
   string specification = 1;  //规格
 }
 
+//扶手
 message Handrail {
   string  uuid  = 1;
   Outline route = 2;
   float   width = 3;  //宽度
 }
 
+//扶手参数
 message HandrailParameters {
   float    height   = 1;
   DxfData  source   = 2;
   Material material = 3;
 } 
 
+//大梁
 message Girder {
   string  uuid        = 1;
   float   length      = 2;  //长度 
@@ -339,11 +359,13 @@ message Girder {
   Outline outTopRoute = 6;  //外侧上方路径
 }
 
+//大梁参数
 message GirderParameters {
   float      height   = 1;  //高度
   float      depth    = 2;  //厚度
   GirderType type     = 3;  //类型
   Material   material = 4;
+  float      fOffsetStep = 5; //前方偏移出踏板的距离
 }
 
 
