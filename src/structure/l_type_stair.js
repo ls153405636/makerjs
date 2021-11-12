@@ -6,6 +6,7 @@ import { Flight } from "./flight"
 import { Girder } from "./girder"
 import { Handrail } from "./handrail"
 import { Landing } from "./landing"
+import { SmallColumn } from "./small_column"
 import { Stair } from "./stair"
 import tool from "./tool"
 
@@ -27,7 +28,6 @@ export class LTypeStair extends Stair {
   }
 
   rebuild() {
-    this.smallColumns = []
     this.hangOffset = this.hangingBoard?.depth || 0
     let gArgs = this.girderParameters
     this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
@@ -45,6 +45,7 @@ export class LTypeStair extends Stair {
     this.updateBorder()
     this.updateGirders()
     this.updateHandrails()
+    this.updateSmallColumns()
     this.updateCanvas('Stair')
   }
 
@@ -86,8 +87,8 @@ export class LTypeStair extends Stair {
       this.border = {
         in:{stairEdges:[], girders:[], handrails:[]},
         out:{stairEdges:[], girders:[], handrails:[]},
-        front:{stairEdges:[], girders:[], handrails:[]},
-        back:{stairEdges:[], girders:[], handrails:[]},
+        front:{stairEdges:[]},
+        back:{stairEdges:[]},
         clock: this.floadSide === Types.Side.si_right
       }
     }
@@ -164,7 +165,8 @@ export class LTypeStair extends Stair {
         this.width = this.width - 200
       }
       let f2StepNum = (this.width - Default.STEP_LENGTH) / Default.STEP_WIDTH
-      let f1StepNum = this.stepNum - this.stepNumRule + 1 - f2StepNum
+      let f1StepNum = this.stepNum - this.stepNumRule + 1 - f2StepNum - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
+      f1StepNum = Math.ceil(f1StepNum)
       this.depth = f1StepNum * Default.STEP_WIDTH + Default.STEP_LENGTH
     } else {
       let f1 = this.flights[0]
@@ -247,7 +249,7 @@ export class LTypeStair extends Stair {
     } else {
       fStepNum = step_num - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
     }
-    let firstNum = Math.floor(vLength1 / (vLength1+vLength2) * fStepNum)
+    let firstNum = Math.ceil(vLength1 / (vLength1+vLength2) * fStepNum)
     let secondNum = fStepNum - firstNum
     return {
       firstNum: firstNum,
@@ -342,7 +344,64 @@ export class LTypeStair extends Stair {
   }
 
   updateSmallColumns () {
+    this.smallColumns = []
+    let bor = this.border
+    this.updateSideSmallCols([bor.in.stairEdges[0],bor.in.stairEdges[3]],!this.border.clock)
+    this.updateSideSmallCols(bor.out.stairEdges,this.border.clock)
+    let args = this.smallColParameters
+    let size = tool.parseSpecification(args.specification)
+    let dis1, dis2
+    if (args.arrangeRule === Types.ArrangeRule.arrThree) {
+      dis1 = this.flights[0].stepWidth * 2 / 3
+      dis2 = this.flights[1].stepWidth * 2 / 3
+    } else {
+      dis1 = this.flights[0].stepWidth / 2
+      dis2 = this.flights[1].stepWidth / 2
+    }
+    this.smallColumns = this.smallColumns.concat(this.landings[0].createSmallCols(dis1, dis2, size))
+  }
 
+  updateSideSmallCols (vStairEdges, vSideOffsetPlus) {
+    let args = this.smallColParameters
+    let size = tool.parseSpecification(args.specification)
+    for (let i = 0; i < vStairEdges.length; i++) {
+      let sideE = vStairEdges[i].edge
+      let treads = this.flights[i].treads
+      let k = Math.abs(1 - this.bigColParameters.posType)
+      let utilVec = new Edge(sideE).getVec()
+      let widthSum = 0
+      for (; k < treads.length; k++) {
+        let t = treads[k]
+        if (t.isLast) {
+          continue
+        }
+        let start = new THREE.Vector2(sideE.p1.x, sideE.p1.y).addScaledVector(utilVec, widthSum)
+        let end = new THREE.Vector2(sideE.p1.x, sideE.p1.y).addScaledVector(utilVec, widthSum + t.stepWidth)
+        let edge = new Types.Edge({p1:start, p2:end})
+        edge = new Edge(edge).offSet(this.sideOffset, vSideOffsetPlus)
+        let pos1 = null
+        let pos2 = null
+        if (args.arrangeRule === Types.ArrangeRule.arrThree) {
+          let index = k % 2
+          if (index === 0) {
+            pos1 = new Edge(edge).extendP1(-Math.abs(t.stepWidth/6,size.x/2)).p1
+            pos2 = new Edge(edge).extendP2(-Math.abs(t.stepWidth/6,size.x/2)).p2
+          } else {
+            pos1 = new Edge(edge).extendP1(-t.stepWidth/2).p1
+          }
+        } else {
+          pos1 = new Edge(edge).extendP1(-t.stepWidth/4).p1
+          pos2 = new Edge(edge).extendP1(-t.stepWidth*3/4).p1
+        }
+        if (pos1) {
+          this.smallColumns.push(new SmallColumn(this, pos1, size))
+        }
+        if (pos2) {
+          this.smallColumns.push(new SmallColumn(this, pos2, size))
+        }
+        widthSum = widthSum + t.stepWidth
+      }
+    }
   }
 
   updateHandrails () {
@@ -355,12 +414,12 @@ export class LTypeStair extends Stair {
   updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
     let routeEdgesArr = [[]]
     let routeIndex = 0
-    let bor = this.border[vSide]
+    let borSide = this.border[vSide]
     for (let i = 0; i < vStairEdges.length; i++) {
       let e = vStairEdges[i].edge
       let sCol = vStairEdges[i].startCol
       let eCol = vStairEdges[i].endCol
-      let gir = bor.girders[0]
+      let gir = borSide.girders[0]
       let start = new Types.Vector3(e.p1)
       let end = new Types.Vector3(e.p2)
       let edge = new Edge({
@@ -402,12 +461,12 @@ export class LTypeStair extends Stair {
       let edges = routeEdgesArr[i]
       let route = new Types.Outline({edges:edges, isClose:false})
       route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
-      if (bor.handrails[i]) {
-        bor.handrails[i].rebuildByParent(route)
+      if (borSide.handrails[i]) {
+        borSide.handrails[i].rebuildByParent(route)
       } else {
-        bor.handrails[i] = new Handrail(this, route)
+        borSide.handrails[i] = new Handrail(this, route)
       }
-      this.handrails.push(bor.handrails[i])
+      this.handrails.push(borSide.handrails[i])
     }
   }
 

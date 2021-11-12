@@ -29,11 +29,12 @@ export class SmallColumn extends ChildInfo {
 
   getArgs() {
     let sargs = this.parent.smallColParameters
+    let hargs = this.parent.handrailParameters
     let specOptions = []
     let height = 0
     for (const item of SmallColumn.SPEC_OPTIONS) {
       let size = tool.parseSpecification(item.value, 'xyz')
-      if (size.z > this.size.z) {
+      if (size.z > hargs.height) {
         if (height) {
           if (height === size.z) {
             specOptions.push(item)

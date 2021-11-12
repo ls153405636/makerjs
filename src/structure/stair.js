@@ -105,7 +105,7 @@ export class Stair extends Info {
         value: this.exitBeamDepth,
         type: 'input',
       },
-      stepHeightD: {name:'步高', value:this.stepHeight, type:'input', disbaled:true},
+      stepHeightD: {name:'步高', value:this.stepHeight, type:'input', disabled:true},
       stepNumRule: {
         name: '步数规则',
         value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),

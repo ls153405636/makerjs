@@ -4,6 +4,7 @@ import { Outline } from "../utils/outline";
 import { BigColumn } from "./big_column";
 import { ChildInfo } from "./child_info";
 import { Default } from "./config";
+import { SmallColumn } from "./small_column";
 import tool from "./tool";
 
 
@@ -137,6 +138,41 @@ export class Landing extends ChildInfo {
     return treads
   }
 
+  createSmallCols (vDis1, vDis2, vSize) {
+    let gArgs = this.parent.girderParameters
+    let utilSEL
+    let utilSEN
+    let cols = []
+    if (gArgs.type === Types.GirderType.gslab) {
+      utilSEL = new Edge(this.sideEdgeL).offSet(this.parent.sideOffset)
+      utilSEN = new Edge(this.sideEdgeN).offSet(this.parent.sideOffset)
+    } else {
+      utilSEL = new Edge(this.sideEdgeL).offSet(this.parent.sideOffset, false)
+      utilSEN = new Edge(this.sideEdgeN).offSet(this.parent.sideOffset, false)
+    }
+    utilSEN = new Edge(utilSEN)
+    utilSEL = new Edge(utilSEL)
+    while(utilSEL.getLength() > vDis1) {
+      let pos
+      if (this.lastEdgeIndex === this.corIndex) {
+        pos = utilSEL.extendP1(-vDis1).p1
+      } else {
+        pos = utilSEL.extendP2(-vDis1).p2
+      }
+      cols.push(new SmallColumn(this.parent, pos, vSize))
+    }
+    while(utilSEN.getLength() > vDis2) {
+      let pos
+      if (this.lastEdgeIndex === this.corIndex) {
+        pos = utilSEN.extendP2(-vDis2).p2
+      } else {
+        pos = utilSEN.extendP1(-vDis2).p1
+      }
+      cols.push(new SmallColumn(this.parent, pos, vSize))
+    }
+    return cols
+  }
+
   //创建二类分割梯板轮廓
   createSecondOutlines(){
     let cor = this.pois[this.corIndex] //转角点
@@ -145,21 +181,21 @@ export class Landing extends ChildInfo {
     let sideDisL = new Edge(this.edgeL).getLength() * Math.tan(Math.PI / 6) //上段楼梯侧边断点的偏移距离
     let sideDisN = new Edge(this.edgeN).getLength() * Math.tan(Math.PI / 6) //下段楼梯侧边断点的偏移距离
     if (this.lastEdgeIndex === this.corIndex) {
-      let bpL = new Edge(this.sideEdgeL).extendP1(-sideDisL).p1 //上段楼梯侧边断点
-      let bpN = new Edge(this.sideEdgeN).extendP2(-sideDisN).p2 //下段楼梯侧边断点
+      this.bpl = new Edge(this.sideEdgeL).extendP1(-sideDisL).p1 //上段楼梯侧边断点
+      this.bpN = new Edge(this.sideEdgeN).extendP2(-sideDisN).p2 //下段楼梯侧边断点
       let pL = this.edgeL.p2 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p1 //下段楼梯对应边的另个端点
-      outlines.push(tool.createOutlineByPois([bpL, cor, pL]))
-      outlines.push(tool.createOutlineByPois([bpN, cor, bpL, oppo]))
-      outlines.push(tool.createOutlineByPois([pN, cor, bpN]))
+      outlines.push(tool.createOutlineByPois([this.bpl, cor, pL]))
+      outlines.push(tool.createOutlineByPois([this.bpN, cor, this.bpl, oppo]))
+      outlines.push(tool.createOutlineByPois([pN, cor, this.bpN]))
     } else {
-      let bpL = new Edge(this.sideEdgeL).extendP2(-sideDisL).p2 //上段楼梯侧边断点
-      let bpN = new Edge(this.sideEdgeN).extendP1(-sideDisN).p1 //下段楼梯侧边断点
+      this.bpl = new Edge(this.sideEdgeL).extendP2(-sideDisL).p2 //上段楼梯侧边断点
+      this.bpN = new Edge(this.sideEdgeN).extendP1(-sideDisN).p1 //下段楼梯侧边断点
       let pL = this.edgeL.p1 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p2 //下段楼梯对应边的另个端点
-      outlines.push(tool.createOutlineByPois([cor, bpL, pL]))
-      outlines.push(tool.createOutlineByPois([cor, bpN, oppo, bpL]))
-      outlines.push(tool.createOutlineByPois([cor, pN, bpN]))
+      outlines.push(tool.createOutlineByPois([cor, this.bpl, pL]))
+      outlines.push(tool.createOutlineByPois([cor, this.bpN, oppo, this.bpl]))
+      outlines.push(tool.createOutlineByPois([cor, pN, this.bpN]))
     }
     return outlines
   }
@@ -171,38 +207,38 @@ export class Landing extends ChildInfo {
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[(this.corIndex+2)%4] //对角点
     if (this.lastEdgeIndex === this.corIndex) {
-      let bpL = new Edge(this.sideEdgeL).extendP1(-this.lastStepWidth).p1
-      let bpN = new Edge(this.sideEdgeN).extendP2(-this.nextStepWidth).p2
+      this.bpL = new Edge(this.sideEdgeL).extendP1(-this.lastStepWidth).p1
+      this.bpN = new Edge(this.sideEdgeN).extendP2(-this.nextStepWidth).p2
       let pL = this.edgeL.p2 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p1 //下段楼梯对应边的另个端点
       let cutP = new Edge(inEdgeL).extendP1(-this.nextStepWidth).p1 //内部切割点
       if (this.type === Types.LandingCutType.lct_third) {
-        outlines.push(tool.createOutlineByPois([bpL, cutP, cor, pL]))
-        outlines.push(tool.createOutlineByPois([pN, cor, cutP, bpL, oppo]))
+        outlines.push(tool.createOutlineByPois([this.bpL, cutP, cor, pL]))
+        outlines.push(tool.createOutlineByPois([pN, cor, cutP, this.bpL, oppo]))
       } else if (this.type === Types.LandingCutType.lct_fourth) {
-        outlines.push(tool.createOutlineByPois([bpN, cutP, cor, pL, oppo]))
-        outlines.push(tool.createOutlineByPois([pN, cor, cutP, bpN]))
+        outlines.push(tool.createOutlineByPois([this.bpN, cutP, cor, pL, oppo]))
+        outlines.push(tool.createOutlineByPois([pN, cor, cutP, this.bpN]))
       } else {
-        outlines.push(tool.createOutlineByPois([bpL, cutP, cor, pL]))
-        outlines.push(tool.createOutlineByPois([bpN, cutP, bpL, oppo]))
-        outlines.push(tool.createOutlineByPois([pN, cor, cutP, bpN]))
+        outlines.push(tool.createOutlineByPois([this.bpL, cutP, cor, pL]))
+        outlines.push(tool.createOutlineByPois([this.bpN, cutP, this.bpL, oppo]))
+        outlines.push(tool.createOutlineByPois([pN, cor, cutP, this.bpN]))
       }
     } else {
-      let bpL = new Edge(this.sideEdgeL).extendP2(-this.lastStepWidth).p2
-      let bpN = new Edge(this.sideEdgeN).extendP1(-this.nextStepWidth).p1
+      this.bpL = new Edge(this.sideEdgeL).extendP2(-this.lastStepWidth).p2
+      this.bpN = new Edge(this.sideEdgeN).extendP1(-this.nextStepWidth).p1
       let pL = this.edgeL.p1 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p2 //下段楼梯对应边的另个端点
       let cutP = new Edge(inEdgeL).extendP2(-this.nextStepWidth).p2 //内部切割点
       if (this.type === Types.LandingCutType.lct_third) {
-        outlines.push(tool.createOutlineByPois([cor, cutP, bpL, pL]))
-        outlines.push(tool.createOutlineByPois([cor, pN, oppo, bpL, cutP]))
+        outlines.push(tool.createOutlineByPois([cor, cutP, this.bpL, pL]))
+        outlines.push(tool.createOutlineByPois([cor, pN, oppo, this.bpL, cutP]))
       } else if (this.type === Types.LandingCutType.lct_fourth) {
-        outlines.push(tool.createOutlineByPois([cor, cutP, bpN, oppo, pL]))
-        outlines.push(tool.createOutlineByPois([cor, pN, bpN, cutP]))
+        outlines.push(tool.createOutlineByPois([cor, cutP, this.bpN, oppo, pL]))
+        outlines.push(tool.createOutlineByPois([cor, pN, this.bpN, cutP]))
       } else {
-        outlines.push(tool.createOutlineByPois([cor, cutP, bpL, pL]))
-        outlines.push(tool.createOutlineByPois([cutP, bpN, oppo, bpL]))
-        outlines.push(tool.createOutlineByPois([cor, pN, bpN, cutP]))
+        outlines.push(tool.createOutlineByPois([cor, cutP, this.bpL, pL]))
+        outlines.push(tool.createOutlineByPois([cutP, this.bpN, oppo, this.bpL]))
+        outlines.push(tool.createOutlineByPois([cor, pN, this.bpN, cutP]))
       }
     }
     return outlines
