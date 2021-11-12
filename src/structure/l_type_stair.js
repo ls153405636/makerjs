@@ -1,8 +1,10 @@
 import { Types } from "../types/stair_v2"
 import { Edge } from "../utils/edge"
+import { Outline } from "../utils/outline"
 import { Default } from "./config"
 import { Flight } from "./flight"
 import { Girder } from "./girder"
+import { Handrail } from "./handrail"
 import { Landing } from "./landing"
 import { Stair } from "./stair"
 import tool from "./tool"
@@ -42,6 +44,7 @@ export class LTypeStair extends Stair {
       this.landings[0].stepNum
     this.updateBorder()
     this.updateGirders()
+    this.updateHandrails()
     this.updateCanvas('Stair')
   }
 
@@ -52,7 +55,9 @@ export class LTypeStair extends Stair {
     if (this.floadSide === Types.Side.si_right) {
       pois = [
         new Types.Vector3({y:this.depth}),
+        new Types.Vector3({y:f2.stepLength}),
         new Types.Vector3(),
+        new Types.Vector3({x:f1.stepLength}),
         new Types.Vector3({x:this.width}),
         new Types.Vector3({x:this.width, y:f2.stepLength}),
         new Types.Vector3({x:f1.stepLength, y:f2.stepLength}),
@@ -61,7 +66,9 @@ export class LTypeStair extends Stair {
     } else {
       pois = [
         new Types.Vector3({x:this.width, y:this.depth}),
+        new Types.Vector3({x:this.width, y:f2.stepLength}),
         new Types.Vector3({x:this.width}),
+        new Types.Vector3({x:f2.length}),
         new Types.Vector3(),
         new Types.Vector3({y:f2.stepLength}),
         new Types.Vector3({x:f2.length, y:f2.stepLength}),
@@ -70,24 +77,55 @@ export class LTypeStair extends Stair {
     }
     let outline = tool.createOutlineByPois(pois)
     let edges = outline.edges
-    let inEdges = {edges:[edges[0], edges[1]]}
-    let frontEdges = {edges:[edges[2]]}
-    let outEdges = {edges:[edges[3], edges[4]]}
-    let backEdges = {edges:[edges[5]]}
+    let inEdges = [edges[0], edges[1], edges[2], edges[3]]
+    let frontEdges = [edges[4]]
+    let outEdges = [edges[5], edges[6]]
+    let backEdges = [edges[7]]
+    this.reverseEdges(outEdges)
     if (!this.border) {
       this.border = {
-        in:{...inEdges, girders:[]},
-        out:{...outEdges, girders:[]},
-        front:{...frontEdges, girders:[]},
-        back:{...backEdges, girders:[]},
+        in:{stairEdges:[], girders:[], handrails:[]},
+        out:{stairEdges:[], girders:[], handrails:[]},
+        front:{stairEdges:[], girders:[], handrails:[]},
+        back:{stairEdges:[], girders:[], handrails:[]},
         clock: this.floadSide === Types.Side.si_right
       }
-    } else {
-      this.border.in.edges = inEdges
-      this.border.out.edges = outEdges
-      this.border.front.edges = frontEdges
-      this.border.back.edges = backEdges
     }
+      this.updateStairEdges(this.border.in.stairEdges, inEdges)
+      this.updateStairEdges(this.border.out.stairEdges, outEdges)
+      this.updateStairEdges(this.border.front.stairEdges, frontEdges)
+      this.updateStairEdges(this.border.back.stairEdges, backEdges)
+      if (this.landings[0].corBigCol) {
+        this.border.out.stairEdges[0].endCol = this.landings[0].corBigCol
+        this.border.out.stairEdges[1].startCol = this.landings[0].corBigCol
+      }
+      if (this.landings[0].oppoBigCol) {
+        this.border.in.stairEdges[0].endCol = this.landings[0].oppoBigCol
+        this.border.in.stairEdges[1].startCol = this.landings[0].oppoBigCol
+      }
+  }
+
+  updateStairEdges (vStairEdges, vEdges) {
+    for (let i = 0; i < vEdges.length; i++) {
+      if (vStairEdges[i]) {
+        vStairEdges[i].edge = vEdges[i]
+      } else {
+        vStairEdges[i] = {edge:vEdges[i], startCol:null, endCol:null}
+      }
+    }
+  }
+
+  /**
+   * 
+   * @param {Array<Types.Edge>} vEdges 
+   */
+  reverseEdges (vEdges) {
+    vEdges.forEach(e => {
+      let temp = e.p1
+      e.p1 = e.p2
+      e.p2 = temp
+    })
+    vEdges.reverse()
   }
 
   computePosition() {
@@ -157,7 +195,7 @@ export class LTypeStair extends Stair {
                           vPos:pos1, 
                           vLVec:lVec1, 
                           vWVec:wVec1})
-      f2.rebuildByParent({vTreadIndex:this.stepNum - f2.stepNum, 
+      f2.rebuildByParent({vTreadIndex:f1.stepNum + this.landings[0].stepNum, 
                           vPos:pos2, 
                           vLVec:lVec2, 
                           vWVec:wVec2})
@@ -249,8 +287,12 @@ export class LTypeStair extends Stair {
       /**平面图不需要绘制锯齿梁，故先不做处理*/
     }
     let bor = this.border
-    for (let i = 0; i < bor.in.edges.length; i++) {
-      let e = bor.in.edges[i]
+    let inBorderEdges = [
+      new Edge(bor.in.stairEdges[0].edge).combineEdge(bor.in.stairEdges[1].edge),
+      new Edge(bor.in.stairEdges[2].edge).combineEdge(bor.in.stairEdges[3].edge)
+    ]
+    for (let i = 0; i < inBorderEdges.length; i++) {
+      let e = inBorderEdges[i]
       let start = i === 0 ? new Edge(e).extendP1(args.fOffsetStep).p1 : new Edge(e).extendP1(-args.depth).p1
       let end = new Types.Vector3(e.p2)
       let outEdges = [
@@ -262,8 +304,8 @@ export class LTypeStair extends Stair {
       ]
       this.updateSideGirder(outEdges, 'in', args.depth, i, !bor.clock)
     }
-    for (let i = 0; i < bor.out.edges.length; i++) {
-      let e = bor.out.edges[i]
+    for (let i = 0; i < bor.out.stairEdges.length; i++) {
+      let e = bor.out.stairEdges[i].edge
       let corOffsetX = 0
       let corOffsetY = 0
       let corCol = this.landings[0].corBigCol
@@ -271,8 +313,8 @@ export class LTypeStair extends Stair {
         corOffsetX = (corCol.size.x - args.depth) / 2
         corOffsetY = (corCol.size.y - args.depth) / 2
       }
-      let start = i === 1 ? new Edge(e).extendP2(args.fOffsetStep).p2 : new Edge(e).extendP2(-corOffsetX).p2
-      let end = i === 1 ? new Edge(e).extendP1(-corOffsetY).p1 : e.p1
+      let start = i === 0 ? new Edge(e).extendP1(args.fOffsetStep).p1 : new Edge(e).extendP1(-corOffsetX).p1
+      let end = i === 0 ? new Edge(e).extendP2(-corOffsetY).p2 : e.p2
       let outEdges = [
         new Types.Edge({
           p1: start,
@@ -298,4 +340,78 @@ export class LTypeStair extends Stair {
     }
     this.girders.push(bor[vSide].girders[vIndex])
   }
+
+  updateSmallColumns () {
+
+  }
+
+  updateHandrails () {
+    this.handrails = []
+    let bor = this.border
+    this.updateSideHandrails(bor.in.stairEdges, 'in', !bor.clock)
+    this.updateSideHandrails(bor.out.stairEdges, 'out', bor.clock)
+  }
+
+  updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
+    let routeEdgesArr = [[]]
+    let routeIndex = 0
+    let bor = this.border[vSide]
+    for (let i = 0; i < vStairEdges.length; i++) {
+      let e = vStairEdges[i].edge
+      let sCol = vStairEdges[i].startCol
+      let eCol = vStairEdges[i].endCol
+      let gir = bor.girders[0]
+      let start = new Types.Vector3(e.p1)
+      let end = new Types.Vector3(e.p2)
+      let edge = new Edge({
+        p1:start,
+        p2:end,
+        type:Types.EdgeType.estraight
+      })
+      let utilE = new Edge(edge)
+      if (i === 0) {
+        let frontOffset = this.computeBigColOffset()
+        utilE.extendP1(frontOffset).p1
+      }
+      if (sCol) {
+        let sOffset = 0
+        //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
+        if (gir.paras.type === Types.GirderType.gslab) {
+          sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
+        } else {
+          sOffset = sCol.size.x / 2
+        }
+        utilE.extendP1(-sOffset)
+        if (i !== 0) {
+          routeIndex++
+          routeEdgesArr[routeIndex] = []
+        }
+      }
+      if (eCol) {
+        let eOffset = 0
+        if (gir.paras.type === Types.GirderType.gslab) {
+          eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
+        } else {
+          eOffset = eCol.size.x / 2
+        }
+        utilE.extendP2(-eOffset)
+      }
+    routeEdgesArr[routeIndex].push(utilE.writePB())
+    }
+    for (let i = 0; i < routeEdgesArr.length; i++) {
+      let edges = routeEdgesArr[i]
+      let route = new Types.Outline({edges:edges, isClose:false})
+      route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
+      if (bor.handrails[i]) {
+        bor.handrails[i].rebuildByParent(route)
+      } else {
+        bor.handrails[i] = new Handrail(this, route)
+      }
+      this.handrails.push(bor.handrails[i])
+    }
+  }
+
+
+
+  
 }

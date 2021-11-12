@@ -99,6 +99,11 @@ export class Edge {
     })
   }
 
+  /**
+   * 
+   * @param {Number} vDis 
+   * @returns {Types.Edge}
+   */
   extendP1(vDis) {
     let vec = this.getVec()
     vec.negate()
@@ -108,12 +113,28 @@ export class Edge {
     return this.writePB()
   }
 
+  /**
+   * 
+   * @param {Number} vDis 
+   * @returns {Types.Edge}
+   */
   extendP2(vDis) {
     let vec = this.getVec()
     let length = this.getLength()
     this.p2 = this.p1.clone().addScaledVector(vec, length + vDis)
     this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
     return this.writePB()
+  }
+
+  /**
+   * 合并在同一条直线上的边
+   * @param {Types.Edge} vEdge 
+   * @returns {Types.Edge}
+   */
+  combineEdge(vEdge) {
+    let pb = this.writePB()
+    pb.p2 = vEdge.p2
+    return pb
   }
 
   /**

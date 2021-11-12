@@ -26,7 +26,7 @@ export class BigColumn extends ChildInfo {
         specification: Default.BIG_COL_SPEC
       })
     } else {
-      this.paras = this.parent.bigColumnPosType
+      this.paras = this.parent.bigColParameters
     }
     this.posName = vPosName
     this.rebuildByParent(vPosition, vIsProp)

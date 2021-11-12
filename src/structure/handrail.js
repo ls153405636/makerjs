@@ -1,15 +1,17 @@
 import { Types } from '../types/stair_v2'
 import { ChildInfo } from './child_info'
+import tool from './tool'
 
 export class Handrail extends ChildInfo {
-  constructor(vParent, vRoute, vWidth) {
+  constructor(vParent, vRoute) {
     super(vParent)
-    this.rebuildByParent(vRoute, vWidth)
+    this.rebuildByParent(vRoute)
   }
 
-  rebuildByParent(vRoute, vWidth) {
+  rebuildByParent(vRoute) {
     this.route = vRoute
-    this.width = vWidth
+    this.paras = this.parent.handrailParameters
+    this.width = tool.parseSpecification(this.paras.source.specification,'yxz').x
   }
 
   getArgs() {

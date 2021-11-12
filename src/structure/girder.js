@@ -15,6 +15,7 @@ export class Girder extends ChildInfo {
   rebuildByParent (vInEdges, vOutEdges) {
     this.inRoute = new Types.Outline({ edges: vInEdges })
     this.outRoute = new Types.Outline({ edges: vOutEdges })
+    this.paras = this.parent.girderParameters
   }
 
   getArgs () {

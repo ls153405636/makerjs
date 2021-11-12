@@ -204,6 +204,21 @@ export class Stair extends Info {
     return args
   }
 
+  computeBigColOffset () {
+    let bArgs = this.bigColParameters
+    let bigColSize = tool.parseSpecification(bArgs.specification)
+    let offset = Default.BIG_COL_GAP
+    let step1 = this.flights[0]
+    let step2 = this.flights[1]
+    if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
+      offset = - step1.stepLength / 2 - bigColSize.y / 2
+    }
+    if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
+      offset = -step1.stepLength - step2.stepLength / 2 - bigColSize.y / 2
+    }
+    return offset
+  }
+
   writePB() {
     let pb = new Types.Stair({
       uuid: this.uuid,
