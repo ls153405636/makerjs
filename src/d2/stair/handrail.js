@@ -26,8 +26,6 @@ export class Handrail extends ChildWidget {
 
     this.inEdges = inRoute.edges
     this.outEdges = outRoute.edges
-    console.log(this.outEdges)
-    console.log(this.inEdges)
 
     this.draw()
     this.addEvent()
@@ -67,7 +65,6 @@ export class Handrail extends ChildWidget {
 
     const handrail = new PIXI.Graphics()
     handrail.lineStyle(1, 0x2d3037)
-    handrail.beginFill(0xffffff)
     handrail.drawPolygon(path)
 
     handrailContainer.addChild(changeHandrail1, changeHandrail, handrail)

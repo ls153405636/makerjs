@@ -48,11 +48,10 @@ const state = {
   stair_dir_options: {
     name: '转向方式',
     options: {
-      0: { value: '1', label: '左转' },
-      1: { value: '2', label: '右转' },
-      2: { value: '3', label: '不转' },
+      0: { value: Types.Side.si_right, label: '右转' },
+      1: { value: Types.Side.si_left, label: '左转' },
     },
-    value: { value: '1', label: '不转' },
+    value: { value: Types.Side.si_right, label: '右转' },
   },
 }
 
