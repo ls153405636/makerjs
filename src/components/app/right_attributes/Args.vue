@@ -183,9 +183,8 @@ export default defineComponent({
 }
 .show_img {
   width: 100px;
-  margin-left: 150px;
+  margin-left: 148px;
   height: 100px;
-  background-color: blue;
   cursor: pointer;
 }
 .show_img .show_img_small {
