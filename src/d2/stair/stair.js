@@ -86,6 +86,10 @@ export class Stair extends BaseWidget {
 
   draw() {
     this.sprite = new PIXI.Container()
+
+    // sortableChildren = true 子级根据zIndex排序
+    this.sprite.sortableChildren = true
+
     this.addSprites(this.flights)
     this.addSprites(this.hangingBoard)
     // 判断大梁与扶手层级
