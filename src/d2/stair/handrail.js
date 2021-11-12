@@ -22,10 +22,12 @@ export class Handrail extends ChildWidget {
      * 偏移方法和调用模式如下
      */
     let inRoute = new Outline(route).offset(this.width / 2, true)
-    let outRoute = new Outline(route).offset(this.width / 2, false)
+    let outRoute = new Outline(route).offset(-this.width / 2, true)
 
     this.inEdges = inRoute.edges
     this.outEdges = outRoute.edges
+    console.log(this.outEdges)
+    console.log(this.inEdges)
 
     this.draw()
     this.addEvent()
@@ -37,18 +39,16 @@ export class Handrail extends ChildWidget {
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-      path.push(
-        this.inEdges[this.inEdges.length - 1].p2.x / D2Config.SCREEN_RATE,
-        this.inEdges[this.inEdges.length - 1].p2.y / D2Config.SCREEN_RATE
-      )
+      if (i === this.inEdges.length - 1) {
+        path.push(e.p2.x / D2Config.SCREEN_RATE, e.p2.y / D2Config.SCREEN_RATE)
+      }
     }
     for (let i = this.outEdges.length - 1; i >= 0; i--) {
       let f = this.outEdges[i]
-      path.push(f.p2.x / D2Config.SCREEN_RATE, f.p2.y / D2Config.SCREEN_RATE)
-      path.push(
-        this.outEdges[0].p1.x / D2Config.SCREEN_RATE,
-        this.outEdges[0].p1.y / D2Config.SCREEN_RATE
-      )
+      if (i === this.outEdges.length - 1) {
+        path.push(f.p2.x / D2Config.SCREEN_RATE, f.p2.y / D2Config.SCREEN_RATE)
+      }
+      path.push(f.p1.x / D2Config.SCREEN_RATE, f.p1.y / D2Config.SCREEN_RATE)
     }
 
     const handrailContainer = new PIXI.Container()
@@ -67,6 +67,7 @@ export class Handrail extends ChildWidget {
 
     const handrail = new PIXI.Graphics()
     handrail.lineStyle(1, 0x2d3037)
+    handrail.beginFill(0xffffff)
     handrail.drawPolygon(path)
 
     handrailContainer.addChild(changeHandrail1, changeHandrail, handrail)
