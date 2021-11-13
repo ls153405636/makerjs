@@ -126,9 +126,8 @@ export class Beam extends Component {
 
   getArgs() {
     return {
-      width: { name: '宽度', value: this.width, type: 'input' },
-      depth: { name: '深度', value: this.depth, type: 'input' },
-      height: { name: '高度', value: this.height, type: 'input' },
+      depth: { name: '宽度', value: this.depth, type: 'input' },
+      height: { name: '厚度', value: this.height, type: 'input' },
       interval: { name: '与墙体间的间隙', value: this.interval, type: 'input' },
     }
   }
