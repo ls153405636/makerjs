@@ -45,24 +45,24 @@ export class Outline {
       if (lEdge) {
         p1OffsetDir = new THREE.Vector2().addVectors(nor, lEdge.getNormal()).normalize()
         if (p1OffsetDir.length() < 0.01) {
-          p1OffsetDir = nor
+          p1OffsetDir = e.getNormal()
         } else {
           let angle = p1OffsetDir.angle() - nor.angle()
           dis1 = dis1 / Math.abs(Math.cos(angle)) 
         }
       } else {
-        p1OffsetDir = nor
+        p1OffsetDir = e.getNormal()
       }
       if (nEdge) {
         p2OffsetDir = new THREE.Vector2().addVectors(nor, nEdge.getNormal()).normalize()
         if (p2OffsetDir.length() < 0.01) {
-          p2OffsetDir = nor
+          p2OffsetDir = e.getNormal()
         } else {
           let angle = p2OffsetDir.angle() - nor.angle()
           dis2 = dis2 / Math.abs(Math.cos(angle)) 
         }
       } else {
-        p2OffsetDir = nor
+        p2OffsetDir = e.getNormal()
       }
       if (!vPlus) {
         p1OffsetDir.negate()

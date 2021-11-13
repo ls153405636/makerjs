@@ -190,9 +190,11 @@ export class Stair extends Info {
     if (this.bigColumns.length) {
       args.bigColParameters.value = this.bigColumns[0].getArgs()
     }
-    args.hangingBoard = {name:'添加挂板'}
-    if(this.hangingBoard) {
-      args.hangingBoard.name = '移除挂板'
+    if (this.type === Types.StairType.sstright) {
+      args.hangingBoard = {name:'添加挂板'}
+      if(this.hangingBoard) {
+        args.hangingBoard.name = '移除挂板'
+      }
     }
     for (const f of this.flights) {
       for (const p of f.treads) {
@@ -208,13 +210,13 @@ export class Stair extends Info {
     let bArgs = this.bigColParameters
     let bigColSize = tool.parseSpecification(bArgs.specification)
     let offset = Default.BIG_COL_GAP
-    let step1 = this.flights[0]
-    let step2 = this.flights[1]
+    let step1 = this.flights[0].treads[0]
+    let step2 = this.flights[0].treads[1]
     if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
-      offset = - step1.stepLength / 2 - bigColSize.y / 2
+      offset = - step1.stepWidth / 2 - bigColSize.y / 2
     }
     if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
-      offset = -step1.stepLength - step2.stepLength / 2 - bigColSize.y / 2
+      offset = -step1.stepWidth - step2.stepWidth / 2 - bigColSize.y / 2
     }
     return offset
   }

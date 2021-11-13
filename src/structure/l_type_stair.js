@@ -1,6 +1,7 @@
 import { Types } from "../types/stair_v2"
 import { Edge } from "../utils/edge"
 import { Outline } from "../utils/outline"
+import { BigColumn } from "./big_column"
 import { Default } from "./config"
 import { Flight } from "./flight"
 import { Girder } from "./girder"
@@ -46,6 +47,7 @@ export class LTypeStair extends Stair {
     this.updateGirders()
     this.updateHandrails()
     this.updateSmallColumns()
+    this.updateBigColumns()
     this.updateCanvas('Stair')
   }
 
@@ -85,8 +87,8 @@ export class LTypeStair extends Stair {
     this.reverseEdges(outEdges)
     if (!this.border) {
       this.border = {
-        in:{stairEdges:[], girders:[], handrails:[]},
-        out:{stairEdges:[], girders:[], handrails:[]},
+        in:{stairEdges:[], girders:[], handrails:[], bigCol:null},
+        out:{stairEdges:[], girders:[], handrails:[], bigCol:null},
         front:{stairEdges:[]},
         back:{stairEdges:[]},
         clock: this.floadSide === Types.Side.si_right
@@ -138,7 +140,7 @@ export class LTypeStair extends Stair {
       if (this.againstWallType === Types.AgainstWallType.aw_right) {
         this.position.y = rightEdge.p2.y - this.depth
       } else if (this.againstWallType === Types.AgainstWallType.aw_no) {
-        this.position.y = (rightEdge.p1.y + rightEdge.p2.y) / 2
+        this.position.y = (rightEdge.p1.y + rightEdge.p2.y) / 2 - Default.STEP_LENGTH / 2
       } else {
         this.position.y = topEdge.p2.y
       }
@@ -148,7 +150,7 @@ export class LTypeStair extends Stair {
       if (this.againstWallType === Types.AgainstWallType.aw_left) {
         this.position.y = leftEdge.p2.y - this.depth
       } else if (this.againstWallType === Types.AgainstWallType.aw_no) {
-        this.position.y = (leftEdge.p1.y + leftEdge.p2.y) / 2
+        this.position.y = (leftEdge.p1.y + leftEdge.p2.y) / 2 - Default.STEP_LENGTH / 2
       } else {
         this.position.y = topEdge.p1.y
       }
@@ -162,7 +164,7 @@ export class LTypeStair extends Stair {
       let topEdge = hole.getEdgeByPos('top')
       this.width = new Edge(topEdge).getLength()
       if (this.againstWallType === Types.AgainstWallType.aw_no) {
-        this.width = this.width - 200
+        this.width = this.width * 2 / 3
       }
       let f2StepNum = (this.width - Default.STEP_LENGTH) / Default.STEP_WIDTH
       let f1StepNum = this.stepNum - this.stepNumRule + 1 - f2StepNum - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
@@ -367,9 +369,15 @@ export class LTypeStair extends Stair {
     for (let i = 0; i < vStairEdges.length; i++) {
       let sideE = vStairEdges[i].edge
       let treads = this.flights[i].treads
-      let k = Math.abs(1 - this.bigColParameters.posType)
       let utilVec = new Edge(sideE).getVec()
       let widthSum = 0
+      let k = 0
+      if (i === 0) {
+        let k = Math.abs(1 - this.bigColParameters.posType)
+        for (let j = 0; j < k; j++) {
+          widthSum = widthSum + treads[j].stepWidth
+        }
+      }
       for (; k < treads.length; k++) {
         let t = treads[k]
         if (t.isLast) {
@@ -419,7 +427,7 @@ export class LTypeStair extends Stair {
       let e = vStairEdges[i].edge
       let sCol = vStairEdges[i].startCol
       let eCol = vStairEdges[i].endCol
-      let gir = borSide.girders[0]
+      let gArgs = this.girderParameters
       let start = new Types.Vector3(e.p1)
       let end = new Types.Vector3(e.p2)
       let edge = new Edge({
@@ -435,10 +443,8 @@ export class LTypeStair extends Stair {
       if (sCol) {
         let sOffset = 0
         //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
-        if (gir.paras.type === Types.GirderType.gslab) {
+        if (gArgs.type === Types.GirderType.gslab) {
           sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
-        } else {
-          sOffset = sCol.size.x / 2
         }
         utilE.extendP1(-sOffset)
         if (i !== 0) {
@@ -448,10 +454,8 @@ export class LTypeStair extends Stair {
       }
       if (eCol) {
         let eOffset = 0
-        if (gir.paras.type === Types.GirderType.gslab) {
+        if (gArgs.type === Types.GirderType.gslab) {
           eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
-        } else {
-          eOffset = eCol.size.x / 2
         }
         utilE.extendP2(-eOffset)
       }
@@ -470,7 +474,25 @@ export class LTypeStair extends Stair {
     }
   }
 
+  updateBigColumns () {
+    this.bigColumns = []
+    this.updateBigCol(this.border.in.stairEdges[0], 'in', !this.border.clock)
+    this.updateBigCol(this.border.out.stairEdges[0], 'out', this.border.clock)
+  }
 
-
+  updateBigCol (vStairEdge, vSide, vSideOffsetPlus) {
+    let args = this.bigColParameters
+    let size = tool.parseSpecification(args.specification)
+    let offSet = this.computeBigColOffset()
+    offSet = offSet + size.x / 2
+    let edge = new Edge(vStairEdge.edge).offSet(this.sideOffset, vSideOffsetPlus)
+    let position = new Edge(edge).extendP1(offSet).p1
+    if (this.border[vSide].bigCol) {
+      this.border[vSide].bigCol.rebuildByParent(position)
+    } else {
+      this.border[vSide].bigCol = new BigColumn({vParent:this,vPosition:position})
+    }
+    this.bigColumns.push(this.border[vSide].bigCol)
+  }
   
 }

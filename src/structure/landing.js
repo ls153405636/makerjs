@@ -38,6 +38,7 @@ export class Landing extends ChildInfo {
     this.oppoIndex = Math.abs(this.corIndex - 2)
     this.lastEdgeIndex = vLastEdgeIndex
     this.nextEdgeIndex = vNextEdgeIndex
+    this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
     this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth})
   }
 
@@ -54,7 +55,6 @@ export class Landing extends ChildInfo {
     vBorder.edges.forEach(e => {
       this.pois.push(e.p1)
     })
-    this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
     this.treadIndex = vTreadIndex
     this.edges = vBorder.edges
     this.lastStepWidth = vLastStepWidth
@@ -64,6 +64,11 @@ export class Landing extends ChildInfo {
     this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
     this.sideEdgeN = this.edges[(this.lastEdgeIndex + 2)%4]
     this.updateCorBigCol()
+  }
+
+  rebuild () {
+    this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
+    super.rebuild()
   }
   
   getArgs() {

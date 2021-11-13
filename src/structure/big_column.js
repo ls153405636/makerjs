@@ -71,7 +71,7 @@ export class BigColumn extends ChildInfo {
 
 
   update (vArgItems) {
-    if (this.isProp) {
+    if (!this.isProp) {
       super.updateParent(vArgItems, 'bigColParameters')
     } else {
       super.update(vArgItems)
