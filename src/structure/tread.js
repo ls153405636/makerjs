@@ -3,6 +3,14 @@ import { ChildInfo } from "./child_info";
 import tool from "./tool";
 
 export class Tread extends ChildInfo {
+  /**
+   * 
+   * @param {Object} param0 
+   * @param {Number} param0.vIndex 踏板的索引
+   * @param {Array<Types.Vector3>} param0.vPois 踏板的轮廓边缘点，目前只针对休台异形踏板
+   * @param {boolean} param0.vIsLast 踏板是否为二楼平面上的最后一级
+   * @param {Types.Vector3} param0.vPos 踏板的位置，即矩形绘制时起始点的坐标
+   */
   constructor ({vParent, vIndex, vPois, vPos, vIsLast}) {
     super(vParent)
     this.inheritL = true
@@ -37,6 +45,9 @@ export class Tread extends ChildInfo {
     return args
   }
 
+  /**
+   * 标准矩形踏板，根据位置及长宽构建出踏板轮廓
+   */
   createOutline () {
     let gArgs = this.parent.parent.girderParameters
     let xOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0

@@ -1,6 +1,7 @@
 import { Types } from "../types/stair_v2";
 import { ChildInfo } from "./child_info";
 import { Default } from "./config";
+import { StartTread } from "./start_tread";
 import tool from "./tool";
 import { Tread } from "./tread";
 
@@ -16,6 +17,7 @@ export class Flight extends ChildInfo {
     this.isLast = isLast
     this.index = vIndex
     this.treads = []
+    this.startTread = false
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
     this.rebuildByParent({vTreadIndex, vPos, vLVec, vWVec})
@@ -88,7 +90,11 @@ export class Flight extends ChildInfo {
         this.treads[step_num - i - 1].rebuildByParent(paras)
         widthSum = widthSum + this.treads[step_num - i - 1].stepWidth
       } else {
-        this.treads[step_num - i - 1] = new Tread(paras)
+        if (i === step_num - 1 && this.startTread) {
+          this.treads[step_num - i - 1] = new StartTread(paras)
+        } else {
+          this.treads[step_num - i - 1] = new Tread(paras)
+        }
         widthSum = widthSum + this.stepWidth
       }
     }

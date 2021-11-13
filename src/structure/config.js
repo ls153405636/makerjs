@@ -44,4 +44,5 @@ export const Default = {
   HAND_SPEC: '60*80',
   HANG_BOARD_DEPTH: 40,
   LANDING_TYPE: Types.LandingCutType.lct_fifth,
+  START_TREAD_PRO_ID: 0,
 }
