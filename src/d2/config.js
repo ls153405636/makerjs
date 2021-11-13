@@ -19,6 +19,7 @@ export const Z_INDEX = {
   GIRDER_ZINDEX: 8,
   SMALL_COLUMN_ZINDEX: 9,
   BIG_COLUMN_ZINDEX: 10,
+  WALL_LINE_ZINDEX: 11,
 }
 
 window.D2Config = D2Config
