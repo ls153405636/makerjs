@@ -1,4 +1,4 @@
-import { f } from '../../../dist/assets/vendor.52b9c170'
+
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
