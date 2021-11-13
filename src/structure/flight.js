@@ -60,9 +60,11 @@ export class Flight extends ChildInfo {
       }
     }
     args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
+    let stepWithArr = []
     for (const t of this.treads) {
-      if (t.stepWidth !== this.stepWidth) {
+      if (t.stepWidth !== this.stepWidth && !stepWithArr.includes(t.stepWidth)) {
         args.stepWidthD.value = args.stepWidthD.value + '/' + t.stepWidth
+        stepWithArr.push(t.stepWidth)
       }
     }
     return args

@@ -196,10 +196,12 @@ export class Stair extends Info {
         args.hangingBoard.name = '移除挂板'
       }
     }
+    let stepHeightArr = []
     for (const f of this.flights) {
       for (const p of f.treads) {
-        if (p.stepHeight !== this.stepHeight) {
+        if (p.stepHeight !== this.stepHeight && !stepHeightArr.includes(p.stepHeight)) {
           args.stepHeightD.value = args.stepHeightD.value + '/' + p.stepHeight
+          stepHeightArr.push(p.stepHeight)
         }
       }
     }
