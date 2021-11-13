@@ -88,7 +88,8 @@ export class Stair extends BaseWidget {
     this.sprite = new PIXI.Container()
 
     // sortableChildren = true 子级根据zIndex排序
-    this.sprite.sortableChildren = true
+    // 跟元素添加顺序有冲突
+    // this.sprite.sortableChildren = true
 
     this.addSprites(this.flights)
     this.addSprites(this.hangingBoard)
@@ -96,7 +97,8 @@ export class Stair extends BaseWidget {
     if (
       this.girders[0] &&
       this.handrails[0] &&
-      this.girders[0].sprite.width > this.handrails[0].sprite.width
+      this.girders[0].sprite.width >
+        this.handrails[0].width / D2Config.SCREEN_RATE
     ) {
       this.addSprites(this.girders)
       this.addSprites(this.handrails)
@@ -104,9 +106,9 @@ export class Stair extends BaseWidget {
       this.addSprites(this.handrails)
       this.addSprites(this.girders)
     }
+    this.addSprites(this.landings)
     this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)
-    this.addSprites(this.landings)
 
     /** 需设置整体精灵图的位置*/
     this.sprite.position.set(this.position.x, this.position.y)

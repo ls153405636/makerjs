@@ -31,12 +31,21 @@ export class Structure {
     return this
   }
 
-  initStair({ type = Types.StairType.sstright, againstWall }) {
+  initStair({
+    type = Types.StairType.sstright,
+    againstWall,
+    floadSide = Types.Side.si_right,
+  }) {
+    console.log(againstWall)
     if (type === Types.StairType.sstright) {
       this.stair = new StraightStair(this, againstWall)
     }
     if (type === Types.StairType.sl_type) {
-      this.stair = new LTypeStair(this, againstWall)
+      if (floadSide === Types.Side.si_right) {
+        this.stair = new LTypeStair(this, againstWall, Types.Side.si_right)
+      } else if (floadSide === Types.Side.si_left) {
+        this.stair = new LTypeStair(this, againstWall, Types.Side.si_left)
+      }
     }
     return this
   }

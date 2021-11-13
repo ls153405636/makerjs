@@ -68,13 +68,13 @@
           <el-select
             v-model="stair_dir_options.value.value"
             :label="stair_dir_options.value.label"
-            disabled
           >
             <el-option
               v-for="item in stair_dir_options.options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :disabled="item.disabled"
             >
             </el-option>
           </el-select>
@@ -104,6 +104,7 @@ export default defineComponent({
         new Command(core.cmds.StairInitCmd, {
           againstWall: this.stair_against_wall_options.value.value,
           type: this.stair_shape_options.value.value,
+          floadSide: this.stair_dir_options.value.value,
         })
       )
     },
