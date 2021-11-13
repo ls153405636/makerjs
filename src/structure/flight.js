@@ -18,7 +18,6 @@ export class Flight extends ChildInfo {
     this.treads = []
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
-    this.computeStepWidth()
     this.rebuildByParent({vTreadIndex, vPos, vLVec, vWVec})
   }
 
@@ -33,12 +32,8 @@ export class Flight extends ChildInfo {
     this.lVec = vLVec
     this.wVec = vWVec
     this.stepHeight = this.parent.stepHeight
-    this.updateTreads()
-  }
-
-  rebuild() {
     this.computeStepWidth()
-    super.rebuild()
+    this.updateTreads()
   }
 
   updateItem(vValue, vKey, vSecondKey) {

@@ -29,6 +29,7 @@ export class BigColumn extends ChildInfo {
       this.paras = this.parent.bigColParameters
     }
     this.posName = vPosName
+    this.size = tool.parseSpecification(this.paras.specification)
     this.rebuildByParent(vPosition, vIsProp)
   }
 
@@ -43,6 +44,11 @@ export class BigColumn extends ChildInfo {
   rebuildByParent (vPosition) {
     this.position = vPosition
     this.size = tool.parseSpecification(this.paras.specification)
+  }
+
+  rebuild () {
+    this.size = tool.parseSpecification(this.paras.specification)
+    super.rebuild()
   }
 
   getArgs() {

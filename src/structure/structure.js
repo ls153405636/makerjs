@@ -41,11 +41,7 @@ export class Structure {
       this.stair = new StraightStair(this, againstWall)
     }
     if (type === Types.StairType.sl_type) {
-      if (floadSide === Types.Side.si_right) {
-        this.stair = new LTypeStair(this, againstWall, Types.Side.si_right)
-      } else if (floadSide === Types.Side.si_left) {
-        this.stair = new LTypeStair(this, againstWall, Types.Side.si_left)
-      }
+      this.stair = new LTypeStair(this, againstWall, floadSide)
     }
     return this
   }

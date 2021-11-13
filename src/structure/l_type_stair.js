@@ -15,14 +15,12 @@ import tool from "./tool"
 export class LTypeStair extends Stair {
   constructor(vParnet, vAgainstWall, vFloadSide) {
     super(vParnet, vAgainstWall)
-    if (vFloadSide) {
-      this.floadSide = vFloadSide
+    if (this.againstWallType === Types.AgainstWallType.aw_left) {
+      this.floadSide = Types.Side.si_right
+    } else if (this.againstWallType === Types.AgainstWallType.aw_right) {
+      this.floadSide = Types.Side.si_left
     } else {
-      if (this.againstWallType === Types.AgainstWallType.aw_left) {
-        this.floadSide = Types.Side.si_right
-      } else {
-        this.floadSide = Types.Side.si_left
-      }
+      this.floadSide = vFloadSide || Types.Side.si_right
     }
     
     this.rebuild()
@@ -205,7 +203,6 @@ export class LTypeStair extends Stair {
                           vWVec:wVec2})
     } else {
       let rst = this.computeStepNum(this.stepNum, this.depth - Default.STEP_LENGTH, this.width - Default.STEP_LENGTH)
-      let step_num = this.stepNum + 1 - this.stepNumRule
       this.flights[0] = new Flight({vParent:this, 
                                     vStepNum:rst.firstNum, 
                                     vStepNumRule:Types.StepNumRule.snr_n, 
@@ -220,7 +217,7 @@ export class LTypeStair extends Stair {
                                     vStepNum:rst.secondNum, 
                                     vStepNumRule:this.stepNumRule, 
                                     vIndex:1, 
-                                    vTreadIndex:step_num - rst.secondNum, 
+                                    vTreadIndex:rst.firstNum + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE), 
                                     isLast:true, 
                                     vPos:pos2, 
                                     vLVec:lVec2, 
@@ -237,6 +234,7 @@ export class LTypeStair extends Stair {
       this.flights[0].updateItem(rst.firstNum, vKey1, vKey2)
       this.flights[1].updateItem(rst.secondNum, vKey1, vKey2)
     } else if (vKey1 === 'stepNumRule') {
+      this.stepNumRule = vValue
       this.flights[1].updateItem(vValue, vKey1, vKey2)
     } else {
       super.updateItem(vValue, vKey1, vKey2)
@@ -252,7 +250,7 @@ export class LTypeStair extends Stair {
       fStepNum = step_num - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
     }
     let firstNum = Math.ceil(vLength1 / (vLength1+vLength2) * fStepNum)
-    let secondNum = fStepNum - firstNum
+    let secondNum = fStepNum - firstNum + this.stepNumRule - 1
     return {
       firstNum: firstNum,
       secondNum: secondNum
@@ -373,7 +371,7 @@ export class LTypeStair extends Stair {
       let widthSum = 0
       let k = 0
       if (i === 0) {
-        let k = Math.abs(1 - this.bigColParameters.posType)
+        k = Math.abs(1 - this.bigColParameters.posType)
         for (let j = 0; j < k; j++) {
           widthSum = widthSum + treads[j].stepWidth
         }

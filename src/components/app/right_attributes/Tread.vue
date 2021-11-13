@@ -6,11 +6,11 @@
           <span>踏步参数</span>
         </div>
       </template>
-      <el-row>
+      <!-- <el-row>
         <el-button @click="enterEdit()" type="primary"
           >进入可视化编辑</el-button
         >
-      </el-row>
+      </el-row> -->
       <right-args></right-args>
     </el-card>
   </div>
