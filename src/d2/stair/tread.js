@@ -1,4 +1,3 @@
-
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
@@ -19,10 +18,60 @@ export class Tread extends ChildWidget {
     this.type = vPB.type
     this.draw()
     this.addEvent()
-    // console.log(this.edges)
   }
 
   draw() {
+    //  // 单层起步踏板参数
+    const elTreadLength1 = 120 // 踏板长度
+    const elTreadDepth1 = 30 // 踏板深度
+    const lRadius1 = 22 // 两侧椭圆长轴
+    const wRadius1 = 12 // 两侧椭圆短轴
+
+    //  // 双层起步踏板参数
+    //  const elTreadLength2 = elTreadLength1
+    //  const elTreadDepth2 = 30
+    //  const lRadius2 = 32
+    //  const wRadius2 = 27
+
+    //  const tabanlength = elTreadLength1
+    //  const radius = 14
+
+    //  const tContainer = new PIXI.Container()
+    //  const elTread = new PIXI.Graphics()
+
+    //  elTread.lineStyle(1, 0x000000)
+    //  elTread.moveTo(0, 0)
+
+    // //  // 单层
+    //  elTread.quadraticCurveTo(0, 0, 120, 0)
+    //  elTread.quadraticCurveTo(120 + 22,0,120 + 22,12)
+    //  elTread.quadraticCurveTo(120 + 22,12 * 2 + 30 - 12 * 2,120 / 2,12 * 2 + 30 - 12 * 2)
+    //  elTread.quadraticCurveTo(0 - 22,12 * 2 + 30 - 12 * 2,0 - 22,12)
+    //  elTread.quadraticCurveTo(0 - 22, 0, 0, 0)
+    //  // console.log(elTread.width, elTread.height)
+    //  // 双层
+    //  elTread.quadraticCurveTo(0, 0, elTreadLength2, 0)
+    //  elTread.quadraticCurveTo(
+    //    elTreadLength2 + lRadius2,
+    //    0,
+    //    elTreadLength2 + lRadius2,
+    //    wRadius2
+    //  )
+    //  elTread.quadraticCurveTo(
+    //    elTreadLength2 + lRadius2,
+    //    wRadius2 * 2 + elTreadDepth2 + elTreadDepth1 - wRadius2 * 2,
+    //    elTreadLength2 / 2,
+    //    wRadius2 * 2 + elTreadDepth2 + elTreadDepth1 - wRadius2 * 2
+    //  )
+    //  elTread.quadraticCurveTo(
+    //    0 - lRadius2,
+    //    wRadius2 * 2 + elTreadDepth2 + elTreadDepth1 - wRadius2 * 2,
+    //    0 - lRadius2,
+    //    wRadius2
+    //  )
+    //  elTread.quadraticCurveTo(0 - lRadius2, 0, 0, 0)
+    //  elTread.position.set(600,0)
+
     // 中心位置计算
     let positionX = 0
     let positionY = 0
@@ -36,29 +85,46 @@ export class Tread extends ChildWidget {
 
     let treadContainer = new PIXI.Container()
     // 踏板绘制
-    let changeTread = new PIXI.Graphics()
+    let path = []
     let path1 = []
+    for (let i = 0; i < this.edges.length; i++) {
+      let e = this.edges[i]
+      if (this.index === 1 && e.type === 2) {
+        path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      } else {
+        path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      }
+    }
+
+    let changeTread = new PIXI.Graphics()
     changeTread.visible = false
     changeTread.lineStyle(1, 0x4478f4)
     changeTread.beginFill(0xe9efff)
-    for (let i = 0; i < this.edges.length; i++) {
-      let e = this.edges[i]
-      path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-    }
-    changeTread.drawPolygon(path1)
+    changeTread.drawPolygon(path)
+
+    changeTread.moveTo(path1[0], path1[1])
+    changeTread.quadraticCurveTo(path1[0], path1[1], path1[2], path1[3])
+    changeTread.quadraticCurveTo(path1[4], path1[5], path1[6], path1[7])
+    changeTread.quadraticCurveTo(path1[8], path1[9], path1[10], path1[11])
+    changeTread.quadraticCurveTo(path1[12], path1[13], path1[14], path1[15])
+    changeTread.quadraticCurveTo(path1[16], path1[17], path1[0], path1[1])
+
     changeTread.endFill()
 
     // 踏板绘制
     let tread = new PIXI.Graphics()
-    let path = []
     tread.lineStyle(1, 0x2d3037)
     tread.beginFill(0xffffff)
     tread.visible = true
-    for (let i = 0; i < this.edges.length; i++) {
-      let e = this.edges[i]
-      path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-    }
     tread.drawPolygon(path)
+
+    tread.moveTo(path1[0], path1[1])
+    tread.quadraticCurveTo(path1[0], path1[1], path1[2], path1[3])
+    tread.quadraticCurveTo(path1[4], path1[5], path1[6], path1[7])
+    tread.quadraticCurveTo(path1[8], path1[9], path1[10], path1[11])
+    tread.quadraticCurveTo(path1[12], path1[13], path1[14], path1[15])
+    tread.quadraticCurveTo(path1[16], path1[17], path1[0], path1[1])
+
     tread.endFill()
 
     // 踏板编号
@@ -136,7 +202,10 @@ export class Tread extends ChildWidget {
           core.execute(
             new Command(core.cmds.SelecteCmd, {
               uuid: this.parent.uuid,
-              type: this.type === Types.TreadType.trect ? COMP_TYPES.FLIGHT : COMP_TYPES.LANDING,
+              type:
+                this.type === Types.TreadType.trect
+                  ? COMP_TYPES.FLIGHT
+                  : COMP_TYPES.LANDING,
             })
           )
         }

@@ -121,6 +121,8 @@ message Edge {
   float    start_angle  = 6;  // 起始角度
   float    end_angle    = 7;  // 终止角度
   bool     is_clockwise = 8;  // 是否为顺时针
+  Vector3  bezier       = 9;  // 是否为贝塞尔点
+
 }
 
 message Outline {

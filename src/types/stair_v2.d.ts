@@ -100,7 +100,8 @@ export namespace Types {
     /** TreadType enum. */
     enum TreadType {
         tph = 0,
-        trect = 1
+        trect = 1,
+        trect_f = 2
     }
 
     /** Properties of a Vector3. */
