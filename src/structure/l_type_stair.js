@@ -41,6 +41,7 @@ export class LTypeStair extends Stair {
       this.flights[0].stepNum +
       this.flights[1].stepNum +
       this.landings[0].stepNum
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.updateBorder()
     this.updateGirders()
     this.updateHandrails()
@@ -165,7 +166,7 @@ export class LTypeStair extends Stair {
         this.width = this.width * 2 / 3
       }
       let f2StepNum = (this.width - Default.STEP_LENGTH) / Default.STEP_WIDTH
-      let f1StepNum = this.stepNum - this.stepNumRule + 1 - f2StepNum - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
+      let f1StepNum = this.realStepNum - f2StepNum - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
       f1StepNum = Math.ceil(f1StepNum)
       this.depth = f1StepNum * Default.STEP_WIDTH + Default.STEP_LENGTH
     } else {

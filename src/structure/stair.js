@@ -18,6 +18,7 @@ export class Stair extends Info {
     this.exitBeamDepth = 0
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.flights = []
     this.landings = []
     this.bigColumns = []
