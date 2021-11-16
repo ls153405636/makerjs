@@ -21,57 +21,6 @@ export class Tread extends ChildWidget {
   }
 
   draw() {
-    //  // 单层起步踏板参数
-    const elTreadLength1 = 120 // 踏板长度
-    const elTreadDepth1 = 30 // 踏板深度
-    const lRadius1 = 22 // 两侧椭圆长轴
-    const wRadius1 = 12 // 两侧椭圆短轴
-
-    //  // 双层起步踏板参数
-    //  const elTreadLength2 = elTreadLength1
-    //  const elTreadDepth2 = 30
-    //  const lRadius2 = 32
-    //  const wRadius2 = 27
-
-    //  const tabanlength = elTreadLength1
-    //  const radius = 14
-
-    //  const tContainer = new PIXI.Container()
-    //  const elTread = new PIXI.Graphics()
-
-    //  elTread.lineStyle(1, 0x000000)
-    //  elTread.moveTo(0, 0)
-
-    // //  // 单层
-    //  elTread.quadraticCurveTo(0, 0, 120, 0)
-    //  elTread.quadraticCurveTo(120 + 22,0,120 + 22,12)
-    //  elTread.quadraticCurveTo(120 + 22,12 * 2 + 30 - 12 * 2,120 / 2,12 * 2 + 30 - 12 * 2)
-    //  elTread.quadraticCurveTo(0 - 22,12 * 2 + 30 - 12 * 2,0 - 22,12)
-    //  elTread.quadraticCurveTo(0 - 22, 0, 0, 0)
-    //  // console.log(elTread.width, elTread.height)
-    //  // 双层
-    //  elTread.quadraticCurveTo(0, 0, elTreadLength2, 0)
-    //  elTread.quadraticCurveTo(
-    //    elTreadLength2 + lRadius2,
-    //    0,
-    //    elTreadLength2 + lRadius2,
-    //    wRadius2
-    //  )
-    //  elTread.quadraticCurveTo(
-    //    elTreadLength2 + lRadius2,
-    //    wRadius2 * 2 + elTreadDepth2 + elTreadDepth1 - wRadius2 * 2,
-    //    elTreadLength2 / 2,
-    //    wRadius2 * 2 + elTreadDepth2 + elTreadDepth1 - wRadius2 * 2
-    //  )
-    //  elTread.quadraticCurveTo(
-    //    0 - lRadius2,
-    //    wRadius2 * 2 + elTreadDepth2 + elTreadDepth1 - wRadius2 * 2,
-    //    0 - lRadius2,
-    //    wRadius2
-    //  )
-    //  elTread.quadraticCurveTo(0 - lRadius2, 0, 0, 0)
-    //  elTread.position.set(600,0)
-
     // 中心位置计算
     let positionX = 0
     let positionY = 0
@@ -87,29 +36,71 @@ export class Tread extends ChildWidget {
     // 踏板绘制
     let path = []
     let path1 = []
+    let path2 = []
+    let path1_ = []
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
-      if (this.index === 1 && e.type === 2) {
+      if (this.edges.length === 11) {
         path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-      } else {
+      } 
+      else if (this.edges.length === 22) {
+        path1_.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      } 
+      else if (this.edges.length === 7) {
+        path2.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      } 
+      else {
         path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
       }
     }
-
     let changeTread = new PIXI.Graphics()
     changeTread.visible = false
     changeTread.lineStyle(1, 0x4478f4)
     changeTread.beginFill(0xe9efff)
     changeTread.drawPolygon(path)
 
+
+    // 单层椭圆踏板绘制
     changeTread.moveTo(path1[0], path1[1])
-    changeTread.quadraticCurveTo(path1[0], path1[1], path1[2], path1[3])
+
+    changeTread.lineTo(path1[2], path1[3])
     changeTread.quadraticCurveTo(path1[4], path1[5], path1[6], path1[7])
     changeTread.quadraticCurveTo(path1[8], path1[9], path1[10], path1[11])
     changeTread.quadraticCurveTo(path1[12], path1[13], path1[14], path1[15])
-    changeTread.quadraticCurveTo(path1[16], path1[17], path1[0], path1[1])
+    changeTread.quadraticCurveTo(path1[16], path1[17], path1[18], path1[19])
+    changeTread.lineTo(path1[20], path1[21])
+
+    // 双层椭圆踏板绘制
+    changeTread.moveTo(path1_[0], path1_[1])
+
+    changeTread.lineTo(path1_[2], path1_[3])
+    changeTread.quadraticCurveTo(path1_[4], path1_[5], path1_[6], path1_[7])
+    changeTread.quadraticCurveTo(path1_[8], path1_[9], path1_[10], path1_[11])
+    changeTread.quadraticCurveTo(path1_[12], path1_[13], path1_[14], path1_[15])
+    changeTread.quadraticCurveTo(path1_[16], path1_[17], path1_[18], path1_[19])
+    changeTread.lineTo(path1_[20], path1_[21])
+
+    changeTread.lineTo(path1_[24], path1_[25])
+    changeTread.quadraticCurveTo(path1_[26], path1_[27], path1_[28], path1_[29])
+    changeTread.quadraticCurveTo(path1_[30], path1_[31], path1_[32], path1_[33])
+    changeTread.quadraticCurveTo(path1_[34], path1_[35], path1_[36], path1_[37])
+    changeTread.quadraticCurveTo(path1_[38], path1_[39], path1_[40], path1_[41])
+    changeTread.lineTo(path1_[42], path1_[43])
+
+
+    // 圆角矩形踏板绘制
+    changeTread.moveTo(path2[0],path2[1])
+    changeTread.lineTo(path2[2],path2[3])
+    changeTread.arc(path2[4],path2[5],path2[5] - path2[3],-Math.PI / 2,Math.PI / 2)
+    changeTread.lineTo(path2[6],path2[7])
+    changeTread.lineTo(path2[8],path2[9])
+    changeTread.arc(path2[10],path2[11],path2[9] - path2[11],Math.PI / 2,-Math.PI / 2)
+    changeTread.lineTo(path2[12],path2[13])
+    changeTread.lineTo(path2[0],path2[1])
 
     changeTread.endFill()
+
+    // --------------------------------------------------------------------------------------------------------------//
 
     // 踏板绘制
     let tread = new PIXI.Graphics()
@@ -118,12 +109,43 @@ export class Tread extends ChildWidget {
     tread.visible = true
     tread.drawPolygon(path)
 
+    // 单层椭圆踏板绘制
     tread.moveTo(path1[0], path1[1])
-    tread.quadraticCurveTo(path1[0], path1[1], path1[2], path1[3])
+
+    tread.lineTo(path1[2], path1[3])
     tread.quadraticCurveTo(path1[4], path1[5], path1[6], path1[7])
     tread.quadraticCurveTo(path1[8], path1[9], path1[10], path1[11])
     tread.quadraticCurveTo(path1[12], path1[13], path1[14], path1[15])
-    tread.quadraticCurveTo(path1[16], path1[17], path1[0], path1[1])
+    tread.quadraticCurveTo(path1[16], path1[17], path1[18], path1[19])
+    tread.lineTo(path1[20], path1[21])
+
+    // 双层椭圆踏板绘制
+    tread.moveTo(path1_[0], path1_[1])
+
+    tread.lineTo(path1_[2], path1_[3])
+    tread.quadraticCurveTo(path1_[4], path1_[5], path1_[6], path1_[7])
+    tread.quadraticCurveTo(path1_[8], path1_[9], path1_[10], path1_[11])
+    tread.quadraticCurveTo(path1_[12], path1_[13], path1_[14], path1_[15])
+    tread.quadraticCurveTo(path1_[16], path1_[17], path1_[18], path1_[19])
+    tread.lineTo(path1_[20], path1_[21])
+
+    tread.lineTo(path1_[24], path1_[25])
+    tread.quadraticCurveTo(path1_[26], path1_[27], path1_[28], path1_[29])
+    tread.quadraticCurveTo(path1_[30], path1_[31], path1_[32], path1_[33])
+    tread.quadraticCurveTo(path1_[34], path1_[35], path1_[36], path1_[37])
+    tread.quadraticCurveTo(path1_[38], path1_[39], path1_[40], path1_[41])
+    tread.lineTo(path1_[42], path1_[43])
+    
+    // 圆角矩形踏板绘制
+    tread.moveTo(path2[0],path2[1])
+    tread.lineTo(path2[2],path2[3])
+    tread.arc(path2[4],path2[5],path2[5] - path2[3],-Math.PI / 2,Math.PI / 2)
+    tread.lineTo(path2[6],path2[7])
+    tread.lineTo(path2[8],path2[9])
+    tread.arc(path2[10],path2[11],path2[9] - path2[11],Math.PI / 2,-Math.PI / 2)
+    tread.lineTo(path2[12],path2[13])
+    tread.lineTo(path2[0],path2[1])
+
 
     tread.endFill()
 

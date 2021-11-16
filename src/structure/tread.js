@@ -1,5 +1,6 @@
 import { Types } from '../types/stair_v2'
 import { ChildInfo } from './child_info'
+// import { Default } from './config'
 import tool from './tool'
 
 export class Tread extends ChildInfo {
@@ -17,11 +18,14 @@ export class Tread extends ChildInfo {
     this.inheritW = true
     this.inheritH = true
     this.isLast = vIsLast
+    // this.type === Types.TreadType.trect
+    // this.projId = Default.START_TREAD_PRO_ID
     this.rebuildByParent({ vIndex, vPois, vPos })
   }
 
   getArgs() {
     let args = {}
+    // if ([Types.TreadType.trect, Types.TreadType.tStart].includes(this.type)) {
     if (this.type === Types.TreadType.trect) {
       args.stepLength = {
         name: '步长',
@@ -71,13 +75,14 @@ export class Tread extends ChildInfo {
       },
       type: 'group',
     }
+    //args.start = {name:'起步踏造型', value:this.type===Types.TreadType.tStart, type:'switch'}
     return args
   }
 
   /**
    * 标准矩形踏板，根据位置及长宽构建出踏板轮廓
    */
-  createOutline() {
+  createRectOutline() {
     let gArgs = this.parent.parent.girderParameters
     let xOffset = gArgs.type === Types.GirderType.gslab ? gArgs.depth : 0
     this.outline = tool.createRectOutline(
@@ -88,6 +93,40 @@ export class Tread extends ChildInfo {
       this.wVec
     )
   }
+
+  /**
+   * 创建起步踏板轮廓哟
+   */
+  // createStartOutline() {
+  //   let pois = []
+
+  //   pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.oriStepLength / 2)
+  //   pois[1] = pois[0].clone().addScaledVector(this.lVec, this.oriStepLength)
+  //   pois[2] = pois[1].clone().addScaledVector(this.lVec, this.oriStepLength / 9)
+  //   pois[3] = pois[2].clone().addScaledVector(this.wVec, this.oriStepWidth / 2)
+  //   pois[4] = pois[3].clone().addScaledVector(this.wVec, this.oriStepWidth / 2 + this.oriStepWidth / 4)
+  //   pois[5] = pois[4].clone().addScaledVector(this.lVec, -(this.oriStepLength / 2 + this.oriStepLength / 9))
+  //   pois[6] = pois[5].clone().addScaledVector(this.lVec, -(this.oriStepLength / 2 + this.oriStepLength / 9))
+  //   pois[7] = pois[6].clone().addScaledVector(this.wVec, -(this.oriStepWidth / 2 + this.oriStepWidth / 4))
+  //   pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.oriStepWidth / 2)
+  //   pois[9] = pois[8].clone().addScaledVector(this.lVec, this.oriStepLength / 9)
+
+  //   this.outline = new Types.Outline()
+  //   let edges = []
+
+  //   for (let i = 0; i < pois.length - 1; i++) {
+  //     let p = pois[i]
+  //     let nextP = i === pois.length ? pois[0] : pois[i + 1]
+  //     edges.push(
+  //       new Types.Edge({
+  //         p1: p,
+  //         p2: nextP,
+  //         type: Types.EdgeType.earc,
+  //       })
+  //     )
+  //   }
+  //   this.outline.edges = edges
+  // }
 
   rebuildByParent({ vIndex, vPois, vPos }) {
     this.position = vPos || new Types.Vector3()
@@ -106,16 +145,27 @@ export class Tread extends ChildInfo {
     if (vPois?.length) {
       this.outline = tool.createOutlineByPois(vPois)
       this.type = Types.TreadType.tph
-    } else {
-      this.createOutline()
+    }
+    else {
+      this.createRectOutline()
       this.type = Types.TreadType.trect
     }
+    // else if (this.type === Types.TreadType.trect) {
+    //   this.createRectOutline()
+    // }
+    // else if (this.type === Types.TreadType.tStart) {
+    //   this.createStartOutline()
+    // }
   }
 
   updateItem(vValue, vKey, vSecondKey) {
     if (['stepHeight', 'stepLength', 'stepWidth'].includes(vKey)) {
       this[vSecondKey] = vValue
-    } else {
+    }
+    // else if (vKey === 'start') {
+    //   this.type = vValue ? Types.TreadType.tStart : Types.TreadType.trect
+    // } 
+    else {
       super.updateItem(vValue, vKey, vSecondKey)
     }
   }

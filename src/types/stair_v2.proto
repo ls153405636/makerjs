@@ -11,6 +11,7 @@ enum EdgeType {
   eph       = 0;
   estraight = 1;
   earc      = 2;
+  ebeszer = 3;
 }
 
 //墙体类型
@@ -99,9 +100,11 @@ enum GirderType {
   gsaw  = 2;  //锯齿型
 }
 
+//踏板类型
 enum TreadType {
   tph  = 0;
   trect = 1;
+  tStart = 2;
 }
 
 //三维向量
@@ -121,7 +124,7 @@ message Edge {
   float    start_angle  = 6;  // 起始角度
   float    end_angle    = 7;  // 终止角度
   bool     is_clockwise = 8;  // 是否为顺时针
-  Vector3  bezier       = 9;  // 是否为贝塞尔点
+  Vector3  bezier       = 9;  // 贝塞尔点
 
 }
 

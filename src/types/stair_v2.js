@@ -23,12 +23,14 @@ export const Types = $root.Types = (() => {
      * @property {number} eph=0 eph value
      * @property {number} estraight=1 estraight value
      * @property {number} earc=2 earc value
+     * @property {number} ebeszer=3 ebeszer value
      */
     Types.EdgeType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "eph"] = 0;
         values[valuesById[1] = "estraight"] = 1;
         values[valuesById[2] = "earc"] = 2;
+        values[valuesById[3] = "ebeszer"] = 3;
         return values;
     })();
 
@@ -236,11 +238,13 @@ export const Types = $root.Types = (() => {
      * @enum {number}
      * @property {number} tph=0 tph value
      * @property {number} trect=1 trect value
+     * @property {number} tStart=2 tStart value
      */
     Types.TreadType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "tph"] = 0;
         values[valuesById[1] = "trect"] = 1;
+        values[valuesById[2] = "tStart"] = 2;
         return values;
     })();
 
@@ -490,6 +494,7 @@ export const Types = $root.Types = (() => {
          * @property {number|null} [start_angle] Edge start_angle
          * @property {number|null} [end_angle] Edge end_angle
          * @property {boolean|null} [is_clockwise] Edge is_clockwise
+         * @property {Types.IVector3|null} [bezier] Edge bezier
          */
 
         /**
@@ -572,6 +577,14 @@ export const Types = $root.Types = (() => {
         Edge.prototype.is_clockwise = false;
 
         /**
+         * Edge bezier.
+         * @member {Types.IVector3|null|undefined} bezier
+         * @memberof Types.Edge
+         * @instance
+         */
+        Edge.prototype.bezier = null;
+
+        /**
          * Creates a new Edge instance using the specified properties.
          * @function create
          * @memberof Types.Edge
@@ -611,6 +624,8 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 7, wireType 5 =*/61).float(message.end_angle);
             if (message.is_clockwise != null && Object.hasOwnProperty.call(message, "is_clockwise"))
                 writer.uint32(/* id 8, wireType 0 =*/64).bool(message.is_clockwise);
+            if (message.bezier != null && Object.hasOwnProperty.call(message, "bezier"))
+                $root.Types.Vector3.encode(message.bezier, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
             return writer;
         };
 
@@ -669,6 +684,9 @@ export const Types = $root.Types = (() => {
                 case 8:
                     message.is_clockwise = reader.bool();
                     break;
+                case 9:
+                    message.bezier = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -721,6 +739,7 @@ export const Types = $root.Types = (() => {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     break;
                 }
             if (message.radius != null && message.hasOwnProperty("radius"))
@@ -740,6 +759,11 @@ export const Types = $root.Types = (() => {
             if (message.is_clockwise != null && message.hasOwnProperty("is_clockwise"))
                 if (typeof message.is_clockwise !== "boolean")
                     return "is_clockwise: boolean expected";
+            if (message.bezier != null && message.hasOwnProperty("bezier")) {
+                let error = $root.Types.Vector3.verify(message.bezier);
+                if (error)
+                    return "bezier." + error;
+            }
             return null;
         };
 
@@ -778,6 +802,10 @@ export const Types = $root.Types = (() => {
             case 2:
                 message.type = 2;
                 break;
+            case "ebeszer":
+            case 3:
+                message.type = 3;
+                break;
             }
             if (object.radius != null)
                 message.radius = Number(object.radius);
@@ -792,6 +820,11 @@ export const Types = $root.Types = (() => {
                 message.end_angle = Number(object.end_angle);
             if (object.is_clockwise != null)
                 message.is_clockwise = Boolean(object.is_clockwise);
+            if (object.bezier != null) {
+                if (typeof object.bezier !== "object")
+                    throw TypeError(".Types.Edge.bezier: object expected");
+                message.bezier = $root.Types.Vector3.fromObject(object.bezier);
+            }
             return message;
         };
 
@@ -817,6 +850,7 @@ export const Types = $root.Types = (() => {
                 object.start_angle = 0;
                 object.end_angle = 0;
                 object.is_clockwise = false;
+                object.bezier = null;
             }
             if (message.p1 != null && message.hasOwnProperty("p1"))
                 object.p1 = $root.Types.Vector3.toObject(message.p1, options);
@@ -834,6 +868,8 @@ export const Types = $root.Types = (() => {
                 object.end_angle = options.json && !isFinite(message.end_angle) ? String(message.end_angle) : message.end_angle;
             if (message.is_clockwise != null && message.hasOwnProperty("is_clockwise"))
                 object.is_clockwise = message.is_clockwise;
+            if (message.bezier != null && message.hasOwnProperty("bezier"))
+                object.bezier = $root.Types.Vector3.toObject(message.bezier, options);
             return object;
         };
 

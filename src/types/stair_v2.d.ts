@@ -6,7 +6,8 @@ export namespace Types {
     enum EdgeType {
         eph = 0,
         estraight = 1,
-        earc = 2
+        earc = 2,
+        ebeszer = 3
     }
 
     /** WallType enum. */
@@ -101,7 +102,7 @@ export namespace Types {
     enum TreadType {
         tph = 0,
         trect = 1,
-        trect_f = 2
+        tStart = 2
     }
 
     /** Properties of a Vector3. */
@@ -232,6 +233,9 @@ export namespace Types {
 
         /** Edge is_clockwise */
         is_clockwise?: (boolean|null);
+
+        /** Edge bezier */
+        bezier?: (Types.IVector3|null);
     }
 
     /** Represents an Edge. */
@@ -266,6 +270,9 @@ export namespace Types {
 
         /** Edge is_clockwise. */
         public is_clockwise: boolean;
+
+        /** Edge bezier. */
+        public bezier?: (Types.IVector3|null);
 
         /**
          * Creates a new Edge instance using the specified properties.
