@@ -105,6 +105,15 @@ export namespace Types {
         tStart = 2
     }
 
+    /** StartTreadType enum. */
+    enum StartTreadType {
+        sph = 0,
+        sel = 1,
+        sel_2 = 2,
+        srr = 3,
+        srr_2 = 4
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 

@@ -107,6 +107,15 @@ enum TreadType {
   tStart = 2;
 }
 
+//起步踏板类型
+enum StartTreadType {
+  sph = 0;
+  sel = 1;  // 单层椭圆
+  sel_2 = 2;  // 双层椭圆
+  srr = 3;    // 单层圆角矩形
+  srr_2= 4;  // 双层圆角矩形
+}
+
 //三维向量
 message Vector3{
 	float x = 1;

@@ -79,7 +79,11 @@ export class Landing extends ChildInfo {
       options.splice(1,1)
     }
     return {
-      type:{name:'分割方案', value:f(this.type, Landing.CUT_TYPE_MAP), type:'select', options:options},
+      type:{
+        name:'分割方案', 
+        value:f(this.type, Landing.CUT_TYPE_MAP), 
+        type:'select',
+        options:options},
 
     }
   }

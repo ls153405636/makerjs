@@ -34,25 +34,46 @@ export class Tread extends ChildWidget {
 
     let treadContainer = new PIXI.Container()
     // 踏板绘制
-    let path = []
-    let path1 = []
-    let path2 = []
-    let path1_ = []
+    let path = [] // 普通踏板
+    let path1 = [] // 单层椭圆
+    let path1_ = [] // 双层椭圆
+    let path1_k = [] // 双层椭圆
+    let path2 = [] // 单层圆角矩形
+    let path2_ = [] // 双层圆角矩形
+    let path2_k = [] // 去边单层圆角矩形
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
-      if (this.edges.length === 11) {
-        path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      // 去边单层圆角矩形
+      if (this.edges.length === 6) {
+        path2_k.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
       } 
-      else if (this.edges.length === 22) {
-        path1_.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-      } 
+      // 单层圆角矩形
       else if (this.edges.length === 7) {
         path2.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
       } 
+      // 去边单层椭圆
+      else if (this.edges.length === 9) {
+        path1_k.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      } 
+      // 单层椭圆
+      else if (this.edges.length === 11) {
+        path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      } 
+      // 双层圆角矩形
+      else if (this.edges.length === 14) {
+        path2_.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      } 
+      // 双层椭圆
+      else if (this.edges.length === 22) {
+        path1_.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      } 
+      // 普通踏步
       else {
         path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
       }
     }
+    // console.log(path1)
+
     let changeTread = new PIXI.Graphics()
     changeTread.visible = false
     changeTread.lineStyle(1, 0x4478f4)
@@ -69,6 +90,14 @@ export class Tread extends ChildWidget {
     changeTread.quadraticCurveTo(path1[12], path1[13], path1[14], path1[15])
     changeTread.quadraticCurveTo(path1[16], path1[17], path1[18], path1[19])
     changeTread.lineTo(path1[20], path1[21])
+
+    // // 去边单层椭圆踏板绘制
+    changeTread.moveTo(path1_k[0], path1_k[1])
+    changeTread.lineTo(path1_k[2], path1_k[3])
+    changeTread.quadraticCurveTo(path1_k[4], path1_k[5], path1_k[6], path1_k[7])
+    changeTread.quadraticCurveTo(path1_k[8], path1_k[9], path1_k[10], path1_k[11])
+    changeTread.quadraticCurveTo(path1_k[12], path1_k[13], path1_k[14], path1_k[15])
+    changeTread.lineTo(path1_k[16], path1_k[17])
 
     // 双层椭圆踏板绘制
     changeTread.moveTo(path1_[0], path1_[1])
@@ -98,7 +127,42 @@ export class Tread extends ChildWidget {
     changeTread.lineTo(path2[12],path2[13])
     changeTread.lineTo(path2[0],path2[1])
 
-    changeTread.endFill()
+    // 去边单层圆角矩形踏板绘制
+    changeTread.moveTo(path2_k[0],path2_k[1])
+    changeTread.lineTo(path2_k[2],path2_k[3])
+    changeTread.arc(path2_k[4],path2_k[5],path2_k[5] - path2_k[3],-Math.PI / 2,Math.PI / 2)
+    changeTread.lineTo(path2_k[6],path2_k[7])
+    changeTread.lineTo(path2_k[8],path2_k[9])
+    changeTread.lineTo(path2_k[10],path2_k[11])
+    changeTread.lineTo(path2_k[0],path2_k[1])
+    // // 去边单层圆角矩形踏板绘制
+    // changeTread.moveTo(path2_k[0],path2_k[1])
+    // changeTread.lineTo(path2_k[2],path2_k[3])
+    // changeTread.arc(path2_k[4],path2_k[5],path2_k[5] - path2_k[3],-Math.PI / 2,Math.PI / 2,true)
+    // changeTread.lineTo(path2_k[6],path2_k[7])
+    // changeTread.lineTo(path2_k[8],path2_k[9])
+    // changeTread.lineTo(path2_k[10],path2_k[11])
+    // changeTread.lineTo(path2_k[0],path2_k[1])
+
+
+    // 双层圆角矩形踏板绘制
+    changeTread.moveTo(path2_[0],path2_[1])
+    changeTread.lineTo(path2_[2],path2_[3])
+    changeTread.arc(path2_[4],path2_[5],path2_[5] - path2_[3],-Math.PI / 2, Math.PI / 2)
+    changeTread.lineTo(path2_[6],path2_[7])
+    changeTread.lineTo(path2_[8],path2_[9])
+    changeTread.arc(path2_[10],path2_[11],path2_[9] - path2_[11],Math.PI / 2, -Math.PI / 2)
+    changeTread.lineTo(path2_[12],path2_[13])
+    changeTread.lineTo(path2_[0],path2_[1])
+
+    changeTread.lineTo(path2_[14],path2_[15])
+    changeTread.lineTo(path2_[16],path2_[17])
+    changeTread.arc(path2_[18],path2_[19],path2_[19] - path2_[17],-Math.PI / 2, Math.PI / 2)
+    changeTread.lineTo(path2_[20],path2_[21])
+    changeTread.lineTo(path2_[22],path2_[23])
+    changeTread.arc(path2_[24],path2_[25],path2_[23] - path2_[25],Math.PI / 2, -Math.PI / 2)
+    changeTread.lineTo(path2_[26],path2_[27])
+    changeTread.lineTo(path2_[0],path2_[1])
 
     // --------------------------------------------------------------------------------------------------------------//
 
@@ -118,6 +182,14 @@ export class Tread extends ChildWidget {
     tread.quadraticCurveTo(path1[12], path1[13], path1[14], path1[15])
     tread.quadraticCurveTo(path1[16], path1[17], path1[18], path1[19])
     tread.lineTo(path1[20], path1[21])
+
+    // 去边单层椭圆踏板绘制
+    tread.moveTo(path1_k[0], path1_k[1])
+    tread.lineTo(path1_k[2], path1_k[3])
+    tread.quadraticCurveTo(path1_k[4], path1_k[5], path1_k[6], path1_k[7])
+    tread.quadraticCurveTo(path1_k[8], path1_k[9], path1_k[10], path1_k[11])
+    tread.quadraticCurveTo(path1_k[12], path1_k[13], path1_k[14], path1_k[15])
+    tread.lineTo(path1_k[16], path1_k[17])
 
     // 双层椭圆踏板绘制
     tread.moveTo(path1_[0], path1_[1])
@@ -146,8 +218,48 @@ export class Tread extends ChildWidget {
     tread.lineTo(path2[12],path2[13])
     tread.lineTo(path2[0],path2[1])
 
+    // 去边单层圆角矩形踏板绘制
+    tread.moveTo(path2_k[0],path2_k[1])
+    tread.lineTo(path2_k[2],path2_k[3])
+    tread.arc(path2_k[4],path2_k[5],path2_k[5] - path2_k[3],-Math.PI / 2,Math.PI / 2)
+    tread.lineTo(path2_k[6],path2_k[7])
+    tread.lineTo(path2_k[8],path2_k[9])
+    tread.lineTo(path2_k[10],path2_k[11])
+    tread.lineTo(path2_k[0],path2_k[1])
+    tread.moveTo(path2_k[0],path2_k[1])
+    // // 去边单层圆角矩形踏板绘制
+    // tread.moveTo(path2_k[0],path2_k[1])
+    // tread.lineTo(path2_k[2],path2_k[3])
+    // tread.arc(path2_k[4],path2_k[5],path2_k[5] - path2_k[3],-Math.PI / 2,Math.PI / 2,true)
+    // tread.lineTo(path2_k[6],path2_k[7])
+    // tread.lineTo(path2_k[8],path2_k[9])
+    // tread.lineTo(path2_k[10],path2_k[11])
+    // tread.lineTo(path2_k[0],path2_k[1])
+    // tread.moveTo(path2_k[0],path2_k[1])
+    
 
-    tread.endFill()
+
+    // 双层圆角矩形踏板绘制
+    tread.moveTo(path2_[0],path2_[1])
+    tread.lineTo(path2_[2],path2_[3])
+    tread.arc(path2_[4],path2_[5],path2_[5] - path2_[3],-Math.PI / 2, Math.PI / 2)
+    tread.lineTo(path2_[6],path2_[7])
+    tread.lineTo(path2_[8],path2_[9])
+    tread.arc(path2_[10],path2_[11],path2_[9] - path2_[11],Math.PI / 2, -Math.PI / 2)
+    tread.lineTo(path2_[12],path2_[13])
+    tread.lineTo(path2_[0],path2_[1])
+
+    tread.lineTo(path2_[14],path2_[15])
+    tread.lineTo(path2_[16],path2_[17])
+    tread.arc(path2_[18],path2_[19],path2_[19] - path2_[17],-Math.PI / 2, Math.PI / 2)
+    tread.lineTo(path2_[20],path2_[21])
+    tread.lineTo(path2_[22],path2_[23])
+    tread.arc(path2_[24],path2_[25],path2_[23] - path2_[25],Math.PI / 2, -Math.PI / 2)
+    tread.lineTo(path2_[26],path2_[27])
+    tread.lineTo(path2_[0],path2_[1])
+    
+
+
 
     // 踏板编号
     let stepNum = new PIXI.Text(this.index, { fontSize: 56 })

@@ -248,6 +248,26 @@ export const Types = $root.Types = (() => {
         return values;
     })();
 
+    /**
+     * StartTreadType enum.
+     * @name Types.StartTreadType
+     * @enum {number}
+     * @property {number} sph=0 sph value
+     * @property {number} sel=1 sel value
+     * @property {number} sel_2=2 sel_2 value
+     * @property {number} srr=3 srr value
+     * @property {number} srr_2=4 srr_2 value
+     */
+    Types.StartTreadType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "sph"] = 0;
+        values[valuesById[1] = "sel"] = 1;
+        values[valuesById[2] = "sel_2"] = 2;
+        values[valuesById[3] = "srr"] = 3;
+        values[valuesById[4] = "srr_2"] = 4;
+        return values;
+    })();
+
     Types.Vector3 = (function() {
 
         /**
