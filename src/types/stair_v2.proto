@@ -116,6 +116,14 @@ enum StartTreadType {
   srr_2= 4;  // 双层圆角矩形
 }
 
+//起步踏板造型类型
+enum StartTreadShapeType {
+  sph = 0;
+  s_no = 1; // 保留两边造型
+  s_left = 2;  // 去掉左边造型
+  s_right = 3;  // 去掉右边造型
+}
+
 //三维向量
 message Vector3{
 	float x = 1;

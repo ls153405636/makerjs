@@ -268,6 +268,24 @@ export const Types = $root.Types = (() => {
         return values;
     })();
 
+    /**
+     * StartTreadShapeType enum.
+     * @name Types.StartTreadShapeType
+     * @enum {number}
+     * @property {number} sph=0 sph value
+     * @property {number} s_no=1 s_no value
+     * @property {number} s_left=2 s_left value
+     * @property {number} s_right=3 s_right value
+     */
+    Types.StartTreadShapeType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "sph"] = 0;
+        values[valuesById[1] = "s_no"] = 1;
+        values[valuesById[2] = "s_left"] = 2;
+        values[valuesById[3] = "s_right"] = 3;
+        return values;
+    })();
+
     Types.Vector3 = (function() {
 
         /**

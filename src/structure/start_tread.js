@@ -12,40 +12,35 @@ export class StartTread extends ChildInfo {
     { value: Types.StartTreadType.srr_w, label: '双层圆角矩形'},
   ]
 
-  constructor({ vParent, vIndex, vPois, vPos}) {
+  constructor({ vParent, vIndex, vPois, vPos,vType=Types.StartTreadType.sel,vShapeType=Types.StartTreadShapeType.s_no}) {
     super(vParent)
     this.inheritL = true
     this.inheritW = true
     this.inheritH = true
+    this.startTreadType = vType
+    this.startTreadShapeType = vShapeType
     this.projId = Default.START_TREAD_PRO_ID
     this.rebuildByParent({ vIndex, vPois, vPos })
+    this.computeBigColPos()
   }
   
   rebuildByParent({ vIndex, vPois, vPos}) {
-    this.startTreadType = Types.StartTreadType.sel
-    // this.direction = 1
+    const length = this.parent.stepLength 
     this.index = vIndex
     this.lVec = this.parent.lVec || new Types.Vector3()
     this.wVec = this.parent.wVec || new Types.Vector3()
-    this.position = vPos || new Types.Vector3()
+
+    this.positionL = vPos || new Types.Vector3()
+    this.positionC = new THREE.Vector2(vPos.x,vPos.y).addScaledVector(this.lVec,length / 2) || new Types.Vector3()
+    this.positionR = new THREE.Vector2(vPos.x,vPos.y).addScaledVector(this.lVec,length) || new Types.Vector3()
+
     this.offSet1 = this.parent.stepWidth * 0.7
     this.offSet2 = this.parent.stepWidth / 6
-    if (this.inheritL && (this.startTreadType === 1 || this.startTreadType === 2)) {
-      // 椭圆踏板参数
-      this.stepLength = (this.parent.stepLength / 2 + this.offSet1) * 2 || 0
-
-    }else {
-      // 圆角矩形踏板参数
-      this.stepLength = this.parent.stepLength + this.parent.stepWidth || 0
+    if (this.inheritL) {
+      this.stepLength = this.parent.stepLength|| 0
     }
-    if (this.inheritW && (this.startTreadType === 1 || this.startTreadType === 2)) {
-      // 椭圆踏板参数
-      this.stepWidth = this.parent.stepWidth + this.offSet2 || 0
-
-    } else {
-      // 圆角矩形踏板参数
+    if (this.inheritW) {
       this.stepWidth = this.parent.stepWidth || 0
-
     }
     if (this.inheritH) {
       this.stepHeight = this.parent.stepHeight
@@ -55,20 +50,20 @@ export class StartTread extends ChildInfo {
       this.treadType = Types.TreadType.tph
     }
     else {
-      if (this.startTreadType === 1) {
-        this.createElOutline(vPos)
+      if (this.startTreadType === Types.StartTreadType.sel) {
+        this.createElOutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
-      else if (this.startTreadType === 2) {
-        this.createElDOutline(vPos)
+      else if (this.startTreadType === Types.StartTreadType.sel_2) {
+        this.createElDOutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
-      else if (this.startTreadType === 3) {
-        this.createRROutline(vPos)
+      else if (this.startTreadType === Types.StartTreadType.srr) {
+        this.createRROutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
-      else if (this.startTreadType === 4) {
-        this.createRRDOutline(vPos)
+      else if (this.startTreadType === Types.StartTreadType.srr_2) {
+        this.createRRDOutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
       
@@ -80,47 +75,47 @@ export class StartTread extends ChildInfo {
   createElOutline() {
     let pois = []
 
-    
     // 椭圆型踏板
-    // 起点
-    // pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.parent.stepLength / 2)
-    // pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength / 2 - this.offSet1)
-    // pois[2] = pois[1].clone().addScaledVector(this.lVec, this.offSet1)
-    // pois[3] = pois[2].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2)
-    // pois[4] = pois[3].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2 + this.offSet2)
-    // pois[5] = pois[4].clone().addScaledVector(this.lVec, -this.stepLength / 2)
-    // pois[6] = pois[5].clone().addScaledVector(this.lVec, -this.stepLength / 2)
-    // pois[7] = pois[6].clone().addScaledVector(this.wVec, -(this.stepWidth  - this.offSet2) / 2 - this.offSet2)
-    // pois[8] = pois[7].clone().addScaledVector(this.wVec, -(this.stepWidth  - this.offSet2) / 2)
-    // pois[9] = pois[8].clone().addScaledVector(this.lVec, this.offSet1)
-    // pois[10] = pois[9].clone().addScaledVector(this.lVec, this.stepLength / 2 - this.offSet1)
-    // pois[11] = pois[0]
-
-    // 去掉左边
-    // pois[0] = new THREE.Vector2(this.position.x, this.position.y)
-    // pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength - this.offSet1 * 2)
-    // pois[2] = pois[1].clone().addScaledVector(this.lVec, this.offSet1)
-    // pois[3] = pois[2].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2)
-    // pois[4] = pois[3].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2 + this.offSet2)
-    // pois[5] = pois[4].clone().addScaledVector(this.lVec, -this.stepLength / 2)
-    // pois[6] = pois[5].clone().addScaledVector(this.lVec, -this.stepLength / 2 + this.offSet1)
-    // pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.offSet2)
-    // pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth + this.offSet2)
-    // pois[9] = pois[0]
-
-    // 去掉右边
-    pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.stepLength - this.offSet1 * 2)
-    pois[1] = pois[0].clone().addScaledVector(this.lVec, -this.stepLength + this.offSet1 * 2)
-    pois[2] = pois[1].clone().addScaledVector(this.lVec, -this.offSet1)
-    pois[3] = pois[2].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2)
-    pois[4] = pois[3].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2 + this.offSet2)
-    pois[5] = pois[4].clone().addScaledVector(this.lVec, this.stepLength / 2)
-    pois[6] = pois[5].clone().addScaledVector(this.lVec, this.stepLength / 2 - this.offSet1)
-    pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.offSet2)
-    pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth + this.offSet2)
-    pois[9] = pois[0]
-
-
+    if (this.startTreadShapeType === 1) {
+      // 起点
+      pois[0] = new THREE.Vector2(this.positionC.x, this.positionC.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[2] = pois[1].clone().addScaledVector(this.lVec, this.offSet1)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.wVec, this.stepWidth / 2 + this.offSet2)
+      pois[5] = pois[4].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1)
+      pois[6] = pois[5].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1)
+      pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.stepWidth / 2 - this.offSet2)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
+      pois[9] = pois[8].clone().addScaledVector(this.lVec, this.offSet1)
+      pois[10] = pois[9].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[11] = pois[0]
+    } else if (this.startTreadShapeType === 2) {
+      // 去掉左边
+      pois[0] = new THREE.Vector2(this.positionL.x, this.positionL.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.lVec, this.offSet1)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.wVec, this.stepWidth / 2 + this.offSet2)
+      pois[5] = pois[4].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1)
+      pois[6] = pois[5].clone().addScaledVector(this.lVec, -this.stepLength / 2)
+      pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.offSet2)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[9] = pois[0]
+    } else {
+      // 去掉右边
+      pois[0] = new THREE.Vector2(this.positionR.x, this.positionR.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.lVec, -this.offSet1)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.wVec, this.stepWidth / 2 + this.offSet2)
+      pois[5] = pois[4].clone().addScaledVector(this.lVec, this.stepLength / 2 + this.offSet1)
+      pois[6] = pois[5].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.offSet2)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[9] = pois[0]
+    }
+    
     this.outline = new Types.Outline()
     let edges = []
 
@@ -151,35 +146,76 @@ export class StartTread extends ChildInfo {
   //双层椭圆
   createElDOutline() {
     let pois = []
-
-    // 起点
-    pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.parent.stepLength / 2)
-
     // 双层椭圆型踏板
-    pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength / 2 - this.offSet1)
-    pois[2] = pois[1].clone().addScaledVector(this.lVec, this.offSet1)
-    pois[3] = pois[2].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2)
-    pois[4] = pois[3].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2 + this.offSet2)
-    pois[5] = pois[4].clone().addScaledVector(this.lVec, -this.stepLength / 2)
-    pois[6] = pois[5].clone().addScaledVector(this.lVec, -this.stepLength / 2)
-    pois[7] = pois[6].clone().addScaledVector(this.wVec, -(this.stepWidth  - this.offSet2) / 2 - this.offSet2)
-    pois[8] = pois[7].clone().addScaledVector(this.wVec, -(this.stepWidth  - this.offSet2) / 2)
-    pois[9] = pois[8].clone().addScaledVector(this.lVec, this.offSet1)
-    pois[10] = pois[9].clone().addScaledVector(this.lVec, this.stepLength / 2 - this.offSet1)
-    pois[11] = pois[0]
-    pois[12] = pois[11].clone().addScaledVector(this.lVec, this.stepLength / 2 - this.offSet1 + this.offSet1 / 4)
-    pois[13] = pois[12].clone().addScaledVector(this.lVec, this.offSet1+ this.offSet1 / 4)
-    pois[14] = pois[13].clone().addScaledVector(this.wVec, (this.stepWidth  - this.offSet2) / 2 * 2)
-    pois[15] = pois[14].clone().addScaledVector(this.wVec, ((this.stepWidth  - this.offSet2) / 2 + this.offSet2) * 2)
-    pois[16] = pois[15].clone().addScaledVector(this.lVec, -this.stepLength / 2 -  this.offSet1 / 2)
-    pois[17] = pois[16].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1 / 2)
-    pois[18] = pois[17].clone().addScaledVector(this.wVec, -(this.stepWidth  - this.offSet2) / 2 * 2- this.offSet2 * 2)
-    pois[19] = pois[18].clone().addScaledVector(this.wVec, -(this.stepWidth  - this.offSet2))
-    pois[20] = pois[19].clone().addScaledVector(this.lVec, this.offSet1 + this.offSet1 / 4)
-    pois[21] = pois[20].clone().addScaledVector(this.lVec, this.stepLength / 2 - this.offSet1 - this.offSet1 / 4)
-    pois[22] = pois[0]
+    if (this.startTreadShapeType === 1) {
+      // 起点
+      pois[0] = new THREE.Vector2(this.positionC.x, this.positionC.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[2] = pois[1].clone().addScaledVector(this.lVec, this.offSet1)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.wVec, this.stepWidth / 2 + this.offSet2)
+      pois[5] = pois[4].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1)
+      pois[6] = pois[5].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1)
+      pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.stepWidth / 2 - this.offSet2)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
+      pois[9] = pois[8].clone().addScaledVector(this.lVec, this.offSet1)
+      pois[10] = pois[9].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[11] = pois[0]
+      pois[12] = pois[11].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[13] = pois[12].clone().addScaledVector(this.lVec, this.offSet1 + this.offSet1 / 4)
+      pois[14] = pois[13].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[15] = pois[14].clone().addScaledVector(this.wVec, this.stepWidth + this.offSet2)
+      pois[16] = pois[15].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1 - this.offSet1 / 4)
+      pois[17] = pois[16].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1 - this.offSet1 / 4)
+      pois[18] = pois[17].clone().addScaledVector(this.wVec, -this.stepWidth - this.offSet2)
+      pois[19] = pois[18].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[20] = pois[19].clone().addScaledVector(this.lVec, this.offSet1 + this.offSet1 / 4)
+      pois[21] = pois[20].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[22] = pois[0]
+    } else if (this.startTreadShapeType === 2) {
+      // 去掉左边
+      pois[0] = new THREE.Vector2(this.positionL.x, this.positionL.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.lVec, this.offSet1)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.wVec, this.stepWidth / 2 + this.offSet2)
+      pois[5] = pois[4].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1)
+      pois[6] = pois[5].clone().addScaledVector(this.lVec, -this.stepLength / 2)
+      pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.offSet2)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[9] = pois[0]
+      pois[10] = pois[9].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[11] = pois[10].clone().addScaledVector(this.lVec, this.offSet1 + this.offSet1 / 4)
+      pois[12] = pois[11].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[13] = pois[12].clone().addScaledVector(this.wVec, this.stepWidth + this.offSet2)
+      pois[14] = pois[13].clone().addScaledVector(this.lVec, -this.stepLength / 2 - this.offSet1 - this.offSet1 / 4)
+      pois[15] = pois[14].clone().addScaledVector(this.lVec, -this.stepLength / 2)
+      pois[16] = pois[15].clone().addScaledVector(this.wVec, -this.offSet2)
+      pois[17] = pois[16].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[18] = pois[0]
+    } else {
+      // 去掉右边
+      pois[0] = new THREE.Vector2(this.positionR.x, this.positionR.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.lVec, -this.offSet1)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.wVec, this.stepWidth / 2 + this.offSet2)
+      pois[5] = pois[4].clone().addScaledVector(this.lVec, this.stepLength / 2 + this.offSet1)
+      pois[6] = pois[5].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[7] = pois[6].clone().addScaledVector(this.wVec, -this.offSet2)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[9] = pois[0]
+      pois[10] = pois[9].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[11] = pois[10].clone().addScaledVector(this.lVec, -this.offSet1 - this.offSet1 / 4)
+      pois[12] = pois[11].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[13] = pois[12].clone().addScaledVector(this.wVec, this.stepWidth + this.offSet2)
+      pois[14] = pois[13].clone().addScaledVector(this.lVec, this.stepLength / 2 + this.offSet1 + this.offSet1 / 4)
+      pois[15] = pois[14].clone().addScaledVector(this.lVec, +this.stepLength / 2)
+      pois[16] = pois[15].clone().addScaledVector(this.wVec, -this.offSet2)
+      pois[17] = pois[16].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[18] = pois[0]
 
-
+    }
 
     this.outline = new Types.Outline()
     let edges = []
@@ -213,33 +249,40 @@ export class StartTread extends ChildInfo {
     let pois = []
 
     // 圆角矩形踏板
-    // 起点
-    pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.parent.stepLength / 2)
-    pois[1] = pois[0].clone().addScaledVector(this.lVec, (this.stepLength - this.stepWidth) / 2)
-    pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    pois[4] = pois[3].clone().addScaledVector(this.lVec, -(this.stepLength - this.stepWidth))
-    pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
-    pois[6] = pois[5].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
-    pois[7] = pois[0]
+    if (this.startTreadShapeType === 1) {
 
-    // 去掉左边
-    // pois[0] = new THREE.Vector2(this.position.x, this.position.y)
-    // pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength - this.stepWidth)
-    // pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    // pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    // pois[4] = pois[3].clone().addScaledVector(this.lVec, -(this.stepLength - this.stepWidth))
-    // pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth)
-    // pois[6] = pois[0]
+      // 起点
+      pois[0] = new THREE.Vector2(this.positionC.x, this.positionC.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
+      pois[6] = pois[5].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
+      pois[7] = pois[0]
+      
+    } else if (this.startTreadShapeType === 2) {
+      // 去掉左边
+      pois[0] = new THREE.Vector2(this.positionL.x, this.positionL.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[6] = pois[0]
 
-    // 去掉右边
-    // pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.stepLength - this.stepWidth)
-    // pois[1] = pois[0].clone().addScaledVector(this.lVec, -this.stepLength + this.stepWidth)
-    // pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    // pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    // pois[4] = pois[3].clone().addScaledVector(this.lVec, this.stepLength - this.stepWidth)
-    // pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth)
-    // pois[6] = pois[0]
+    } else {
+
+      // 去掉右边
+      pois[0] = new THREE.Vector2(this.positionR.x, this.positionR.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[6] = pois[0]
+    }
+    
     
 
 
@@ -273,27 +316,60 @@ export class StartTread extends ChildInfo {
   // 双层圆角矩形
   createRRDOutline() {
     let pois = []
-
-    // 起点
-    pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.parent.stepLength / 2)
-
     // 双层圆角矩形踏板
-    pois[1] = pois[0].clone().addScaledVector(this.lVec, (this.stepLength - this.stepWidth) / 2)
-    pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
-    pois[4] = pois[3].clone().addScaledVector(this.lVec, -(this.stepLength - this.stepWidth))
-    pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
-    pois[6] = pois[5].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
-    pois[7] = pois[0]
+    if (this.startTreadShapeType === 1) {
 
-    pois[8] = pois[7].clone().addScaledVector(this.lVec, (this.stepLength - this.stepWidth) / 2)
-    pois[9] = pois[8].clone().addScaledVector(this.wVec, this.stepWidth)
-    pois[10] = pois[9].clone().addScaledVector(this.wVec, this.stepWidth)
-    pois[11] = pois[10].clone().addScaledVector(this.lVec, -(this.stepLength - this.stepWidth))
-    pois[12] = pois[11].clone().addScaledVector(this.wVec, -this.stepWidth)
-    pois[13] = pois[12].clone().addScaledVector(this.wVec, -this.stepWidth)
-    pois[14] = pois[7]
+      // 起点
+      pois[0] = new THREE.Vector2(this.positionC.x, this.positionC.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
+      pois[6] = pois[5].clone().addScaledVector(this.wVec, -this.stepWidth / 2)
+      pois[7] = pois[0]
+      pois[8] = pois[7].clone().addScaledVector(this.lVec, this.stepLength / 2)
+      pois[9] = pois[8].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[10] = pois[9].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[11] = pois[10].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[12] = pois[11].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[13] = pois[12].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[14] = pois[7]
+    } else if (this.startTreadShapeType === 2) {
+      // 去掉左边
+      pois[0] = new THREE.Vector2(this.positionL.x, this.positionL.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[6] = pois[0]
+  
+      pois[7] = pois[6].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[9] = pois[8].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[10] = pois[9].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[11] = pois[10].clone().addScaledVector(this.wVec, -this.stepWidth * 2)
+      pois[12] = pois[0]
 
+    } else {
+
+      // 去掉右边
+      pois[0] = new THREE.Vector2(this.positionR.x, this.positionR.y)
+      pois[1] = pois[0].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[2] = pois[1].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[3] = pois[2].clone().addScaledVector(this.wVec, this.stepWidth / 2)
+      pois[4] = pois[3].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[5] = pois[4].clone().addScaledVector(this.wVec, -this.stepWidth)
+      pois[6] = pois[0]
+  
+      pois[7] = pois[6].clone().addScaledVector(this.lVec, -this.stepLength)
+      pois[8] = pois[7].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[9] = pois[8].clone().addScaledVector(this.wVec, this.stepWidth)
+      pois[10] = pois[9].clone().addScaledVector(this.lVec, this.stepLength)
+      pois[11] = pois[10].clone().addScaledVector(this.wVec, -this.stepWidth * 2)
+      pois[12] = pois[0]
+    }
 
     this.outline = new Types.Outline()
     let edges = []
@@ -323,8 +399,16 @@ export class StartTread extends ChildInfo {
     this.outline.edges = edges
   }
 
+  updateItem(vValue, vKey, vSecondKey) {
+    if (['stepHeight', 'stepLength', 'stepWidth'].includes(vKey)) {
+      this[vSecondKey] = vValue
+    }
+    else {
+      this[vKey] = vValue
+      super.updateItem(vValue, vKey, vSecondKey)
+    }
+  }
   getArgs() {
-    let gargs = this.parent.startTreads
     let args = {}
     args.startTreadType = {
       name: '类型',
@@ -337,14 +421,14 @@ export class StartTread extends ChildInfo {
       value: {value: this.startTreadType, label: '椭圆型'},
       type: 'select',
     }
-    args.startTreadDirType = {
-      name: '方向',
+    args.startTreadShapeType = {
+      name: '造型',
       options: {
-        0: { value: 1, label: '保留两边'},
-        1: { value: 2, label: '去掉左边'},
-        2: { value: 3, label: '去掉右边'},
+        0: { value: Types.StartTreadShapeType.s_no, label: '保留两边造型'},
+        1: { value: Types.StartTreadShapeType.s_left, label: '去掉左边造型'},
+        2: { value: Types.StartTreadShapeType.s_right, label: '去掉右边造型'},
       },
-      value: {value: this.direction, label: '保留两边'},
+      value: {value: this.startTreadShapeType, label: '保留两边造型'},
       type: 'select',
     }
     args.stepLength = {
@@ -396,13 +480,28 @@ export class StartTread extends ChildInfo {
     }
     return args
   }
-  
-  updateItem(vValue, vKey, vSecondKey) {
-    if (['startTreadType', 'stepHeight', 'stepLength', 'stepWidth'].includes(vKey)) {
-      this[vSecondKey] = vValue
+
+  computeBigColPos () {
+    /** */
+    let args = this.parent.parent.bigColParameters
+    let left = new Types.Vector3({
+      x: 100,
+      y: 4900,
+    })
+    let right = new Types.Vector3({
+      x: 900,
+      y: 4900,
+    })
+    if (args.posType === Types.BigColumnPosType.bcp_first) {
+      left.y += 100
     }
-    else {
-      super.updateItem(vValue, vKey, vSecondKey)
+    if (args.posType === Types.BigColumnPosType.bcp_second) {
+      left.y += 200
+    }
+    console.log(left)
+    return {
+      left,
+      right
     }
   }
 

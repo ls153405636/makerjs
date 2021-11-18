@@ -173,9 +173,14 @@ export class StraightStair extends Stair  {
     this.smallColumns.push(new SmallColumn(this, rightPosition, size))
   }
 
+
   createBigColumns() {
     let args = this.bigColParameters
     let size = tool.parseSpecification(args.specification)
+
+    let rst = this.flights[0].treads[0].computeBigColPos(args.posType)
+    // let rst = this.flights[0].treads[this.stepNum - this.stepNumRule].computeBigColPos()
+
     let leftPosition = new Types.Vector3({
       x: this.sideOffset,
       y: this.depth + Default.BIG_COL_GAP + size.y / 2,
@@ -191,13 +196,19 @@ export class StraightStair extends Stair  {
       x: this.width - this.sideOffset,
       y: leftPosition.y,
     })
+    console.log(rst.left)
     if (this.bigColumns.length === 2) {
-      this.bigColumns[0].rebuildByParent(leftPosition)
-      this.bigColumns[1].rebuildByParent(rightPosition)
-    } else {
+      this.bigColumns[0].rebuildByParent(rst.left)
+      this.bigColumns[1].rebuildByParent(rst.right)
+      // this.bigColumns[0].rebuildByParent(leftPosition)
+      // this.bigColumns[1].rebuildByParent(rightPosition)
+    }
+    else {
       this.bigColumns.push(
-        new BigColumn({vParent:this, vPosition:leftPosition}),
-        new BigColumn({vParent:this, vPosition:rightPosition})
+        new BigColumn({vParent:this, vPosition:rst.left}),
+        new BigColumn({vParent:this, vPosition:rst.right}),
+        // new BigColumn({vParent:this, vPosition:leftPosition}),
+        // new BigColumn({vParent:this, vPosition:rightPosition})
       )
     }
   }
@@ -323,3 +334,5 @@ export class StraightStair extends Stair  {
     }
   }
 }
+
+

@@ -114,6 +114,14 @@ export namespace Types {
         srr_2 = 4
     }
 
+    /** StartTreadShapeType enum. */
+    enum StartTreadShapeType {
+        sph = 0,
+        s_no = 1,
+        s_left = 2,
+        s_right = 3
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 

@@ -36,7 +36,6 @@ export class Structure {
     againstWall,
     floadSide = Types.Side.si_right,
   }) {
-    console.log(againstWall)
     if (type === Types.StairType.sstright) {
       this.stair = new StraightStair(this, againstWall)
     }
