@@ -484,23 +484,35 @@ export class StartTread extends ChildInfo {
   computeBigColPos () {
     /** */
     let args = this.parent.parent.bigColParameters
+    this.sideOffset = this.parent.parent.sideOffset
+    this.positionX = 0
+    this.positionY = 0
+    if (this.startTreadType === Types.StartTreadType.sel || this.startTreadType === Types.StartTreadType.srr) {
+      this.positionX = this.positionL.x - this.sideOffset
+      this.positionY = this.positionL.y + this.stepWidth + this.offSet2 * 2
+    } else {
+      this.positionX = this.positionL.x - this.sideOffset
+      this.positionY = this.positionL.y + this.stepWidth * 2 + this.offSet2 * 2
+    }
     let left = new Types.Vector3({
-      x: 100,
-      y: 4900,
-    })
-    let right = new Types.Vector3({
-      x: 900,
-      y: 4900,
-    })
+      x: this.positionX,
+      y: this.positionY
+      })
+
     if (args.posType === Types.BigColumnPosType.bcp_first) {
-      left.y += 100
+      left.y = left.y - this.stepWidth / 2 - this.offSet2 * 2
     }
     if (args.posType === Types.BigColumnPosType.bcp_second) {
-      left.y += 200
+      left.y = left.y - this.stepWidth - this.stepWidth / 2 - this.offSet2 * 2
     }
-    console.log(left)
+
+    let right = new Types.Vector3({
+      x: this.stepLength - this.positionL.x + this.sideOffset,
+      y: left.y,
+    })
+
     return {
-      left,
+      left, 
       right
     }
   }

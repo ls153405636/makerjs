@@ -196,7 +196,6 @@ export class StraightStair extends Stair  {
       x: this.width - this.sideOffset,
       y: leftPosition.y,
     })
-    console.log(rst.left)
     if (this.bigColumns.length === 2) {
       this.bigColumns[0].rebuildByParent(rst.left)
       this.bigColumns[1].rebuildByParent(rst.right)
@@ -266,15 +265,15 @@ export class StraightStair extends Stair  {
     let route2 = new Types.Outline()
     let leftPois = []
     let rightPois = []
-    let startY = this.depth + Default.BIG_COL_GAP
-    let bigColSize = tool.parseSpecification(bArgs.specification)
-    let stepWidth = this.flights[0].getTreadByNum(0).stepWidth
-    if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
-      startY = this.depth - stepWidth / 2 - bigColSize.y / 2
-    }
-    if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
-      startY = this.depth - (stepWidth * 3) / 2 - bigColSize.y / 2
-    }
+    let startY = this.depth - this.flights[0].treads[0].stepWidth
+    // let bigColSize = tool.parseSpecification(bArgs.specification)
+    // let stepWidth = this.flights[0].getTreadByNum(0).stepWidth
+    // if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
+    //   startY = this.depth - stepWidth / 2 - bigColSize.y / 2
+    // }
+    // if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
+    //   startY = this.depth - (stepWidth * 3) / 2 - bigColSize.y / 2
+    // }
 
     leftPois[0] = new Types.Vector3({
       x: this.sideOffset,
@@ -282,11 +281,6 @@ export class StraightStair extends Stair  {
       z: args.height + this.stepHeight,
     })
     leftPois[1] = new Types.Vector3({
-      x: this.sideOffset,
-      y: startY - Default.BIG_COL_GAP,
-      z: args.height + this.stepHeight,
-    })
-    leftPois[2] = new Types.Vector3({
       x: this.sideOffset,
       y: 0,
       z: args.height + this.height,
@@ -297,11 +291,6 @@ export class StraightStair extends Stair  {
       z: args.height + this.stepHeight,
     })
     rightPois[1] = new Types.Vector3({
-      x: this.width - this.sideOffset,
-      y: startY - Default.BIG_COL_GAP,
-      z: args.height + this.stepHeight,
-    })
-    rightPois[2] = new Types.Vector3({
       x: this.width - this.sideOffset,
       y: 0,
       z: args.height + this.height,
