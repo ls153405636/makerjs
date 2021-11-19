@@ -3,6 +3,7 @@ import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
 import { D2Config } from '../config'
+import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
 
 export class Tread extends ChildWidget {
@@ -91,6 +92,25 @@ export class Tread extends ChildWidget {
     changeTread.lineStyle(1, 0x4478f4)
     changeTread.beginFill(0xe9efff)
     changeTread.drawPolygon(path)
+
+    // for (let i = 0; i < this.edges.length; i++) {
+    // let e = this.edges[i]
+    // let p1 = d2_tool.translateCoord(this.edges[i].p1)
+    // let p2 = d2_tool.translateCoord(this.edges[i].p2)
+    // if (i === 0) {
+    //   changeTread.moveTo(p1.x, p1.y)
+    // }
+    // if (e.type === Types.EdgeType.estraight) {
+    //   changeTread.lineTo(p2.x, p2.y)
+    // } else if (e.type === Types.EdgeType.earc) {
+    //     let pos = d2_tool.translateCoord(e.position)
+    //     let radius = d2_tool.translateValue(e.radius)
+    //     changeTread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+    // } else if (e.type === Types.EdgeType.ebeszer) {
+    //     let bezier = d2_tool.translateCoord(e.bezier)
+    //     changeTread.quadraticCurveTo(bezier.x, bezier.y, p2.x, p2.y)
+    //   }
+    // }
 
 
     // 单层椭圆踏板绘制

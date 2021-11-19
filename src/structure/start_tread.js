@@ -485,14 +485,35 @@ export class StartTread extends ChildInfo {
     /** */
     let args = this.parent.parent.bigColParameters
     this.sideOffset = this.parent.parent.sideOffset
+    this.sideOffset >50 ? this.sideOffset = this.parent.parent.sideOffset : this.sideOffset = 45
     this.positionX = 0
     this.positionY = 0
     if (this.startTreadType === Types.StartTreadType.sel || this.startTreadType === Types.StartTreadType.srr) {
-      this.positionX = this.positionL.x - this.sideOffset
-      this.positionY = this.positionL.y + this.stepWidth + this.offSet2 * 2
+      if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
+        this.positionX = this.positionC.x - this.stepLength / 2 - this.sideOffset * 2
+        this.positionY = this.positionC.y + this.stepWidth + this.offSet2 * 2
+      }
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
+        this.positionX = this.positionL.x - this.sideOffset * 2
+        this.positionY = this.positionL.y + this.stepWidth + this.offSet2 * 2
+      }
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
+        this.positionX = this.positionR.x - this.sideOffset * 2 - this.stepLength
+        this.positionY = this.positionR.y + this.stepWidth + this.offSet2 * 2
+      }
     } else {
-      this.positionX = this.positionL.x - this.sideOffset
-      this.positionY = this.positionL.y + this.stepWidth * 2 + this.offSet2 * 2
+      if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
+        this.positionX = this.positionC.x - this.stepLength / 2 - this.sideOffset * 2
+        this.positionY = this.positionC.y + this.stepWidth * 2 + this.offSet2 * 2
+      }
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
+        this.positionX = this.positionL.x - this.sideOffset * 2
+        this.positionY = this.positionL.y + this.stepWidth * 2 + this.offSet2 * 2
+      }
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
+        this.positionX = this.positionR.x - this.sideOffset * 2 - this.stepLength
+        this.positionY = this.positionR.y + this.stepWidth * 2 + this.offSet2 * 2
+      }
     }
     let left = new Types.Vector3({
       x: this.positionX,
@@ -505,12 +526,25 @@ export class StartTread extends ChildInfo {
     if (args.posType === Types.BigColumnPosType.bcp_second) {
       left.y = left.y - this.stepWidth - this.stepWidth / 2 - this.offSet2 * 2
     }
-
+    
+    this.positionX_R = 0
+    this.positionY_R = 0
+    if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
+      this.positionX_R = this.positionC.x + this.stepLength / 2 + this.sideOffset * 2
+      this.positionY_R = left.y
+    }
+    else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
+      this.positionX_R = this.positionL.x + this.sideOffset * 2 + this.stepLength
+      this.positionY_R = left.y
+    }
+    else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
+      this.positionX_R = this.positionR.x + this.sideOffset * 2 
+      this.positionY_R = left.y
+    }
     let right = new Types.Vector3({
-      x: this.stepLength - this.positionL.x + this.sideOffset,
-      y: left.y,
+      x: this.positionX_R,
+      y: this.positionY_R
     })
-
     return {
       left, 
       right
