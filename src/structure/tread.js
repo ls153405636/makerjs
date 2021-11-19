@@ -1,4 +1,5 @@
 import { Types } from "../types/stair_v2";
+import { Edge } from "../utils/edge";
 import { ChildInfo } from "./child_info";
 import tool from "./tool";
 
@@ -63,8 +64,26 @@ export class Tread extends ChildInfo {
     } else {
       this.createOutline()
       this.type = Types.TreadType.trect
+      this.border = {
+        inEdgeIndex:[3],
+        outEdgeIndex:[1]
+      }
     }
     
+  }
+
+  getColPos (vRateArr, vSide, vSideOffset) {
+    let posArr = []
+    for(const i of this.border[vSide+'EdgeIndex']) {
+      let e = this.outline.edges[i]
+      let utilE = new Edge(e)
+      utilE.offset(vSideOffset, false)
+      for(const r of vRateArr) {
+        let pos = new Edge(utilE.writePB()).extendP1(-utilE.getLength() * r).p1
+        posArr.push(pos)
+      }
+    }
+    return posArr
   }
 
   updateItem (vValue, vKey, vSecondKey) {
@@ -86,7 +105,8 @@ export class Tread extends ChildInfo {
       stepLength:this.stepLength,
       inheritH:this.inheritH,
       inheritW:this.inheritW,
-      inheritL:this.inheritL
+      inheritL:this.inheritL,
+      type:this.type
     })
   }
 } 

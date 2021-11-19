@@ -2,20 +2,15 @@ import { Types } from "../types/stair_v2"
 import { Edge } from "../utils/edge"
 import { Outline } from "../utils/outline"
 import { BigColumn } from "./big_column"
-import { Default } from "./config"
-import { Flight } from "./flight"
 import { Girder } from "./girder"
 import { Handrail } from "./handrail"
-import { Landing } from "./landing"
 import { SmallColumn } from "./small_column"
 import { Stair } from "./stair"
 import tool from "./tool"
-import { StairBorder } from "./toolComp/stair_border"
-import { StairEdge } from "./toolComp/stair_edge"
 
 
 export class UTypeStair extends Stair {
-  constructor(vParnet, vAgainstWall, vFloadSide) {
+  constructor(vParnet, vAgainstWall, vFloadSide ) {
     super(vParnet, vAgainstWall)
     if (this.againstWallType === Types.AgainstWallType.aw_left) {
       this.floadSide = Types.Side.si_right
@@ -24,205 +19,297 @@ export class UTypeStair extends Stair {
     } else {
       this.floadSide = vFloadSide || Types.Side.si_right
     }
-    this.gap = Default.U_TYPE_GAP
-    this.landingWidth = Default.STEP_LENGTH
-    this.rebuild()
   }
 
   rebuild() {
     this.hangOffset = this.hangingBoard?.depth || 0
     let gArgs = this.girderParameters
     this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
+    this.computeSideOffset()
+    if (this.flights.length) {
+      this.computeStepNum()
+      this.computeStepHeight()
+      this.updateFlights()
+    } else {
+      this.initFlights()
+    }
+    this.updateLandings()
     this.computeSize()
     this.computePosition()
-    this.computeStepHeight()
-    this.computeSideOffset()
     this.updateBorder()
-    this.updateFlights()
-    // this.updateLandings()
-    // this.stepNumRule = this.flights[1].stepNumRule
-    // this.stepNum =
-    //   this.flights[0].stepNum +
-    //   this.flights[1].stepNum +
-    //   this.landings[0].stepNum
-    // this.updateGirders()
-    // this.updateHandrails()
-    // this.updateSmallColumns()
-    // this.updateBigColumns()
+    this.updateGirders()
+    this.updateHandrails()
+    this.updateSmallColumns()
+    this.updateBigColumns()
     this.updateCanvas('Stair')
-  }
-
-  computeSize() {
-    let hole = this.parent.hole
-    this.height = hole.floorHeight
-    if (this.flights.length === 0) {
-      let topEdge = hole.getEdgeByPos('top')
-      let rightEdge = hole.getEdgeByPos('right')
-      this.width = new Edge(topEdge).getLength()
-      this.depth2 = new Edge(rightEdge).getLength()
-      this.initNum2 = Math.floor((this.depth2 - this.hangOffset) / Default.STEP_WIDTH)
-      this.initNum1 = this.realStepNum - num2 - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2
-      this.depth1 = Default.STEP_WIDTH * num1 + this.landingWidth
-    } else {
-      let f1 = this.flights[0]
-      let f2 = this.flights[1]
-      this.width = f1.stepLength + f2.stepLength + this.gap
-      this.depth1 = f1.length + this.landingWidth
-      this.depth2 = f2.length + this.landingWidth + this.hangOffset
-    }
   }
 
   computePosition() {
     let topEdge = this.parent.hole.getEdgeByPos('top')
     let botEdge = this.parent.hole.getEdgeByPos('bot')
     this.position = new Types.Vector3()
-    if (this.flights.length === 0) {
-      this.position.y = topEdge.p1.y
-    } else {
-      let f2 = this.flights[1]
-      this.position.y = botEdge.p1.y - f2.length - this.landingWidth
-    }
+    this.position.y = botEdge.p1.y - this.depth2
     if (this.againstWallType === Types.AgainstWallType.aw_right) {
-      this.position.x = topEdge.p1.x
-    } else if (this.floadSide === Types.AgainstWallType.aw_left) {
       this.position.x = topEdge.p2.x - this.width
+    } else if (this.againstWallType === Types.AgainstWallType.aw_left) {
+      this.position.x = topEdge.p1.x
     } else {
       this.position.x = new Edge(topEdge).getCenter().x - this.width / 2
     }
   }
 
-  updateBorder() {
-    let f1SL = this.flights[0]?.stepLength || Default.STEP_LENGTH
-    let f2SL = this.flights[1]?.stepLength || Default.STEP_LENGTH
-    let inEdges, outEdges
-    if (this.floadSide === Types.Side.si_left) {
-      inEdges = [
-        new StairEdge(this.width, this.depth1, this.width, this.landingWidth),
-        new StairEdge(this.width, this.landingWidth, this.width, 0),
-        new StairEdge(this.width, 0, f2SL+this.gap, 0),
-        new StairEdge(f2SL+this.gap, 0, 0, 0),
-        new StairEdge(0, 0, this.landingWidth, 0),
-        new StairEdge(this.landingWidth, 0, this.depth2, 0)
-      ]
-      outEdges = [
-        new StairEdge(f2SL+this.gap, this.depth1, f2SL+this.gap, this.landingWidth),
-        new StairEdge(f2SL, this.landingWidth, f2SL, this.depth2)
-      ]
+  updateItem(vValue, vKey1, vKey2) {
+    if (vKey2 && ['model', 'material'].includes(vKey2)) {
+      console.log(1)
+    } else if (vKey1 === 'stepNum') {
+      let lengthArr = []
+      this.flights.forEach(f => {
+        lengthArr.push(f.length)
+      })
+      let stepNumArr = this.computeFlightStepNum(vValue, lengthArr)
+      this.flights.forEach((f,i) => {
+        f.updateItem(stepNumArr[i], vKey1, vKey2)
+      })
+    } else if (vKey1 === 'stepNumRule') {
+      this.stepNumRule = vValue
+      this.flights[this.flights.length - 1].updateItem(vValue, vKey1, vKey2)
     } else {
-      inEdges = [
-        new StairEdge(0, this.depth1, 0, this.landingWidth),
-        new StairEdge(0, this.landingWidth, 0, 0),
-        new StairEdge(0, 0, f1SL, 0),
-        new StairEdge(f1SL, 0, this.width, 0),
-        new StairEdge(this.width, 0, this.width, this.landingWidth),
-        new StairEdge(this.width, this.landingWidth, this.width, this.depth2)
-      ]
-      outEdges = [
-        new StairEdge(f1SL, this.depth1, f1SL, this.landingWidth),
-        new StairEdge(f1SL+this.gap, this.landingWidth, f1SL+this.gap, this.depth2)
-      ]
-    }
-    if (this.border) {
-      this.border.rebuild(inEdges, outEdges)
-    } else {
-      this.border = new StairBorder(inEdges, outEdges)
+      super.updateItem(vValue, vKey1, vKey2)
     }
   }
 
-  updateFlights() {
-    let pos1, pos2
-    if (this.floadSide === Types.Side.si_right) {
-      let e1 = this.border.in.edges[0]
-      let e2 = this.border.in.edges[5]
-      pos1 = e1.offset(this.girOffset, false).p2
-      pos2 = new Edge(e2.offset(this.girOffset, false)).extendP2(-this.hangOffset).p2
-    } else {
-      let e1 = this.border.out.edges[0]
-      let e2 = this.border.out.edges[1]
-      pos1 = e1.offSet(this.girOffset, true).p2
-      pos2 = new Edge(e2.offset(this.girOffset, true)).extendP2(-this.hangOffset).p2
+  computeFlightStepNum (vStepNum, vLengthArr) {
+    let fStepNum = vStepNum + 1 - this.stepNumRule
+    this.landings.forEach(l=>{
+      fStepNum = fStepNum - l.stepNum
+    })
+    let stepNumArr = []
+    let stepNumSum = 0
+    let i = 0
+    let lengthSum = 0
+    vLengthArr.forEach(l => {
+      lengthSum += l
+    })
+    for (; i < vLengthArr.length - 1; i++) {
+      let num = Number((vLengthArr[i] / lengthSum * fStepNum).toFixed(0))
+      num = Math.max(num, 1)
+      stepNumArr.push(num)
+      stepNumSum += num
     }
-    let wVec1 = new Types.Vector3({x:1})
-    let wVec2 = new Types.Vector3({x:-1})
+    stepNumArr[i] = Math.max(fStepNum - stepNumSum, 1)
+    stepNumArr[i] = stepNumArr[i] + this.stepNumRule - 1
+    return stepNumArr
+  }
 
-    if (this.flights.length === 2) {
-      f1.rebuildByParent({vTreadIndex:0, 
-                          vPos:pos1, 
-                          vLVec:new Types.Vector3({y:1}), 
-                          vWVec:wVec1})
-      f2.rebuildByParent({vTreadIndex:f1.stepNum + this.landings[0].stepNum, 
-                          vPos:pos2, 
-                          vLVec:new Types.Vector3({y:-1}), 
-                          vWVec:wVec2})
-    } else {
-      this.flights[0] = new Flight({vParent:this, 
-                                    vStepNum:this.initNum1, 
-                                    vStepNumRule:Types.StepNumRule.snr_n, 
-                                    vIndex:0, 
-                                    vTreadIndex:0, 
-                                    isLast:false, 
-                                    vPos:pos1, 
-                                    vLVec:new Types.Vector3({y:1}), 
-                                    vWVec:wVec1, 
-                                    vLength:this.depth1 - this.landingWidth})
-      this.flights[1] = new Flight({vParent:this, 
-                                    vStepNum:this.initNum2, 
-                                    vStepNumRule:this.stepNumRule, 
-                                    vIndex:1, 
-                                    vTreadIndex:num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE), 
-                                    isLast:true, 
-                                    vPos:pos2, 
-                                    vLVec:new Types.Vector3({y:-1}), 
-                                    vWVec:wVec2, 
-                                    vLength:this.depth2 - this.landingWidth})
+  computeStepNum () {
+    this.stepNum = 0
+    for (const f of this.flights) {
+      this.stepNum = this.stepNum + f.stepNum
+    }
+    for (const l of this.landings) {
+      this.stepNum = this.stepNum + l.stepNum
+    }
+    this.stepNumRule = this.flights[this.flights.length - 1].stepNumRule
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
+  }
+
+  updateGirders () {
+    let args = this.girderParameters
+    this.girders = []
+    if (args.type === Types.GirderType.gsaw) {
+      return
+      /**平面图不需要绘制锯齿梁，故先不做处理*/
+    }
+    let bor = this.border
+    let inBorderEdges = this.getGirderInEdges()
+    for (let i = 0; i < inBorderEdges.length; i++) {
+      let e = inBorderEdges[i]
+      let start = i === 0 ? new Edge(e).extendP1(args.fOffsetStep).p1 : new Edge(e).extendP1(-args.depth).p1
+      let end = new Types.Vector3(e.p2)
+      let outEdges = [
+        new Types.Edge({
+          p1: start,
+          p2: end,
+          type: Types.EdgeType.estraight
+        })
+      ]
+      this.updateSideGirder(outEdges, 'in', args.depth, i, this.floadSide === Types.Side.si_left)
+    }
+    for (let i = 0; i < bor.out.edges.length; i++) {
+      let e = bor.out.edges[i]
+      if (!e.flight) {
+        continue
+      }
+      let utilE = new Edge(e)
+      if (i === 0) {
+        utilE.extendP1(args.fOffsetStep)
+      }
+      if (e.startCol) {
+        let offset = (e.startCol.size.x - args.depth) / 2
+        utilE.extendP1(-offset)
+      }
+      if (e.endCol) {
+        let offSet = (e.endCol.size.x - args.depth) / 2
+        utilE.extendP2(-offSet)
+      }
+      let outEdges = [
+        utilE.writePB()
+      ]
+      this.updateSideGirder(outEdges, 'out', args.depth, i, this.floadSide !== Types.Side.si_left)
     }
   }
 
-  computeStepNum (vStepNum, vLength1, vLength2) {
-    let step_num = vStepNum + 1 - this.stepNumRule
-    let fStepNum
-    if (this.landings.length) {
-      fStepNum = step_num - this.landings[0].stepNum - this.landings[1].stepNum
+  updateSideGirder (vOutEdges, vSide, vDepth, vIndex, vPlus) {
+    let inEdges = []
+    let bor = this.border
+    for (const e of vOutEdges) {
+      let inE = new Edge(e).offset(vDepth, vPlus)
+      inEdges.push(inE)
+    } 
+    if (bor[vSide].girders[vIndex]) {
+      bor[vSide].girders[vIndex].rebuildByParent(inEdges, vOutEdges)
     } else {
-      fStepNum = step_num - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2
+      bor[vSide].girders[vIndex] = new Girder(this, inEdges, vOutEdges)
     }
-    let firstNum = Math.ceil(vLength1 / (vLength1+vLength2) * fStepNum)
-    let secondNum = fStepNum - firstNum + this.stepNumRule - 1
-    return {
-      firstNum: firstNum,
-      secondNum: secondNum
+    this.girders.push(bor[vSide].girders[vIndex])
+  }
+
+  updateHandrails () {
+    this.handrails = []
+    let bor = this.border
+    this.updateSideHandrails(bor.in.edges, 'in', this.floadSide === Types.Side.si_left)
+    this.updateSideHandrails(bor.out.edges, 'out', this.floadSide !== Types.Side.si_left)
+  }
+
+  updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
+    let routeEdgesArr = [[]]
+    let routeIndex = 0
+    let borSide = this.border[vSide]
+    for (let i = 0; i < vStairEdges.length; i++) {
+      let e = vStairEdges[i]
+      let sCol = vStairEdges[i].startCol
+      let eCol = vStairEdges[i].endCol
+      let gArgs = this.girderParameters
+      let start = new Types.Vector3(e.p1)
+      let end = new Types.Vector3(e.p2)
+      let edge = new Edge({
+        p1:start,
+        p2:end,
+        type:Types.EdgeType.estraight
+      })
+      let utilE = new Edge(edge)
+      if (i === 0) {
+        let frontOffset = this.computeBigColOffset()
+        utilE.extendP1(frontOffset).p1
+      }
+      if (sCol) {
+        let sOffset = 0
+        //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
+        if (gArgs.type === Types.GirderType.gslab) {
+          sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
+        }
+        utilE.extendP1(-sOffset)
+        if (i !== 0) {
+          routeIndex++
+          routeEdgesArr[routeIndex] = []
+        }
+      }
+      if (eCol) {
+        let eOffset = 0
+        if (gArgs.type === Types.GirderType.gslab) {
+          eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
+        }
+        utilE.extendP2(-eOffset)
+      }
+      routeEdgesArr[routeIndex].push(utilE.writePB())
+    }
+    for (let i = 0; i < routeEdgesArr.length; i++) {
+      let edges = routeEdgesArr[i]
+      let route = new Types.Outline({edges:edges, isClose:false})
+      route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
+      if (borSide.handrails[i]) {
+        borSide.handrails[i].rebuildByParent(route)
+      } else {
+        borSide.handrails[i] = new Handrail(this, route)
+      }
+      this.handrails.push(borSide.handrails[i])
     }
   }
 
-  updateLandings () {
-    let f1 = this.flights[0]
-    let f2 = this.flights[1]
-    let f1SL = this.flights[0].stepLength
-    let f2SL = this.flights[1].stepLength
-    let paras1 = {vParent:this, 
-                  vTreadIndex:f1.stepNum,
-                  vLastStepWidth:f1.stepWidth,
-                  vNextStepWidth:f2.stepWidth}
-    let paras2 = {vParent:this,
-                  vLastStepWidth:f1.stepWidth,
-                  vNextStepWidth:f2.stepWidth}
-    let ori1, ori2
-    if (this.floadSide === Types.Side.si_right) {
-      ori1 = new Types.Vector3({x:this.girOffset, y:this.girOffset})
-      ori2 = new Types.Vector3({x:f1SL, y:this.girOffset})
-      paras1.vLastEdgeIndex = 2
-      paras2.vLastEdgeIndex = 3
-      paras1.vNextEdgeIndex = 1
-      paras2.vNextEdgeIndex = 2
+  updateSmallColumns() {
+    let args = this.smallColParameters
+    let size = tool.parseSpecification(args.specification)
+    this.smallColumns = []
+    let bor = this.border
+    this.updateSideSmallCols(bor.in.edges, 'in')
+    this.updateSideSmallCols(bor.out.edges, 'out')
+    let dis
+    if (args.arrangeRule === Types.ArrangeRule.arrThree) {
+      dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) * 2 / 3
     } else {
-      ori1 = new Types.Vector3({x:f2SL+this.gap, y:this.girOffset})
-      ori2 = new Types.Vector3({x:this.girOffset, y:this.girOffset})
-      paras1.vLastEdgeIndex = 2
-      paras2.vLastEdgeIndex = 1
-      paras1.vNextEdgeIndex = 3
-      paras2.vNextEdgeIndex = 2
+      dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) / 2
     }
-    paras1.border = tool.createRectOutline(ori1, f1SL - this.girOffset, this.landingWidth - this.girOffset)
-    paras2.border = tool.createRectOutline(ori2, f2SL + this.gap - this.girOffset, this.landingWidth - this.girOffset)
+    this.smallColumns = this.smallColumns.concat(this.landings[0].createSmallCols(dis, dis, size))
+    this.smallColumns = this.smallColumns.concat(this.landings[1].createSmallCols(dis, dis, size))
+  }
+
+  updateSideSmallCols(vStairEdges, vSide) {
+    let args = this.smallColParameters
+    let size = tool.parseSpecification(args.specification)
+    let gArgs = this.girderParameters
+    let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.sideOffset : this.sideOffset
+    for (let i = 0; i < vStairEdges.length; i++) {
+      let sideE = vStairEdges[i]
+      let flight = sideE.flight
+      if (!(flight?.treads)) {
+        continue
+      }
+      let k = 0
+      if (i === 0) {
+        k = Math.abs(1 - this.bigColParameters.posType)
+      }
+      for (; k < flight.treads.length; k++) {
+        let t = flight.treads[k]
+        if (t.isLast) {
+          continue
+        }
+        let posArr = []
+        if (args.arrangeRule === Types.ArrangeRule.arrThree) {
+          let index = k % 2
+          if (index === 0) {
+            let rate = Math.max(1/6, size.x/2/t.stepWidth)
+            posArr = t.getColPos([rate, 1-rate], vSide, sideOffset)
+          } else {
+            posArr = t.getColPos([1/2], vSide, sideOffset)
+          }
+        } else {
+          posArr = t.getColPos([1/4, 3/4], vSide, sideOffset)
+        }
+        for (const p of posArr) {
+          this.smallColumns.push(new SmallColumn(this, p, size))
+        }
+      }
+    }
+  }
+
+  updateBigColumns () {
+    this.bigColumns = []
+    this.updateBigCol(this.border.in.edges[0], 'in', this.floadSide === Types.Side.si_left)
+    this.updateBigCol(this.border.out.edges[0], 'out', this.floadSide !== Types.Side.si_left)
+  }
+
+  updateBigCol (vStairEdge, vSide, vSideOffsetPlus) {
+    let args = this.bigColParameters
+    let size = tool.parseSpecification(args.specification)
+    let offset = this.computeBigColOffset()
+    offset = offset + size.x / 2
+    let edge = new Edge(vStairEdge).offset(this.sideOffset, vSideOffsetPlus)
+    let position = new Edge(edge).extendP1(offset).p1
+    if (this.border[vSide].bigCol) {
+      this.border[vSide].bigCol.rebuildByParent(position)
+    } else {
+      this.border[vSide].bigCol = new BigColumn({vParent:this,vPosition:position})
+    }
+    this.bigColumns.push(this.border[vSide].bigCol)
   }
 }

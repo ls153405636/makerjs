@@ -63,7 +63,7 @@ export class Landing extends ChildInfo {
     this.edgeN = this.edges[this.nextEdgeIndex]
     this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
     this.sideEdgeN = this.edges[(this.lastEdgeIndex + 2)%4]
-    this.updateCorBigCol()
+    //this.updateCorBigCol()
   }
 
   rebuild () {
@@ -148,16 +148,20 @@ export class Landing extends ChildInfo {
     let utilSEL
     let utilSEN
     let cols = []
+    let borderGap1 = vDis1
+    let borderGap2 = vDis2
     if (gArgs.type === Types.GirderType.gslab) {
-      utilSEL = new Edge(this.sideEdgeL).offSet(this.parent.sideOffset)
-      utilSEN = new Edge(this.sideEdgeN).offSet(this.parent.sideOffset)
+      utilSEL = new Edge(new Edge(this.sideEdgeL).offset(this.parent.sideOffset))
+      utilSEN = new Edge(new Edge(this.sideEdgeN).offset(this.parent.sideOffset))
+      borderGap1 -= this.parent.sideOffset
+      borderGap2 -= this.parent.sideOffset
     } else {
-      utilSEL = new Edge(this.sideEdgeL).offSet(this.parent.sideOffset, false)
-      utilSEN = new Edge(this.sideEdgeN).offSet(this.parent.sideOffset, false)
+      utilSEL = new Edge(new Edge(this.sideEdgeL).offset(this.parent.sideOffset, false))
+      utilSEN = new Edge(new Edge(this.sideEdgeN).offset(this.parent.sideOffset, false))
+      borderGap1 += this.parent.sideOffset
+      borderGap2 += this.parent.sideOffset
     }
-    utilSEN = new Edge(utilSEN)
-    utilSEL = new Edge(utilSEL)
-    while(utilSEL.getLength() > vDis1) {
+    while(utilSEL.getLength() > borderGap1) {
       let pos
       if (this.lastEdgeIndex === this.corIndex) {
         pos = utilSEL.extendP1(-vDis1).p1
@@ -166,7 +170,7 @@ export class Landing extends ChildInfo {
       }
       cols.push(new SmallColumn(this.parent, pos, vSize))
     }
-    while(utilSEN.getLength() > vDis2) {
+    while(utilSEN.getLength() > borderGap2) {
       let pos
       if (this.lastEdgeIndex === this.corIndex) {
         pos = utilSEN.extendP2(-vDis2).p2
@@ -208,7 +212,7 @@ export class Landing extends ChildInfo {
   //创建三四五类分割梯板轮廓
   createInCutOutlines() {
     let outlines = []
-    let inEdgeL = new Edge(this.edgeL).offSet(this.lastStepWidth, false)
+    let inEdgeL = new Edge(this.edgeL).offset(this.lastStepWidth, false)
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[(this.corIndex+2)%4] //对角点
     if (this.lastEdgeIndex === this.corIndex) {

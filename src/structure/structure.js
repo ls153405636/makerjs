@@ -1,10 +1,13 @@
 import { D2Config } from '../d2/config'
 import { Types } from '../types/stair_v2'
+import { BigUTypeStair } from './b_u_type_stair'
 import { StructConfig } from './config'
 import { RectHole } from './hole'
 import { LHole } from './hole'
 import { LTypeStair } from './l_type_stair'
 import { StraightStair } from './straight_stair'
+import { SmallUTypeStair } from './s_u_type_stair'
+import { UTypeStair } from './u_type_stair'
 
 const FloorHeight = 2840
 
@@ -31,17 +34,18 @@ export class Structure {
     return this
   }
 
-  initStair({
-    type = Types.StairType.sstright,
-    againstWall,
-    floadSide = Types.Side.si_right,
-  }) {
-    console.log(againstWall)
+  initStair({type = Types.StairType.sstright,againstWall,floadSide = Types.Side.si_right}) {
     if (type === Types.StairType.sstright) {
       this.stair = new StraightStair(this, againstWall)
     }
     if (type === Types.StairType.sl_type) {
       this.stair = new LTypeStair(this, againstWall, floadSide)
+    }
+    if (type === Types.StairType.s_small_u_type) {
+      this.stair = new SmallUTypeStair(this, againstWall, floadSide)
+    }
+    if (type === Types.StairType.s_big_u_type) {
+      this.stair = new BigUTypeStair(this, againstWall, floadSide)
     }
     return this
   }

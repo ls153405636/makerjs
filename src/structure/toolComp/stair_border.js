@@ -1,4 +1,3 @@
-import { Types } from "../../types/stair_v2"
 import { StairEdge } from "./stair_edge"
 
 
@@ -15,14 +14,16 @@ export class StairBorder {
       edges: vInEdges,
       girders:[], 
       handrails:[], 
-      bigCol:null
+      bigCol:null,
+      name:'in',
     }
     this.out = {
        /**@type {Array<StairEdge>} */
       edges: vOutEdges,
       girders:[], 
       handrails:[], 
-      bigCol:null
+      bigCol:null,
+      name:'out',
     }
   }
 
