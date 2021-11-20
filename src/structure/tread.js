@@ -8,24 +8,22 @@ export class Tread extends ChildInfo {
    *
    * @param {Object} param0
    * @param {Number} param0.vIndex 踏板的索引
-   * @param {Array<Types.Vector3>} param0.vPois 踏板的轮廓边缘点，目前只针对休台异形踏板
+   * @param {Types.Outline} param0.vOutline 踏板的轮廓，目前只针对休台异形踏板和起步踏
    * @param {boolean} param0.vIsLast 踏板是否为二楼平面上的最后一级
    * @param {Types.Vector3} param0.vPos 踏板的位置，即矩形绘制时起始点的坐标
    */
-  constructor({ vParent, vIndex, vPois, vPos, vIsLast }) {
+  constructor({ vParent, vIndex, vOutline, vPos, vIsLast, vType = Types.TreadType.trect }) {
     super(vParent)
     this.inheritL = true
     this.inheritW = true
     this.inheritH = true
     this.isLast = vIsLast
-    // this.type === Types.TreadType.trect
-    // this.projId = Default.START_TREAD_PRO_ID
-    this.rebuildByParent({ vIndex, vPois, vPos })
+    this.type = vType
+    this.rebuildByParent({ vIndex, vOutline, vPos })
   }
 
   getArgs() {
     let args = {}
-    // if ([Types.TreadType.trect, Types.TreadType.tStart].includes(this.type)) {
     if (this.type === Types.TreadType.trect) {
       args.stepLength = {
         name: '步长',
@@ -75,7 +73,6 @@ export class Tread extends ChildInfo {
       },
       type: 'group',
     }
-    //args.start = {name:'起步踏造型', value:this.type===Types.TreadType.tStart, type:'switch'}
     return args
   }
 
@@ -94,41 +91,7 @@ export class Tread extends ChildInfo {
     )
   }
 
-  /**
-   * 创建起步踏板轮廓哟
-   */
-  // createStartOutline() {
-  //   let pois = []
-
-  //   pois[0] = new THREE.Vector2(this.position.x, this.position.y).addScaledVector(this.lVec, this.oriStepLength / 2)
-  //   pois[1] = pois[0].clone().addScaledVector(this.lVec, this.oriStepLength)
-  //   pois[2] = pois[1].clone().addScaledVector(this.lVec, this.oriStepLength / 9)
-  //   pois[3] = pois[2].clone().addScaledVector(this.wVec, this.oriStepWidth / 2)
-  //   pois[4] = pois[3].clone().addScaledVector(this.wVec, this.oriStepWidth / 2 + this.oriStepWidth / 4)
-  //   pois[5] = pois[4].clone().addScaledVector(this.lVec, -(this.oriStepLength / 2 + this.oriStepLength / 9))
-  //   pois[6] = pois[5].clone().addScaledVector(this.lVec, -(this.oriStepLength / 2 + this.oriStepLength / 9))
-  //   pois[7] = pois[6].clone().addScaledVector(this.wVec, -(this.oriStepWidth / 2 + this.oriStepWidth / 4))
-  //   pois[8] = pois[7].clone().addScaledVector(this.wVec, -this.oriStepWidth / 2)
-  //   pois[9] = pois[8].clone().addScaledVector(this.lVec, this.oriStepLength / 9)
-
-  //   this.outline = new Types.Outline()
-  //   let edges = []
-
-  //   for (let i = 0; i < pois.length - 1; i++) {
-  //     let p = pois[i]
-  //     let nextP = i === pois.length ? pois[0] : pois[i + 1]
-  //     edges.push(
-  //       new Types.Edge({
-  //         p1: p,
-  //         p2: nextP,
-  //         type: Types.EdgeType.earc,
-  //       })
-  //     )
-  //   }
-  //   this.outline.edges = edges
-  // }
-
-  rebuildByParent({ vIndex, vPois, vPos }) {
+  rebuildByParent({ vIndex, vOutline, vPos }) {
     this.position = vPos || new Types.Vector3()
     this.lVec = this.parent.lVec || new Types.Vector3()
     this.wVec = this.parent.wVec || new Types.Vector3()
@@ -142,29 +105,18 @@ export class Tread extends ChildInfo {
     if (this.inheritH) {
       this.stepHeight = this.parent.stepHeight
     }
-    if (vPois?.length) {
-      this.outline = tool.createOutlineByPois(vPois)
-      this.type = Types.TreadType.tph
+    if (vOutline) {
+      this.outline = vOutline
     }
     else {
       this.createRectOutline()
-      this.type = Types.TreadType.trect
     }
-    // else if (this.type === Types.TreadType.trect) {
-    //   this.createRectOutline()
-    // }
-    // else if (this.type === Types.TreadType.tStart) {
-    //   this.createStartOutline()
-    // }
   }
 
   updateItem(vValue, vKey, vSecondKey) {
     if (['stepHeight', 'stepLength', 'stepWidth'].includes(vKey)) {
       this[vSecondKey] = vValue
     }
-    // else if (vKey === 'start') {
-    //   this.type = vValue ? Types.TreadType.tStart : Types.TreadType.trect
-    // } 
     else {
       super.updateItem(vValue, vKey, vSecondKey)
     }
