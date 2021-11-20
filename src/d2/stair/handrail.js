@@ -16,13 +16,13 @@ export class Handrail extends ChildWidget {
   constructor(vPB) {
     super(vPB.uuid)
     this.width = vPB.width
-    let route = vPB.route
+    this.route = vPB.route
     /**pb里只保存了中线路径，通过中线路径向两侧分别偏移宽度的1/2
      * 可得到两侧的路径，用这两条路径可以绘制扶手
      * 偏移方法和调用模式如下
      */
-    let inRoute = new Outline(route).offset(this.width / 2, true)
-    let outRoute = new Outline(route).offset(-this.width / 2, true)
+    let inRoute = new Outline(this.route).offset(this.width / 2, true)
+    let outRoute = new Outline(this.route).offset(-this.width / 2, true)
 
     this.inEdges = inRoute.edges
     this.outEdges = outRoute.edges
@@ -31,9 +31,14 @@ export class Handrail extends ChildWidget {
     this.addEvent()
   }
 
+
   draw() {
+    console.log(this)
     // 扶手路径
     let path = []
+    for (let i = 0; i < this.route.edges.length; i++) {
+      console.log(i)
+    }
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)

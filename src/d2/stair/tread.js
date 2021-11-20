@@ -112,6 +112,25 @@ export class Tread extends ChildWidget {
       }
     }
 
+    // for (let i = 0; i < this.edges.length; i++) {
+    // let e = this.edges[i]
+    // let p1 = d2_tool.translateCoord(this.edges[i].p1)
+    // let p2 = d2_tool.translateCoord(this.edges[i].p2)
+    // if (i === 0) {
+    //   changeTread.moveTo(p1.x, p1.y)
+    // }
+    // if (e.type === Types.EdgeType.estraight) {
+    //   changeTread.lineTo(p2.x, p2.y)
+    // } else if (e.type === Types.EdgeType.earc) {
+    //     let pos = d2_tool.translateCoord(e.position)
+    //     let radius = d2_tool.translateValue(e.radius)
+    //     changeTread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+    // } else if (e.type === Types.EdgeType.ebeszer) {
+    //     let bezier = d2_tool.translateCoord(e.bezier)
+    //     changeTread.quadraticCurveTo(bezier.x, bezier.y, p2.x, p2.y)
+    //   }
+    // }
+
 
     // 单层椭圆踏板绘制
     // changeTread.moveTo(path1[0], path1[1])
