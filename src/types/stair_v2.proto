@@ -138,10 +138,10 @@ message Edge {
   EdgeType type         = 3;  //类型
   float    radius       = 4;  // 半径， 针对弧线
   Vector3  position     = 5;  // 圆心位置， 针对弧线
-  float    start_angle  = 6;  // 起始角度
-  float    end_angle    = 7;  // 终止角度
-  bool     is_clockwise = 8;  // 是否为顺时针
-  Vector3  bezier       = 9;  // 贝塞尔点
+  float    startAngle  = 6;  // 起始角度
+  float    endAngle    = 7;  // 终止角度
+  bool     isClockwise = 8;  // 是否为顺时针
+  Vector3  controlPos  = 9;  // 贝塞尔曲线控制点
 
 }
 
