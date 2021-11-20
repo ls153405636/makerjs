@@ -242,17 +242,17 @@ export namespace Types {
         /** Edge position */
         position?: (Types.IVector3|null);
 
-        /** Edge start_angle */
-        start_angle?: (number|null);
+        /** Edge startAngle */
+        startAngle?: (number|null);
 
-        /** Edge end_angle */
-        end_angle?: (number|null);
+        /** Edge endAngle */
+        endAngle?: (number|null);
 
-        /** Edge is_clockwise */
-        is_clockwise?: (boolean|null);
+        /** Edge isClockwise */
+        isClockwise?: (boolean|null);
 
-        /** Edge bezier */
-        bezier?: (Types.IVector3|null);
+        /** Edge controlPos */
+        controlPos?: (Types.IVector3|null);
     }
 
     /** Represents an Edge. */
@@ -279,17 +279,17 @@ export namespace Types {
         /** Edge position. */
         public position?: (Types.IVector3|null);
 
-        /** Edge start_angle. */
-        public start_angle: number;
+        /** Edge startAngle. */
+        public startAngle: number;
 
-        /** Edge end_angle. */
-        public end_angle: number;
+        /** Edge endAngle. */
+        public endAngle: number;
 
-        /** Edge is_clockwise. */
-        public is_clockwise: boolean;
+        /** Edge isClockwise. */
+        public isClockwise: boolean;
 
-        /** Edge bezier. */
-        public bezier?: (Types.IVector3|null);
+        /** Edge controlPos. */
+        public controlPos?: (Types.IVector3|null);
 
         /**
          * Creates a new Edge instance using the specified properties.
