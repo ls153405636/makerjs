@@ -14,8 +14,8 @@ export const StructConfig = {
 export const Default = {
   FLOOR_HEIGHT: 2840,
   WALL_DEPTH: 240,
-  HOLE_LENGTH: 4000,
-  HOLE_WIDTH: 3000,
+  HOLE_LENGTH: 2800,
+  HOLE_WIDTH: 2500,
   L_HOLE_T_LENGTH: 2000,
   L_HOLE_T_WIDTH: 2000,
   L_HOLE_B_LENGTH: 4000,
@@ -45,4 +45,5 @@ export const Default = {
   HANG_BOARD_DEPTH: 40,
   LANDING_TYPE: Types.LandingCutType.lct_fifth,
   START_TREAD_PRO_ID: 0,
+  U_TYPE_GAP: 80,
 }

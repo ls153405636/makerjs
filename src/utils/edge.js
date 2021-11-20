@@ -95,7 +95,7 @@ export class Edge {
    * @param {boolean} vPlus 是否为法线方向偏移，true为法线方向，false为法线反方向
    * @returns {Types.Edge}
    */
-  offSet(vDis, vPlus = true) {
+  offset(vDis, vPlus = true) {
     let nor = this.getNormal()
     if (!vPlus) {
       nor.negate()
@@ -108,6 +108,8 @@ export class Edge {
       this.p2,
       nor.clone().multiplyScalar(vDis)
     )
+    this.p1 = newP1
+    this.p2 = newP2
     return new Types.Edge({
       p1: new Types.Vector3({ x: newP1.x, y: newP1.y }),
       p2: new Types.Vector3({ x: newP2.x, y: newP2.y }),
@@ -151,6 +153,8 @@ export class Edge {
     pb.p2 = vEdge.p2
     return pb
   }
+
+
 
   /**
    * @return {Types.Vector3}
