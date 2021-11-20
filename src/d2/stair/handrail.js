@@ -17,6 +17,7 @@ export class Handrail extends ChildWidget {
     super(vPB.uuid)
     this.width = vPB.width
     this.route = vPB.route
+    console.log(this.route.edges)
     /**pb里只保存了中线路径，通过中线路径向两侧分别偏移宽度的1/2
      * 可得到两侧的路径，用这两条路径可以绘制扶手
      * 偏移方法和调用模式如下
@@ -33,12 +34,8 @@ export class Handrail extends ChildWidget {
 
 
   draw() {
-    console.log(this)
     // 扶手路径
     let path = []
-    for (let i = 0; i < this.route.edges.length; i++) {
-      console.log(i)
-    }
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)

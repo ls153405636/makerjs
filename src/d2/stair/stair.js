@@ -40,7 +40,7 @@ export class Stair extends BaseWidget {
       this.landings.push(new Flight(l, this))
     }
     for (const hdl of vPB.handrails) {
-      this.handrails.push(new Handrail(hdl))
+      this.handrails.push(new Handrail(hdl,this))
     }
     for (const col of vPB.smallColumns) {
       this.smallColumns.push(new SmallColumn(col, this))
