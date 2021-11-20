@@ -115,7 +115,7 @@ export class Edge {
   }
 
   /**
-   * 
+   * 从p1方向将边延长
    * @param {Number} vDis 
    * @returns {Types.Edge}
    */
@@ -129,7 +129,7 @@ export class Edge {
   }
 
   /**
-   * 
+   *从p2方向将边延长 
    * @param {Number} vDis 
    * @returns {Types.Edge}
    */
