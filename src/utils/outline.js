@@ -70,7 +70,7 @@ export class Outline {
       }
       let newP1 = e.getP1().addScaledVector(p1OffsetDir, dis1)
       let newP2 = e.getP2().addScaledVector(p2OffsetDir, dis2)
-      if (i === 2 || i === 3) {
+      if (i === 2) {
         newEdges.push(new Types.Edge({
           p1: new Types.Vector3({x:newP1.x, y:newP1.y, z:0}),
           p2: new Types.Vector3({x:newP2.x, y:newP2.y, z:0}),
@@ -83,7 +83,7 @@ export class Outline {
           p2: new Types.Vector3({x:newP2.x, y:newP2.y, z:0}),
           type: Types.EdgeType.estraight
         }))
-
+        
       }
     }
     return new Types.Outline({

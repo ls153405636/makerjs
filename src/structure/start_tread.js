@@ -10,11 +10,11 @@ export class StartTread extends ChildInfo {
   static START_TYPE_OPTION = [
     { value: Types.StartTreadType.sel, label: '椭圆型'},
     { value: Types.StartTreadType.srr, label: '双层椭圆型'},
-    { value: Types.StartTreadType.sel_w, label: '圆角矩形'},
-    { value: Types.StartTreadType.srr_w, label: '双层圆角矩形'},
+    { value: Types.StartTreadType.sel_2, label: '圆角矩形'},
+    { value: Types.StartTreadType.srr_2, label: '双层圆角矩形'},
   ]
 
-  constructor({ vParent, vIndex, vPois, vPos,vType=Types.StartTreadType.srr_2,vShapeType=Types.StartTreadShapeType.s_no}) {
+  constructor({ vParent, vIndex, vPois, vPos,vType=Types.StartTreadType.sel,vShapeType=Types.StartTreadShapeType.s_no}) {
     super(vParent)
     this.inheritL = true
     this.inheritW = true
@@ -105,6 +105,17 @@ export class StartTread extends ChildInfo {
       type: Types.EdgeType.ebeszer
     })
   }
+  
+  /**
+   * 创建圆弧
+   * @param {Types.Vector3} vP1 起始点
+   * @param {Types.Vector3} vVec2 起始点到终止点的方向向量
+   * @param {Types.float} vRadius 半径
+   * @param {Types.float} vstartAngle 起始角度
+   * @param {Types.float} vEndAngle 终止角度
+   * @param {Types.bool} vIsClockwise 顺逆时针
+   * @returns 
+   */
   createArcEdge (vP1,vVec2,vRadius,vstartAngle,vEndAngle,vIsClockwise) {
     let p1 = vP1
     let p2 = new THREE.Vector2(vP1.x, vP1.y).addScaledVector(this.wVec, vRadius * 2)
@@ -195,6 +206,7 @@ export class StartTread extends ChildInfo {
     edges.push(bE,rE,rFE,lFE,lE,bE,rE_d,rFE_d,lFE_d,lE_d)
     
     this.outline.edges = edges
+    console.log(this.outline.edges)
   }
   // 单层圆角矩形
   createRROutline() {
@@ -223,11 +235,9 @@ export class StartTread extends ChildInfo {
     }
     if (this.startTreadShapeType === 3) {
       edges.push(bE,rL, dE,lArc)
-      
     }else if (this.startTreadShapeType === 2) {
       edges.push(bE,rArc, dE,lL)
-    }
-    else {
+    }else {
       edges.push(bE,rArc, dE,lArc)
     }
     
@@ -249,9 +259,6 @@ export class StartTread extends ChildInfo {
     let new_rE = new Edge(rectOutline.edges[1]).extendP2(this.stepWidth)
     let new_lE = new Edge(rectOutline.edges[3]).extendP2(this.stepWidth)
     let new_dE = new Edge(dE).offSet(this.stepWidth)
-    console.log(rE)
-    console.log(new_rE)
-    console.log(new_dE)
     let rArc, lArc , rL,lL// 右圆弧、 左圆弧
     let rArc_d, lArc_d // 第二层右圆弧， 第层左圆弧
     if (this.startTreadShapeType === 3) {
@@ -269,9 +276,9 @@ export class StartTread extends ChildInfo {
     }
     if (this.startTreadShapeType === 3) {
       edges.push(bE,rE,dE,lArc,bE,new_rE,new_dE,lArc_d)
-      
-    } else {
-
+    }else if (this.startTreadShapeType === 2) {
+      edges.push(bE,rArc,dE,lE,bE,rArc_d,new_dE,lL)
+    }else {
       edges.push(bE,rArc, dE,lArc,bE,rArc_d,new_dE,lArc_d)
     }
     
@@ -362,41 +369,42 @@ export class StartTread extends ChildInfo {
 
   computeBigColPos () {
     /** */
+    console.log(this)
     let args = this.parent.parent.bigColParameters
     this.sideOffset = this.parent.parent.sideOffset
     this.sideOffset >50 ? this.sideOffset = this.parent.parent.sideOffset : this.sideOffset = 45
-    this.positionX = 0
-    this.positionY = 0
+    let bigColPositionX = 0
+    let bigColPositionY = 0
     if (this.startTreadType === Types.StartTreadType.sel || this.startTreadType === Types.StartTreadType.srr) {
       if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
-        this.positionX = this.positionC.x - this.stepLength / 2 - this.sideOffset * 2
-        this.positionY = this.positionC.y + this.stepWidth + this.offSet2 * 2
+        bigColPositionX = this.positionC.x - this.stepLength / 2 - this.offSet1 / 2
+        bigColPositionY = this.positionC.y + this.stepWidth + this.offSet2 * 2
       }
       else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
-        this.positionX = this.positionL.x - this.sideOffset * 2
-        this.positionY = this.positionL.y + this.stepWidth + this.offSet2 * 2
+        bigColPositionX = this.positionL.x - this.offSet1 / 2
+        bigColPositionY = this.positionL.y + this.stepWidth + this.offSet2 * 2
       }
       else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
-        this.positionX = this.positionR.x - this.sideOffset * 2 - this.stepLength
-        this.positionY = this.positionR.y + this.stepWidth + this.offSet2 * 2
+        bigColPositionX = this.positionR.x - this.offSet1 / 2 - this.stepLength
+        bigColPositionY = this.positionR.y + this.stepWidth + this.offSet2 * 2
       }
     } else {
       if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
-        this.positionX = this.positionC.x - this.stepLength / 2 - this.sideOffset * 2
-        this.positionY = this.positionC.y + this.stepWidth * 2 + this.offSet2 * 2
+        bigColPositionX = this.positionC.x - this.stepLength / 2 - this.offSet1 / 2
+        bigColPositionY = this.positionC.y + this.stepWidth * 2 + this.offSet2 * 2
       }
       else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
-        this.positionX = this.positionL.x - this.sideOffset * 2
-        this.positionY = this.positionL.y + this.stepWidth * 2 + this.offSet2 * 2
+        bigColPositionX = this.positionL.x - this.offSet1 / 2
+        bigColPositionY = this.positionL.y + this.stepWidth * 2 + this.offSet2 * 2
       }
       else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
-        this.positionX = this.positionR.x - this.sideOffset * 2 - this.stepLength
-        this.positionY = this.positionR.y + this.stepWidth * 2 + this.offSet2 * 2
+        bigColPositionX = this.positionR.x - this.offSet1 / 2 - this.stepLength
+        bigColPositionY = this.positionR.y + this.stepWidth * 2 + this.offSet2 * 2
       }
     }
     let left = new Types.Vector3({
-      x: this.positionX,
-      y: this.positionY
+      x: bigColPositionX,
+      y: bigColPositionY
       })
 
     if (args.posType === Types.BigColumnPosType.bcp_first) {

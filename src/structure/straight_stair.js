@@ -283,6 +283,7 @@ export class StraightStair extends Stair  {
     this.stepWidth = this.flights[0].treads[0].stepWidth
     this.stepLength = this.flights[0].treads[0].stepLength
     this.positionC = this.flights[0].treads[0].positionC
+    let startTreadoffSet1 = this.flights[0].treads[0].offSet1
     
     // let bigColSize = tool.parseSpecification(bArgs.specification)
     // let stepWidth = this.flights[0].getTreadByNum(0).stepWidth
@@ -294,93 +295,115 @@ export class StraightStair extends Stair  {
     // }
     
     leftPois[0] = new Types.Vector3({
-      x: this.positionC.x - this.stepLength / 2 - 4.5 - this.stepWidth / 4,
-      y: startY + this.stepWidth / 2,
+      x: this.positionC.x - this.stepLength / 2 - startTreadoffSet1 / 2,
+      y: this.positionC.y + this.stepWidth / 2,
       z: args.height,
     })
     leftPois[1] = new Types.Vector3({
-      x: this.positionC.x - this.stepLength / 2 + this.sideOffset,
-      y: startY + this.stepWidth / 2,
+      x: this.sideOffset - 80,
+      y: this.positionC.y + this.stepWidth / 2,
       z: args.height,
     })
     leftPois[2] = new Types.Vector3({
-      x: this.positionC.x - this.stepLength / 2 + this.sideOffset,
-      y: startY ,
+      x: this.sideOffset,
+      y: this.positionC.y + this.stepWidth / 2,
       z: args.height,
     })
-    // leftPois[3] = new Types.Vector3({
-    //   x: this.positionC.x - this.stepLength / 2,
-    //   y: this.positionC.y,
-    //   z: args.height + this.stepHeight,
-    // })
-    // leftPois[4] = new Types.Vector3({
-    //   x: this.positionC.x,
-    //   y: 0,
-    //   z: args.height + this.height,
-    // })
+    leftPois[3] = new Types.Vector3({
+      x: this.sideOffset,
+      y: this.positionC.y + this.stepWidth / 2 - 80,
+      z: args.height + this.stepHeight,
+    })
+    leftPois[4] = new Types.Vector3({
+      x: this.sideOffset,
+      y: this.positionC.y,
+      z: args.height + this.height,
+    })
+    leftPois[5] = new Types.Vector3({
+      x: this.sideOffset,
+      y: 0,
+      z: args.height + this.height,
+    })
 
 
     rightPois[0] = new Types.Vector3({
-      x: this.width + this.sideOffset + this.stepWidth / 2,
-      y: startY + this.stepWidth / 2,
+      x: this.positionC.x + this.stepLength / 2 + startTreadoffSet1 / 2,
+      y: this.positionC.y + this.stepWidth / 2,
       z: args.height,
     })
     rightPois[1] = new Types.Vector3({
-      x: this.positionC.x - this.stepLength / 2 -this.sideOffset,
-      y: startY + this.stepWidth / 2,
+      x: this.width - this.sideOffset + 80,
+      y: this.positionC.y + this.stepWidth / 2,
       z: args.height,
     })
     rightPois[2] = new Types.Vector3({
       x: this.width - this.sideOffset,
-      y: startY + this.stepWidth / 2,
+      y: this.positionC.y + this.stepWidth / 2,
       z: args.height,
     })
     rightPois[3] = new Types.Vector3({
       x: this.width - this.sideOffset,
-      y: startY,
+      y: this.positionC.y + this.stepWidth / 2 - 80,
       z: args.height + this.stepHeight,
     })
     rightPois[4] = new Types.Vector3({
+      x: this.width - this.sideOffset,
+      y: this.positionC.y,
+      z: args.height + this.height,
+    })
+    rightPois[5] = new Types.Vector3({
       x: this.width - this.sideOffset,
       y: 0,
       z: args.height + this.height,
     })
 
     for (let i = 0; i < leftPois.length - 1; i++) {
-      // if (i === 2 || i === 3) {
-      //   route1.edges.push(
-      //     new Types.Edge({
-      //       p1: leftPois[i],
-      //       p2: leftPois[i + 1],
-      //       type: Types.EdgeType.ebeszer,
-      //     })
-      //   )
-      // } else {
-      // }
-      route1.edges.push(
-        new Types.Edge({
-          p1: leftPois[i],
-          p2: leftPois[i + 1],
-          type: Types.EdgeType.estraight,
-        })
-      )
-      route2.edges.push(
-        new Types.Edge({
-          p1: rightPois[i],
-          p2: rightPois[i + 1],
-          type: Types.EdgeType.estraight,
-        })
-      )
+      if (i === 2) {
+        route1.edges.push(
+          new Types.Edge({
+            p1: leftPois[i],
+            p2: leftPois[i + 1],
+            type: Types.EdgeType.ebeszer,
+          })
+        )
+      } else {
+        route1.edges.push(
+          new Types.Edge({
+            p1: leftPois[i],
+            p2: leftPois[i + 1],
+            type: Types.EdgeType.estraight,
+          })
+        )
+      }
+      if (i === 2) {
+
+        route2.edges.push(
+          new Types.Edge({
+            p1: rightPois[i],
+            p2: rightPois[i + 1],
+            type: Types.EdgeType.ebeszer,
+          })
+        )
+      } else {
+
+        route2.edges.push(
+          new Types.Edge({
+            p1: rightPois[i],
+            p2: rightPois[i + 1],
+            type: Types.EdgeType.estraight,
+          })
+        )
+      }
     }
     let size = tool.parseSpecification(args.source.specification, 'yxz')
-    console.log(route1)
+
 
     if (this.handrails.length === 2) {
       this.handrails[0].rebuildByParent(route1, size.x)
-      // this.handrails[1].rebuildByParent(route2, size.x)
+      this.handrails[1].rebuildByParent(route2, size.x)
     } else {
       this.handrails.push(new Handrail(this, route1, size.x))
-      // this.handrails.push(new Handrail(this, route2, size.x))
+      this.handrails.push(new Handrail(this, route2, size.x))
     }
   }
 }

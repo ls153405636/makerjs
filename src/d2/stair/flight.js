@@ -8,7 +8,7 @@ export class Flight extends BaseWidget {
    *
    * @param {Types.Flight} vPB
    */
-  constructor(vPB) {
+  constructor(vPB,vParent) {
     super(vPB.uuid)
     this.treads = []
     for (const t of vPB.treads) {

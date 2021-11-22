@@ -1,3 +1,4 @@
+import { types } from 'protobufjs'
 import { Types } from '../types/stair_v2'
 
 export class Edge {
@@ -11,6 +12,7 @@ export class Edge {
       this.p2 = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
     }
     this.vec = null
+    // this.type = vPB.type
     this.normal = null
   }
 
@@ -111,6 +113,7 @@ export class Edge {
     return new Types.Edge({
       p1: new Types.Vector3({ x: newP1.x, y: newP1.y }),
       p2: new Types.Vector3({ x: newP2.x, y: newP2.y }),
+      type: 1
     })
   }
 
@@ -166,6 +169,7 @@ export class Edge {
     return new Types.Edge({
       p1: new Types.Vector3({ x: this.p1.x, y: this.p1.y }),
       p2: new Types.Vector3({ x: this.p2.x, y: this.p2.y }),
+      type: 1
     })
   }
 }
