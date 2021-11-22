@@ -79,12 +79,16 @@ export const Types = $root.Types = (() => {
      * @property {number} sph=0 sph value
      * @property {number} sstright=1 sstright value
      * @property {number} sl_type=2 sl_type value
+     * @property {number} s_small_u_type=3 s_small_u_type value
+     * @property {number} s_big_u_type=4 s_big_u_type value
      */
     Types.StairType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "sph"] = 0;
         values[valuesById[1] = "sstright"] = 1;
         values[valuesById[2] = "sl_type"] = 2;
+        values[valuesById[3] = "s_small_u_type"] = 3;
+        values[valuesById[4] = "s_big_u_type"] = 4;
         return values;
     })();
 
@@ -3845,6 +3849,8 @@ export const Types = $root.Types = (() => {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
+                case 4:
                     break;
                 }
             if (message.againstWallType != null && message.hasOwnProperty("againstWallType"))
@@ -4001,6 +4007,14 @@ export const Types = $root.Types = (() => {
             case "sl_type":
             case 2:
                 message.type = 2;
+                break;
+            case "s_small_u_type":
+            case 3:
+                message.type = 3;
+                break;
+            case "s_big_u_type":
+            case 4:
+                message.type = 4;
                 break;
             }
             switch (object.againstWallType) {
@@ -4858,6 +4872,7 @@ export const Types = $root.Types = (() => {
          * @property {boolean|null} [inheritL] Tread inheritL
          * @property {boolean|null} [inheritH] Tread inheritH
          * @property {boolean|null} [inheritW] Tread inheritW
+         * @property {Types.TreadType|null} [type] Tread type
          */
 
         /**
@@ -4956,6 +4971,14 @@ export const Types = $root.Types = (() => {
         Tread.prototype.inheritW = false;
 
         /**
+         * Tread type.
+         * @member {Types.TreadType} type
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.type = 0;
+
+        /**
          * Creates a new Tread instance using the specified properties.
          * @function create
          * @memberof Types.Tread
@@ -4999,6 +5022,8 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 9, wireType 0 =*/72).bool(message.inheritH);
             if (message.inheritW != null && Object.hasOwnProperty.call(message, "inheritW"))
                 writer.uint32(/* id 10, wireType 0 =*/80).bool(message.inheritW);
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
+                writer.uint32(/* id 11, wireType 0 =*/88).int32(message.type);
             return writer;
         };
 
@@ -5062,6 +5087,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 10:
                     message.inheritW = reader.bool();
+                    break;
+                case 11:
+                    message.type = reader.int32();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -5130,6 +5158,14 @@ export const Types = $root.Types = (() => {
             if (message.inheritW != null && message.hasOwnProperty("inheritW"))
                 if (typeof message.inheritW !== "boolean")
                     return "inheritW: boolean expected";
+            if (message.type != null && message.hasOwnProperty("type"))
+                switch (message.type) {
+                default:
+                    return "type: enum value expected";
+                case 0:
+                case 1:
+                    break;
+                }
             return null;
         };
 
@@ -5168,6 +5204,16 @@ export const Types = $root.Types = (() => {
                 message.inheritH = Boolean(object.inheritH);
             if (object.inheritW != null)
                 message.inheritW = Boolean(object.inheritW);
+            switch (object.type) {
+            case "tph":
+            case 0:
+                message.type = 0;
+                break;
+            case "trect":
+            case 1:
+                message.type = 1;
+                break;
+            }
             return message;
         };
 
@@ -5195,6 +5241,7 @@ export const Types = $root.Types = (() => {
                 object.inheritL = false;
                 object.inheritH = false;
                 object.inheritW = false;
+                object.type = options.enums === String ? "tph" : 0;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -5216,6 +5263,8 @@ export const Types = $root.Types = (() => {
                 object.inheritH = message.inheritH;
             if (message.inheritW != null && message.hasOwnProperty("inheritW"))
                 object.inheritW = message.inheritW;
+            if (message.type != null && message.hasOwnProperty("type"))
+                object.type = options.enums === String ? $root.Types.TreadType[message.type] : message.type;
             return object;
         };
 

@@ -31,7 +31,9 @@ export namespace Types {
     enum StairType {
         sph = 0,
         sstright = 1,
-        sl_type = 2
+        sl_type = 2,
+        s_small_u_type = 3,
+        s_big_u_type = 4
     }
 
     /** Side enum. */
@@ -1726,6 +1728,9 @@ export namespace Types {
 
         /** Tread inheritW */
         inheritW?: (boolean|null);
+
+        /** Tread type */
+        type?: (Types.TreadType|null);
     }
 
     /** Represents a Tread. */
@@ -1766,6 +1771,9 @@ export namespace Types {
 
         /** Tread inheritW. */
         public inheritW: boolean;
+
+        /** Tread type. */
+        public type: Types.TreadType;
 
         /**
          * Creates a new Tread instance using the specified properties.

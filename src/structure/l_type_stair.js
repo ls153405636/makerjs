@@ -41,6 +41,7 @@ export class LTypeStair extends Stair {
       this.flights[0].stepNum +
       this.flights[1].stepNum +
       this.landings[0].stepNum
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.updateBorder()
     this.updateGirders()
     this.updateHandrails()
@@ -165,7 +166,7 @@ export class LTypeStair extends Stair {
         this.width = this.width * 2 / 3
       }
       let f2StepNum = (this.width - Default.STEP_LENGTH) / Default.STEP_WIDTH
-      let f1StepNum = this.stepNum - this.stepNumRule + 1 - f2StepNum - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
+      let f1StepNum = this.realStepNum - f2StepNum - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
       f1StepNum = Math.ceil(f1StepNum)
       this.depth = f1StepNum * Default.STEP_WIDTH + Default.STEP_LENGTH
     } else {
@@ -230,6 +231,7 @@ export class LTypeStair extends Stair {
     if (vKey2 && ['model', 'material'].includes(vKey2)) {
       console.log(1)
     } else if (vKey1 === 'stepNum') {
+      this.stepNum = vValue
       let rst = this.computeStepNum(vValue, this.flights[0].length, this.flights[1].length)
       this.flights[0].updateItem(rst.firstNum, vKey1, vKey2)
       this.flights[1].updateItem(rst.secondNum, vKey1, vKey2)
@@ -279,6 +281,7 @@ export class LTypeStair extends Stair {
     } else {
       this.landings[0] = new Landing(paras)
     }
+    this.landings[0].updateCorBigCol()
   }
 
   updateGirders() {
@@ -332,7 +335,7 @@ export class LTypeStair extends Stair {
     let inEdges = []
     let bor = this.border
     for (const e of vOutEdges) {
-      let inE = new Edge(e).offSet(vDepth, vPlus)
+      let inE = new Edge(e).offset(vDepth, vPlus)
       inEdges.push(inE)
     }
     if (bor[vSide].girders[vIndex]) {
@@ -384,7 +387,7 @@ export class LTypeStair extends Stair {
         let start = new THREE.Vector2(sideE.p1.x, sideE.p1.y).addScaledVector(utilVec, widthSum)
         let end = new THREE.Vector2(sideE.p1.x, sideE.p1.y).addScaledVector(utilVec, widthSum + t.stepWidth)
         let edge = new Types.Edge({p1:start, p2:end})
-        edge = new Edge(edge).offSet(this.sideOffset, vSideOffsetPlus)
+        edge = new Edge(edge).offset(this.sideOffset, vSideOffsetPlus)
         let pos1 = null
         let pos2 = null
         if (args.arrangeRule === Types.ArrangeRule.arrThree) {
@@ -481,10 +484,10 @@ export class LTypeStair extends Stair {
   updateBigCol (vStairEdge, vSide, vSideOffsetPlus) {
     let args = this.bigColParameters
     let size = tool.parseSpecification(args.specification)
-    let offSet = this.computeBigColOffset()
-    offSet = offSet + size.x / 2
-    let edge = new Edge(vStairEdge.edge).offSet(this.sideOffset, vSideOffsetPlus)
-    let position = new Edge(edge).extendP1(offSet).p1
+    let offset = this.computeBigColOffset()
+    offset = offset + size.x / 2
+    let edge = new Edge(vStairEdge.edge).offset(this.sideOffset, vSideOffsetPlus)
+    let position = new Edge(edge).extendP1(offset).p1
     if (this.border[vSide].bigCol) {
       this.border[vSide].bigCol.rebuildByParent(position)
     } else {

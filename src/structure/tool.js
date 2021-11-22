@@ -29,9 +29,10 @@ export function createRectOutline(vOri, vLength, vWdith, vLengthVec = new THREE.
   return createOutlineByPois(pois)
 }
 
-export function createOutlineByPois(vPois) {
+export function createOutlineByPois(vPois, vIsClose = true) {
   let outline = new Types.Outline()
-    for (let i = 0; i < vPois.length; i++) {
+  let length = vIsClose ? vPois.length : vPois.length - 1
+    for (let i = 0; i < length; i++) {
       let p = vPois[i]
       let nextP = i === vPois.length - 1 ? vPois[0] : vPois[i+1]
       outline.edges.push(new Types.Edge({

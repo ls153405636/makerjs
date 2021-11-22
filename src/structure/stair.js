@@ -4,6 +4,7 @@ import { Types } from '../types/stair_v2'
 import { Flight } from './flight'
 import tool from './tool'
 import { Girder } from './girder'
+import { Landing } from './landing'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -18,7 +19,10 @@ export class Stair extends Info {
     this.exitBeamDepth = 0
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
+    /**@type {Array<Flight>} */
     this.flights = []
+    /**@type {Array<Landing>} */
     this.landings = []
     this.bigColumns = []
     this.handrails = []
@@ -58,6 +62,9 @@ export class Stair extends Info {
 
   computeStepHeight() {
     let step_num = 0
+    for (const l of this.landings) {
+      step_num = step_num + l.stepNum
+    }
     if (this.flights.length) {
       let totalHeight = this.height
       for (const f of this.flights) {

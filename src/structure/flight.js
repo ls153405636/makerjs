@@ -96,15 +96,6 @@ export class Flight extends ChildInfo {
     let commonParas = { vParent: this, vIsLast: false }
     for (let i = 0; i < step_num; i++) {
       let index = step_num - i + this.treadIndex
-      // if (this.treads[step_num - i - 1]?.containLast) {
-      //   let cur = this.treads[step_num - i - 1]
-      //   let last = this.treads[step_num - i - 2]
-      //   widthSum = - last.stepWidth
-      //   if (cur.stepWidth <= last.stepWidth) {
-      //     cur.inheritW = false
-      //     cur.stepWidth = last.stepWidth * 2
-      //   }
-      // }
       let pos = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(
         this.wVec,
         widthSum
@@ -117,13 +108,9 @@ export class Flight extends ChildInfo {
         if (i === step_num - 1 && this.startTread) {
           this.treads[step_num - i - 1] = new StartTread(paras)
         }
-        // else if  (i === step_num - 2 && this.startTread) {
-        //   this.treads[step_num - i - 1] = new StartTread(paras)
-        // }
         else {
           this.treads[step_num - i - 1] = new Tread(paras)
         }
-        //this.treads[step_num - i - 1] = new Tread(paras)
         widthSum = widthSum + this.stepWidth
       }
     }
