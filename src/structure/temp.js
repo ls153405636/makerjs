@@ -32,11 +32,10 @@ export class StraightStair extends Stair  {
 
   updateFlights() {
     let pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
-    let paras = {vTreadIndex:0, 
+    let paras = {vTreadIndex:this.startFlight?.stepNum || 0, 
                 vPos:pos, 
                 vLVec:new Types.Vector3({x:1}), 
-                vWVec:new Types.Vector3({y:1}), 
-                vTreadIndex: this.startFlight?.stepNum || 0}
+                vWVec:new Types.Vector3({y:1}), }
     this.flights[0].rebuildByParent(paras)
   }
 

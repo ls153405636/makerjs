@@ -33,170 +33,170 @@ export class Handrail extends ChildWidget {
 
 
   draw() {
-        // // 扶手路径
-        // let path = []
-        // for (let i = 0; i < this.inEdges.length; i++) {
-        //   let e = this.inEdges[i]
-        //   path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-        //   if (i === this.inEdges.length - 1) {
-        //     path.push(e.p2.x / D2Config.SCREEN_RATE, e.p2.y / D2Config.SCREEN_RATE)
-        //   }
-        // }
-        // for (let i = this.outEdges.length - 1; i >= 0; i--) {
-        //   let f = this.outEdges[i]
-        //   if (i === this.outEdges.length - 1) {
-        //     path.push(f.p2.x / D2Config.SCREEN_RATE, f.p2.y / D2Config.SCREEN_RATE)
-        //   }
-        //   path.push(f.p1.x / D2Config.SCREEN_RATE, f.p1.y / D2Config.SCREEN_RATE)
-        // }
+        // 扶手路径
+        let path = []
+        for (let i = 0; i < this.inEdges.length; i++) {
+          let e = this.inEdges[i]
+          path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+          if (i === this.inEdges.length - 1) {
+            path.push(e.p2.x / D2Config.SCREEN_RATE, e.p2.y / D2Config.SCREEN_RATE)
+          }
+        }
+        for (let i = this.outEdges.length - 1; i >= 0; i--) {
+          let f = this.outEdges[i]
+          if (i === this.outEdges.length - 1) {
+            path.push(f.p2.x / D2Config.SCREEN_RATE, f.p2.y / D2Config.SCREEN_RATE)
+          }
+          path.push(f.p1.x / D2Config.SCREEN_RATE, f.p1.y / D2Config.SCREEN_RATE)
+        }
     
-        // const handrailContainer = new PIXI.Container()
+        const handrailContainer = new PIXI.Container()
     
-        // const changeHandrail1 = new PIXI.Graphics()
-        // changeHandrail1.visible = true
-        // changeHandrail1.alpha = 0
-        // changeHandrail1.lineStyle(1, 0x4478f4)
-        // changeHandrail1.beginFill(0xffffff)
-        // changeHandrail1.drawPolygon(path)
+        const changeHandrail1 = new PIXI.Graphics()
+        changeHandrail1.visible = true
+        changeHandrail1.alpha = 0
+        changeHandrail1.lineStyle(1, 0x4478f4)
+        changeHandrail1.beginFill(0xffffff)
+        changeHandrail1.drawPolygon(path)
     
-        // const changeHandrail = new PIXI.Graphics()
-        // changeHandrail.visible = false
-        // changeHandrail.lineStyle(1, 0x4478f4)
-        // changeHandrail.drawPolygon(path)
+        const changeHandrail = new PIXI.Graphics()
+        changeHandrail.visible = false
+        changeHandrail.lineStyle(1, 0x4478f4)
+        changeHandrail.drawPolygon(path)
     
-        // const handrail = new PIXI.Graphics()
-        // handrail.lineStyle(1, 0x2d3037)
-        // handrail.drawPolygon(path)
+        const handrail = new PIXI.Graphics()
+        handrail.lineStyle(1, 0x2d3037)
+        handrail.drawPolygon(path)
     
-        // handrailContainer.addChild(changeHandrail1, changeHandrail, handrail)
-        // this.sprite = handrailContainer
+        handrailContainer.addChild(changeHandrail1, changeHandrail, handrail)
+        this.sprite = handrailContainer
 
 
-    const handrailContainer = new PIXI.Container()
+    // const handrailContainer = new PIXI.Container()
 
-    const changeHandrail1 = new PIXI.Graphics()
-    changeHandrail1.visible = true
-    changeHandrail1.alpha = 0.01
-    changeHandrail1.lineStyle(1, 0x4478f4)
-    changeHandrail1.beginFill(0xffffff)
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      if (i === 0) {
-        changeHandrail1.moveTo(e.p1.x / 10, e.p1.y / 10)
-      }
-      if (e.type === 1) {
-        changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-    }
-    for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let f = this.outEdges[i]
-      if (i === this.outEdges.length - 1) {
-        changeHandrail1.lineTo(f.p2.x / 10, f.p2.y / 10)
-      }
-      if (f.type === 1) {
-        changeHandrail1.lineTo(f.p1.x / 10,f.p1.y / 10)
-      }
-    }
-    for (let j = 0; j < this.inEdges.length; j++) {
-      let e1 = this.inEdges[j]
-      if (j === 0) {
-        changeHandrail1.lineTo(e1.p1.x / 10, e1.p1.y / 10)
-      }
-    }
-
-
-    const changeHandrail = new PIXI.Graphics()
-    changeHandrail.visible = false
-    changeHandrail.lineStyle(1, 0x4478f4)
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      if (i === 0) {
-        changeHandrail.moveTo(e.p1.x / 10, e.p1.y / 10)
-      }
-      if (e.type === 1) {
-        changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-    }
-    for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let f = this.outEdges[i]
-      if (i === this.outEdges.length - 1) {
-        changeHandrail.lineTo(f.p2.x / 10, f.p2.y / 10)
-      }
-      if (f.type === 1) {
-        changeHandrail.lineTo(f.p1.x / 10,f.p1.y / 10)
-      }
-    }
-    for (let j = 0; j < this.inEdges.length; j++) {
-      let e1 = this.inEdges[j]
-      if (j === 0) {
-        changeHandrail.lineTo(e1.p1.x / 10, e1.p1.y / 10)
-      }
-    }
-
-
-    const handrail = new PIXI.Graphics()
-    handrail.lineStyle(1, 0x2d3037)
-    for (let i = 0; i < this.outEdges.length; i++) {
-      let e = this.outEdges[i]
-      if (i === 0) {
-        handrail.moveTo(e.p1.x / 10, e.p1.y / 10)
-      }
-    }
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      if (i === 0) {
-        handrail.lineTo(e.p1.x / 10, e.p1.y / 10)
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-      else if (i === 2 && e.type === 3) {
-        handrail.quadraticCurveTo(e.p1.x / 10,e.p1.y / 10,e.p2.x / 10,e.p2.y /10)
-      }
-      else if (i > 2 && e.type === 1) {
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-    }
-    for (let i = this.outEdges.length; i >= 0; i--) {
-      let e = this.outEdges[i]
-      if (i === this.outEdges.length - 1) [
-        handrail.lineTo(e.p2.x,e.p2.y)
-      ]
-    }
-    for (let i = 0; i < this.outEdges.length; i++) {
-      let e = this.outEdges[i]
-      if (i === 0) {
-        handrail.moveTo(e.p1.x / 10, e.p1.y / 10)
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-      else if (i === 2 && e.type === 3) {
-        handrail.quadraticCurveTo(e.p1.x / 10,e.p1.y / 10,e.p2.x / 10,e.p2.y /10)
-      }
-      else if (i > 2 && e.type === 1) {
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-    }
-
-
-    // const handrail1 = new PIXI.Graphics()
-    // handrail1.lineStyle(1, 0x2d3037)
-    // for (let i = 0; i < this.route.edges.length; i++) {
-    //   let e = this.route.edges[i]
-    //   console.log(e)
+    // const changeHandrail1 = new PIXI.Graphics()
+    // changeHandrail1.visible = true
+    // changeHandrail1.alpha = 0.01
+    // changeHandrail1.lineStyle(1, 0x4478f4)
+    // changeHandrail1.beginFill(0xffffff)
+    // for (let i = 0; i < this.inEdges.length; i++) {
+    //   let e = this.inEdges[i]
     //   if (i === 0) {
-    //     handrail1.moveTo(e.p1.x / 10,e.p1.y / 10)
-    //     handrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
+    //     changeHandrail1.moveTo(e.p1.x / 10, e.p1.y / 10)
     //   }
-    //   else if (i === 2 && e.type === 3) {
-    //     handrail1.quadraticCurveTo(e.p1.x / 10,e.p1.y / 10,e.p2.x / 10,e.p2.y /10)
+    //   if (e.type === 1) {
+    //     changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
     //   }
-    //   else if (i > 2 && e.type === 1) {
-    //     handrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
+    // }
+    // for (let i = this.outEdges.length - 1; i >= 0; i--) {
+    //   let f = this.outEdges[i]
+    //   if (i === this.outEdges.length - 1) {
+    //     changeHandrail1.lineTo(f.p2.x / 10, f.p2.y / 10)
+    //   }
+    //   if (f.type === 1) {
+    //     changeHandrail1.lineTo(f.p1.x / 10,f.p1.y / 10)
+    //   }
+    // }
+    // for (let j = 0; j < this.inEdges.length; j++) {
+    //   let e1 = this.inEdges[j]
+    //   if (j === 0) {
+    //     changeHandrail1.lineTo(e1.p1.x / 10, e1.p1.y / 10)
     //   }
     // }
 
 
-    handrailContainer.addChild(changeHandrail1, changeHandrail, handrail)
-    // handrailContainer.addChild(handrail1)
-    this.sprite = handrailContainer
+    // const changeHandrail = new PIXI.Graphics()
+    // changeHandrail.visible = false
+    // changeHandrail.lineStyle(1, 0x4478f4)
+    // for (let i = 0; i < this.inEdges.length; i++) {
+    //   let e = this.inEdges[i]
+    //   if (i === 0) {
+    //     changeHandrail.moveTo(e.p1.x / 10, e.p1.y / 10)
+    //   }
+    //   if (e.type === 1) {
+    //     changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+    //   }
+    // }
+    // for (let i = this.outEdges.length - 1; i >= 0; i--) {
+    //   let f = this.outEdges[i]
+    //   if (i === this.outEdges.length - 1) {
+    //     changeHandrail.lineTo(f.p2.x / 10, f.p2.y / 10)
+    //   }
+    //   if (f.type === 1) {
+    //     changeHandrail.lineTo(f.p1.x / 10,f.p1.y / 10)
+    //   }
+    // }
+    // for (let j = 0; j < this.inEdges.length; j++) {
+    //   let e1 = this.inEdges[j]
+    //   if (j === 0) {
+    //     changeHandrail.lineTo(e1.p1.x / 10, e1.p1.y / 10)
+    //   }
+    // }
+
+
+    // const handrail = new PIXI.Graphics()
+    // handrail.lineStyle(1, 0x2d3037)
+    // for (let i = 0; i < this.outEdges.length; i++) {
+    //   let e = this.outEdges[i]
+    //   if (i === 0) {
+    //     handrail.moveTo(e.p1.x / 10, e.p1.y / 10)
+    //   }
+    // }
+    // for (let i = 0; i < this.inEdges.length; i++) {
+    //   let e = this.inEdges[i]
+    //   if (i === 0) {
+    //     handrail.lineTo(e.p1.x / 10, e.p1.y / 10)
+    //     handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+    //   }
+    //   else if (i === 2 && e.type === 3) {
+    //     handrail.quadraticCurveTo(e.p1.x / 10,e.p1.y / 10,e.p2.x / 10,e.p2.y /10)
+    //   }
+    //   else if (i > 2 && e.type === 1) {
+    //     handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+    //   }
+    // }
+    // for (let i = this.outEdges.length; i >= 0; i--) {
+    //   let e = this.outEdges[i]
+    //   if (i === this.outEdges.length - 1) [
+    //     handrail.lineTo(e.p2.x,e.p2.y)
+    //   ]
+    // }
+    // for (let i = 0; i < this.outEdges.length; i++) {
+    //   let e = this.outEdges[i]
+    //   if (i === 0) {
+    //     handrail.moveTo(e.p1.x / 10, e.p1.y / 10)
+    //     handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+    //   }
+    //   else if (i === 2 && e.type === 3) {
+    //     handrail.quadraticCurveTo(e.p1.x / 10,e.p1.y / 10,e.p2.x / 10,e.p2.y /10)
+    //   }
+    //   else if (i > 2 && e.type === 1) {
+    //     handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+    //   }
+    // }
+
+
+    // // const handrail1 = new PIXI.Graphics()
+    // // handrail1.lineStyle(1, 0x2d3037)
+    // // for (let i = 0; i < this.route.edges.length; i++) {
+    // //   let e = this.route.edges[i]
+    // //   console.log(e)
+    // //   if (i === 0) {
+    // //     handrail1.moveTo(e.p1.x / 10,e.p1.y / 10)
+    // //     handrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
+    // //   }
+    // //   else if (i === 2 && e.type === 3) {
+    // //     handrail1.quadraticCurveTo(e.p1.x / 10,e.p1.y / 10,e.p2.x / 10,e.p2.y /10)
+    // //   }
+    // //   else if (i > 2 && e.type === 1) {
+    // //     handrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
+    // //   }
+    // // }
+
+
+    // handrailContainer.addChild(changeHandrail1, changeHandrail, handrail)
+    // // handrailContainer.addChild(handrail1)
+    // this.sprite = handrailContainer
   }
 
   // 取消扶手选中效果

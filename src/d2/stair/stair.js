@@ -93,7 +93,7 @@ export class Stair extends BaseWidget {
 
     this.addSprites(this.flights)
     this.addSprites(this.hangingBoard)
-    // this.addSprites(this.landings)
+    this.addSprites(this.landings)
     // 判断大梁与扶手层级
     if (
       this.girders[0] &&
@@ -107,7 +107,7 @@ export class Stair extends BaseWidget {
       this.addSprites(this.handrails)
       this.addSprites(this.girders)
     }
-    // this.addSprites(this.smallColumns)
+    this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)
 
     /** 需设置整体精灵图的位置*/
