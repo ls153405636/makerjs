@@ -3,7 +3,6 @@ import { Types } from '../types/stair_v2'
 import { Default } from './config'
 import { Stair } from './stair'
 import { Edge } from '../utils/edge'
-import { StartFlight } from './start_flight'
 import { StairEdge } from './toolComp/stair_edge'
 import { StairBorder } from './toolComp/stair_border'
 

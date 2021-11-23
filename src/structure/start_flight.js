@@ -166,6 +166,7 @@ export class StartFlight extends ChildInfo{
       let stepNumDiff = this.stepNum - stepNum
       let f1 = this.parent.flights[0]
       let lengthDiff = f1.stepWidth * stepNumDiff
+      /**起步踏发生变化时，为保持楼梯总步数不变，第一段楼梯需做出相应更新变化 */
       f1.updateItem(f1.stepNum + stepNumDiff, 'stepNum')
       f1.updateItem(f1.length + lengthDiff, 'length')
       this.stepNum = stepNum
