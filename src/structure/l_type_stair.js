@@ -477,11 +477,11 @@ export class LTypeStair extends Stair {
 
   updateBigColumns () {
     this.bigColumns = []
-    this.updateBigCol(this.border.in.stairEdges[0], 'in', !this.border.clock)
-    this.updateBigCol(this.border.out.stairEdges[0], 'out', this.border.clock)
+    this.updateSideBigCol(this.border.in.stairEdges[0], 'in', !this.border.clock)
+    this.updateSideBigCol(this.border.out.stairEdges[0], 'out', this.border.clock)
   }
 
-  updateBigCol (vStairEdge, vSide, vSideOffsetPlus) {
+  updateSideBigCol (vStairEdge, vSide, vSideOffsetPlus) {
     let args = this.bigColParameters
     let size = tool.parseSpecification(args.specification)
     let offset = this.computeBigColOffset()
