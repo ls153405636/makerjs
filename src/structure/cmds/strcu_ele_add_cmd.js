@@ -10,7 +10,7 @@ export class StrucEleAddCmd extends Command {
     super()
     this.info = null
     this.type = null
-    if (type === '挂板') {
+    if (type === 'hangingBoard') {
       this.info = new HangingBoard(StructConfig.SELECTED)
       this.type = COMP_TYPES.HANGING_BOARD
     } else if ([1, 2, 3].includes(type)) {
@@ -22,6 +22,9 @@ export class StrucEleAddCmd extends Command {
     } else if (type === 5) {
       this.info = new Cloumn(StructConfig.SELECTED, type)
       this.type = COMP_TYPES.CEMENT_COMP
+    } else if (type === 'startFlight') {
+      this.info = StructConfig.SELECTED.createStartFlight()
+      this.type = COMP_TYPES.FLIGHT
     }
   }
 

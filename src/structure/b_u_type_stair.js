@@ -49,6 +49,7 @@ export class BigUTypeStair extends UTypeStair {
     depth1 = Number(depth1.toFixed(2))
     num3 = num3 + this.stepNumRule - 1
     this.stepNum = num1 + num2 + num3 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.stepHeight = hole.floorHeight / this.stepNum
     this.stepHeight = Number(this.stepHeight.toFixed(2))
     let pos1, pos2, pos3, wVec2
@@ -67,7 +68,7 @@ export class BigUTypeStair extends UTypeStair {
                                   vStepNum:num1, 
                                   vStepNumRule:Types.StepNumRule.snr_n, 
                                   vIndex:0, 
-                                  vTreadIndex:0, 
+                                  vTreadIndex:this.startFlight?.stepNum || 0, 
                                   isLast:false, 
                                   vPos:pos1, 
                                   vLVec:new Types.Vector3({x:1}), 
@@ -82,7 +83,8 @@ export class BigUTypeStair extends UTypeStair {
                                   vPos:pos2, 
                                   vLVec:new Types.Vector3({y:1}), 
                                   vWVec:wVec2, 
-                                  vLength:width - Default.STEP_LENGTH * 2})
+                                  vLength:width - Default.STEP_LENGTH * 2,
+                                  vClock:this.floadSide === Types.Side.si_right})
     this.flights[2] = new Flight({vParent:this, 
                                   vStepNum:num3, 
                                   vStepNumRule:this.stepNumRule, 
@@ -113,7 +115,7 @@ export class BigUTypeStair extends UTypeStair {
       pos3 = new Types.Vector3({x:f2.stepLength - this.girOffset, y:depth2 - this.hangOffset})
       wVec2 = new Types.Vector3({x:1})
     }
-    f1.rebuildByParent({vTreadIndex:0, 
+    f1.rebuildByParent({vTreadIndex:this.startFlight?.stepNum || 0, 
                         vPos:pos1, 
                         vLVec:new Types.Vector3({x:1}), 
                         vWVec:new Types.Vector3({y:1})})
