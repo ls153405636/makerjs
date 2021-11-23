@@ -31,10 +31,18 @@ export class StartTread extends ChildInfo {
     this.index = vIndex
     this.lVec = this.parent.lVec || new Types.Vector3()
     this.wVec = this.parent.wVec || new Types.Vector3()
+    this.pos = vPos
+    // console.log(this.pos)
+    // let gArgs = this.parent.parent.girderParameters
+    // console.log(gArgs.type)
+    // if (gArgs.type === Types.GirderType.gslab) {
+    //   this.pos = vPos.addScaledVector(this.lVec,-gArgs.depth)
+    //   console.log(this.pos)
+    // }
 
-    this.positionL = vPos || new Types.Vector3()
-    this.positionC = new THREE.Vector2(vPos.x,vPos.y).addScaledVector(this.lVec,length / 2) || new Types.Vector3()
-    this.positionR = new THREE.Vector2(vPos.x,vPos.y).addScaledVector(this.lVec,length) || new Types.Vector3()
+    this.positionL = this.pos || new Types.Vector3()
+    this.positionC = new THREE.Vector2(this.pos.x,this.pos.y).addScaledVector(this.lVec,length / 2) || new Types.Vector3()
+    this.positionR = new THREE.Vector2(this.pos.x,this.pos.y).addScaledVector(this.lVec,length) || new Types.Vector3()
 
     this.offSet1 = this.parent.stepWidth * 0.7
     this.offSet2 = this.parent.stepWidth / 6
@@ -369,10 +377,9 @@ export class StartTread extends ChildInfo {
 
   computeBigColPos () {
     /** */
-    console.log(this)
     let args = this.parent.parent.bigColParameters
     this.sideOffset = this.parent.parent.sideOffset
-    this.sideOffset >50 ? this.sideOffset = this.parent.parent.sideOffset : this.sideOffset = 45
+    // this.sideOffset >50 ? this.sideOffset = this.parent.parent.sideOffset : this.sideOffset = 45
     let bigColPositionX = 0
     let bigColPositionY = 0
     if (this.startTreadType === Types.StartTreadType.sel || this.startTreadType === Types.StartTreadType.srr) {
@@ -417,7 +424,7 @@ export class StartTread extends ChildInfo {
     this.positionX_R = 0
     this.positionY_R = 0
     if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
-      this.positionX_R = this.positionC.x + this.stepLength / 2 + this.sideOffset * 2
+      this.positionX_R = this.positionC.x + this.stepLength / 2 + this.offSet1 / 2
       this.positionY_R = left.y
     }
     else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
