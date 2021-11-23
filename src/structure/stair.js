@@ -105,9 +105,6 @@ export class Stair extends Info {
   /** 更新楼梯段*/
   updateFlights() {}
 
-  /**更新起步踏 */
-  updateStartFlight() {}
-
   /** 根据楼梯段、起步踏、休息平台等计算总步数*/
   computeStepNum() {}
 
@@ -222,6 +219,19 @@ export class Stair extends Info {
     this.startFlight = null
     this.flights.pop()
     this.rebuild()
+  }
+
+  /**更新起步踏 */
+  updateStartFlight() {
+    if (this.startFlight) {
+      let f1 = this.flights[0]
+      let pos = new Edge().setByVec(f1.pos, f1.wVec, f1.length).p2
+      pos = new Edge().setByVec(pos, f1.lVec, -this.girOffset).p2
+      this.startFlight.rebuildByParent({vPos:pos, 
+                                        vLVec:new Types.Vector3({x:1}),
+                                        vWVec:new Types.Vector3({y:1}),
+                                        vStepLength: f1.stepLength})
+    }
   }
 
 
@@ -537,8 +547,9 @@ export class Stair extends Info {
       } else {
         dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) / 2
       }
-      this.smallColumns = this.smallColumns.concat(this.landings[0].createSmallCols(dis, dis, size))
-      this.smallColumns = this.smallColumns.concat(this.landings[1].createSmallCols(dis, dis, size))
+      for (const l of this.landings) {
+        this.smallColumns = this.smallColumns.concat(l.createSmallCols(dis, dis, size))
+      }
     }
   }
 
@@ -604,7 +615,7 @@ export class Stair extends Info {
    * 更新边界一侧的大柱
    * @param {Array<import('./toolComp/stair_edge').StairEdge>} vStairEdge 本侧边集
    * @param {string} vSide 当前是哪一侧 'in' or 'out'
-   * @param {boolean} vSideOffsetPlus 大柱在楼梯宽度方向的位置由边界边偏移得到，偏移方向是否为发现方向
+   * @param {boolean} vSideOffsetPlus 大柱在楼梯宽度方向的位置由边界边偏移得到，偏移方向是否为法线方向
    */
   updateSideBigCol (vStairEdge, vSide, vSideOffsetPlus) {
     let args = this.bigColParameters

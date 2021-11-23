@@ -87,17 +87,6 @@ export class UTypeStair extends Stair {
     this.realStepNum = this.stepNum - this.stepNumRule + 1
   }
 
-  updateStartFlight() {
-    if (this.startFlight) {
-      let pos = new Types.Vector3({x:this.girOffset, y:this.depth1})
-      let f1 = this.flights[0]
-      this.startFlight.rebuildByParent({vPos:pos, 
-                                        vLVec:new Types.Vector3({x:1}),
-                                        vWVec:new Types.Vector3({y:1}),
-                                        vStepLength: f1.stepLength})
-    }
-  }
-
   getInSideOffsetPlus () {
     return this.floadSide === Types.Side.si_left
   }

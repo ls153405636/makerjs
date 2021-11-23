@@ -12,7 +12,7 @@ export const StructConfig = {
 }
 
 export const Default = {
-  FLOOR_HEIGHT: 2840,
+  FLOOR_HEIGHT: 3000,
   WALL_DEPTH: 240,
   HOLE_LENGTH: 2800,
   HOLE_WIDTH: 2500,
@@ -26,7 +26,7 @@ export const Default = {
   STEP_NUM_RULE: Types.StepNumRule.snr_n_add_1,
   STEP_NUM: 18,
   STEP_LENGTH: 900,
-  STEP_WIDTH: 259,
+  STEP_WIDTH: 240,
   TREAD_DEPTH: 30,
   RISER_DEPTH: 20,
   TREAD_NOSSING_TYPE: Types.NossingType.nno,

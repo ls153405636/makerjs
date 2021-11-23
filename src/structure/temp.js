@@ -84,19 +84,7 @@ export class StraightStair extends Stair  {
       return super.getItemValue(vItem)
     }
   }
-
-
-  updateStartFlight() {
-    if (this.startFlight) {
-      let pos = new Types.Vector3({x:this.girOffset, y:this.depth})
-      let f1 = this.flights[0]
-      this.startFlight.rebuildByParent({vPos:pos, 
-                                        vLVec:new Types.Vector3({x:1}),
-                                        vWVec:new Types.Vector3({y:1}),
-                                        vStepLength: f1.stepLength})
-    }
-  }
-
+  
   updateBorder() {
     let inEdges, outEdges
     let leftEdges = [new StairEdge(0, this.depth, 0, 0, this.flights[0])]

@@ -41,7 +41,7 @@ export class BigUTypeStair extends UTypeStair {
     let num2 = Math.floor((width - Default.STEP_LENGTH * 2) / Default.STEP_WIDTH)
     if (num2 < 1) {
       num2 = 1
-      width = Default.STEP_LENGTH * 2 + Default.width
+      width = Default.STEP_LENGTH * 2 + num2 * ((depth2 - Default.STEP_LENGTH)/num3)
     } 
     let num1 = fStepNum - num2 - num3
     num1 = Math.max(num1, 3)

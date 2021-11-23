@@ -84,6 +84,7 @@ export class SmallUTypeStair extends UTypeStair {
     }
     if (this.landings[0].corBigCol) {
       outEdges[0].endCol = this.landings[0].corBigCol
+      outEdges[1].startCol = this.landings[0].corBigCol
     }
     if (this.border) {
       this.border.rebuild(inEdges, outEdges)
