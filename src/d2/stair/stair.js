@@ -20,7 +20,7 @@ export class Stair extends BaseWidget {
     super(vPB.uuid)
     this.init(vPB)
   }
-
+  
   init(vPB) {
     D2Config.CUR_STAIR = this
     this.flights = []
@@ -40,7 +40,7 @@ export class Stair extends BaseWidget {
       this.landings.push(new Flight(l, this))
     }
     for (const hdl of vPB.handrails) {
-      this.handrails.push(new Handrail(hdl))
+      this.handrails.push(new Handrail(hdl,this))
     }
     for (const col of vPB.smallColumns) {
       this.smallColumns.push(new SmallColumn(col, this))
@@ -93,7 +93,7 @@ export class Stair extends BaseWidget {
 
     this.addSprites(this.flights)
     this.addSprites(this.hangingBoard)
-    this.addSprites(this.landings)
+    // this.addSprites(this.landings)
     // 判断大梁与扶手层级
     if (
       this.girders[0] &&
@@ -107,7 +107,7 @@ export class Stair extends BaseWidget {
       this.addSprites(this.handrails)
       this.addSprites(this.girders)
     }
-    this.addSprites(this.smallColumns)
+    // this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)
 
     /** 需设置整体精灵图的位置*/
