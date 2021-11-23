@@ -78,6 +78,7 @@ export class Stair extends Info {
     this.hangOffset = this.hangingBoard?.depth || 0
     let gArgs = this.girderParameters
     this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
+    this.startStepNum = this.startFlight?.stepNum || 0
     this.computeSideOffset()
     if (this.flights.length) {
       this.computeStepNum()

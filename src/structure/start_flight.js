@@ -26,6 +26,7 @@ export class StartFlight extends ChildInfo{
     this.modelType = Types.StartTreadType.sel
     this.shapeType = Types.StartTreadShapeType.s_no
     this.treads = []
+    this.length = 0
     this.rebuildByParent({vPos, vLVec, vWVec, vStepLength})
   }
 

@@ -43,7 +43,8 @@ export class UTypeStair extends Stair {
       })
     } else if (vKey1 === 'stepNumRule') {
       this.stepNumRule = vValue
-      this.flights[this.flights.length - 1].updateItem(vValue, vKey1, vKey2)
+      let lastIndex = this.startFlight ? this.flights.length - 2 : this.flights.length - 1
+      this.flights[lastIndex].updateItem(vValue, vKey1, vKey2)
     } else {
       super.updateItem(vValue, vKey1, vKey2)
     }
@@ -74,14 +75,15 @@ export class UTypeStair extends Stair {
   }
 
   computeStepNum () {
-    this.stepNum = this.startFlight?.stepNum || 0
+    this.stepNum = 0
     for (const f of this.flights) {
       this.stepNum = this.stepNum + f.stepNum
     }
     for (const l of this.landings) {
       this.stepNum = this.stepNum + l.stepNum
     }
-    this.stepNumRule = this.flights[this.flights.length - 1].stepNumRule
+    let lastIndex = this.startFlight ? this.flights.length - 2 : this.flights.length - 1
+    this.stepNumRule = this.flights[lastIndex].stepNumRule
     this.realStepNum = this.stepNum - this.stepNumRule + 1
   }
 
