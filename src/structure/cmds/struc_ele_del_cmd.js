@@ -5,8 +5,8 @@ import { StructConfig } from '../config'
 export class StrucEleDelCmd extends Command {
   constructor({ type }) {
     super()
-    if (type === '挂板') {
-      this.info = StructConfig.SELECTED?.hangingBoard
+    if (type === 'hangingBoard' || type === 'startFlight') {
+      this.info = StructConfig.SELECTED ? StructConfig.SELECTED[type] : null
     } else {
       this.info = StructConfig.SELECTED
     }

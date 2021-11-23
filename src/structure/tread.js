@@ -95,6 +95,7 @@ export class Tread extends ChildInfo {
     this.position = vPos || new Types.Vector3()
     this.lVec = this.parent.lVec || new Types.Vector3()
     this.wVec = this.parent.wVec || new Types.Vector3()
+    this.clock = this.parent.clock
     this.index = vIndex
     if (this.inheritL) {
       this.stepLength = this.parent.stepLength || 0
@@ -122,7 +123,7 @@ export class Tread extends ChildInfo {
     for(const i of this.border[vSide+'EdgeIndex']) {
       let e = this.outline.edges[i]
       let utilE = new Edge(e)
-      utilE.offset(vSideOffset, false)
+      utilE.offset(vSideOffset, !this.clock)
       for(const r of vRateArr) {
         let pos = new Edge(utilE.writePB()).extendP1(-utilE.getLength() * r).p1
         posArr.push(pos)

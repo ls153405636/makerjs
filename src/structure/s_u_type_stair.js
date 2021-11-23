@@ -105,6 +105,7 @@ export class SmallUTypeStair extends UTypeStair {
     depth1 = Number(depth1.toFixed(2))
     num2 = num2 + this.stepNumRule - 1
     this.stepNum = num1 + num2 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.stepHeight = hole.floorHeight / this.stepNum
     this.stepHeight = Number(this.stepHeight.toFixed(2))
     let pos1, pos2
@@ -119,7 +120,7 @@ export class SmallUTypeStair extends UTypeStair {
                                   vStepNum:num1, 
                                   vStepNumRule:Types.StepNumRule.snr_n, 
                                   vIndex:0, 
-                                  vTreadIndex:0, 
+                                  vTreadIndex:this.startFlight?.stepNum || 0, 
                                   isLast:false, 
                                   vPos:pos1, 
                                   vLVec:new Types.Vector3({x:1}), 
@@ -150,7 +151,7 @@ export class SmallUTypeStair extends UTypeStair {
       pos1 = new Types.Vector3({x:f2.stepLength+this.gap+this.girOffset, y:this.landingWidth})
       pos2 = new Types.Vector3({x:f2.stepLength-this.girOffset, y:depth2 - this.hangOffset})
     }
-    f1.rebuildByParent({vTreadIndex:0, 
+    f1.rebuildByParent({vTreadIndex:this.startFlight?.stepNum || 0, 
                         vPos:pos1, 
                         vLVec:new Types.Vector3({x:1}), 
                         vWVec:new Types.Vector3({y:1})})

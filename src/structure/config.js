@@ -26,7 +26,7 @@ export const Default = {
   STEP_NUM_RULE: Types.StepNumRule.snr_n_add_1,
   STEP_NUM: 18,
   STEP_LENGTH: 900,
-  STEP_WIDTH: 280,
+  STEP_WIDTH: 259,
   TREAD_DEPTH: 30,
   RISER_DEPTH: 20,
   TREAD_NOSSING_TYPE: Types.NossingType.nno,
@@ -44,6 +44,6 @@ export const Default = {
   HAND_SPEC: '60*80',
   HANG_BOARD_DEPTH: 40,
   LANDING_TYPE: Types.LandingCutType.lct_fifth,
-  START_TREAD_PRO_ID: 0,
+  START_TREAD_PRO_ID: 1,
   U_TYPE_GAP: 80,
 }
