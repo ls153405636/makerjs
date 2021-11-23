@@ -32,13 +32,6 @@ export class StartTread extends ChildInfo {
     this.lVec = this.parent.lVec || new Types.Vector3()
     this.wVec = this.parent.wVec || new Types.Vector3()
     this.pos = vPos
-    // console.log(this.pos)
-    // let gArgs = this.parent.parent.girderParameters
-    // console.log(gArgs.type)
-    // if (gArgs.type === Types.GirderType.gslab) {
-    //   this.pos = vPos.addScaledVector(this.lVec,-gArgs.depth)
-    //   console.log(this.pos)
-    // }
 
     this.positionL = this.pos || new Types.Vector3()
     this.positionC = new THREE.Vector2(this.pos.x,this.pos.y).addScaledVector(this.lVec,length / 2) || new Types.Vector3()

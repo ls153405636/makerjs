@@ -10,9 +10,11 @@ export class Edge {
     if (vPB) {
       this.p1 = new THREE.Vector2(vPB.p1.x, vPB.p1.y)
       this.p2 = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
+      this.controlPos = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
+      this.type = vPB.type
     }
     this.vec = null
-    // this.type = vPB.type
+    
     this.normal = null
   }
 
@@ -173,6 +175,7 @@ export class Edge {
     return new Types.Edge({
       p1: new Types.Vector3({ x: this.p1.x, y: this.p1.y }),
       p2: new Types.Vector3({ x: this.p2.x, y: this.p2.y }),
+      // controlPos: new Types.Vector3({x:this.controlPos.x, y:this.controlPos.y}),
       type: 1
     })
   }

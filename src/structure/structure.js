@@ -5,7 +5,7 @@ import { StructConfig } from './config'
 import { RectHole } from './hole'
 import { LHole } from './hole'
 import { LTypeStair } from './l_type_stair'
-//import { StraightStair } from './straight_stair'
+// import { StraightStair } from './straight_stair'
 import { StraightStair } from './temp'
 import { SmallUTypeStair } from './s_u_type_stair'
 

@@ -157,7 +157,7 @@ export class Stair extends Info {
     let pos = firstTread.position
     let gArgs = this.girderParameters
     if (gArgs.type === Types.GirderType.gslab) {
-      pos = new Edge().setByVec(pos, f1.lVec, -gArgs.depth/2)
+      pos = new Edge().setByVec(pos, f1.lVec, -gArgs.depth).p2
     }
     return new StartFlight({vParent:this,
                             vLVec:new Types.Vector3({x:1}),
