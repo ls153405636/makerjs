@@ -41,7 +41,7 @@ export class StraightStair extends Stair  {
   }
 
   computeStepNum () {
-    this.stepNum = this.flights[0].stepNum
+    this.stepNum = this.flights[0].stepNum + this.startFlight?.stepNum || 0
     this.stepNumRule = this.flights[0].stepNumRule
     this.realStepNum = this.stepNum - this.stepNumRule + 1
   }
@@ -71,7 +71,7 @@ export class StraightStair extends Stair  {
     if (vKey2 && ['model', 'material'].includes(vKey2)) {
       console.log(1)
     } else if (['stepNum','stepNumRule'].includes(vKey1)) {
-      
+
       this.flights[0].updateItem(vValue, vKey1, vKey2)
     } else {
       super.updateItem(vValue, vKey1, vKey2)
