@@ -68,7 +68,7 @@ export class StartFlight extends ChildInfo{
     let outlines = []
     if (this.modelType === Types.StartTreadType.sel) {
       outlines = this.createElOutline()
-    } else if (0) {
+    } else if (outlines === 1) {
       /**补全剩余几种 */
     }
 

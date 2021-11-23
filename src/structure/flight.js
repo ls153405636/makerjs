@@ -1,4 +1,5 @@
 import { Types } from '../types/stair_v2'
+import { Edge } from '../utils/edge'
 import { ChildInfo } from './child_info'
 import { Default } from './config'
 import { StartTread } from './start_tread'
@@ -87,16 +88,25 @@ export class Flight extends ChildInfo {
     let commonParas = { vParent: this, vIsLast: false }
     for (let i = 0; i < step_num; i++) {
       let index = step_num - i + this.treadIndex
-      let pos = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(
-        this.wVec,
-        widthSum
-      )
+      let pos = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(this.wVec,widthSum)
       let paras = { ...commonParas, vIndex: index, vPos: pos, vIsLast: false }
       if (this.treads[step_num - i - 1]) {
+        if (i === step_num - 1 && this.startTread) {
+          let gArgs = this.parent.girderParameters
+          if (gArgs.type === Types.GirderType.gslab) {
+            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth)
+            console.log(paras.pos)
+          }
+        }
         this.treads[step_num - i - 1].rebuildByParent(paras)
         widthSum = widthSum + this.treads[step_num - i - 1].stepWidth
       } else {
         if (i === step_num - 1 && this.startTread) {
+          let gArgs = this.parent.girderParameters
+          if (gArgs.type === Types.GirderType.gslab) {
+            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth)
+          }
+          
           this.treads[step_num - i - 1] = new StartTread(paras)
         }
         else {
