@@ -84,6 +84,7 @@ export class SmallUTypeStair extends UTypeStair {
     }
     if (this.landings[0].corBigCol) {
       outEdges[0].endCol = this.landings[0].corBigCol
+      outEdges[1].startCol = this.landings[0].corBigCol
     }
     if (this.border) {
       this.border.rebuild(inEdges, outEdges)
@@ -120,7 +121,7 @@ export class SmallUTypeStair extends UTypeStair {
                                   vStepNum:num1, 
                                   vStepNumRule:Types.StepNumRule.snr_n, 
                                   vIndex:0, 
-                                  vTreadIndex:this.startFlight?.stepNum || 0, 
+                                  vTreadIndex:0, 
                                   isLast:false, 
                                   vPos:pos1, 
                                   vLVec:new Types.Vector3({x:1}), 
@@ -151,11 +152,11 @@ export class SmallUTypeStair extends UTypeStair {
       pos1 = new Types.Vector3({x:f2.stepLength+this.gap+this.girOffset, y:this.landingWidth})
       pos2 = new Types.Vector3({x:f2.stepLength-this.girOffset, y:depth2 - this.hangOffset})
     }
-    f1.rebuildByParent({vTreadIndex:this.startFlight?.stepNum || 0, 
+    f1.rebuildByParent({vTreadIndex:this.startStepNum, 
                         vPos:pos1, 
                         vLVec:new Types.Vector3({x:1}), 
                         vWVec:new Types.Vector3({y:1})})
-    f2.rebuildByParent({vTreadIndex:f1.stepNum + this.landings[0].stepNum + this.landings[1].stepNum, 
+    f2.rebuildByParent({vTreadIndex:this.startStepNum + f1.stepNum + this.landings[0].stepNum + this.landings[1].stepNum, 
                         vPos:pos2, 
                         vLVec:new Types.Vector3({x:-1}), 
                         vWVec:new Types.Vector3({y:-1})})
@@ -167,7 +168,7 @@ export class SmallUTypeStair extends UTypeStair {
     let f1SL = this.flights[0].stepLength
     let f2SL = this.flights[1].stepLength
     let paras1 = {vParent:this, 
-                  vTreadIndex:f1.stepNum,
+                  vTreadIndex:this.startStepNum + f1.stepNum,
                   vLastStepWidth:f1.stepWidth,
                   vNextStepWidth:f2.stepWidth}
     let paras2 = {vParent:this,
@@ -193,7 +194,7 @@ export class SmallUTypeStair extends UTypeStair {
     paras2.vBorder = tool.createRectOutline(ori2, f2SL + this.gap - this.girOffset, this.landingWidth - this.girOffset)
     if (this.landings.length) {
       this.landings[0].rebuildByParent(paras1)
-      this.landings[1].rebuildByParent({...paras2, vTreadIndex:f1.stepNum+this.landings[0].stepNum})
+      this.landings[1].rebuildByParent({...paras2, vTreadIndex:this.startStepNum + f1.stepNum+this.landings[0].stepNum})
     } else {
       this.landings[0] = new Landing(paras1)
       this.landings[1] = new Landing({...paras2, vTreadIndex:f1.stepNum+this.landings[0].stepNum})

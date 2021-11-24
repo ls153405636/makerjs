@@ -43,7 +43,8 @@ export class UTypeStair extends Stair {
       })
     } else if (vKey1 === 'stepNumRule') {
       this.stepNumRule = vValue
-      this.flights[this.flights.length - 1].updateItem(vValue, vKey1, vKey2)
+      let lastIndex = this.startFlight ? this.flights.length - 2 : this.flights.length - 1
+      this.flights[lastIndex].updateItem(vValue, vKey1, vKey2)
     } else {
       super.updateItem(vValue, vKey1, vKey2)
     }
@@ -54,6 +55,7 @@ export class UTypeStair extends Stair {
     this.landings.forEach(l=>{
       fStepNum = fStepNum - l.stepNum
     })
+    fStepNum = fStepNum - this.startFlight?.stepNum || 0
     let stepNumArr = []
     let stepNumSum = 0
     let i = 0
@@ -80,19 +82,9 @@ export class UTypeStair extends Stair {
     for (const l of this.landings) {
       this.stepNum = this.stepNum + l.stepNum
     }
-    this.stepNumRule = this.flights[this.flights.length - 1].stepNumRule
+    let lastIndex = this.startFlight ? this.flights.length - 2 : this.flights.length - 1
+    this.stepNumRule = this.flights[lastIndex].stepNumRule
     this.realStepNum = this.stepNum - this.stepNumRule + 1
-  }
-
-  updateStartFlight() {
-    if (this.startFlight) {
-      let pos = new Types.Vector3({x:this.girOffset, y:this.depth1})
-      let f1 = this.flights[0]
-      this.startFlight.rebuildByParent({vPos:pos, 
-                                        vLVec:new Types.Vector3({x:1}),
-                                        vWVec:new Types.Vector3({y:1}),
-                                        vStepLength: f1.stepLength})
-    }
   }
 
   getInSideOffsetPlus () {
