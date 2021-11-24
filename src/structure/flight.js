@@ -94,8 +94,7 @@ export class Flight extends ChildInfo {
         if (i === step_num - 1 && this.startTread) {
           let gArgs = this.parent.girderParameters
           if (gArgs.type === Types.GirderType.gslab) {
-            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth)
-            console.log(paras.pos)
+            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth).p2
           }
         }
         this.treads[step_num - i - 1].rebuildByParent(paras)
@@ -104,7 +103,7 @@ export class Flight extends ChildInfo {
         if (i === step_num - 1 && this.startTread) {
           let gArgs = this.parent.girderParameters
           if (gArgs.type === Types.GirderType.gslab) {
-            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth)
+            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth).p2
           }
           
           this.treads[step_num - i - 1] = new StartTread(paras)

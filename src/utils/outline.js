@@ -79,7 +79,7 @@ export class Outline {
         newEdges.push(new Types.Edge({
           p1: new Types.Vector3({x:newP1.x, y:newP1.y, z:0}),
           p2: new Types.Vector3({x:newP2.x, y:newP2.y, z:0}),
-          controlPos: conPoil,
+          controlPos: conPoi,
           type: Types.EdgeType.ebeszer
         }))
         

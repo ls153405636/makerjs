@@ -20,6 +20,7 @@ export class StartFlight extends ChildInfo{
   constructor ({vParent, vPos, vLVec, vWVec, vStepLength, vStepWidth, vStepHeight}) {
     super(vParent)
     this.stepLength = vStepLength
+    this.initStePlength = vStepLength
     this.stepWidth = vStepWidth
     this.stepHeight = vStepHeight
     this.stepNum = 1 //需根据当前的
@@ -50,7 +51,12 @@ export class StartFlight extends ChildInfo{
   rebuildByParent ({vPos, vLVec, vWVec, vStepLength}) {
     this.lVec = vLVec
     this.wVec = vWVec
-    this.positionL = vPos || new Types.Vector3()
+    this.pos = vPos
+    let gArgs = this.parent.girderParameters
+    if (gArgs.type === Types.GirderType.gslab) {
+      this.pos = new Edge().setByVec(this.pos,this.lVec,-gArgs.depth).p2
+    }
+    this.positionL = this.pos || new Types.Vector3()
     this.positionC = new Edge().setByVec(this.positionL, this.lVec, vStepLength/2).p2
     this.positionR = new Edge().setByVec(this.positionL, this.lVec, vStepLength).p2
 
@@ -67,17 +73,17 @@ export class StartFlight extends ChildInfo{
   updateTreads () {
     let outlines = []
     if (this.modelType === Types.StartTreadType.sel) {
-      outlines = this.createElOutline(Types.StartTreadType.sel)
+      outlines = this.createElOutline()
       /**补全剩余几种 */
     }
-    if (this.modelType === Types.StartTreadType.sel_2) {
-      outlines = this.createElDOutline(Types.StartTreadType.sel_2)
+    else if (this.modelType === Types.StartTreadType.sel_2) {
+      outlines = this.createElDOutline()
     }
-    if (this.modelType === Types.StartTreadType.srr) {
-      outlines = this.createRROutline(Types.StartTreadType.srr)
+    else if (this.modelType === Types.StartTreadType.srr) {
+      outlines = this.createRROutline()
     }
-    if (this.modelType === Types.StartTreadType.srr_2) {
-      outlines = this.createRRDOutline(Types.StartTreadType.srr_2)
+    else if (this.modelType === Types.StartTreadType.srr_2) {
+      outlines = this.createRRDOutline()
     }
 
     for (let i = 0; i < outlines.length; i++) {
@@ -187,12 +193,13 @@ export class StartFlight extends ChildInfo{
   createElDOutline() {
 
     let outline = new Types.Outline()
+    let outline1 = new Types.Outline()
     let start = this.computeRealPos()
     let rectOutline = tool.createRectOutline(start, this.stepLength, this.stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边
     let lE, rE, lFE, rFE //分别为左边、右边、左前边，右前边
-    let lE_d, rE_d, lFE_d, rFE_d
+    let lE_d, rE_d, lFE_d, rFE_d // 第二层左边、右边、左前边，右前边
 
     if (this.shapeType === Types.StartTreadShapeType.s_right) {
       rE = rectOutline.edges[1]
@@ -217,8 +224,9 @@ export class StartFlight extends ChildInfo{
       lFE_d = this.createBeszerEdge(rFE_d.p2, this.lVec, -this.stepLength / 2-this.offSet1 * 2, this.wVec, -this.stepWidth - this.offSet2)
       lE_d = this.createBeszerEdge(lFE_d.p2, this.wVec, -this.stepWidth, this.lVec, this.offSet1 * 2)
     }
-    outline.edges.push(bE,rE,rFE,lFE,lE,bE,rE_d,rFE_d,lFE_d,lE_d)
-    return [outline]
+    outline.edges.push(bE,rE,rFE,lFE,lE)
+    outline1.edges.push(bE,rE_d,rFE_d,lFE_d,lE_d)
+    return [outline1,outline]
   }
 
   // 单层圆角矩形
@@ -256,13 +264,14 @@ export class StartFlight extends ChildInfo{
   // 双层圆角矩形
   createRRDOutline() {
     let outline = new Types.Outline()
+    let outline1 = new Types.Outline()
     let start = this.computeRealPos()
     let rectOutline = tool.createRectOutline(start, this.stepLength, this.stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边
     let dE = rectOutline.edges[2]//底边
-    let rE = rectOutline.edges[1]
-    let lE = rectOutline.edges[3]
+    let rE = rectOutline.edges[1]// 右边
+    let lE = rectOutline.edges[3]// 左边
     let new_rE = new Edge(rectOutline.edges[1]).extendP2(this.stepWidth)
     let new_lE = new Edge(rectOutline.edges[3]).extendP2(this.stepWidth)
     let new_dE = new Edge(dE).offset(this.stepWidth)
@@ -282,25 +291,36 @@ export class StartFlight extends ChildInfo{
       lArc_d = this.createArcEdge(new_dE.p2,this.wVec, -this.stepWidth,-Math.PI / 2, Math.PI / 2, false)
     }
     if (this.shapeType === Types.StartTreadShapeType.s_right) {
-      outline.edges.push(bE,rE,dE,lArc,bE,new_rE,new_dE,lArc_d)
+      outline.edges.push(bE,rE,dE,lArc)
+      outline1.edges.push(bE,new_rE,new_dE,lArc_d)
     }else if (this.shapeType === Types.StartTreadShapeType.s_left) {
-      outline.edges.push(bE,rArc,dE,lE,bE,rArc_d,new_dE,lL)
+      outline.edges.push(bE,rArc,dE,lE)
+      outline1.edges.push(bE,rArc_d,new_dE,lL)
     }else {
-      outline.edges.push(bE,rArc, dE,lArc,bE,rArc_d,new_dE,lArc_d)
+      outline.edges.push(bE,rArc, dE,lArc)
+      outline1.edges.push(bE,rArc_d,new_dE,lArc_d)
     }
-    return [outline]
+    return [outline1,outline]
   }
 
   updateItem(vValue, vKey1, vKey2) {
-    if (vKey1 === 'modelType') {
-      let stepNum = 2 //根据类型获取踏步数
+    if (vKey1=== 'modelType') {
+      this.modelType = vValue
+      let stepNum = 0 //根据类型获取踏步数
+      if (this.modelType === 1 || this.modelType === 3) {
+        stepNum = 1
+      }
+      else if (this.modelType === 2 || this.modelType === 4) {
+        stepNum = 2
+      }
+      this.treads = []
       let stepNumDiff = this.stepNum - stepNum
       let f1 = this.parent.flights[0]
       let lengthDiff = f1.stepWidth * stepNumDiff
       f1.updateItem(f1.stepNum + stepNumDiff, 'stepNum')
       f1.updateItem(f1.length + lengthDiff, 'length')
       this.stepNum = stepNum
-    } else {
+    }else {
       super.updateItem(vValue, vKey1, vKey2)
     }
   }
@@ -311,63 +331,75 @@ export class StartFlight extends ChildInfo{
    */
   computeBigColPos () {
     /** */
-    let args = this.parent.parent.bigColParameters
-    this.sideOffset = this.parent.parent.sideOffset
-    this.sideOffset >50 ? this.sideOffset = this.parent.parent.sideOffset : this.sideOffset = 45
+    let startTreadoffSet1 = this.parent.flights[this.parent.flights.length - 1].offSet1
+    this.sideOffset = this.parent.sideOffset
+    // this.sideOffset >50 ? this.sideOffset = this.parent.sideOffset : this.sideOffset = 45
     this.positionX = 0
     this.positionY = 0
-    if (this.modelType === Types.StartTreadType.sel || this.modelType === Types.StartTreadType.srr) {
+    if (this.modelType === Types.StartTreadType.sel || this.modelType === Types.StartTreadType.sel_2) {
       if (this.shapeType === Types.StartTreadShapeType.s_no) {
-        this.positionX = this.positionC.x - this.stepLength / 2 - this.sideOffset * 2
-        this.positionY = this.positionC.y + this.stepWidth + this.offSet2 * 2
+        this.positionX = this.positionC.x - this.stepLength / 2 - this.offSet1 / 2
+        this.positionY = this.positionC.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_left) {
-        this.positionX = this.positionL.x - this.sideOffset * 2
-        this.positionY = this.positionL.y + this.stepWidth + this.offSet2 * 2
+        this.positionX = this.positionL.x + this.sideOffset
+        this.positionY = this.positionL.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_right) {
-        this.positionX = this.positionR.x - this.sideOffset * 2 - this.stepLength
-        this.positionY = this.positionR.y + this.stepWidth + this.offSet2 * 2
+        this.positionX = this.positionR.x - this.stepLength - this.offSet1 / 2
+        this.positionY = this.positionR.y + this.stepWidth / 2
       }
-    } else {
+    }
+    else {
       if (this.shapeType === Types.StartTreadShapeType.s_no) {
-        this.positionX = this.positionC.x - this.stepLength / 2 - this.sideOffset * 2
-        this.positionY = this.positionC.y + this.stepWidth * 2 + this.offSet2 * 2
+        this.positionX = this.positionC.x - this.stepLength / 2 - this.stepWidth / 4
+        this.positionY = this.positionC.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_left) {
-        this.positionX = this.positionL.x - this.sideOffset * 2
-        this.positionY = this.positionL.y + this.stepWidth * 2 + this.offSet2 * 2
+        this.positionX = this.positionL.x + this.sideOffset
+        this.positionY = this.positionL.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_right) {
-        this.positionX = this.positionR.x - this.sideOffset * 2 - this.stepLength
-        this.positionY = this.positionR.y + this.stepWidth * 2 + this.offSet2 * 2
+        this.positionX = this.positionR.x - this.stepLength - this.stepWidth / 4
+        this.positionY = this.positionR.y + this.stepWidth / 2
       }
     }
     let left = new Types.Vector3({
       x: this.positionX,
       y: this.positionY
-      })
+    })
 
-    if (args.posType === Types.BigColumnPosType.bcp_first) {
-      left.y = left.y - this.stepWidth / 2 - this.offSet2 * 2
-    }
-    if (args.posType === Types.BigColumnPosType.bcp_second) {
-      left.y = left.y - this.stepWidth - this.stepWidth / 2 - this.offSet2 * 2
-    }
     
     this.positionX_R = 0
     this.positionY_R = 0
-    if (this.shapeType === Types.StartTreadShapeType.s_no) {
-      this.positionX_R = this.positionC.x + this.stepLength / 2 + this.sideOffset * 2
-      this.positionY_R = left.y
+    if (this.modelType === Types.StartTreadType.sel || this.modelType === Types.StartTreadType.sel_2) {
+      if (this.shapeType === Types.StartTreadShapeType.s_no) {
+        this.positionX_R = this.positionC.x + this.stepLength / 2 + this.offSet1 / 2
+        this.positionY_R = left.y
+      }
+      else if (this.shapeType === Types.StartTreadShapeType.s_left) {
+        this.positionX_R = this.positionL.x + this.stepLength + this.offSet1 / 2
+        this.positionY_R = left.y
+      }
+      else if (this.shapeType === Types.StartTreadShapeType.s_right) {
+        this.positionX_R = this.positionR.x -this.sideOffset
+        this.positionY_R = left.y
+      }
     }
-    else if (this.shapeType === Types.StartTreadShapeType.s_left) {
-      this.positionX_R = this.positionL.x + this.sideOffset * 2 + this.stepLength
-      this.positionY_R = left.y
-    }
-    else if (this.shapeType === Types.StartTreadShapeType.s_right) {
-      this.positionX_R = this.positionR.x + this.sideOffset * 2 
-      this.positionY_R = left.y
+    else {
+      if (this.shapeType === Types.StartTreadShapeType.s_no) {
+        this.positionX_R = this.positionC.x + this.stepLength / 2 + this.stepWidth / 4
+        this.positionY_R = left.y
+      }
+      else if (this.shapeType === Types.StartTreadShapeType.s_left) {
+        this.positionX_R = this.positionL.x + this.stepLength + this.stepWidth / 4
+        this.positionY_R = left.y
+      }
+      else if (this.shapeType === Types.StartTreadShapeType.s_right) {
+        this.positionX_R = this.positionR.x -this.sideOffset
+        this.positionY_R = left.y
+      }
+
     }
     let right = new Types.Vector3({
       x: this.positionX_R,
@@ -384,9 +416,176 @@ export class StartFlight extends ChildInfo{
    */
   createHandRouteEdges () {
     /**补全此函数 */
+    if (this.parent.flights[0]) {
+      this.width = this.parent.flights[0].stepLength
+    } else {
+      this.width = Default.STEP_LENGTH
+    }
+    console.log(this)
+    console.log(this.parent)
+    let handrailHeight = this.parent.handrailParameters.height
+    console.log(handrailHeight)
+    let stepLength = this.parent.flights[this.parent.flights.length - 1].treads[0].stepLength
+    let stepWidth = this.parent.flights[this.parent.flights.length - 1].treads[0].stepWidth
+    let sideOffset = this.parent.sideOffset
+    let arcRL = 90 //左弯头半径
+    let arcRR = 90 //右弯头半径
+    if (this.shapeType === 2) {
+      arcRL = 45
+    } else if (this.shapeType === 3) {
+      arcRR = 45
+    }
+    let leftC = new Types.Outline()
+    let rightC = new Types.Outline()
+    let leftPois = []
+    let rightPois = []
+
+    // 左边扶手
+    // 椭圆踏板扶手路径
+    if (this.modelType === Types.StartTreadType.sel || this.modelType === Types.StartTreadType.sel_2) {
+      if (this.shapeType === Types.StartTreadShapeType.s_right) {
+        leftPois[0] = new Types.Vector3({
+          x: this.positionR.x - this.stepLength - this.offSet1 / 2 ,
+          y: this.positionR.y + stepWidth / 2,
+          z: handrailHeight,
+        })
+      } else {
+        leftPois[0] = new Types.Vector3({
+          x: this.positionC.x - this.stepLength / 2 - this.offSet1 / 2,
+          y: this.positionC.y + this.stepWidth / 2,
+          z: handrailHeight,
+        })
+      }
+    }
+    // 圆角矩形踏板扶手路径
+    else {
+      if (this.shapeType === Types.StartTreadShapeType.s_right) {
+        leftPois[0] = new Types.Vector3({
+          x: this.positionR.x - this.stepLength - this.stepWidth / 4 ,
+          y: this.positionR.y + this.stepWidth / 2,
+          z: handrailHeight,
+        })
+      }else {
+        leftPois[0] = new Types.Vector3({
+          x: this.positionC.x - this.stepLength / 2 - this.stepWidth / 4,
+          y: this.positionC.y + this.stepWidth / 2,
+          z: handrailHeight,
+        })
+      }
+    }
+    leftPois[1] = new Types.Vector3({
+      x: sideOffset - arcRL,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: handrailHeight,
+    })
+    leftPois[2] = new Types.Vector3({
+      x: sideOffset,
+      y: this.positionC.y + this.stepWidth / 2 - arcRL,
+      z: handrailHeight,
+    })
+    leftPois[3] = new Types.Vector3({
+      x: sideOffset,
+      y: this.positionC.y,
+      z: handrailHeight
+    })
+    leftPois[4] = new Types.Vector3({
+      x: sideOffset,
+      y: 0,
+      z: handrailHeight
+    })
+
+    // 右边扶手
+    if (this.modelType === Types.StartTreadType.sel || this.modelType === Types.StartTreadType.sel_2) {
+      if (this.shapeType === Types.StartTreadShapeType.s_left) {
+        rightPois[0] = new Types.Vector3({
+          x: this.positionL.x + this.stepLength + this.offSet1 / 2,
+          y: this.positionL.y + this.stepWidth / 2,
+          z: handrailHeight
+        })
+      }else {
+        rightPois[0] = new Types.Vector3({
+          x: this.positionC.x + this.stepLength / 2 + this.offSet1 / 2,
+          y: this.positionC.y + this.stepWidth / 2,
+          z: handrailHeight
+        })
+      }
+    }else {
+      if (this.shapeType === Types.StartTreadShapeType.s_left) {
+        rightPois[0] = new Types.Vector3({
+          x: this.positionL.x + this.stepLength + this.stepWidth / 4,
+          y: this.positionL.y + this.stepWidth / 2,
+          z: handrailHeight
+        })
+      }else {
+        rightPois[0] = new Types.Vector3({
+          x: this.positionC.x + this.stepLength / 2 + this.stepWidth / 4,
+          y: this.positionC.y + this.stepWidth / 2,
+          z: handrailHeight
+        })
+      }
+    }
+    rightPois[1] = new Types.Vector3({
+      x: this.width - sideOffset + arcRR,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: handrailHeight
+    })
+    rightPois[2] = new Types.Vector3({
+      x: this.width - sideOffset,
+      y: this.positionC.y + this.stepWidth / 2 - arcRR,
+      z: handrailHeight
+    })
+    rightPois[3] = new Types.Vector3({
+      x: this.width - sideOffset,
+      y: this.positionC.y,
+      z: handrailHeight
+    })
+    rightPois[4] = new Types.Vector3({
+      x: this.width - sideOffset,
+      y: 0,
+      z: handrailHeight
+    })
+
+    for (let i = 0; i < leftPois.length - 1; i++) {
+      if (i !== 1) {
+        leftC.edges.push(
+          new Types.Edge({
+            p1: leftPois[i],
+            p2: leftPois[i + 1],
+            type: Types.EdgeType.estraight,
+          })
+        )
+      }
+    }
+    let firstLE = leftC.edges[0]
+    let bzrLE = this.createBeszerEdge(firstLE.p2,this.lVec,arcRL,this.wVec,-arcRL)
+    leftC.edges.splice(1,0,bzrLE)
+    if (this.shapeType === 2) {
+      leftC.edges.splice(0,2)
+    }
+
+    for (let i = 0; i < rightPois.length - 1; i++) {
+      if (i !== 1) {
+        rightC.edges.push(
+          new Types.Edge({
+            p1: rightPois[i],
+            p2: rightPois[i + 1],
+            type: Types.EdgeType.estraight,
+          })
+        )
+      }
+    }
+    let firstRE = rightC.edges[0]
+    let bzrRE = this.createBeszerEdge(firstRE.p2,this.lVec,-arcRR,this.wVec,-arcRR)
+    rightC.edges.splice(1,0,bzrRE)
+    if (this.shapeType === 3) {
+      rightC.edges.splice(0,2)
+    }
+
+    let left = leftC.edges
+    let right = rightC.edges
     return {
-      left:[],
-      right:[]
+      left,
+      right
     }
   }
 

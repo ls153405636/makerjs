@@ -94,7 +94,7 @@ export class Stair extends Info {
     this.updateGirders()
     this.updateHandrails()
     this.updateSmallColumns()
-    // this.updateBigColumns()
+    this.updateBigColumns()
     this.updateCanvas('Stair')
   }
   
@@ -507,7 +507,7 @@ export class Stair extends Info {
         if (vSide === 'in') {
           route.edges = vSideOffsetPlus ? right.concat(route.edges) : left.concat(route.edges)
         } else if (vSide === 'out') {
-          route.edges = vSideOffsetPlus ? left.concat(route.edges) : right.concat(route.edges)
+          route.edges = vSideOffsetPlus ? right.concat(route.edges) : left.concat(route.edges)
         }
       }
       if (borSide.handrails[i]) {
@@ -621,7 +621,7 @@ export class Stair extends Info {
       if (vSide === 'in') {
         position = vSideOffsetPlus ? right : left
       } else if (vSide === 'out') {
-        position = vSideOffsetPlus ? left : right
+        position = vSideOffsetPlus ? right : left
       }
     }
     if (this.border[vSide].bigCol) {

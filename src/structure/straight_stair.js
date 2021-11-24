@@ -176,7 +176,8 @@ export class StraightStair extends Stair  {
 
 
   createBigColumns() {
-    this.startTreadShapeType = this.flights[0].treads[0].startTreadShapeType
+    this.shapeType = this.flights[0].treads[0].startTreadShapeType
+    console.log(this.shapeType)
     this.bigColumns = []
     let args = this.bigColParameters
     let size = tool.parseSpecification(args.specification)
@@ -199,22 +200,22 @@ export class StraightStair extends Stair  {
       y: leftPosition.y,
     })
     if (this.bigColumns.length === 2) {
-      if (this.startTreadShapeType === 1) {
+      if (this.shapeType === 1) {
         this.bigColumns[0].rebuildByParent(rst.left)
         this.bigColumns[1].rebuildByParent(rst.right)
-      } else if (this.startTreadShapeType === 2) {
+      } else if (this.shapeType === 2) {
         this.bigColumns[1].rebuildByParent(rst.right)
       } else {
         this.bigColumns[0].rebuildByParent(rst.left)
       }
     }
     else {
-      if (this.startTreadShapeType === 1) {
+      if (this.shapeType === 1) {
         this.bigColumns.push(
           new BigColumn({vParent:this, vPosition:rst.left}),
           new BigColumn({vParent:this, vPosition:rst.right}),
         )
-      } else if (this.startTreadShapeType === 2) {
+      } else if (this.shapeType === 2) {
         this.bigColumns.push(
           new BigColumn({vParent:this, vPosition:rst.right}),
         )
@@ -284,15 +285,6 @@ export class StraightStair extends Stair  {
     this.stepLength = this.flights[0].treads[0].stepLength
     this.positionC = this.flights[0].treads[0].positionC
     let startTreadoffSet1 = this.flights[0].treads[0].offSet1
-    
-    // let bigColSize = tool.parseSpecification(bArgs.specification)
-    // let stepWidth = this.flights[0].getTreadByNum(0).stepWidth
-    // if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
-    //   startY = this.depth - stepWidth / 2 - bigColSize.y / 2
-    // }
-    // if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
-    //   startY = this.depth - (stepWidth * 3) / 2 - bigColSize.y / 2
-    // }
     
     leftPois[0] = new Types.Vector3({
       x: this.positionC.x - this.stepLength / 2 - startTreadoffSet1 / 2,
