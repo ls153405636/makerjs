@@ -44,6 +44,16 @@ export class Tread extends ChildInfo {
     this.outline = tool.createRectOutline(this.position, this.stepLength - 2 * xOffset, this.stepWidth, this.lVec, this.wVec)
   }
 
+  createTreadOutline () {
+    let tArgs = this.parent.parent.treadParameters
+    let rArgs = this.parent.parent.riserParameters
+    let gArgs = this.parent.parent.girderParameters
+    let sideOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
+    let backOffset = tArgs.nossing + rArgs.riserExist ? rArgs.depth : 0
+    let ori = new Edge().setByVec(this.position, this.wVec, -backOffset).p2
+    this.treadOutline = tool.createRectOutline(ori, this.stepLength-2*sideOffset, this.stepWidth+backOffset, this.lVec, this.wVec)
+  }
+
   rebuildByParent ({vIndex, vPois, vPos}) {
     this.position = vPos || new Types.Vector3()
     this.lVec = this.parent.lVec || new Types.Vector3()
@@ -63,6 +73,7 @@ export class Tread extends ChildInfo {
       this.type = Types.TreadType.tph
     } else {
       this.createOutline()
+      this.createTreadOutline()
       this.type = Types.TreadType.trect
       this.border = {
         inEdgeIndex:[3],
@@ -100,6 +111,7 @@ export class Tread extends ChildInfo {
       index:this.index,
       isLast:this.isLast,
       stepOutline:this.outline,
+      treadOutline:this.treadOutline,
       stepHeight:this.stepHeight,
       stepWidth:this.stepWidth,
       stepLength:this.stepLength,

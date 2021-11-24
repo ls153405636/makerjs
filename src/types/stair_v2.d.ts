@@ -1680,6 +1680,9 @@ export namespace Types {
         /** Tread stepOutline */
         stepOutline?: (Types.IOutline|null);
 
+        /** Tread treadOutline */
+        treadOutline?: (Types.IOutline|null);
+
         /** Tread index */
         index?: (number|null);
 
@@ -1722,6 +1725,9 @@ export namespace Types {
 
         /** Tread stepOutline. */
         public stepOutline?: (Types.IOutline|null);
+
+        /** Tread treadOutline. */
+        public treadOutline?: (Types.IOutline|null);
 
         /** Tread index. */
         public index: number;

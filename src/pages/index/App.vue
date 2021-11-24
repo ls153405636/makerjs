@@ -37,9 +37,6 @@ export default {
   },
   mounted() {
     new Core().execute(new Command(new Core().cmds.BootCmd))
-
-    //initProj()
-    // new Structure().initHole('rect').initStair('stright')
   },
 }
 </script>

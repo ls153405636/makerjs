@@ -6,11 +6,28 @@ export class Edge {
    * @param {Types.Edge} vPB
    */
   constructor(vPB) {
-    this.p1 = new THREE.Vector2(vPB.p1.x, vPB.p1.y)
-    this.p2 = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
+    if (vPB) {
+      this.p1 = new THREE.Vector2(vPB.p1.x, vPB.p1.y)
+      this.p2 = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
+    }
     this.vec = null
     this.normal = null
   }
+
+
+  /**
+   * 通过起点和方向来初始化边
+   * @param {Types.Vector3} vP1 
+   * @param {Types.Vector3} vVec
+   * @param {Number} vLength 
+   */
+  setByVec (vP1, vVec, vLength) {
+    this.p1 = new THREE.Vector2(vP1.x, vP1.y)
+    this.vec = new THREE.Vector2(vVec.x, vVec.y)
+    this.p2 = this.p1.clone().addScaledVector(this.vec, vLength)
+    return this.writePB()
+  }
+
 
   /**
    *
@@ -70,6 +87,8 @@ export class Edge {
       this.normal = this.getVec()
         .rotateAround(Edge.center, -Math.PI / 2)
         .normalize()
+      this.normal.x = Number(this.normal.x.toFixed(2))
+      this.normal.y = Number(this.normal.y.toFixed(2))
     }
     return this.normal.clone()
   }

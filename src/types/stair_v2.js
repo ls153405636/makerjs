@@ -4790,6 +4790,7 @@ export const Types = $root.Types = (() => {
          * @interface ITread
          * @property {string|null} [uuid] Tread uuid
          * @property {Types.IOutline|null} [stepOutline] Tread stepOutline
+         * @property {Types.IOutline|null} [treadOutline] Tread treadOutline
          * @property {number|null} [index] Tread index
          * @property {boolean|null} [isLast] Tread isLast
          * @property {number|null} [stepLength] Tread stepLength
@@ -4831,6 +4832,14 @@ export const Types = $root.Types = (() => {
          * @instance
          */
         Tread.prototype.stepOutline = null;
+
+        /**
+         * Tread treadOutline.
+         * @member {Types.IOutline|null|undefined} treadOutline
+         * @memberof Types.Tread
+         * @instance
+         */
+        Tread.prototype.treadOutline = null;
 
         /**
          * Tread index.
@@ -4932,24 +4941,26 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
             if (message.stepOutline != null && Object.hasOwnProperty.call(message, "stepOutline"))
                 $root.Types.Outline.encode(message.stepOutline, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.treadOutline != null && Object.hasOwnProperty.call(message, "treadOutline"))
+                $root.Types.Outline.encode(message.treadOutline, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             if (message.index != null && Object.hasOwnProperty.call(message, "index"))
-                writer.uint32(/* id 3, wireType 5 =*/29).float(message.index);
+                writer.uint32(/* id 4, wireType 5 =*/37).float(message.index);
             if (message.isLast != null && Object.hasOwnProperty.call(message, "isLast"))
-                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.isLast);
+                writer.uint32(/* id 5, wireType 0 =*/40).bool(message.isLast);
             if (message.stepLength != null && Object.hasOwnProperty.call(message, "stepLength"))
-                writer.uint32(/* id 5, wireType 5 =*/45).float(message.stepLength);
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.stepLength);
             if (message.stepWidth != null && Object.hasOwnProperty.call(message, "stepWidth"))
-                writer.uint32(/* id 6, wireType 5 =*/53).float(message.stepWidth);
+                writer.uint32(/* id 7, wireType 5 =*/61).float(message.stepWidth);
             if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
-                writer.uint32(/* id 7, wireType 5 =*/61).float(message.stepHeight);
+                writer.uint32(/* id 8, wireType 5 =*/69).float(message.stepHeight);
             if (message.inheritL != null && Object.hasOwnProperty.call(message, "inheritL"))
-                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.inheritL);
+                writer.uint32(/* id 9, wireType 0 =*/72).bool(message.inheritL);
             if (message.inheritH != null && Object.hasOwnProperty.call(message, "inheritH"))
-                writer.uint32(/* id 9, wireType 0 =*/72).bool(message.inheritH);
+                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.inheritH);
             if (message.inheritW != null && Object.hasOwnProperty.call(message, "inheritW"))
-                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.inheritW);
+                writer.uint32(/* id 11, wireType 0 =*/88).bool(message.inheritW);
             if (message.type != null && Object.hasOwnProperty.call(message, "type"))
-                writer.uint32(/* id 11, wireType 0 =*/88).int32(message.type);
+                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.type);
             return writer;
         };
 
@@ -4991,30 +5002,33 @@ export const Types = $root.Types = (() => {
                     message.stepOutline = $root.Types.Outline.decode(reader, reader.uint32());
                     break;
                 case 3:
-                    message.index = reader.float();
+                    message.treadOutline = $root.Types.Outline.decode(reader, reader.uint32());
                     break;
                 case 4:
-                    message.isLast = reader.bool();
+                    message.index = reader.float();
                     break;
                 case 5:
-                    message.stepLength = reader.float();
+                    message.isLast = reader.bool();
                     break;
                 case 6:
-                    message.stepWidth = reader.float();
+                    message.stepLength = reader.float();
                     break;
                 case 7:
-                    message.stepHeight = reader.float();
+                    message.stepWidth = reader.float();
                     break;
                 case 8:
-                    message.inheritL = reader.bool();
+                    message.stepHeight = reader.float();
                     break;
                 case 9:
-                    message.inheritH = reader.bool();
+                    message.inheritL = reader.bool();
                     break;
                 case 10:
-                    message.inheritW = reader.bool();
+                    message.inheritH = reader.bool();
                     break;
                 case 11:
+                    message.inheritW = reader.bool();
+                    break;
+                case 12:
                     message.type = reader.int32();
                     break;
                 default:
@@ -5059,6 +5073,11 @@ export const Types = $root.Types = (() => {
                 let error = $root.Types.Outline.verify(message.stepOutline);
                 if (error)
                     return "stepOutline." + error;
+            }
+            if (message.treadOutline != null && message.hasOwnProperty("treadOutline")) {
+                let error = $root.Types.Outline.verify(message.treadOutline);
+                if (error)
+                    return "treadOutline." + error;
             }
             if (message.index != null && message.hasOwnProperty("index"))
                 if (typeof message.index !== "number")
@@ -5114,6 +5133,11 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Tread.stepOutline: object expected");
                 message.stepOutline = $root.Types.Outline.fromObject(object.stepOutline);
             }
+            if (object.treadOutline != null) {
+                if (typeof object.treadOutline !== "object")
+                    throw TypeError(".Types.Tread.treadOutline: object expected");
+                message.treadOutline = $root.Types.Outline.fromObject(object.treadOutline);
+            }
             if (object.index != null)
                 message.index = Number(object.index);
             if (object.isLast != null)
@@ -5159,6 +5183,7 @@ export const Types = $root.Types = (() => {
             if (options.defaults) {
                 object.uuid = "";
                 object.stepOutline = null;
+                object.treadOutline = null;
                 object.index = 0;
                 object.isLast = false;
                 object.stepLength = 0;
@@ -5173,6 +5198,8 @@ export const Types = $root.Types = (() => {
                 object.uuid = message.uuid;
             if (message.stepOutline != null && message.hasOwnProperty("stepOutline"))
                 object.stepOutline = $root.Types.Outline.toObject(message.stepOutline, options);
+            if (message.treadOutline != null && message.hasOwnProperty("treadOutline"))
+                object.treadOutline = $root.Types.Outline.toObject(message.treadOutline, options);
             if (message.index != null && message.hasOwnProperty("index"))
                 object.index = options.json && !isFinite(message.index) ? String(message.index) : message.index;
             if (message.isLast != null && message.hasOwnProperty("isLast"))

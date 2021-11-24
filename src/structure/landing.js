@@ -26,7 +26,7 @@ export class Landing extends ChildInfo {
   /**
    * 
    * @param {Object} param0 
-   * @param {Number} param0.vBorder 
+   * @param {Types.Outline} param0.vBorder 
    */
   constructor ({vParent, vTreadIndex, vBorder, vLastEdgeIndex, vNextEdgeIndex, vLastStepWidth, vNextStepWidth}) {
     super(vParent)
@@ -38,6 +38,8 @@ export class Landing extends ChildInfo {
     this.oppoIndex = Math.abs(this.corIndex - 2)
     this.lastEdgeIndex = vLastEdgeIndex
     this.nextEdgeIndex = vNextEdgeIndex
+    this.lastVec = new Edge(vBorder.edges[this.lastEdgeIndex]).getNormal().negate()
+    this.nextVec = new Edge(vBorder.edges[this.nextEdgeIndex]).getNormal()
     this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
     this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth})
   }
@@ -187,6 +189,10 @@ export class Landing extends ChildInfo {
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[(this.corIndex+2)%4] //对角点
     let outlines = []
+    let tArgs = this.parent.parent.treadParameters
+    let rArgs = this.parent.parent.riserParameters
+    let backOffset = tArgs.nossing + rArgs.riserExist ? rArgs.depth : 0
+    let treadOutlines = []
     let sideDisL = new Edge(this.edgeL).getLength() * Math.tan(Math.PI / 6) //上段楼梯侧边断点的偏移距离
     let sideDisN = new Edge(this.edgeN).getLength() * Math.tan(Math.PI / 6) //下段楼梯侧边断点的偏移距离
     if (this.lastEdgeIndex === this.corIndex) {
@@ -194,19 +200,46 @@ export class Landing extends ChildInfo {
       this.bpN = new Edge(this.sideEdgeN).extendP2(-sideDisN).p2 //下段楼梯侧边断点
       let pL = this.edgeL.p2 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p1 //下段楼梯对应边的另个端点
-      outlines.push(tool.createOutlineByPois([this.bpl, cor, pL]))
-      outlines.push(tool.createOutlineByPois([this.bpN, cor, this.bpl, oppo]))
-      outlines.push(tool.createOutlineByPois([pN, cor, this.bpN]))
+
+      let pois1 = [this.bpl, cor, pL]
+      outlines.push(tool.createOutlineByPois(pois1))
+      treadOutlines.push(this.createSecondTreadOutline(pois1, this.lastVec, this.lastVec, backOffset))
+
+      let pois2 = [this.bpN, cor, this.bpl, oppo]
+      outlines.push(tool.createOutlineByPois(pois2))
+      treadOutlines.push(this.createSecondTreadOutline(pois2, this.nextVec, this.lastVec, backOffset))
+
+      let pois3 = [pN, cor, this.bpN]
+      outlines.push(tool.createOutlineByPois(pois3))
+      treadOutlines.push(this.createSecondTreadOutline(pois3, this.nextVec, this.nextVec, backOffset))
     } else {
       this.bpl = new Edge(this.sideEdgeL).extendP2(-sideDisL).p2 //上段楼梯侧边断点
       this.bpN = new Edge(this.sideEdgeN).extendP1(-sideDisN).p1 //下段楼梯侧边断点
       let pL = this.edgeL.p1 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p2 //下段楼梯对应边的另个端点
-      outlines.push(tool.createOutlineByPois([cor, this.bpl, pL]))
-      outlines.push(tool.createOutlineByPois([cor, this.bpN, oppo, this.bpl]))
-      outlines.push(tool.createOutlineByPois([cor, pN, this.bpN]))
+
+      let pois1 = [cor, this.bpl, pL]
+      outlines.push(tool.createOutlineByPois(pois1))
+      treadOutlines.push(this.createSecondTreadOutline(pois1, this.lastVec, this.lastVec, backOffset))
+
+      let pois2 = [cor, this.bpN, oppo, this.bpl]
+      outlines.push(tool.createOutlineByPois())
+      treadOutlines.push(this.createSecondTreadOutline(pois2, this.lastVec, this.nextVec, backOffset))
+
+      let pois3 = [cor, pN, this.bpN]
+      outlines.push(tool.createOutlineByPois(pois3))
+      treadOutlines.push(this.createSecondOutlines(pois3, this.nextVec, this.nextVec, backOffset))
     }
-    return outlines
+    return {outlines, treadOutlines}
+  }
+
+  createSecondTreadOutline (vPois, vVec1, vVec2, vBackOffset) {
+    let p1 = vPois[0]
+    let p2 = vPois[1]
+    let p1_b = new Edge().setByVec(p1, vVec1, vBackOffset).p2
+    let p2_b = new Edge().setByVec(p2, vVec2, vBackOffset).p2
+    vPois.splice(1, 0, p1_b, p2_b)
+    return tool.createOutlineByPois(vPois)
   }
 
   //创建三四五类分割梯板轮廓
@@ -253,4 +286,7 @@ export class Landing extends ChildInfo {
     return outlines
   }
 
+  createInCutTreadOutline () {
+    
+  }
 }
