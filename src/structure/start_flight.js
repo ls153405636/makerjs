@@ -53,10 +53,6 @@ export class StartFlight extends ChildInfo{
     this.lVec = vLVec
     this.wVec = vWVec
     this.pos = vPos
-    let gArgs = this.parent.girderParameters
-    if (gArgs.type === Types.GirderType.gslab) {
-      this.pos = new Edge().setByVec(this.pos,this.lVec,-gArgs.depth).p2
-    }
     this.positionL = this.pos || new Types.Vector3()
     this.positionC = new Edge().setByVec(this.positionL, this.lVec, vStepLength/2).p2
     this.positionR = new Edge().setByVec(this.positionL, this.lVec, vStepLength).p2
@@ -425,7 +421,6 @@ export class StartFlight extends ChildInfo{
     console.log(this)
     console.log(this.parent)
     let handrailHeight = this.parent.handrailParameters.height
-    console.log(handrailHeight)
     let stepLength = this.parent.flights[this.parent.flights.length - 1].treads[0].stepLength
     let stepWidth = this.parent.flights[this.parent.flights.length - 1].treads[0].stepWidth
     let sideOffset = this.parent.sideOffset
@@ -475,22 +470,22 @@ export class StartFlight extends ChildInfo{
       }
     }
     leftPois[1] = new Types.Vector3({
-      x: sideOffset - arcRL,
+      x: this.positionL.x + sideOffset - arcRL,
       y: this.positionC.y + this.stepWidth / 2,
       z: handrailHeight,
     })
     leftPois[2] = new Types.Vector3({
-      x: sideOffset,
+      x: this.positionL.x + sideOffset,
       y: this.positionC.y + this.stepWidth / 2 - arcRL,
       z: handrailHeight,
     })
     leftPois[3] = new Types.Vector3({
-      x: sideOffset,
+      x: this.positionL.x + sideOffset,
       y: this.positionC.y,
       z: handrailHeight
     })
     leftPois[4] = new Types.Vector3({
-      x: sideOffset,
+      x: this.positionL.x + sideOffset,
       y: 0,
       z: handrailHeight
     })
@@ -526,22 +521,22 @@ export class StartFlight extends ChildInfo{
       }
     }
     rightPois[1] = new Types.Vector3({
-      x: this.width - sideOffset + arcRR,
+      x: this.positionL.x + this.width - sideOffset + arcRR,
       y: this.positionC.y + this.stepWidth / 2,
       z: handrailHeight
     })
     rightPois[2] = new Types.Vector3({
-      x: this.width - sideOffset,
+      x: this.positionL.x + this.width - sideOffset,
       y: this.positionC.y + this.stepWidth / 2 - arcRR,
       z: handrailHeight
     })
     rightPois[3] = new Types.Vector3({
-      x: this.width - sideOffset,
+      x: this.positionL.x + this.width - sideOffset,
       y: this.positionC.y,
       z: handrailHeight
     })
     rightPois[4] = new Types.Vector3({
-      x: this.width - sideOffset,
+      x: this.positionL.x + this.width - sideOffset,
       y: 0,
       z: handrailHeight
     })
