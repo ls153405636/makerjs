@@ -8,13 +8,13 @@ import tool from './tool'
 export class StartTread extends ChildInfo {
 
   static START_TYPE_OPTION = [
-    { value: Types.StartTreadType.sel, label: '椭圆型'},
-    { value: Types.StartTreadType.srr, label: '双层椭圆型'},
-    { value: Types.StartTreadType.sel_2, label: '圆角矩形'},
-    { value: Types.StartTreadType.srr_2, label: '双层圆角矩形'},
+    { value: Types.StartTreadType.st_el, label: '椭圆型'},
+    { value: Types.StartTreadType.st_rr, label: '双层椭圆型'},
+    { value: Types.StartTreadType.st_el_2, label: '圆角矩形'},
+    { value: Types.StartTreadType.st_rr_2, label: '双层圆角矩形'},
   ]
 
-  constructor({ vParent, vIndex, vPois, vPos,vType=Types.StartTreadType.sel,vShapeType=Types.StartTreadShapeType.s_no}) {
+  constructor({ vParent, vIndex, vPois, vPos,vType=Types.StartTreadType.st_el,vShapeType=Types.StartTreadShapeType.sts_no}) {
     super(vParent)
     this.inheritL = true
     this.inheritW = true
@@ -53,19 +53,19 @@ export class StartTread extends ChildInfo {
       this.treadType = Types.TreadType.tph
     }
     else {
-      if (this.startTreadType === Types.StartTreadType.sel) {
+      if (this.startTreadType === Types.StartTreadType.st_el) {
         this.createElOutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
-      else if (this.startTreadType === Types.StartTreadType.sel_2) {
+      else if (this.startTreadType === Types.StartTreadType.st_el_2) {
         this.createElDOutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
-      else if (this.startTreadType === Types.StartTreadType.srr) {
+      else if (this.startTreadType === Types.StartTreadType.st_rr) {
         this.createRROutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
-      else if (this.startTreadType === Types.StartTreadType.srr_2) {
+      else if (this.startTreadType === Types.StartTreadType.st_rr_2) {
         this.createRRDOutline(vPos,this.startTreadType,this.startTreadShapeType)
         this.treadType = Types.TreadType.tStart
       }
@@ -78,9 +78,9 @@ export class StartTread extends ChildInfo {
    */
   computeRealPos () {
     let pos = new Types.Vector3(this.positionL)
-    if (this.startTreadShapeType === 1) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_no) {
       pos = new Edge().setByVec(this.positionC, this.lVec, -this.stepLength / 2).p2
-    } else if (this.startTreadShapeType === 3) {
+    } else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       pos = new Edge().setByVec(this.positionR, this.lVec, -this.stepLength).p2
     }
     return pos
@@ -149,7 +149,7 @@ export class StartTread extends ChildInfo {
     
     let bE = rectOutline.edges[0]//后边
     let lE, rE, lFE, rFE //分别为左边、右边、左前边，右前边
-    if (this.startTreadShapeType === 3) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       rE = rectOutline.edges[1]
       rFE = this.createBeszerEdge(rE.p2, this.wVec, this.offSet2, this.lVec, -this.stepLength / 2)
     } else {
@@ -157,7 +157,7 @@ export class StartTread extends ChildInfo {
       rFE = this.createBeszerEdge(rE.p2, this.wVec, this.offSet2+this.stepWidth/2, this.lVec, -this.offSet1-this.stepLength/2)
     }
 
-    if (this.startTreadShapeType === 2) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
       lFE = this.createBeszerEdge(rFE.p2, this.lVec, -this.stepLength/2, this.wVec, -this.offSet2)
       lE = rectOutline.edges[3]
     } else {
@@ -181,7 +181,7 @@ export class StartTread extends ChildInfo {
     let lE, rE, lFE, rFE //分别为左边、右边、左前边，右前边
     let lE_d, rE_d, lFE_d, rFE_d
 
-    if (this.startTreadShapeType === 3) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       rE = rectOutline.edges[1]
       rFE = this.createBeszerEdge(rE.p2, this.wVec, this.offSet2, this.lVec, -this.stepLength / 2)
       rE_d = this.createBeszerEdge(rE.p2, this.wVec, this.stepWidth, this.lVec, 0)
@@ -193,7 +193,7 @@ export class StartTread extends ChildInfo {
       rFE_d = this.createBeszerEdge(rE_d.p2, this.wVec, this.offSet2+this.stepWidth, this.lVec, -this.offSet1 * 2 - this.stepLength/2)
     }
 
-    if (this.startTreadShapeType === 2) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
       lFE = this.createBeszerEdge(rFE.p2, this.lVec, -this.stepLength/2, this.wVec, -this.offSet2)
       lE = rectOutline.edges[3]
       lFE_d = this.createBeszerEdge(rFE_d.p2, this.lVec, -this.stepLength / 2, this.wVec, -this.offSet2)
@@ -223,20 +223,20 @@ export class StartTread extends ChildInfo {
     let rE = rectOutline.edges[1]
     let lE = rectOutline.edges[3]
     let rArc, lArc , rL,lL// 右圆弧、 左圆弧
-    if (this.startTreadShapeType === 3) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       rL = rE
     } else {
       rArc = this.createArcEdge(bE.p2,this.wVec,this.stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
     }
 
-    if (this.startTreadShapeType === 2) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
       lL = lE
     } else {
       lArc = this.createArcEdge(dE.p2,this.wVec,-this.stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
     }
-    if (this.startTreadShapeType === 3) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       edges.push(bE,rL, dE,lArc)
-    }else if (this.startTreadShapeType === 2) {
+    }else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
       edges.push(bE,rArc, dE,lL)
     }else {
       edges.push(bE,rArc, dE,lArc)
@@ -262,22 +262,22 @@ export class StartTread extends ChildInfo {
     let new_dE = new Edge(dE).offSet(this.stepWidth)
     let rArc, lArc , rL,lL// 右圆弧、 左圆弧
     let rArc_d, lArc_d // 第二层右圆弧， 第层左圆弧
-    if (this.startTreadShapeType === 3) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       rL = new_rE
     } else {
       rArc = this.createArcEdge(bE.p2,this.wVec,this.stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
       rArc_d = this.createArcEdge(bE.p2, this.wVec,this.stepWidth, -Math.PI / 2, Math.PI / 2, false)
     }
 
-    if (this.startTreadShapeType === 2) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
       lL = new_lE
     } else {
       lArc = this.createArcEdge(dE.p2,this.wVec,-this.stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
       lArc_d = this.createArcEdge(new_dE.p2,this.wVec, -this.stepWidth,-Math.PI / 2, Math.PI / 2, false)
     }
-    if (this.startTreadShapeType === 3) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       edges.push(bE,rE,dE,lArc,bE,new_rE,new_dE,lArc_d)
-    }else if (this.startTreadShapeType === 2) {
+    }else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
       edges.push(bE,rArc,dE,lE,bE,rArc_d,new_dE,lL)
     }else {
       edges.push(bE,rArc, dE,lArc,bE,rArc_d,new_dE,lArc_d)
@@ -300,10 +300,10 @@ export class StartTread extends ChildInfo {
     args.startTreadType = {
       name: '类型',
       options: {
-        0: { value: Types.StartTreadType.sel, label: '椭圆型'},
-        1: { value: Types.StartTreadType.sel_2, label: '双层椭圆型'},
-        2: { value: Types.StartTreadType.srr, label: '圆角矩形'},
-        3: { value: Types.StartTreadType.srr_2, label: '双层圆角矩形'},
+        0: { value: Types.StartTreadType.st_el, label: '椭圆型'},
+        1: { value: Types.StartTreadType.st_el_2, label: '双层椭圆型'},
+        2: { value: Types.StartTreadType.st_rr, label: '圆角矩形'},
+        3: { value: Types.StartTreadType.st_rr_2, label: '双层圆角矩形'},
       },
       value: {value: this.startTreadType, label: '椭圆型'},
       type: 'select',
@@ -311,9 +311,9 @@ export class StartTread extends ChildInfo {
     args.startTreadShapeType = {
       name: '造型',
       options: {
-        0: { value: Types.StartTreadShapeType.s_no, label: '保留两边造型'},
-        1: { value: Types.StartTreadShapeType.s_left, label: '去掉左边造型'},
-        2: { value: Types.StartTreadShapeType.s_right, label: '去掉右边造型'},
+        0: { value: Types.StartTreadShapeType.sts_no, label: '保留两边造型'},
+        1: { value: Types.StartTreadShapeType.sts_left, label: '去掉左边造型'},
+        2: { value: Types.StartTreadShapeType.sts_right, label: '去掉右边造型'},
       },
       value: {value: this.startTreadShapeType, label: '保留两边造型'},
       type: 'select',
@@ -375,29 +375,29 @@ export class StartTread extends ChildInfo {
     // this.sideOffset >50 ? this.sideOffset = this.parent.parent.sideOffset : this.sideOffset = 45
     let bigColPositionX = 0
     let bigColPositionY = 0
-    if (this.startTreadType === Types.StartTreadType.sel || this.startTreadType === Types.StartTreadType.srr) {
-      if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
+    if (this.startTreadType === Types.StartTreadType.st_el || this.startTreadType === Types.StartTreadType.st_rr) {
+      if (this.startTreadShapeType === Types.StartTreadShapeType.sts_no) {
         bigColPositionX = this.positionC.x - this.stepLength / 2 - this.offSet1 / 2
         bigColPositionY = this.positionC.y + this.stepWidth + this.offSet2 * 2
       }
-      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
         bigColPositionX = this.positionL.x - this.offSet1 / 2
         bigColPositionY = this.positionL.y + this.stepWidth + this.offSet2 * 2
       }
-      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
         bigColPositionX = this.positionR.x - this.offSet1 / 2 - this.stepLength
         bigColPositionY = this.positionR.y + this.stepWidth + this.offSet2 * 2
       }
     } else {
-      if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
+      if (this.startTreadShapeType === Types.StartTreadShapeType.sts_no) {
         bigColPositionX = this.positionC.x - this.stepLength / 2 - this.offSet1 / 2
         bigColPositionY = this.positionC.y + this.stepWidth * 2 + this.offSet2 * 2
       }
-      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
         bigColPositionX = this.positionL.x - this.offSet1 / 2
         bigColPositionY = this.positionL.y + this.stepWidth * 2 + this.offSet2 * 2
       }
-      else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
+      else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
         bigColPositionX = this.positionR.x - this.offSet1 / 2 - this.stepLength
         bigColPositionY = this.positionR.y + this.stepWidth * 2 + this.offSet2 * 2
       }
@@ -416,15 +416,15 @@ export class StartTread extends ChildInfo {
     
     this.positionX_R = 0
     this.positionY_R = 0
-    if (this.startTreadShapeType === Types.StartTreadShapeType.s_no) {
+    if (this.startTreadShapeType === Types.StartTreadShapeType.sts_no) {
       this.positionX_R = this.positionC.x + this.stepLength / 2 + this.offSet1 / 2
       this.positionY_R = left.y
     }
-    else if (this.startTreadShapeType === Types.StartTreadShapeType.s_left) {
+    else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_left) {
       this.positionX_R = this.positionL.x + this.sideOffset * 2 + this.stepLength
       this.positionY_R = left.y
     }
-    else if (this.startTreadShapeType === Types.StartTreadShapeType.s_right) {
+    else if (this.startTreadShapeType === Types.StartTreadShapeType.sts_right) {
       this.positionX_R = this.positionR.x + this.sideOffset * 2 
       this.positionY_R = left.y
     }

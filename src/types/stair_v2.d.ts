@@ -109,19 +109,19 @@ export namespace Types {
 
     /** StartTreadType enum. */
     enum StartTreadType {
-        sph = 0,
-        sel = 1,
-        sel_2 = 2,
-        srr = 3,
-        srr_2 = 4
+        stph = 0,
+        st_el = 1,
+        st_el_2 = 2,
+        st_rr = 3,
+        st_rr_2 = 4
     }
 
     /** StartTreadShapeType enum. */
     enum StartTreadShapeType {
-        sph = 0,
-        s_no = 1,
-        s_left = 2,
-        s_right = 3
+        stsph = 0,
+        sts_no = 1,
+        sts_left = 2,
+        sts_right = 3
     }
 
     /** Properties of a Vector3. */

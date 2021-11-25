@@ -111,19 +111,19 @@ enum TreadType {
 
 //起步踏板类型
 enum StartTreadType {
-  sph = 0;
-  sel = 1;  // 单层椭圆
-  sel_2 = 2;  // 双层椭圆
-  srr = 3;    // 单层圆角矩形
-  srr_2= 4;  // 双层圆角矩形
+  stph = 0;
+  st_el = 1;  // 单层椭圆
+  st_el_2 = 2;  // 双层椭圆
+  st_rr = 3;    // 单层圆角矩形
+  st_rr_2= 4;  // 双层圆角矩形
 }
 
 //起步踏板造型类型
 enum StartTreadShapeType {
-  sph = 0;
-  s_no = 1; // 保留两边造型
-  s_left = 2;  // 去掉左边造型
-  s_right = 3;  // 去掉右边造型
+  stsph = 0;
+  sts_no = 1; // 保留两边造型
+  sts_left = 2;  // 去掉左边造型
+  sts_right = 3;  // 去掉右边造型
 }
 
 //三维向量

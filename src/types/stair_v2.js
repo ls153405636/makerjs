@@ -256,19 +256,19 @@ export const Types = $root.Types = (() => {
      * StartTreadType enum.
      * @name Types.StartTreadType
      * @enum {number}
-     * @property {number} sph=0 sph value
-     * @property {number} sel=1 sel value
-     * @property {number} sel_2=2 sel_2 value
-     * @property {number} srr=3 srr value
-     * @property {number} srr_2=4 srr_2 value
+     * @property {number} stph=0 stph value
+     * @property {number} st_el=1 st_el value
+     * @property {number} st_el_2=2 st_el_2 value
+     * @property {number} st_rr=3 st_rr value
+     * @property {number} st_rr_2=4 st_rr_2 value
      */
     Types.StartTreadType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
-        values[valuesById[0] = "sph"] = 0;
-        values[valuesById[1] = "sel"] = 1;
-        values[valuesById[2] = "sel_2"] = 2;
-        values[valuesById[3] = "srr"] = 3;
-        values[valuesById[4] = "srr_2"] = 4;
+        values[valuesById[0] = "stph"] = 0;
+        values[valuesById[1] = "st_el"] = 1;
+        values[valuesById[2] = "st_el_2"] = 2;
+        values[valuesById[3] = "st_rr"] = 3;
+        values[valuesById[4] = "st_rr_2"] = 4;
         return values;
     })();
 
@@ -276,17 +276,17 @@ export const Types = $root.Types = (() => {
      * StartTreadShapeType enum.
      * @name Types.StartTreadShapeType
      * @enum {number}
-     * @property {number} sph=0 sph value
-     * @property {number} s_no=1 s_no value
-     * @property {number} s_left=2 s_left value
-     * @property {number} s_right=3 s_right value
+     * @property {number} stsph=0 stsph value
+     * @property {number} sts_no=1 sts_no value
+     * @property {number} sts_left=2 sts_left value
+     * @property {number} sts_right=3 sts_right value
      */
     Types.StartTreadShapeType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
-        values[valuesById[0] = "sph"] = 0;
-        values[valuesById[1] = "s_no"] = 1;
-        values[valuesById[2] = "s_left"] = 2;
-        values[valuesById[3] = "s_right"] = 3;
+        values[valuesById[0] = "stsph"] = 0;
+        values[valuesById[1] = "sts_no"] = 1;
+        values[valuesById[2] = "sts_left"] = 2;
+        values[valuesById[3] = "sts_right"] = 3;
         return values;
     })();
 
@@ -5164,6 +5164,7 @@ export const Types = $root.Types = (() => {
                     return "type: enum value expected";
                 case 0:
                 case 1:
+                case 2:
                     break;
                 }
             return null;
@@ -5212,6 +5213,10 @@ export const Types = $root.Types = (() => {
             case "trect":
             case 1:
                 message.type = 1;
+                break;
+            case "tStart":
+            case 2:
+                message.type = 2;
                 break;
             }
             return message;
