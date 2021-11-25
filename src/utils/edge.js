@@ -1,4 +1,3 @@
-import { types } from 'protobufjs'
 import { Types } from '../types/stair_v2'
 
 export class Edge {
