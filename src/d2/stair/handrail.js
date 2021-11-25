@@ -43,32 +43,32 @@ export class Handrail extends ChildWidget {
     for (let i = 0; i < this.outEdges.length; i++) {
       let e = this.outEdges[i]
       if (i === 0) {
-        changeHandrail1.moveTo(e.p1.x / 10, e.p1.y / 10)
+        changeHandrail1.moveTo(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
       }
     }
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
       if (i === 0) {
-        changeHandrail1.lineTo(e.p1.x / 10, e.p1.y / 10)
-        changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
+        changeHandrail1.lineTo(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+        changeHandrail1.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
       }
       if (i > 0 && e.type === 3) {
-        changeHandrail1.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
+        changeHandrail1.quadraticCurveTo(e.controlPos.x / D2Config.SCREEN_RATE,e.controlPos.y / D2Config.SCREEN_RATE,e.p2.x / D2Config.SCREEN_RATE,e.p2.y /D2Config.SCREEN_RATE)
       }
       else if (i > 0 && e.type === 1) {
-        changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
+        changeHandrail1.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
       }
     }
     for (let i = this.outEdges.length - 1; i >= 0; i--) {
       let e = this.outEdges[i]
       if (i === this.outEdges.length - 1) {
-        changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
+        changeHandrail1.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
       }
       if (e.type === 1) {
-        changeHandrail1.lineTo(e.p1.x / 10,e.p1.y / 10)
+        changeHandrail1.lineTo(e.p1.x / D2Config.SCREEN_RATE,e.p1.y / D2Config.SCREEN_RATE)
       }
       else if(e.type === 3) {
-        changeHandrail1.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p1.x / 10,e.p1.y /10)
+        changeHandrail1.quadraticCurveTo(e.controlPos.x / D2Config.SCREEN_RATE,e.controlPos.y / D2Config.SCREEN_RATE,e.p1.x / D2Config.SCREEN_RATE,e.p1.y /D2Config.SCREEN_RATE)
       }
     }
 
@@ -78,32 +78,32 @@ export class Handrail extends ChildWidget {
     for (let i = 0; i < this.outEdges.length; i++) {
       let e = this.outEdges[i]
       if (i === 0) {
-        changeHandrail.moveTo(e.p1.x / 10, e.p1.y / 10)
+        changeHandrail.moveTo(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
       }
     }
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
       if (i === 0) {
-        changeHandrail.lineTo(e.p1.x / 10, e.p1.y / 10)
-        changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+        changeHandrail.lineTo(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+        changeHandrail.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
       }
       if (i > 0 && e.type === 3) {
-        changeHandrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
+        changeHandrail.quadraticCurveTo(e.controlPos.x / D2Config.SCREEN_RATE,e.controlPos.y / D2Config.SCREEN_RATE,e.p2.x / D2Config.SCREEN_RATE,e.p2.y /D2Config.SCREEN_RATE)
       }
       else if (i > 0 && e.type === 1) {
-        changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+        changeHandrail.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
       }
     }
     for (let i = this.outEdges.length - 1; i >= 0; i--) {
       let e = this.outEdges[i]
       if (i === this.outEdges.length - 1) {
-        changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+        changeHandrail.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
       }
       if (e.type === 1) {
-        changeHandrail.lineTo(e.p1.x / 10,e.p1.y / 10)
+        changeHandrail.lineTo(e.p1.x / D2Config.SCREEN_RATE,e.p1.y / D2Config.SCREEN_RATE)
       }
       else if(e.type === 3) {
-        changeHandrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p1.x / 10,e.p1.y /10)
+        changeHandrail.quadraticCurveTo(e.controlPos.x / D2Config.SCREEN_RATE,e.controlPos.y / D2Config.SCREEN_RATE,e.p1.x / D2Config.SCREEN_RATE,e.p1.y /D2Config.SCREEN_RATE)
       }
     }
 

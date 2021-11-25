@@ -350,7 +350,7 @@ export class StartFlight extends ChildInfo{
     }
     else {
       if (this.shapeType === Types.StartTreadShapeType.s_no) {
-        this.positionX = this.positionC.x - this.stepLength / 2 - this.stepWidth / 4
+        this.positionX = this.positionC.x - this.stepLength / 2 - this.stepWidth / 8
         this.positionY = this.positionC.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_left) {
@@ -358,7 +358,7 @@ export class StartFlight extends ChildInfo{
         this.positionY = this.positionL.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_right) {
-        this.positionX = this.positionR.x - this.stepLength - this.stepWidth / 4
+        this.positionX = this.positionR.x - this.stepLength - this.stepWidth / 8
         this.positionY = this.positionR.y + this.stepWidth / 2
       }
     }
@@ -386,11 +386,11 @@ export class StartFlight extends ChildInfo{
     }
     else {
       if (this.shapeType === Types.StartTreadShapeType.s_no) {
-        this.positionX_R = this.positionC.x + this.stepLength / 2 + this.stepWidth / 4
+        this.positionX_R = this.positionC.x + this.stepLength / 2 + this.stepWidth / 8
         this.positionY_R = left.y
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_left) {
-        this.positionX_R = this.positionL.x + this.stepLength + this.stepWidth / 4
+        this.positionX_R = this.positionL.x + this.stepLength + this.stepWidth / 8
         this.positionY_R = left.y
       }
       else if (this.shapeType === Types.StartTreadShapeType.s_right) {
