@@ -42,6 +42,7 @@ export class StartFlight extends ChildInfo{
   getArgs() {
     let f = tool.getItemFromOptions
     return {
+      name:'起步踏参数',
       stepLength:{value:this.stepLength, name:'步长', type:'input'},
       stepWidth:{value:this.stepWidth, name:'步宽', type:'input'},
       modelType:{value:f(this.modelType, StartFlight.START_TYPE_OPTION), name:'造型类型', type:'select', options:StartFlight.START_TYPE_OPTION},

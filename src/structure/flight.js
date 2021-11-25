@@ -69,6 +69,7 @@ export class Flight extends ChildInfo {
       }
     }
     args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
+    args.name = '楼梯段参数'
     let stepWithArr = []
     for (const t of this.treads) {
       if (
