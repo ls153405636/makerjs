@@ -124,7 +124,11 @@ export class Tread extends ChildWidget {
 
   // 踏板选中效果
   setSelected() {
-    this.sprite.zIndex = 100
+    if (this.index === 1) {
+      this.sprite.zIndex = 0
+    }else {
+      this.sprite.zIndex = 100
+    }
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
     this.isSelected = true
@@ -132,13 +136,18 @@ export class Tread extends ChildWidget {
 
   // 鼠标进入踏板效果
   setHover() {
-    this.sprite.zIndex = 100
+    if (this.index === 1) {
+      this.sprite.zIndex = 0
+    }else {
+      this.sprite.zIndex = 100
+    }
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
   }
   // 鼠标离开踏板效果
   cancelHover() {
     if (!this.isSelected) {
+      // this.zIndex = 0
       this.sprite.zIndex = 0
       this.sprite.children[0].visible = false
       this.sprite.children[1].visible = true

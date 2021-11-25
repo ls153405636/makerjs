@@ -62,7 +62,7 @@ export class StartFlight extends ChildInfo{
       this.stepLength = vStepLength
     }
 
-    this.offSet1 = this.stepWidth * 0.7
+    this.offSet1 = this.stepWidth * 1
     this.offSet2 = this.stepWidth / 6
     this.stepHeight = this.parent.stepHeight
     this.updateTreads()
