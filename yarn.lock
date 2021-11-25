@@ -674,7 +674,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@vue/devtools-api@^6.0.0-beta.11":
+"@vue/devtools-api@^6.0.0-beta.11", "@vue/devtools-api@^6.0.0-beta.18":
   "integrity" "sha1-+OiAWdqkJFFZkkJqDH6lzeB+mb8="
   "resolved" "https://registry.npmmirror.com/@vue/devtools-api/download/@vue/devtools-api-6.0.0-beta.19.tgz?cache=0&sync_timestamp=1633376929470&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40vue%2Fdevtools-api%2Fdownload%2F%40vue%2Fdevtools-api-6.0.0-beta.19.tgz"
   "version" "6.0.0-beta.19"
@@ -3273,7 +3273,14 @@
   "resolved" "https://registry.nlark.com/vue-demi/download/vue-demi-0.11.4.tgz"
   "version" "0.11.4"
 
-"vue@^2.6.0 || ^3.2.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.2", "vue@^3.2.0", "vue@^3.2.16", "vue@>= 2.5 < 3", "vue@3.2.20":
+"vue-router@^4.0.12":
+  "integrity" "sha1-jceSzd9bsavMOQj5BkE23n4TxGA="
+  "resolved" "https://registry.npmmirror.com/vue-router/download/vue-router-4.0.12.tgz"
+  "version" "4.0.12"
+  dependencies:
+    "@vue/devtools-api" "^6.0.0-beta.18"
+
+"vue@^2.6.0 || ^3.2.0", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.2", "vue@^3.2.0", "vue@^3.2.16", "vue@>= 2.5 < 3", "vue@3.2.20":
   "integrity" "sha512-81JjEP4OGk9oO8+CU0h2nFPGgJBm9mNa3kdCX2k6FuRdrWrC+CNe+tOnuIeTg8EWwQuI+wwdra5Q7vSzp7p4Iw== sha1-lA+KqL8+O+eCQ8pYK61B/NRa4+Y="
   "resolved" "https://registry.npmmirror.com/vue/download/vue-3.2.20.tgz?cache=0&sync_timestamp=1633712790340&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fvue%2Fdownload%2Fvue-3.2.20.tgz"
   "version" "3.2.20"

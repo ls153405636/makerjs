@@ -2,52 +2,60 @@
   <div class="component-top">
     <div class="top-name">楼梯设计工具</div>
     <div class="center-icons">
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-revocation"></i>
         <span>撤销</span>
       </div>
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-recover"></i>
         <span>恢复</span>
       </div>
-      <div>
+      <div class="options"> 
         <i class="iconfont icon-tool-new"></i>
         <span>新建</span>
       </div>
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-save"></i>
         <span>保存</span>
       </div>
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-clear"></i>
         <span>清空</span>
       </div>
-      <div>
+      <div class="options">
         <span class="line"></span>
       </div>
-      <div>
-        <i class="iconfont icon-tool-download"></i>
-        <span>导出</span>
-      </div>
-      <div>
+        <el-dropdown class="options"> 
+          <span class="el-dropdown-link">
+            <i class="iconfont icon-tool-download"></i>
+            <span class="export-img">导出</span>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="onSubmit()">导出平面图</el-dropdown-item>
+              <el-dropdown-item disabled>导出报价清单</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      <div class="options">
         <i class="iconfont icon-tool-picture"></i>
         <span>上传</span>
       </div>
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-apply"></i>
         <span>去装修</span>
       </div>
     </div>
     <div class="right-icons">
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-revocation"></i>
         <span>方案</span>
       </div>
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-revocation"></i>
         <span>帮助</span>
       </div>
-      <div>
+      <div class="options">
         <i class="iconfont icon-tool-revocation"></i>
         <span>帮助</span>
       </div>
@@ -61,6 +69,12 @@ export default {
   data() {
     return {}
   },
+  methods: {
+   onSubmit () {
+       console.log('导出')
+      this.$router.push('/export')
+    }
+  }
 }
 </script>
 
@@ -96,7 +110,7 @@ export default {
   width: 150px;
   padding-right: 10px;
 }
-.component-top .center-icons div {
+.component-top .center-icons .options {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -109,7 +123,7 @@ export default {
   float: left;
   cursor: pointer;
 }
-.component-top .right-icons div {
+.component-top .right-icons .options {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -134,5 +148,14 @@ export default {
   width: 1px;
   height: 22px;
   border-right: 1px solid #dbdbdb;
+}
+.export-img {
+  margin: 0;
+  /* color: #000000; */
+}
+.el-dropdown-link {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
