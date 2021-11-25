@@ -79,6 +79,7 @@ export class Landing extends ChildInfo {
       options.splice(1,1)
     }
     return {
+      name: '休息平台参数',
       type:{
         name:'分割方案', 
         value:f(this.type, Landing.CUT_TYPE_MAP), 

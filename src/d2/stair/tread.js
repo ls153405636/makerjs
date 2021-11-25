@@ -167,10 +167,7 @@ export class Tread extends ChildWidget {
           core.execute(
             new Command(core.cmds.SelecteCmd, {
               uuid: this.parent.uuid,
-              type:
-                this.type === Types.TreadType.trect
-                  ? COMP_TYPES.FLIGHT
-                  : COMP_TYPES.LANDING,
+              type: COMP_TYPES.FLIGHT
             })
           )
         }
