@@ -484,11 +484,6 @@ export class StartFlight extends ChildInfo{
       y: this.positionC.y,
       z: handrailHeight
     })
-    leftPois[4] = new Types.Vector3({
-      x: this.positionL.x + sideOffset,
-      y: 0,
-      z: handrailHeight
-    })
 
     // 右边扶手
     if (this.modelType === Types.StartTreadType.sel || this.modelType === Types.StartTreadType.sel_2) {
@@ -533,11 +528,6 @@ export class StartFlight extends ChildInfo{
     rightPois[3] = new Types.Vector3({
       x: this.positionL.x + this.width - sideOffset,
       y: this.positionC.y,
-      z: handrailHeight
-    })
-    rightPois[4] = new Types.Vector3({
-      x: this.positionL.x + this.width - sideOffset,
-      y: 0,
       z: handrailHeight
     })
 
