@@ -34,7 +34,7 @@ export const Default = {
   TREAD_SIDE_NOSSING: 20,
   SMALL_COL_ARR_RULE: Types.ArrangeRule.arrThree,
   SMALL_COL_SPEC: '58*58*950',
-  BIG_COL_POS_TYPE: Types.BigColumnPosType.bcp_floor,
+  BIG_COL_POS_TYPE: Types.BigColumnPosType.bcp_first,
   BIG_COL_SPEC: '110*110*1200',
   BIG_COL_GAP: 20,
   GIRDER_TYPE: Types.GirderType.gsaw,
@@ -43,7 +43,7 @@ export const Default = {
   HAND_HEIGHT: 870,
   HAND_SPEC: '60*80',
   HANG_BOARD_DEPTH: 40,
-  LANDING_TYPE: Types.LandingCutType.lct_fifth,
+  LANDING_TYPE: Types.LandingCutType.lct_first,
   START_TREAD_PRO_ID: 1,
   U_TYPE_GAP: 80,
 }
