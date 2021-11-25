@@ -1,9 +1,9 @@
-
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
 import { Types } from '../../types/stair_v2'
 import { D2Config } from '../config'
+import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
 
 export class Tread extends ChildWidget {
@@ -19,7 +19,6 @@ export class Tread extends ChildWidget {
     this.type = vPB.type
     this.draw()
     this.addEvent()
-    // console.log(this.edges)
   }
 
   draw() {
@@ -35,31 +34,63 @@ export class Tread extends ChildWidget {
     positionY = positionY / this.edges.length
 
     let treadContainer = new PIXI.Container()
-    // 踏板绘制
+
+
     let changeTread = new PIXI.Graphics()
-    let path1 = []
-    changeTread.visible = false
+    changeTread.visible = true
     changeTread.lineStyle(1, 0x4478f4)
     changeTread.beginFill(0xe9efff)
+
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
-      path1.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      let p1 = d2_tool.translateCoord(this.edges[i].p1)
+      let p2 = d2_tool.translateCoord(this.edges[i].p2)
+      if (i === 0) {
+        changeTread.moveTo(p1.x, p1.y)
+      }
+      if (e.type === Types.EdgeType.estraight) {
+        changeTread.lineTo(p2.x, p2.y)
+      } else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        changeTread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+      } else if (e.type === Types.EdgeType.ebeszer) {
+        let conPoi = d2_tool.translateCoord(e.controlPos)
+        changeTread.quadraticCurveTo(conPoi.x, conPoi.y, p2.x, p2.y)
+      }
     }
-    changeTread.drawPolygon(path1)
-    changeTread.endFill()
+
+
+    // --------------------------------------------------------------------------------------------------------------//
 
     // 踏板绘制
     let tread = new PIXI.Graphics()
-    let path = []
-    tread.lineStyle(1, 0x2d3037)
+    tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
     tread.beginFill(0xffffff)
     tread.visible = true
+
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]
-      path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
+      let p1 = d2_tool.translateCoord(this.edges[i].p1)
+      let p2 = d2_tool.translateCoord(this.edges[i].p2)
+      if (i === 0) {
+        tread.moveTo(p1.x, p1.y)
+      }
+      if (e.type === Types.EdgeType.estraight) {
+        tread.lineTo(p2.x, p2.y)
+      }
+      else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        tread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+      }
+      else if (e.type === Types.EdgeType.ebeszer) {
+        let conPoi = d2_tool.translateCoord(e.controlPos)
+        tread.quadraticCurveTo(conPoi.x, conPoi.y, p2.x, p2.y)
+      }
     }
-    tread.drawPolygon(path)
-    tread.endFill()
+
+
 
     // 踏板编号
     let stepNum = new PIXI.Text(this.index, { fontSize: 56 })
@@ -93,7 +124,11 @@ export class Tread extends ChildWidget {
 
   // 踏板选中效果
   setSelected() {
-    this.sprite.zIndex = 100
+    if (this.index === 1) {
+      this.sprite.zIndex = 0
+    }else {
+      this.sprite.zIndex = 100
+    }
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
     this.isSelected = true
@@ -101,13 +136,18 @@ export class Tread extends ChildWidget {
 
   // 鼠标进入踏板效果
   setHover() {
-    this.sprite.zIndex = 100
+    if (this.index === 1) {
+      this.sprite.zIndex = 0
+    }else {
+      this.sprite.zIndex = 100
+    }
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
   }
   // 鼠标离开踏板效果
   cancelHover() {
     if (!this.isSelected) {
+      // this.zIndex = 0
       this.sprite.zIndex = 0
       this.sprite.children[0].visible = false
       this.sprite.children[1].visible = true
@@ -136,7 +176,7 @@ export class Tread extends ChildWidget {
           core.execute(
             new Command(core.cmds.SelecteCmd, {
               uuid: this.parent.uuid,
-              type: this.type === Types.TreadType.trect ? COMP_TYPES.FLIGHT : COMP_TYPES.LANDING,
+              type: COMP_TYPES.FLIGHT
             })
           )
         }

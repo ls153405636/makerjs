@@ -6,7 +6,8 @@ export namespace Types {
     enum EdgeType {
         eph = 0,
         estraight = 1,
-        earc = 2
+        earc = 2,
+        ebeszer = 3
     }
 
     /** WallType enum. */
@@ -102,7 +103,25 @@ export namespace Types {
     /** TreadType enum. */
     enum TreadType {
         tph = 0,
-        trect = 1
+        trect = 1,
+        tStart = 2
+    }
+
+    /** StartTreadType enum. */
+    enum StartTreadType {
+        stph = 0,
+        st_el = 1,
+        st_el_2 = 2,
+        st_rr = 3,
+        st_rr_2 = 4
+    }
+
+    /** StartTreadShapeType enum. */
+    enum StartTreadShapeType {
+        stsph = 0,
+        sts_no = 1,
+        sts_left = 2,
+        sts_right = 3
     }
 
     /** Properties of a Vector3. */
@@ -225,14 +244,17 @@ export namespace Types {
         /** Edge position */
         position?: (Types.IVector3|null);
 
-        /** Edge start_angle */
-        start_angle?: (number|null);
+        /** Edge startAngle */
+        startAngle?: (number|null);
 
-        /** Edge end_angle */
-        end_angle?: (number|null);
+        /** Edge endAngle */
+        endAngle?: (number|null);
 
-        /** Edge is_clockwise */
-        is_clockwise?: (boolean|null);
+        /** Edge isClockwise */
+        isClockwise?: (boolean|null);
+
+        /** Edge controlPos */
+        controlPos?: (Types.IVector3|null);
     }
 
     /** Represents an Edge. */
@@ -259,14 +281,17 @@ export namespace Types {
         /** Edge position. */
         public position?: (Types.IVector3|null);
 
-        /** Edge start_angle. */
-        public start_angle: number;
+        /** Edge startAngle. */
+        public startAngle: number;
 
-        /** Edge end_angle. */
-        public end_angle: number;
+        /** Edge endAngle. */
+        public endAngle: number;
 
-        /** Edge is_clockwise. */
-        public is_clockwise: boolean;
+        /** Edge isClockwise. */
+        public isClockwise: boolean;
+
+        /** Edge controlPos. */
+        public controlPos?: (Types.IVector3|null);
 
         /**
          * Creates a new Edge instance using the specified properties.

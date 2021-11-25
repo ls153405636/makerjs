@@ -8,9 +8,15 @@
       </template>
       <el-button
         v-if="cur_args.hangingBoard != undefined"
-        @click="addHangingBoard()"
+        @click="addEle('hangingBoard', cur_args.hangingBoard.state)"
       >
         {{ cur_args.hangingBoard.name }}
+      </el-button>
+      <el-button
+        v-if="cur_args.startFlight != undefined"
+        @click="addEle('startFlight', cur_args.startFlight.state)"
+      >
+        {{ cur_args.startFlight.name }}
       </el-button>
       <right-args></right-args>
     </el-card>
@@ -34,12 +40,12 @@ export default {
     ...mapState('right_attribute', ['cur_args']),
   },
   methods: {
-    addHangingBoard() {
+    addEle(vType, vState) {
       let core = new Core()
-      if (this.cur_args.hangingBoard.name === '添加挂板') {
-        core.execute(new Command(core.cmds.EleAddCmd, { type: '挂板' }))
+      if (vState === 'add') {
+        core.execute(new Command(core.cmds.EleAddCmd, { type: vType }))
       } else {
-        core.execute(new Command(core.cmds.EleDelCmd, { type: '挂板' }))
+        core.execute(new Command(core.cmds.EleDelCmd, { type: vType }))
       }
     },
   },

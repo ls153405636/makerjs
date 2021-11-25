@@ -30,6 +30,7 @@
           <el-select
             v-model="stair_against_wall_options.value.value"
             :label="stair_against_wall_options.value.label"
+            @change="getMsg(stair_against_wall_options.value.value)"
           >
             <el-option
               v-for="item in stair_against_wall_options.options"
@@ -66,15 +67,17 @@
           </div>
           <p class="type-text">{{ stair_dir_options.name }}</p>
           <el-select
+            
             v-model="stair_dir_options.value.value"
             :label="stair_dir_options.value.label"
+            @change="getMsg1(stair_dir_options.value.value)"
           >
             <el-option
               v-for="item in stair_dir_options.options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              :disabled="item.disabled"
+              :disabled="isDisabled"
             >
             </el-option>
           </el-select>
@@ -93,9 +96,28 @@ import { mapState } from 'vuex'
 export default defineComponent({
   name: 'componentStairInit',
   data() {
-    return {}
+    return {
+      isDisabled: false,
+      
+    }
   },
   methods: {
+    getMsg (value) {
+      console.log(value)
+      if (value === 3) {
+        this.isDisabled = false
+      } else {
+        this.isDisabled = false
+      }
+    },
+    getMsg1(value) {
+      // console.log(value)
+      // if (value === 2) {
+      //   this.isDisabled = true
+      // } else {
+      //   this.isDisabled = false
+      // }
+    },
     clickCreate() {
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'none'

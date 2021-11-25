@@ -64,7 +64,7 @@ export class BigColumn extends ChildInfo {
       source: { name: '型号', value: '', type: 'replace' },
       material: { name: '材质', value: '', type: 'replace' },
     }
-    if (!this.isProp) {
+    if (!this.isProp && this.parent?.startFlight == null) {
       args.posType = {
         name: '位置类型',
         value: f(this.paras.posType, BigColumn.POS_TYPE_OPTIONS),

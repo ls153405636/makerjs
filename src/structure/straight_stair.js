@@ -8,6 +8,7 @@ import { SmallColumn } from './small_column'
 import tool from './tool'
 import { Stair } from './stair'
 import { Edge } from '../utils/edge'
+import { l } from '../../dist/assets/vendor.52b9c170'
 
 export class StraightStair extends Stair  {
   constructor(vParent, vAgainstWall) {
@@ -173,9 +174,16 @@ export class StraightStair extends Stair  {
     this.smallColumns.push(new SmallColumn(this, rightPosition, size))
   }
 
+
   createBigColumns() {
+    this.shapeType = this.flights[0].treads[0].startTreadShapeType
+    console.log(this.shapeType)
+    this.bigColumns = []
     let args = this.bigColParameters
     let size = tool.parseSpecification(args.specification)
+
+    let rst = this.flights[0].treads[0].computeBigColPos(args.posType)
+
     let leftPosition = new Types.Vector3({
       x: this.sideOffset,
       y: this.depth + Default.BIG_COL_GAP + size.y / 2,
@@ -192,13 +200,30 @@ export class StraightStair extends Stair  {
       y: leftPosition.y,
     })
     if (this.bigColumns.length === 2) {
-      this.bigColumns[0].rebuildByParent(leftPosition)
-      this.bigColumns[1].rebuildByParent(rightPosition)
-    } else {
-      this.bigColumns.push(
-        new BigColumn({vParent:this, vPosition:leftPosition}),
-        new BigColumn({vParent:this, vPosition:rightPosition})
-      )
+      if (this.shapeType === 1) {
+        this.bigColumns[0].rebuildByParent(rst.left)
+        this.bigColumns[1].rebuildByParent(rst.right)
+      } else if (this.shapeType === 2) {
+        this.bigColumns[1].rebuildByParent(rst.right)
+      } else {
+        this.bigColumns[0].rebuildByParent(rst.left)
+      }
+    }
+    else {
+      if (this.shapeType === 1) {
+        this.bigColumns.push(
+          new BigColumn({vParent:this, vPosition:rst.left}),
+          new BigColumn({vParent:this, vPosition:rst.right}),
+        )
+      } else if (this.shapeType === 2) {
+        this.bigColumns.push(
+          new BigColumn({vParent:this, vPosition:rst.right}),
+        )
+      } else {
+        this.bigColumns.push(
+          new BigColumn({vParent:this, vPosition:rst.left}),
+        )
+      }
     }
   }
 
@@ -255,64 +280,115 @@ export class StraightStair extends Stair  {
     let route2 = new Types.Outline()
     let leftPois = []
     let rightPois = []
-    let startY = this.depth + Default.BIG_COL_GAP
-    let bigColSize = tool.parseSpecification(bArgs.specification)
-    let stepWidth = this.flights[0].getTreadByNum(0).stepWidth
-    if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
-      startY = this.depth - stepWidth / 2 - bigColSize.y / 2
-    }
-    if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
-      startY = this.depth - (stepWidth * 3) / 2 - bigColSize.y / 2
-    }
-
+    let startY = this.depth - this.flights[0].treads[0].stepWidth
+    this.stepWidth = this.flights[0].treads[0].stepWidth
+    this.stepLength = this.flights[0].treads[0].stepLength
+    this.positionC = this.flights[0].treads[0].positionC
+    let startTreadoffSet1 = this.flights[0].treads[0].offSet1
+    
     leftPois[0] = new Types.Vector3({
-      x: this.sideOffset,
-      y: startY,
-      z: args.height + this.stepHeight,
+      x: this.positionC.x - this.stepLength / 2 - startTreadoffSet1 / 2,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: args.height,
     })
     leftPois[1] = new Types.Vector3({
-      x: this.sideOffset,
-      y: startY - Default.BIG_COL_GAP,
-      z: args.height + this.stepHeight,
+      x: this.sideOffset - 80,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: args.height,
     })
     leftPois[2] = new Types.Vector3({
+      x: this.sideOffset,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: args.height,
+    })
+    leftPois[3] = new Types.Vector3({
+      x: this.sideOffset,
+      y: this.positionC.y + this.stepWidth / 2 - 80,
+      z: args.height + this.stepHeight,
+    })
+    leftPois[4] = new Types.Vector3({
+      x: this.sideOffset,
+      y: this.positionC.y,
+      z: args.height + this.height,
+    })
+    leftPois[5] = new Types.Vector3({
       x: this.sideOffset,
       y: 0,
       z: args.height + this.height,
     })
+
+
     rightPois[0] = new Types.Vector3({
-      x: this.width - this.sideOffset,
-      y: startY,
-      z: args.height + this.stepHeight,
+      x: this.positionC.x + this.stepLength / 2 + startTreadoffSet1 / 2,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: args.height,
     })
     rightPois[1] = new Types.Vector3({
-      x: this.width - this.sideOffset,
-      y: startY - Default.BIG_COL_GAP,
-      z: args.height + this.stepHeight,
+      x: this.width - this.sideOffset + 80,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: args.height,
     })
     rightPois[2] = new Types.Vector3({
+      x: this.width - this.sideOffset,
+      y: this.positionC.y + this.stepWidth / 2,
+      z: args.height,
+    })
+    rightPois[3] = new Types.Vector3({
+      x: this.width - this.sideOffset,
+      y: this.positionC.y + this.stepWidth / 2 - 80,
+      z: args.height + this.stepHeight,
+    })
+    rightPois[4] = new Types.Vector3({
+      x: this.width - this.sideOffset,
+      y: this.positionC.y,
+      z: args.height + this.height,
+    })
+    rightPois[5] = new Types.Vector3({
       x: this.width - this.sideOffset,
       y: 0,
       z: args.height + this.height,
     })
 
     for (let i = 0; i < leftPois.length - 1; i++) {
-      route1.edges.push(
-        new Types.Edge({
-          p1: leftPois[i],
-          p2: leftPois[i + 1],
-          type: Types.EdgeType.estraight,
-        })
-      )
-      route2.edges.push(
-        new Types.Edge({
-          p1: rightPois[i],
-          p2: rightPois[i + 1],
-          type: Types.EdgeType.estraight,
-        })
-      )
+      if (i === 2) {
+        route1.edges.push(
+          new Types.Edge({
+            p1: leftPois[i],
+            p2: leftPois[i + 1],
+            type: Types.EdgeType.ebeszer,
+          })
+        )
+      } else {
+        route1.edges.push(
+          new Types.Edge({
+            p1: leftPois[i],
+            p2: leftPois[i + 1],
+            type: Types.EdgeType.estraight,
+          })
+        )
+      }
+      if (i === 2) {
+
+        route2.edges.push(
+          new Types.Edge({
+            p1: rightPois[i],
+            p2: rightPois[i + 1],
+            type: Types.EdgeType.ebeszer,
+          })
+        )
+      } else {
+
+        route2.edges.push(
+          new Types.Edge({
+            p1: rightPois[i],
+            p2: rightPois[i + 1],
+            type: Types.EdgeType.estraight,
+          })
+        )
+      }
     }
     let size = tool.parseSpecification(args.source.specification, 'yxz')
+
 
     if (this.handrails.length === 2) {
       this.handrails[0].rebuildByParent(route1, size.x)
@@ -323,3 +399,5 @@ export class StraightStair extends Stair  {
     }
   }
 }
+
+

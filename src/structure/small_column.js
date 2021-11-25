@@ -68,6 +68,7 @@ export class SmallColumn extends ChildInfo {
   }
 
   update (vArgItems) {
+    console.log(vArgItems)
     super.updateParent(vArgItems, 'smallColParameters')
   }
 

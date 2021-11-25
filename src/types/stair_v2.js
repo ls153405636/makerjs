@@ -23,12 +23,14 @@ export const Types = $root.Types = (() => {
      * @property {number} eph=0 eph value
      * @property {number} estraight=1 estraight value
      * @property {number} earc=2 earc value
+     * @property {number} ebeszer=3 ebeszer value
      */
     Types.EdgeType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "eph"] = 0;
         values[valuesById[1] = "estraight"] = 1;
         values[valuesById[2] = "earc"] = 2;
+        values[valuesById[3] = "ebeszer"] = 3;
         return values;
     })();
 
@@ -240,11 +242,51 @@ export const Types = $root.Types = (() => {
      * @enum {number}
      * @property {number} tph=0 tph value
      * @property {number} trect=1 trect value
+     * @property {number} tStart=2 tStart value
      */
     Types.TreadType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "tph"] = 0;
         values[valuesById[1] = "trect"] = 1;
+        values[valuesById[2] = "tStart"] = 2;
+        return values;
+    })();
+
+    /**
+     * StartTreadType enum.
+     * @name Types.StartTreadType
+     * @enum {number}
+     * @property {number} stph=0 stph value
+     * @property {number} st_el=1 st_el value
+     * @property {number} st_el_2=2 st_el_2 value
+     * @property {number} st_rr=3 st_rr value
+     * @property {number} st_rr_2=4 st_rr_2 value
+     */
+    Types.StartTreadType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "stph"] = 0;
+        values[valuesById[1] = "st_el"] = 1;
+        values[valuesById[2] = "st_el_2"] = 2;
+        values[valuesById[3] = "st_rr"] = 3;
+        values[valuesById[4] = "st_rr_2"] = 4;
+        return values;
+    })();
+
+    /**
+     * StartTreadShapeType enum.
+     * @name Types.StartTreadShapeType
+     * @enum {number}
+     * @property {number} stsph=0 stsph value
+     * @property {number} sts_no=1 sts_no value
+     * @property {number} sts_left=2 sts_left value
+     * @property {number} sts_right=3 sts_right value
+     */
+    Types.StartTreadShapeType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "stsph"] = 0;
+        values[valuesById[1] = "sts_no"] = 1;
+        values[valuesById[2] = "sts_left"] = 2;
+        values[valuesById[3] = "sts_right"] = 3;
         return values;
     })();
 
@@ -491,9 +533,10 @@ export const Types = $root.Types = (() => {
          * @property {Types.EdgeType|null} [type] Edge type
          * @property {number|null} [radius] Edge radius
          * @property {Types.IVector3|null} [position] Edge position
-         * @property {number|null} [start_angle] Edge start_angle
-         * @property {number|null} [end_angle] Edge end_angle
-         * @property {boolean|null} [is_clockwise] Edge is_clockwise
+         * @property {number|null} [startAngle] Edge startAngle
+         * @property {number|null} [endAngle] Edge endAngle
+         * @property {boolean|null} [isClockwise] Edge isClockwise
+         * @property {Types.IVector3|null} [controlPos] Edge controlPos
          */
 
         /**
@@ -552,28 +595,36 @@ export const Types = $root.Types = (() => {
         Edge.prototype.position = null;
 
         /**
-         * Edge start_angle.
-         * @member {number} start_angle
+         * Edge startAngle.
+         * @member {number} startAngle
          * @memberof Types.Edge
          * @instance
          */
-        Edge.prototype.start_angle = 0;
+        Edge.prototype.startAngle = 0;
 
         /**
-         * Edge end_angle.
-         * @member {number} end_angle
+         * Edge endAngle.
+         * @member {number} endAngle
          * @memberof Types.Edge
          * @instance
          */
-        Edge.prototype.end_angle = 0;
+        Edge.prototype.endAngle = 0;
 
         /**
-         * Edge is_clockwise.
-         * @member {boolean} is_clockwise
+         * Edge isClockwise.
+         * @member {boolean} isClockwise
          * @memberof Types.Edge
          * @instance
          */
-        Edge.prototype.is_clockwise = false;
+        Edge.prototype.isClockwise = false;
+
+        /**
+         * Edge controlPos.
+         * @member {Types.IVector3|null|undefined} controlPos
+         * @memberof Types.Edge
+         * @instance
+         */
+        Edge.prototype.controlPos = null;
 
         /**
          * Creates a new Edge instance using the specified properties.
@@ -609,12 +660,14 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 4, wireType 5 =*/37).float(message.radius);
             if (message.position != null && Object.hasOwnProperty.call(message, "position"))
                 $root.Types.Vector3.encode(message.position, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-            if (message.start_angle != null && Object.hasOwnProperty.call(message, "start_angle"))
-                writer.uint32(/* id 6, wireType 5 =*/53).float(message.start_angle);
-            if (message.end_angle != null && Object.hasOwnProperty.call(message, "end_angle"))
-                writer.uint32(/* id 7, wireType 5 =*/61).float(message.end_angle);
-            if (message.is_clockwise != null && Object.hasOwnProperty.call(message, "is_clockwise"))
-                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.is_clockwise);
+            if (message.startAngle != null && Object.hasOwnProperty.call(message, "startAngle"))
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.startAngle);
+            if (message.endAngle != null && Object.hasOwnProperty.call(message, "endAngle"))
+                writer.uint32(/* id 7, wireType 5 =*/61).float(message.endAngle);
+            if (message.isClockwise != null && Object.hasOwnProperty.call(message, "isClockwise"))
+                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.isClockwise);
+            if (message.controlPos != null && Object.hasOwnProperty.call(message, "controlPos"))
+                $root.Types.Vector3.encode(message.controlPos, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
             return writer;
         };
 
@@ -665,13 +718,16 @@ export const Types = $root.Types = (() => {
                     message.position = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
                 case 6:
-                    message.start_angle = reader.float();
+                    message.startAngle = reader.float();
                     break;
                 case 7:
-                    message.end_angle = reader.float();
+                    message.endAngle = reader.float();
                     break;
                 case 8:
-                    message.is_clockwise = reader.bool();
+                    message.isClockwise = reader.bool();
+                    break;
+                case 9:
+                    message.controlPos = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -725,6 +781,7 @@ export const Types = $root.Types = (() => {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     break;
                 }
             if (message.radius != null && message.hasOwnProperty("radius"))
@@ -735,15 +792,20 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "position." + error;
             }
-            if (message.start_angle != null && message.hasOwnProperty("start_angle"))
-                if (typeof message.start_angle !== "number")
-                    return "start_angle: number expected";
-            if (message.end_angle != null && message.hasOwnProperty("end_angle"))
-                if (typeof message.end_angle !== "number")
-                    return "end_angle: number expected";
-            if (message.is_clockwise != null && message.hasOwnProperty("is_clockwise"))
-                if (typeof message.is_clockwise !== "boolean")
-                    return "is_clockwise: boolean expected";
+            if (message.startAngle != null && message.hasOwnProperty("startAngle"))
+                if (typeof message.startAngle !== "number")
+                    return "startAngle: number expected";
+            if (message.endAngle != null && message.hasOwnProperty("endAngle"))
+                if (typeof message.endAngle !== "number")
+                    return "endAngle: number expected";
+            if (message.isClockwise != null && message.hasOwnProperty("isClockwise"))
+                if (typeof message.isClockwise !== "boolean")
+                    return "isClockwise: boolean expected";
+            if (message.controlPos != null && message.hasOwnProperty("controlPos")) {
+                let error = $root.Types.Vector3.verify(message.controlPos);
+                if (error)
+                    return "controlPos." + error;
+            }
             return null;
         };
 
@@ -782,6 +844,10 @@ export const Types = $root.Types = (() => {
             case 2:
                 message.type = 2;
                 break;
+            case "ebeszer":
+            case 3:
+                message.type = 3;
+                break;
             }
             if (object.radius != null)
                 message.radius = Number(object.radius);
@@ -790,12 +856,17 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Edge.position: object expected");
                 message.position = $root.Types.Vector3.fromObject(object.position);
             }
-            if (object.start_angle != null)
-                message.start_angle = Number(object.start_angle);
-            if (object.end_angle != null)
-                message.end_angle = Number(object.end_angle);
-            if (object.is_clockwise != null)
-                message.is_clockwise = Boolean(object.is_clockwise);
+            if (object.startAngle != null)
+                message.startAngle = Number(object.startAngle);
+            if (object.endAngle != null)
+                message.endAngle = Number(object.endAngle);
+            if (object.isClockwise != null)
+                message.isClockwise = Boolean(object.isClockwise);
+            if (object.controlPos != null) {
+                if (typeof object.controlPos !== "object")
+                    throw TypeError(".Types.Edge.controlPos: object expected");
+                message.controlPos = $root.Types.Vector3.fromObject(object.controlPos);
+            }
             return message;
         };
 
@@ -818,9 +889,10 @@ export const Types = $root.Types = (() => {
                 object.type = options.enums === String ? "eph" : 0;
                 object.radius = 0;
                 object.position = null;
-                object.start_angle = 0;
-                object.end_angle = 0;
-                object.is_clockwise = false;
+                object.startAngle = 0;
+                object.endAngle = 0;
+                object.isClockwise = false;
+                object.controlPos = null;
             }
             if (message.p1 != null && message.hasOwnProperty("p1"))
                 object.p1 = $root.Types.Vector3.toObject(message.p1, options);
@@ -832,12 +904,14 @@ export const Types = $root.Types = (() => {
                 object.radius = options.json && !isFinite(message.radius) ? String(message.radius) : message.radius;
             if (message.position != null && message.hasOwnProperty("position"))
                 object.position = $root.Types.Vector3.toObject(message.position, options);
-            if (message.start_angle != null && message.hasOwnProperty("start_angle"))
-                object.start_angle = options.json && !isFinite(message.start_angle) ? String(message.start_angle) : message.start_angle;
-            if (message.end_angle != null && message.hasOwnProperty("end_angle"))
-                object.end_angle = options.json && !isFinite(message.end_angle) ? String(message.end_angle) : message.end_angle;
-            if (message.is_clockwise != null && message.hasOwnProperty("is_clockwise"))
-                object.is_clockwise = message.is_clockwise;
+            if (message.startAngle != null && message.hasOwnProperty("startAngle"))
+                object.startAngle = options.json && !isFinite(message.startAngle) ? String(message.startAngle) : message.startAngle;
+            if (message.endAngle != null && message.hasOwnProperty("endAngle"))
+                object.endAngle = options.json && !isFinite(message.endAngle) ? String(message.endAngle) : message.endAngle;
+            if (message.isClockwise != null && message.hasOwnProperty("isClockwise"))
+                object.isClockwise = message.isClockwise;
+            if (message.controlPos != null && message.hasOwnProperty("controlPos"))
+                object.controlPos = $root.Types.Vector3.toObject(message.controlPos, options);
             return object;
         };
 
@@ -5109,6 +5183,7 @@ export const Types = $root.Types = (() => {
                     return "type: enum value expected";
                 case 0:
                 case 1:
+                case 2:
                     break;
                 }
             return null;
@@ -5162,6 +5237,10 @@ export const Types = $root.Types = (() => {
             case "trect":
             case 1:
                 message.type = 1;
+                break;
+            case "tStart":
+            case 2:
+                message.type = 2;
                 break;
             }
             return message;

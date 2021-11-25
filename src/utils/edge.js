@@ -9,8 +9,13 @@ export class Edge {
     if (vPB) {
       this.p1 = new THREE.Vector2(vPB.p1.x, vPB.p1.y)
       this.p2 = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
+      if (vPB.controlPos) {
+        this.controlPos = new THREE.Vector2(vPB.controlPos.x, vPB.controlPos.y)
+      }
+      this.type = vPB.type
     }
     this.vec = null
+    
     this.normal = null
   }
 
@@ -28,6 +33,19 @@ export class Edge {
     return this.writePB()
   }
 
+
+  /**
+   * 通过起点和方向来初始化边
+   * @param {Types.Vector3} vP1 
+   * @param {Types.Vector3} vVec
+   * @param {Number} vLength 
+   */
+  setByVec (vP1, vVec, vLength) {
+    this.p1 = new THREE.Vector2(vP1.x, vP1.y)
+    this.vec = new THREE.Vector2(vVec.x, vVec.y)
+    this.p2 = this.p1.clone().addScaledVector(this.vec, vLength)
+    return this.writePB()
+  }
 
   /**
    *
@@ -117,11 +135,12 @@ export class Edge {
     return new Types.Edge({
       p1: new Types.Vector3({ x: newP1.x, y: newP1.y }),
       p2: new Types.Vector3({ x: newP2.x, y: newP2.y }),
+      type: 1
     })
   }
 
   /**
-   * 
+   * 从p1方向将边延长
    * @param {Number} vDis 
    * @returns {Types.Edge}
    */
@@ -135,7 +154,7 @@ export class Edge {
   }
 
   /**
-   * 
+   *从p2方向将边延长 
    * @param {Number} vDis 
    * @returns {Types.Edge}
    */
@@ -171,9 +190,14 @@ export class Edge {
   }
 
   writePB () {
-    return new Types.Edge({
+    let pb = new Types.Edge({
       p1: new Types.Vector3({ x: this.p1.x, y: this.p1.y }),
       p2: new Types.Vector3({ x: this.p2.x, y: this.p2.y }),
+      type: 1
     })
+    if (this.controlPos) {
+      pb.controlPos = new Types.Vector3({x:this.controlPos.x, y:this.controlPos.y})
+    }
+    return pb
   }
 }
