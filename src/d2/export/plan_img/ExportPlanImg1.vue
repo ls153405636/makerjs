@@ -1,13 +1,15 @@
 <template>
   <!-- 顶部 -->
-  <div class="header-export">
-       <el-button type="primary" class="export">确认导出</el-button>
+  <div class="header-export" id="q123">
+       <el-button type="primary" class="export" @click="onSubmit()">确认导出</el-button>
        <el-button type="primary" class="back-index">返回</el-button>
   </div>
 
   <!-- 内容 -->
   <div class="main-export">
+    <!-- 内容-左侧 -->
     <div class="left-content">
+      <!-- 内容-左侧-顶部 -->
       <div class="top-text">
         <p class="dear-user">尊敬的客户您好:</p>
         <div class="description-word">
@@ -20,11 +22,24 @@
           <span>图纸编号:<input type="text"></span>
         </span>
       </div>
-      <div class="center-pic"></div>
-      <div class="buttom-text"></div>
+      <!-- 平面图展示区域 -->
+      <div id="plan-pic">
+        <img src="@/assets/logo.png" alt="" class="show-img">
+      </div>
+      <!-- 内容-左侧-底部 -->
+      <div class="buttom-text">
+       <span>客户姓名：</span>
+       <input type="text" class="user-name">
+       <span>联系电话：</span>
+       <input type="text" class="user-phone">
+       <span>客户地址：</span>
+       <input type="text" class="user-address">
+      </div>
     </div>
+    <!-- 内容-右侧 -->
     <div class="right-content">
       <div class="right-text">
+        <!-- logo -->
         <span><img src="" alt=""></span>
         <div v-for="(item,index) in tableData" class="input-content">
           <span :key="index" class="description-text">{{item.name}}</span>
@@ -125,6 +140,25 @@ export default {
       ],
     }
   },
+  methods: {
+    onSubmit() {
+      // document.querySelector('.show-img').src = this.$store.state.show_img.showImgUrl
+      console.log(this.$store.state.show_img.showImgUrl)
+    }
+    // async onSubmit() {
+    //   let el = document.querySelector("#q123");
+    //   await html2canvas(el, {
+    //     scale: window.devicePixelRatio,
+    //     width: 1500,
+    //     height: 1500,
+    //     // useCORS: true,
+    //     // allowTaint: true,
+    //   })
+    //   .then(async (canvas) => {
+    //     document.querySelector('.show-img').src = this.$store.state.show_img.showImgUrl
+    //   })
+    // }
+  }
 }
 </script>
 
@@ -168,11 +202,13 @@ export default {
 }
 /* 中心-左侧 */
 .main-export .left-content {
+  position: relative;
   width: 80%;
   height: 100%;
 }
 /* 中心-左侧-顶部 */
 .main-export .left-content .top-text {
+  position: relative;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -200,9 +236,9 @@ export default {
   font-size: 14px;
 }
 .main-export .left-content .top-text .dimension{
-  position: fixed;
-  left: 1100px;
-  top: 150px;
+  position: absolute;
+  right: 30px;
+  bottom: 0;
   display: block;
   width: 18%;
   font-size: 14px;
@@ -225,18 +261,50 @@ export default {
   border-bottom: 1px solid #000;
 }
 /* 中心-左侧-中间内容 */
-.main-export .left-content .center-pic {
+.main-export .left-content #plan-pic {
+  display: block;
   width: 100%;
-  height: 80%;
+  height: 85%;
   padding: 6px;
   box-sizing: border-box;
-  background-color: #af1313;
 }
 /* 中心-左侧-底部 */
 .main-export .left-content .buttom-text {
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  height: 5%;
-  background-color: #e76262;
+  height: 30px;
+  /* background-color: #e76262; */
+}
+.main-export .left-content .buttom-text span {
+  float: left;
+  display: block;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  text-align: center;
+  box-sizing: border-box;
+  border: 0;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+  background-color: #ffffff;
+}
+.main-export .left-content .buttom-text input {
+  display: block;
+  float: left;
+  width: 120px;
+  height: 100%;
+  outline:none;  
+  box-sizing: border-box;
+  border: none;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+  background-color: #ffffff;
+}
+.main-export .left-content .buttom-text input.user-address {
+  width: 481px;
+  border-right: none;
 }
 /* 中心-右侧 */
 .main-export .right-content {
@@ -334,6 +402,8 @@ export default {
   display: block;
   width: 100%;
   height: 121px;
-  background-color: #e76262;
+  border-bottom: 1px solid #000;
+  box-sizing: border-box;
+  /* background-color: #e76262; */
 }
 </style>

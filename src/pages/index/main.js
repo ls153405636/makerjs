@@ -10,8 +10,11 @@ import './index.css'
 
 const app = createApp(App)
 
-app.use(ElementPlus)
-app.use(router)
+// app.use(router)
+// app.use(store)
+// app.use(ElementPlus)
+// app.mount('#app')
+
 
 /**
  * 依赖注入
@@ -20,4 +23,4 @@ app.use(router)
   new Core().setCmds(allCmds)
 })()
 
-createApp(App).use(router).use(store).use(ElementPlus).mount('#app')
+app.use(router).use(store).use(ElementPlus).mount('#app')

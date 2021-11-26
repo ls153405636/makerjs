@@ -64,15 +64,42 @@
 </template>
 
 <script>
+import html2canvas from 'html2canvas';
+import { stage_scale_context } from '../../d2/fsm/stage_scale';
 export default {
   name: 'componentTop',
   data() {
-    return {}
+    return {
+      imgUrl: ''
+    }
   },
   methods: {
-   onSubmit () {
-       console.log('导出')
-      this.$router.push('/export')
+    onSubmit() {
+      // stage_scale_context.set_scale(1, true)
+      let el = document.querySelector("#canvas");
+      html2canvas(el, {
+        scale: window.devicePixelRatio,
+        width: 950,
+        height: 710,
+        x: 500,
+        y: 120,
+        allowTaint: true,
+      })
+      .then((canvas) => {
+        this.imgUrl = canvas.toDataURL();
+        this.$store.commit({
+          type: 'show_img/getImgUrl',
+          url: this.imgUrl
+        })
+        localStorage.setItem('img_url',this.imgUrl)
+        this.$router.push({
+          name: 'export',
+        })
+        setTimeout(() => {
+          window.location.reload()
+        },10)
+        
+      })
     }
   }
 }
@@ -151,7 +178,6 @@ export default {
 }
 .export-img {
   margin: 0;
-  /* color: #000000; */
 }
 .el-dropdown-link {
   display: flex;

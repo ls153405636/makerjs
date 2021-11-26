@@ -12,8 +12,6 @@
 <script>
 import { Command } from '../../common/command'
 import { Core } from '../../common/core'
-import { initProj } from '../../init_temp'
-import { Structure } from '../../structure/structure'
 
 // 引入组件
 import componentTop from './Top.vue'
@@ -25,7 +23,6 @@ import componentHoleInit from './HoleInit.vue'
 import rightTextureEdit from './TextureEdit.vue'
 
 export default {
-  name: 'Index',
   components: {
     componentTop,
     componenLeft,
@@ -37,9 +34,6 @@ export default {
   },
   mounted() {
     new Core().execute(new Command(new Core().cmds.BootCmd))
-
-    //initProj()
-    // new Structure().initHole('rect').initStair('stright')
   },
 }
 </script>
