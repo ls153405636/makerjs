@@ -285,7 +285,9 @@ export class Landing extends ChildInfo {
     let outlines = []
     let backOffset = this.parent.getTreadBackOffset()
     let treadOutlines = []
+    let frontIndexs = [], inIndexs = []
     let borders = []
+
     let inEdgeL = new Edge(this.edgeL).offset(this.lastStepWidth, false)
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[(this.corIndex+2)%4] //对角点
@@ -299,32 +301,46 @@ export class Landing extends ChildInfo {
         let pois1 = [this.bpL, cutP, cor, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+        frontIndexs.push([2])
+        inIndexs.push([3])
 
         let pois2 = [pN, cor, cutP, this.bpL, oppo]
         outlines.push(this.createOutlineByPois(pois2, 2))
         treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
+        frontIndexs.push([1, 2])
+        inIndexs.push([3, 4])
 
       } else if (this.type === Types.LandingCutType.lct_fourth) {
         let pois1 = [this.bpN, cutP, cor, pL, oppo]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.nextVec, this.nextVec, this.lastVec], backOffset, 1))
+        frontIndexs.push([2])
+        inIndexs.push([3, 4])
 
         let pois2 = [pN, cor, cutP, this.bpN]
         outlines.push(this.createOutlineByPois(pois2, 2))
         treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
+        frontIndexs.push([1, 2])
+        inIndexs.push([3])
       } else {
         let pois1 = [this.bpL, cutP, cor, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+        frontIndexs.push([2])
+        inIndexs.push([3])
 
         let pois2 = [this.bpN, cutP, this.bpL, oppo]
         outlines.push(this.createOutlineByPois(pois2, 2))
         //let t_pois2 = [this.bpN, cutP, cor, cutP, this.bpL, oppo]
         treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec, /*this.lastVec*/], backOffset, 2))
+        frontIndexs.push([1])
+        inIndexs.push([2, 3])
 
         let pois3 = [pN, cor, cutP, this.bpN]
         outlines.push(this.createOutlineByPois(pois3, 3))
         treadOutlines.push(this.createTreadOutline(pois3, [this.nextVec, this.nextVec], backOffset, 3))
+        frontIndexs.push([2])
+        inIndexs.push([3])
       }
     } else {
       this.bpL = new Edge(this.sideEdgeL).extendP2(-this.lastStepWidth).p2
@@ -336,56 +352,56 @@ export class Landing extends ChildInfo {
         let pois1 = [cor, cutP, this.bpL, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+        frontIndexs.push([3])
+        inIndexs.push([2])
 
         let pois2 = [cor, pN, oppo, this.bpL, cutP]
         outlines.push(this.createOutlineByPois(pois2, 2))
         treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
+        frontIndexs.push([3, 4])
+        inIndexs.push([1, 2])
 
       } else if (this.type === Types.LandingCutType.lct_fourth) {
         let pois1 = [cor, cutP, this.bpN, oppo, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec, this.nextVec, this.nextVec], backOffset, 1))
+        frontIndexs.push([4])
+        inIndexs.push([2, 3])
 
         let pois2 = [cor, pN, this.bpN, cutP]
         outlines.push(this.createOutlineByPois(pois2, 2))
         treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
+        frontIndexs.push([2, 3])
+        inIndexs.push([1])
       } else {
         let pois1 = [cor, cutP, this.bpL, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+        frontIndexs.push([3])
+        inIndexs.push([2])
 
         let pois2 = [cutP, this.bpN, oppo, this.bpL]
         outlines.push(this.createOutlineByPois(pois2, 2))
         //let t_pois2 = [cor, cutP, this.bpN, oppo, this.bpL, cutP]
         treadOutlines.push(this.createTreadOutline(pois2, [/*this.lastVec,*/ this.nextVec, this.nextVec], backOffset, 2))
+        frontIndexs.push([3])
+        inIndexs.push([1,2])
 
         let pois3 = [cor, pN, this.bpN, cutP]
         outlines.push(this.createOutlineByPois(pois3, 3))
         treadOutlines.push(this.createTreadOutline(pois3, [this.nextVec, this.nextVec], backOffset, 3))
+        frontIndexs.push([2])
+        inIndexs.push([1])
       }
     }
     for (let i = 0; i < outlines.length; i++) {
       let border = new Types.TreadBorder({
         stepOutline: outlines[i],
         treadOutline: treadOutlines[i],
-        backIndex:[0]
+        backIndex:[0],
+        frontIndex:frontIndexs[i],
+        inIndex:inIndexs[i]
       })
-      if (i === 2) {
-        border.frontIndex = [2]
-        border.inIndex = this.lastEdgeIndex === this.corIndex ? [3] : [1]
-      }
-      if (i === 0) {
-        border.frontIndex = this.lastEdgeIndex === this.corIndex ? [2] : [3]
-        border.inIndex = this.lastEdgeIndex === this.corIndex ? [3] : [2]
-      } else if (i === 1) {
-        if (this.lastEdgeIndex === this.corIndex) {
-          border.inIndex = [outlines[i].edges.length - 1, outlines[i].edges.length - 2]
-          border.frontIndex = [outlines[i].edges.length - 3]
-        } else {
-          border.inIndex = [1, 2]
-          border.frontIndex = [3]
-        }
-      } 
       borders.push(border)
     }
     return borders

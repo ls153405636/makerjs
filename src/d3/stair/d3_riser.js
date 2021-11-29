@@ -22,7 +22,7 @@ export class Riser extends ChildModel {
 
     for (let i = inRoute.edges.length - 1; i>=0; i--) {
       let e = new Edge(inRoute.edges[i]).reserve()
-      if (i === 0 ) {
+      if (i === inRoute.edges.length - 1 ) {
         edges.push(new Types.Edge({
           p1: edges[edges.length-1].p2,
           p2: e.p1,
@@ -30,7 +30,7 @@ export class Riser extends ChildModel {
         }))
       }
       edges.push(e)
-      if (i === inRoute.edges.length - 1) {
+      if (i === 0) {
         edges.push(new Types.Edge({
           p1:e.p2,
           p2:edges[0].p1,
