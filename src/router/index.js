@@ -12,11 +12,6 @@ const routes =  [
     name: 'export',
     component: () => import('@/components/app/ExportPlanImg.vue')
   },
-  {
-    path: '/shot',
-    name: 'shot',
-    component: () => import('@/components/app/ScreenShot.vue')
-  },
 ]
 
 

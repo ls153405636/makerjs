@@ -1,6 +1,8 @@
+import Victor from 'victor'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
+import { Default } from '../../structure/config'
 import { Types } from '../../types/stair_v2'
 import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
@@ -13,10 +15,13 @@ export class Tread extends ChildWidget {
    */
   constructor(vPB, vParent) {
     super(vPB.uuid)
+    this.p1 = d2_tool.translateCoord(vPB.stepOutline.edges[3].p1)
+    this.p2 = d2_tool.translateCoord(vPB.stepOutline.edges[3].p2)
     this.edges = vPB.stepOutline.edges
     this.index = vPB.index
     this.parent = vParent
-    this.type = vPB.type
+    this.depth = Default.WALL_DEPTH
+    this.addDimension()
     this.draw()
     this.addEvent()
   }
@@ -100,7 +105,78 @@ export class Tread extends ChildWidget {
       positionY / D2Config.SCREEN_RATE
     )
     stepNum.anchor.set(0.5, 0.5)
-    treadContainer.addChild(changeTread, tread, stepNum)
+
+
+    // 踏板标注线计算
+    const { p1, p2 } = this
+    const linelength = Math.round(Math.hypot(p1.x - p2.x, p1.y - p2.y) * 10)
+    const offSet1 = new Victor((this.depth * 2) / 10, (this.depth * 2) / 10)
+    const offSet2 = new Victor(this.depth / 10 / 2, this.depth / 10 / 2)
+    const newP1 = new Victor(p1.x, p1.y).subtractX(offSet1)
+    const newP1T = new Victor(p1.x, p1.y)
+      .subtractX(offSet1)
+      .addX(new Victor(10, 10))
+    const newP1B = new Victor(p1.x, p1.y)
+      .subtractX(offSet1)
+      .subtractX(new Victor(5, 5))
+
+    const newP2 = new Victor(p2.x, p2.y).subtractX(offSet1)
+    const newp2T = new Victor(p2.x, p2.y)
+      .subtractX(offSet1)
+      .addX(new Victor(10, 10))
+    const newp2B = new Victor(p2.x, p2.y)
+      .subtractX(offSet1)
+      .subtractX(new Victor(5, 5))
+    const centerP = new Victor(
+      (newP1.x + newP2.x) / 2,
+      (newP1.y + newP2.y) / 2
+    ).subtractX(offSet2)
+
+    // 旋转计算
+    let newTextRotation = ''
+    const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
+    const textAngle = textRotation.angle()
+    if (textAngle == Math.PI || textAngle == 0) {
+      newTextRotation = 0
+    } else if (textAngle < Math.PI) {
+      newTextRotation = textRotation.invert().angle()
+    } else if (textAngle > Math.PI) {
+      newTextRotation = textRotation.angle()
+    }
+
+    // 标注线绘制
+    const dimensionContainer = new PIXI.Graphics()
+    let treadLine = new PIXI.Graphics()
+    treadLine.lineStyle(1, 0xff88ff)
+    treadLine.moveTo(newP1.x, newP1.y)
+    treadLine.lineTo(newP2.x, newP2.y)
+
+    const treadLineLeft = new PIXI.Graphics()
+    treadLineLeft.lineStyle(0.5, 0xff88ff)
+    treadLineLeft.moveTo(newP1B.x, newP1B.y)
+    treadLineLeft.lineTo(newP1T.x, newP1T.y)
+
+    const treadLineRight = new PIXI.Graphics()
+    treadLineRight.lineStyle(0.5, 0xff88ff)
+    treadLineRight.moveTo(newp2B.x, newp2B.y)
+    treadLineRight.lineTo(newp2T.x, newp2T.y)
+
+    // 标注尺寸绘制
+    let treadLineNum = new PIXI.Text(linelength, { fontSize: 40 })
+    treadLineNum.scale.set(0.25)
+    treadLineNum.anchor.set(0.5, 0.5)
+    treadLineNum.position.set(centerP.x, centerP.y)
+    treadLineNum.rotation = newTextRotation
+
+    dimensionContainer.addChild(
+      treadLine,
+      treadLineNum,
+      treadLineLeft,
+      treadLineRight
+    )
+    treadContainer.addChild(changeTread, tread, stepNum, dimensionContainer)
+    // this.sprite = treadContainer
+    // treadContainer.addChild(changeTread, tread, stepNum)
     this.sprite = treadContainer
   }
 
@@ -195,5 +271,8 @@ export class Tread extends ChildWidget {
           _this.parent.setHover()
         }
       })
+  }
+  addDimension() {
+
   }
 }
