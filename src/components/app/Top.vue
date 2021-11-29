@@ -1,5 +1,5 @@
 <template>
-  <div class="component-top">
+  <div class="component-top" >
     <div class="top-name">楼梯设计工具</div>
     <div class="center-icons">
       <div class="options">
@@ -61,11 +61,15 @@
       </div>
     </div>
   </div>
+  <!-- <div class="screen"></div> -->
 </template>
 
 <script>
 import html2canvas from 'html2canvas';
 import { stage_scale_context } from '../../d2/fsm/stage_scale';
+import { Core } from '../../common/core';
+import { Command } from '../../common/command';
+import { D2Config } from '../../d2/config';
 export default {
   name: 'componentTop',
   data() {
@@ -75,14 +79,27 @@ export default {
   },
   methods: {
     onSubmit() {
-      // stage_scale_context.set_scale(1, true)
+      console.log(app)
+      document.querySelector(".shot").style.display = 'block'
+      document.querySelector("#home-components").style.display = 'none'
+      document.querySelector(".shot-header").style.display = 'flex'
+      window.stage[0].visible = 0
+      let core = new Core()
+      core.execute(
+        new Command(core.cmds.SelecteCmd, {
+          uuid: null,
+          type: null,
+        })
+      )
+    },
+    app() {
       let el = document.querySelector("#canvas");
       html2canvas(el, {
         scale: window.devicePixelRatio,
         width: 950,
-        height: 710,
-        x: 500,
-        y: 120,
+        height: 680,
+        x: 485,
+        y: 113.5,
         allowTaint: true,
       })
       .then((canvas) => {
@@ -97,7 +114,7 @@ export default {
         })
         setTimeout(() => {
           window.location.reload()
-        },10)
+        },100)
         
       })
     }
@@ -106,6 +123,15 @@ export default {
 </script>
 
 <style>
+.screen {
+  position: fixed;
+  width: 950px;
+  height: 710px;
+  left: 500px;
+  top: 120px;
+  
+  border: 1px solid #4478f4;
+}
 .iconfont {
   color: #c4c4c4;
   font-size: 24px;

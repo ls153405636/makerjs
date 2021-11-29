@@ -13,14 +13,9 @@ const routes =  [
     component: () => import('@/components/app/ExportPlanImg.vue')
   },
   {
-    path: '/a',
-    name: 'a',
-    component: () => import('@/components/app/a.vue')
-  },
-  {
-    path: '/b',
-    name: 'b',
-    component: () => import('@/components/app/b.vue')
+    path: '/shot',
+    name: 'shot',
+    component: () => import('@/components/app/ScreenShot.vue')
   },
 ]
 

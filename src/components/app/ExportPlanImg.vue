@@ -1,7 +1,7 @@
 <template>
   <!-- 顶部 -->
   <div class="header-export" id="q123">
-       <el-button type="primary" class="export" @click="createdImg()">确认导出</el-button>
+       <el-button type="primary" class="export" @click="createdImg()">下载图片</el-button>
        <el-button type="primary" class="back-index" @click="back()">返回</el-button>
   </div>
 
@@ -24,6 +24,7 @@
       </div>
       <!-- 平面图展示区域 -->
       <div id="plan-pic">
+        <div id="canvas"></div>
         <!-- <img src=""  class="show-img"> -->
       </div>
       <!-- 内容-左侧-底部 -->
@@ -57,6 +58,8 @@
 </template>
 <script>
 import html2canvas from 'html2canvas'
+import { Core } from '../../common/core'
+import { Command } from '../../common/command'
 export default {
   name: 'exportPlanImg',
   provide () {
@@ -198,6 +201,9 @@ export default {
     },100)
                 
   },
+  // mounted() {
+  //   new Core().execute(new Command(new Core().cmds.BootCmd))
+  // },
 }
 </script>
 
@@ -303,15 +309,16 @@ export default {
 .main-export .left-content #plan-pic {
   display: block;
   width: 100%;
-  height: 85%;
+  height: 81%;
   padding: 6px;
   box-sizing: border-box;
+  /* background-color: aqua; */
   overflow: hidden;
 }
 .main-export .left-content #plan-pic .show-img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 99%;
+  height: 99%;
 }
 /* 中心-左侧-底部 */
 .main-export .left-content .buttom-text {

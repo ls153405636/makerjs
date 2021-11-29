@@ -5,6 +5,7 @@ export const D2Config = {
   SELECTED: null,
   CUR_STAIR: null,
   IS_SINGLE_SELECTED: false,
+  IS_SHOW: true,
   WIDGETS: new Map(),
 }
 
@@ -22,5 +23,8 @@ export const Z_INDEX = {
   WALL_LINE_ZINDEX: 11,
 }
 
-window.D2Config = D2Config
-window.D2Config = Z_INDEX
+window.D2Config = {
+  D2Config,
+  Z_INDEX
+}
+// window.D2Config = Z_INDEX

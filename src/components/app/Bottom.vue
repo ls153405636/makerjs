@@ -6,7 +6,7 @@
         <span class="right">3D</span>
       </div>
     </div>
-    <div class="add-stair" @click="addStair">添加楼梯</div>
+    <div class="add-stair-btn" @click="addStair">添加楼梯</div>
     <div class="zoom">
       <div class="vector">
         <i class="iconfont icon-view-angle" @click="defaultZoom"></i>
@@ -124,7 +124,7 @@ export default defineComponent({
   background-color: aliceblue;
   color: #4478f4;
 }
-.component-bottom .add-stair {
+.component-bottom .add-stair-btn {
   width: 128px;
   height: 34px;
   font: normal 14px/34px Source Han Sans CN;
