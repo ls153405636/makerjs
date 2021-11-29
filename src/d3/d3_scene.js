@@ -5,6 +5,7 @@ export class D3Scene {
     if (!D3Scene.instance) {
       this.init()
       D3Scene.instance = this
+      window.scene = this.scene
     }
     return D3Scene.instance
   }

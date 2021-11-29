@@ -2,6 +2,9 @@ import { v4 } from 'uuid'
 import { CUR_DATA } from '../common/common_config'
 import { D2Config } from '../d2/config'
 import d2_action from '../d2/d2_action'
+import d3_action from '../d3/d3_action'
+import { D3Config } from '../d3/d3_config'
+import { D3Scene } from '../d3/d3_scene'
 import { StructConfig } from './config'
 
 export class Info {
@@ -127,6 +130,15 @@ export class Info {
       } else {
         widget.update(this.writePB())
       }
+    }
+    if (CUR_DATA.MODE === '3D' && this.isUpdate3D) {
+      let model = D3Config.MODELS.get(this.uuid)
+      if (!model) {
+        d3_action.createModel(this.writePB(), vName)
+      } else {
+        model.update()
+      }
+      new D3Scene().render()
     }
   }
 

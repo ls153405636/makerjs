@@ -3,36 +3,29 @@ import { Types } from '../types/stair_v2'
 export class Edge {
   static center = new THREE.Vector2(0, 0)
   /**
+   * 根据PB中的Edge而设置的处理工具类
+   * 此边默认处于x轴水平向右，y轴竖直向下的2d平面
+   * 顺时针方向为正x至正y
+   * 角度正x方向为0，正y方向为pai/2
+   * 后续如果3d2d放样的坐标轴方向或顺逆时针等等有差异
+   * 需另行派生处理，不可在此类中添加其余方法
    * @param {Types.Edge} vPB
    */
   constructor(vPB) {
     if (vPB) {
       this.p1 = new THREE.Vector2(vPB.p1.x, vPB.p1.y)
       this.p2 = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
+      this.zCoord = vPB.p1.z
       if (vPB.controlPos) {
         this.controlPos = new THREE.Vector2(vPB.controlPos.x, vPB.controlPos.y)
       }
       this.type = vPB.type
+    } else {
+      this.type === Types.EdgeType.estraight
     }
     this.vec = null
-    
     this.normal = null
   }
-
-
-  /**
-   * 通过起点和方向来初始化边
-   * @param {Types.Vector3} vP1 
-   * @param {Types.Vector3} vVec
-   * @param {Number} vLength 
-   */
-  setByVec (vP1, vVec, vLength) {
-    this.p1 = new THREE.Vector2(vP1.x, vP1.y)
-    this.vec = new THREE.Vector2(vVec.x, vVec.y)
-    this.p2 = this.p1.clone().addScaledVector(this.vec, vLength)
-    return this.writePB()
-  }
-
 
   /**
    * 通过起点和方向来初始化边
@@ -44,11 +37,21 @@ export class Edge {
     this.p1 = new THREE.Vector2(vP1.x, vP1.y)
     this.vec = new THREE.Vector2(vVec.x, vVec.y)
     this.p2 = this.p1.clone().addScaledVector(this.vec, vLength)
+    this.zCoord = vP1.z
     return this.writePB()
   }
 
   /**
-   *
+   * 为边设置一个统一的z坐标
+   * @param {Number} vZCoord z坐标 
+   */
+  setZCoord (vZCoord) {
+    this.zCoord = vZCoord
+    return this.writePB()
+  }
+
+  /**
+   *获取线段的方向向量
    * @returns THREE.Vector2
    */
   getVec() {
@@ -59,7 +62,7 @@ export class Edge {
   }
 
   /**
-   *
+   *获取P1
    * @returns THREE.Vector2
    */
   getP1() {
@@ -67,7 +70,7 @@ export class Edge {
   }
 
   /**
-   *
+   *获取P2
    * @returns THREE.Vector2
    */
   getP2() {
@@ -94,7 +97,7 @@ export class Edge {
   }
 
   /**
-   *
+   *获取线段法线，默认线段所处轮廓为顺时针
    * @returns THREE.Vector2
    */
   getNormal() {
@@ -132,11 +135,7 @@ export class Edge {
     )
     this.p1 = newP1
     this.p2 = newP2
-    return new Types.Edge({
-      p1: new Types.Vector3({ x: newP1.x, y: newP1.y }),
-      p2: new Types.Vector3({ x: newP2.x, y: newP2.y }),
-      type: 1
-    })
+    return this.writePB()
   }
 
   /**
@@ -177,9 +176,21 @@ export class Edge {
     return pb
   }
 
+  /**
+   * 反转线段
+   * @returns {Types.Edge}
+   */
+  reserve() {
+    let temp = this.p1
+    this.p1 = this.p2
+    this.p2 = temp
+    return this.writePB()
+  }
+
 
 
   /**
+   * 获取线段中心点
    * @return {Types.Vector3}
    */
   getCenter () {
@@ -191,12 +202,12 @@ export class Edge {
 
   writePB () {
     let pb = new Types.Edge({
-      p1: new Types.Vector3({ x: this.p1.x, y: this.p1.y }),
-      p2: new Types.Vector3({ x: this.p2.x, y: this.p2.y }),
-      type: 1
+      p1: new Types.Vector3({ x: this.p1.x, y: this.p1.y, z: this.zCoord}),
+      p2: new Types.Vector3({ x: this.p2.x, y: this.p2.y, z: this.zCoord }),
+      type: this.type
     })
     if (this.controlPos) {
-      pb.controlPos = new Types.Vector3({x:this.controlPos.x, y:this.controlPos.y})
+      pb.controlPos = new Types.Vector3({x:this.controlPos.x, y:this.controlPos.y, z:this.zCoord})
     }
     return pb
   }

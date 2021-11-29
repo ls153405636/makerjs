@@ -1,5 +1,6 @@
 import { Types } from "../types/stair_v2";
 import { Edge } from "../utils/edge";
+import { Outline } from "../utils/outline";
 import { ChildInfo } from "./child_info";
 import tool from "./tool";
 
@@ -12,14 +13,14 @@ export class Tread extends ChildInfo {
    * @param {boolean} param0.vIsLast 踏板是否为二楼平面上的最后一级
    * @param {Types.Vector3} param0.vPos 踏板的位置，即矩形绘制时起始点的坐标
    */
-  constructor({ vParent, vIndex, vOutline, vPos, vIsLast, vType = Types.TreadType.trect }) {
+  constructor({ vParent, vIndex, vBorder, vPos, vIsLast, vType = Types.TreadType.trect }) {
     super(vParent)
     this.inheritL = true
     this.inheritW = true
     this.inheritH = true
     this.isLast = vIsLast
     this.type = vType
-    this.rebuildByParent({ vIndex, vOutline, vPos })
+    this.rebuildByParent({ vIndex, vBorder, vPos })
   }
 
   getArgs() {
@@ -77,31 +78,29 @@ export class Tread extends ChildInfo {
   }
 
   /**
-   * 标准矩形踏板，根据位置及长宽构建出踏板轮廓
+   * 标准矩形踏板，根据位置及长宽构建出踏板边界
    */
-  createRectOutline() {
-    let gArgs = this.parent.parent.girderParameters
-    let xOffset = gArgs.type === Types.GirderType.gslab ? gArgs.depth : 0
-    this.outline = tool.createRectOutline(
-      this.position,
-      this.stepLength - 2 * xOffset,
-      this.stepWidth,
-      this.lVec,
-      this.wVec
-    )
+  createRectBorder() {
+    let sideOffset = this.parent.parent.girOffset
+    let backOffset = this.parent.parent.getTreadBackOffset()
+    let outline = tool.createRectOutline(this.position,this.stepLength-2*sideOffset,this.stepWidth,this.lVec,this.wVec)
+    let t_ori = new Edge().setByVec(this.position, this.wVec, -backOffset).p2
+    let treadOutline = tool.createRectOutline(t_ori, this.stepLength-2*sideOffset, this.stepWidth+backOffset, this.lVec, this.wVec)
+    outline = new Outline(outline).setZCoord(this.position.z)
+    treadOutline = new Outline(treadOutline).setZCoord(this.position.z)
+    outline.isClock = this.clock
+    treadOutline.isClock = this.clock
+    this.border = new Types.TreadBorder({
+      stepOutline:outline,
+      treadOutline:treadOutline,
+      inIndex:[3],
+      outIndex:[1],
+      frontIndex:[2],
+      backIndex:[0]
+    })
   }
 
-  createTreadOutline () {
-    let tArgs = this.parent.parent.treadParameters
-    let rArgs = this.parent.parent.riserParameters
-    let gArgs = this.parent.parent.girderParameters
-    let sideOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
-    let backOffset = tArgs.nossing + rArgs.riserExist ? rArgs.depth : 0
-    let ori = new Edge().setByVec(this.position, this.wVec, -backOffset).p2
-    this.treadOutline = tool.createRectOutline(ori, this.stepLength-2*sideOffset, this.stepWidth+backOffset, this.lVec, this.wVec)
-  }
-
-  rebuildByParent ({vIndex, vPois, vPos}) {
+  rebuildByParent ({vIndex, vBorder, vPos}) {
     this.position = vPos || new Types.Vector3()
     this.lVec = this.parent.lVec || new Types.Vector3()
     this.wVec = this.parent.wVec || new Types.Vector3()
@@ -116,22 +115,17 @@ export class Tread extends ChildInfo {
     if (this.inheritH) {
       this.stepHeight = this.parent.stepHeight
     }
-    if (vOutline) {
-      this.outline = vOutline
+    if (vBorder) {
+      this.border = vBorder
     } else {
-      this.createOutline()
-      this.createTreadOutline()
-      this.border = {
-        inEdgeIndex:[3],
-        outEdgeIndex:[1]
-      }
+      this.createRectBorder()
     }
   }
 
   getColPos (vRateArr, vSide, vSideOffset) {
     let posArr = []
-    for(const i of this.border[vSide+'EdgeIndex']) {
-      let e = this.outline.edges[i]
+    for(const i of this.border[vSide+'Index']) {
+      let e = this.border.stepOutline.edges[i]
       let utilE = new Edge(e)
       utilE.offset(vSideOffset, !this.clock)
       for(const r of vRateArr) {
@@ -156,8 +150,7 @@ export class Tread extends ChildInfo {
       uuid:this.uuid,
       index:this.index,
       isLast:this.isLast,
-      stepOutline:this.outline,
-      treadOutline:this.treadOutline,
+      border:this.border,
       stepHeight:this.stepHeight,
       stepWidth:this.stepWidth,
       stepLength:this.stepLength,

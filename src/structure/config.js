@@ -30,7 +30,7 @@ export const Default = {
   TREAD_DEPTH: 30,
   RISER_DEPTH: 20,
   TREAD_NOSSING_TYPE: Types.NossingType.nno,
-  TREAD_NOSSING: 0,
+  TREAD_NOSSING: 20,
   TREAD_SIDE_NOSSING: 20,
   SMALL_COL_ARR_RULE: Types.ArrangeRule.arrThree,
   SMALL_COL_SPEC: '58*58*950',
@@ -43,7 +43,7 @@ export const Default = {
   HAND_HEIGHT: 870,
   HAND_SPEC: '60*80',
   HANG_BOARD_DEPTH: 40,
-  LANDING_TYPE: Types.LandingCutType.lct_first,
+  LANDING_TYPE: Types.LandingCutType.lct_fifth,
   START_TREAD_PRO_ID: 1,
   U_TYPE_GAP: 80,
 }

@@ -1,4 +1,5 @@
 import { Types } from '../types/stair_v2'
+import { Edge } from '../utils/edge'
 
 export function parseSpecification(vSpecStr, order = 'xyz') {
   let size = new Types.Vector3()
@@ -22,15 +23,15 @@ export function createRectOutline(vOri, vLength, vWdith, vLengthVec = new THREE.
   let lVec = vLengthVec
   let wVec = vWidthVec
   let pois = []
-  pois[0] = new THREE.Vector2(vOri.x, vOri.y)
-  pois[1] = pois[0].clone().addScaledVector(lVec, vLength)
-  pois[2] = pois[1].clone().addScaledVector(wVec, vWdith)
-  pois[3] = pois[2].clone().addScaledVector(lVec, -vLength)
+  pois[0] = new Types.Vector3({x:vOri.x, y:vOri.y})
+  pois[1] = new Edge().setByVec(pois[0], lVec, vLength).p2
+  pois[2] = new Edge().setByVec(pois[1], wVec, vWdith).p2
+  pois[3] = new Edge().setByVec(pois[2], lVec, -vLength).p2
   return createOutlineByPois(pois)
 }
 
 export function createOutlineByPois(vPois, vIsClose = true) {
-  let outline = new Types.Outline()
+  let outline = new Types.Outline({isClose:vIsClose})
   let length = vIsClose ? vPois.length : vPois.length - 1
     for (let i = 0; i < length; i++) {
       let p = vPois[i]

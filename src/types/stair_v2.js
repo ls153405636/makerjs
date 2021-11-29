@@ -937,6 +937,7 @@ export const Types = $root.Types = (() => {
          * @interface IOutline
          * @property {Array.<Types.IEdge>|null} [edges] Outline edges
          * @property {boolean|null} [isClose] Outline isClose
+         * @property {boolean|null} [isClock] Outline isClock
          */
 
         /**
@@ -972,6 +973,14 @@ export const Types = $root.Types = (() => {
         Outline.prototype.isClose = false;
 
         /**
+         * Outline isClock.
+         * @member {boolean} isClock
+         * @memberof Types.Outline
+         * @instance
+         */
+        Outline.prototype.isClock = false;
+
+        /**
          * Creates a new Outline instance using the specified properties.
          * @function create
          * @memberof Types.Outline
@@ -1000,6 +1009,8 @@ export const Types = $root.Types = (() => {
                     $root.Types.Edge.encode(message.edges[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
             if (message.isClose != null && Object.hasOwnProperty.call(message, "isClose"))
                 writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isClose);
+            if (message.isClock != null && Object.hasOwnProperty.call(message, "isClock"))
+                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.isClock);
             return writer;
         };
 
@@ -1041,6 +1052,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 2:
                     message.isClose = reader.bool();
+                    break;
+                case 3:
+                    message.isClock = reader.bool();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -1089,6 +1103,9 @@ export const Types = $root.Types = (() => {
             if (message.isClose != null && message.hasOwnProperty("isClose"))
                 if (typeof message.isClose !== "boolean")
                     return "isClose: boolean expected";
+            if (message.isClock != null && message.hasOwnProperty("isClock"))
+                if (typeof message.isClock !== "boolean")
+                    return "isClock: boolean expected";
             return null;
         };
 
@@ -1116,6 +1133,8 @@ export const Types = $root.Types = (() => {
             }
             if (object.isClose != null)
                 message.isClose = Boolean(object.isClose);
+            if (object.isClock != null)
+                message.isClock = Boolean(object.isClock);
             return message;
         };
 
@@ -1134,8 +1153,10 @@ export const Types = $root.Types = (() => {
             let object = {};
             if (options.arrays || options.defaults)
                 object.edges = [];
-            if (options.defaults)
+            if (options.defaults) {
                 object.isClose = false;
+                object.isClock = false;
+            }
             if (message.edges && message.edges.length) {
                 object.edges = [];
                 for (let j = 0; j < message.edges.length; ++j)
@@ -1143,6 +1164,8 @@ export const Types = $root.Types = (() => {
             }
             if (message.isClose != null && message.hasOwnProperty("isClose"))
                 object.isClose = message.isClose;
+            if (message.isClock != null && message.hasOwnProperty("isClock"))
+                object.isClock = message.isClock;
             return object;
         };
 
@@ -4863,8 +4886,7 @@ export const Types = $root.Types = (() => {
          * @memberof Types
          * @interface ITread
          * @property {string|null} [uuid] Tread uuid
-         * @property {Types.IOutline|null} [stepOutline] Tread stepOutline
-         * @property {Types.IOutline|null} [treadOutline] Tread treadOutline
+         * @property {Types.ITreadBorder|null} [border] Tread border
          * @property {number|null} [index] Tread index
          * @property {boolean|null} [isLast] Tread isLast
          * @property {number|null} [stepLength] Tread stepLength
@@ -4900,20 +4922,12 @@ export const Types = $root.Types = (() => {
         Tread.prototype.uuid = "";
 
         /**
-         * Tread stepOutline.
-         * @member {Types.IOutline|null|undefined} stepOutline
+         * Tread border.
+         * @member {Types.ITreadBorder|null|undefined} border
          * @memberof Types.Tread
          * @instance
          */
-        Tread.prototype.stepOutline = null;
-
-        /**
-         * Tread treadOutline.
-         * @member {Types.IOutline|null|undefined} treadOutline
-         * @memberof Types.Tread
-         * @instance
-         */
-        Tread.prototype.treadOutline = null;
+        Tread.prototype.border = null;
 
         /**
          * Tread index.
@@ -5013,28 +5027,26 @@ export const Types = $root.Types = (() => {
                 writer = $Writer.create();
             if (message.uuid != null && Object.hasOwnProperty.call(message, "uuid"))
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
-            if (message.stepOutline != null && Object.hasOwnProperty.call(message, "stepOutline"))
-                $root.Types.Outline.encode(message.stepOutline, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.treadOutline != null && Object.hasOwnProperty.call(message, "treadOutline"))
-                $root.Types.Outline.encode(message.treadOutline, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.border != null && Object.hasOwnProperty.call(message, "border"))
+                $root.Types.TreadBorder.encode(message.border, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             if (message.index != null && Object.hasOwnProperty.call(message, "index"))
-                writer.uint32(/* id 4, wireType 5 =*/37).float(message.index);
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.index);
             if (message.isLast != null && Object.hasOwnProperty.call(message, "isLast"))
-                writer.uint32(/* id 5, wireType 0 =*/40).bool(message.isLast);
+                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.isLast);
             if (message.stepLength != null && Object.hasOwnProperty.call(message, "stepLength"))
-                writer.uint32(/* id 6, wireType 5 =*/53).float(message.stepLength);
+                writer.uint32(/* id 5, wireType 5 =*/45).float(message.stepLength);
             if (message.stepWidth != null && Object.hasOwnProperty.call(message, "stepWidth"))
-                writer.uint32(/* id 7, wireType 5 =*/61).float(message.stepWidth);
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.stepWidth);
             if (message.stepHeight != null && Object.hasOwnProperty.call(message, "stepHeight"))
-                writer.uint32(/* id 8, wireType 5 =*/69).float(message.stepHeight);
+                writer.uint32(/* id 7, wireType 5 =*/61).float(message.stepHeight);
             if (message.inheritL != null && Object.hasOwnProperty.call(message, "inheritL"))
-                writer.uint32(/* id 9, wireType 0 =*/72).bool(message.inheritL);
+                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.inheritL);
             if (message.inheritH != null && Object.hasOwnProperty.call(message, "inheritH"))
-                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.inheritH);
+                writer.uint32(/* id 9, wireType 0 =*/72).bool(message.inheritH);
             if (message.inheritW != null && Object.hasOwnProperty.call(message, "inheritW"))
-                writer.uint32(/* id 11, wireType 0 =*/88).bool(message.inheritW);
+                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.inheritW);
             if (message.type != null && Object.hasOwnProperty.call(message, "type"))
-                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.type);
+                writer.uint32(/* id 11, wireType 0 =*/88).int32(message.type);
             return writer;
         };
 
@@ -5073,36 +5085,33 @@ export const Types = $root.Types = (() => {
                     message.uuid = reader.string();
                     break;
                 case 2:
-                    message.stepOutline = $root.Types.Outline.decode(reader, reader.uint32());
+                    message.border = $root.Types.TreadBorder.decode(reader, reader.uint32());
                     break;
                 case 3:
-                    message.treadOutline = $root.Types.Outline.decode(reader, reader.uint32());
-                    break;
-                case 4:
                     message.index = reader.float();
                     break;
-                case 5:
+                case 4:
                     message.isLast = reader.bool();
                     break;
-                case 6:
+                case 5:
                     message.stepLength = reader.float();
                     break;
-                case 7:
+                case 6:
                     message.stepWidth = reader.float();
                     break;
-                case 8:
+                case 7:
                     message.stepHeight = reader.float();
                     break;
-                case 9:
+                case 8:
                     message.inheritL = reader.bool();
                     break;
-                case 10:
+                case 9:
                     message.inheritH = reader.bool();
                     break;
-                case 11:
+                case 10:
                     message.inheritW = reader.bool();
                     break;
-                case 12:
+                case 11:
                     message.type = reader.int32();
                     break;
                 default:
@@ -5143,15 +5152,10 @@ export const Types = $root.Types = (() => {
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 if (!$util.isString(message.uuid))
                     return "uuid: string expected";
-            if (message.stepOutline != null && message.hasOwnProperty("stepOutline")) {
-                let error = $root.Types.Outline.verify(message.stepOutline);
+            if (message.border != null && message.hasOwnProperty("border")) {
+                let error = $root.Types.TreadBorder.verify(message.border);
                 if (error)
-                    return "stepOutline." + error;
-            }
-            if (message.treadOutline != null && message.hasOwnProperty("treadOutline")) {
-                let error = $root.Types.Outline.verify(message.treadOutline);
-                if (error)
-                    return "treadOutline." + error;
+                    return "border." + error;
             }
             if (message.index != null && message.hasOwnProperty("index"))
                 if (typeof message.index !== "number")
@@ -5203,15 +5207,10 @@ export const Types = $root.Types = (() => {
             let message = new $root.Types.Tread();
             if (object.uuid != null)
                 message.uuid = String(object.uuid);
-            if (object.stepOutline != null) {
-                if (typeof object.stepOutline !== "object")
-                    throw TypeError(".Types.Tread.stepOutline: object expected");
-                message.stepOutline = $root.Types.Outline.fromObject(object.stepOutline);
-            }
-            if (object.treadOutline != null) {
-                if (typeof object.treadOutline !== "object")
-                    throw TypeError(".Types.Tread.treadOutline: object expected");
-                message.treadOutline = $root.Types.Outline.fromObject(object.treadOutline);
+            if (object.border != null) {
+                if (typeof object.border !== "object")
+                    throw TypeError(".Types.Tread.border: object expected");
+                message.border = $root.Types.TreadBorder.fromObject(object.border);
             }
             if (object.index != null)
                 message.index = Number(object.index);
@@ -5261,8 +5260,7 @@ export const Types = $root.Types = (() => {
             let object = {};
             if (options.defaults) {
                 object.uuid = "";
-                object.stepOutline = null;
-                object.treadOutline = null;
+                object.border = null;
                 object.index = 0;
                 object.isLast = false;
                 object.stepLength = 0;
@@ -5275,10 +5273,8 @@ export const Types = $root.Types = (() => {
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
-            if (message.stepOutline != null && message.hasOwnProperty("stepOutline"))
-                object.stepOutline = $root.Types.Outline.toObject(message.stepOutline, options);
-            if (message.treadOutline != null && message.hasOwnProperty("treadOutline"))
-                object.treadOutline = $root.Types.Outline.toObject(message.treadOutline, options);
+            if (message.border != null && message.hasOwnProperty("border"))
+                object.border = $root.Types.TreadBorder.toObject(message.border, options);
             if (message.index != null && message.hasOwnProperty("index"))
                 object.index = options.json && !isFinite(message.index) ? String(message.index) : message.index;
             if (message.isLast != null && message.hasOwnProperty("isLast"))
@@ -5312,6 +5308,412 @@ export const Types = $root.Types = (() => {
         };
 
         return Tread;
+    })();
+
+    Types.TreadBorder = (function() {
+
+        /**
+         * Properties of a TreadBorder.
+         * @memberof Types
+         * @interface ITreadBorder
+         * @property {Types.IOutline|null} [stepOutline] TreadBorder stepOutline
+         * @property {Types.IOutline|null} [treadOutline] TreadBorder treadOutline
+         * @property {Array.<number>|null} [inIndex] TreadBorder inIndex
+         * @property {Array.<number>|null} [outIndex] TreadBorder outIndex
+         * @property {Array.<number>|null} [frontIndex] TreadBorder frontIndex
+         * @property {Array.<number>|null} [backIndex] TreadBorder backIndex
+         */
+
+        /**
+         * Constructs a new TreadBorder.
+         * @memberof Types
+         * @classdesc Represents a TreadBorder.
+         * @implements ITreadBorder
+         * @constructor
+         * @param {Types.ITreadBorder=} [properties] Properties to set
+         */
+        function TreadBorder(properties) {
+            this.inIndex = [];
+            this.outIndex = [];
+            this.frontIndex = [];
+            this.backIndex = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * TreadBorder stepOutline.
+         * @member {Types.IOutline|null|undefined} stepOutline
+         * @memberof Types.TreadBorder
+         * @instance
+         */
+        TreadBorder.prototype.stepOutline = null;
+
+        /**
+         * TreadBorder treadOutline.
+         * @member {Types.IOutline|null|undefined} treadOutline
+         * @memberof Types.TreadBorder
+         * @instance
+         */
+        TreadBorder.prototype.treadOutline = null;
+
+        /**
+         * TreadBorder inIndex.
+         * @member {Array.<number>} inIndex
+         * @memberof Types.TreadBorder
+         * @instance
+         */
+        TreadBorder.prototype.inIndex = $util.emptyArray;
+
+        /**
+         * TreadBorder outIndex.
+         * @member {Array.<number>} outIndex
+         * @memberof Types.TreadBorder
+         * @instance
+         */
+        TreadBorder.prototype.outIndex = $util.emptyArray;
+
+        /**
+         * TreadBorder frontIndex.
+         * @member {Array.<number>} frontIndex
+         * @memberof Types.TreadBorder
+         * @instance
+         */
+        TreadBorder.prototype.frontIndex = $util.emptyArray;
+
+        /**
+         * TreadBorder backIndex.
+         * @member {Array.<number>} backIndex
+         * @memberof Types.TreadBorder
+         * @instance
+         */
+        TreadBorder.prototype.backIndex = $util.emptyArray;
+
+        /**
+         * Creates a new TreadBorder instance using the specified properties.
+         * @function create
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {Types.ITreadBorder=} [properties] Properties to set
+         * @returns {Types.TreadBorder} TreadBorder instance
+         */
+        TreadBorder.create = function create(properties) {
+            return new TreadBorder(properties);
+        };
+
+        /**
+         * Encodes the specified TreadBorder message. Does not implicitly {@link Types.TreadBorder.verify|verify} messages.
+         * @function encode
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {Types.ITreadBorder} message TreadBorder message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TreadBorder.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.stepOutline != null && Object.hasOwnProperty.call(message, "stepOutline"))
+                $root.Types.Outline.encode(message.stepOutline, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.treadOutline != null && Object.hasOwnProperty.call(message, "treadOutline"))
+                $root.Types.Outline.encode(message.treadOutline, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.inIndex != null && message.inIndex.length) {
+                writer.uint32(/* id 3, wireType 2 =*/26).fork();
+                for (let i = 0; i < message.inIndex.length; ++i)
+                    writer.float(message.inIndex[i]);
+                writer.ldelim();
+            }
+            if (message.outIndex != null && message.outIndex.length) {
+                writer.uint32(/* id 4, wireType 2 =*/34).fork();
+                for (let i = 0; i < message.outIndex.length; ++i)
+                    writer.float(message.outIndex[i]);
+                writer.ldelim();
+            }
+            if (message.frontIndex != null && message.frontIndex.length) {
+                writer.uint32(/* id 5, wireType 2 =*/42).fork();
+                for (let i = 0; i < message.frontIndex.length; ++i)
+                    writer.float(message.frontIndex[i]);
+                writer.ldelim();
+            }
+            if (message.backIndex != null && message.backIndex.length) {
+                writer.uint32(/* id 6, wireType 2 =*/50).fork();
+                for (let i = 0; i < message.backIndex.length; ++i)
+                    writer.float(message.backIndex[i]);
+                writer.ldelim();
+            }
+            return writer;
+        };
+
+        /**
+         * Encodes the specified TreadBorder message, length delimited. Does not implicitly {@link Types.TreadBorder.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {Types.ITreadBorder} message TreadBorder message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TreadBorder.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a TreadBorder message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.TreadBorder} TreadBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TreadBorder.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.TreadBorder();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.stepOutline = $root.Types.Outline.decode(reader, reader.uint32());
+                    break;
+                case 2:
+                    message.treadOutline = $root.Types.Outline.decode(reader, reader.uint32());
+                    break;
+                case 3:
+                    if (!(message.inIndex && message.inIndex.length))
+                        message.inIndex = [];
+                    if ((tag & 7) === 2) {
+                        let end2 = reader.uint32() + reader.pos;
+                        while (reader.pos < end2)
+                            message.inIndex.push(reader.float());
+                    } else
+                        message.inIndex.push(reader.float());
+                    break;
+                case 4:
+                    if (!(message.outIndex && message.outIndex.length))
+                        message.outIndex = [];
+                    if ((tag & 7) === 2) {
+                        let end2 = reader.uint32() + reader.pos;
+                        while (reader.pos < end2)
+                            message.outIndex.push(reader.float());
+                    } else
+                        message.outIndex.push(reader.float());
+                    break;
+                case 5:
+                    if (!(message.frontIndex && message.frontIndex.length))
+                        message.frontIndex = [];
+                    if ((tag & 7) === 2) {
+                        let end2 = reader.uint32() + reader.pos;
+                        while (reader.pos < end2)
+                            message.frontIndex.push(reader.float());
+                    } else
+                        message.frontIndex.push(reader.float());
+                    break;
+                case 6:
+                    if (!(message.backIndex && message.backIndex.length))
+                        message.backIndex = [];
+                    if ((tag & 7) === 2) {
+                        let end2 = reader.uint32() + reader.pos;
+                        while (reader.pos < end2)
+                            message.backIndex.push(reader.float());
+                    } else
+                        message.backIndex.push(reader.float());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a TreadBorder message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.TreadBorder} TreadBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TreadBorder.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a TreadBorder message.
+         * @function verify
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        TreadBorder.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.stepOutline != null && message.hasOwnProperty("stepOutline")) {
+                let error = $root.Types.Outline.verify(message.stepOutline);
+                if (error)
+                    return "stepOutline." + error;
+            }
+            if (message.treadOutline != null && message.hasOwnProperty("treadOutline")) {
+                let error = $root.Types.Outline.verify(message.treadOutline);
+                if (error)
+                    return "treadOutline." + error;
+            }
+            if (message.inIndex != null && message.hasOwnProperty("inIndex")) {
+                if (!Array.isArray(message.inIndex))
+                    return "inIndex: array expected";
+                for (let i = 0; i < message.inIndex.length; ++i)
+                    if (typeof message.inIndex[i] !== "number")
+                        return "inIndex: number[] expected";
+            }
+            if (message.outIndex != null && message.hasOwnProperty("outIndex")) {
+                if (!Array.isArray(message.outIndex))
+                    return "outIndex: array expected";
+                for (let i = 0; i < message.outIndex.length; ++i)
+                    if (typeof message.outIndex[i] !== "number")
+                        return "outIndex: number[] expected";
+            }
+            if (message.frontIndex != null && message.hasOwnProperty("frontIndex")) {
+                if (!Array.isArray(message.frontIndex))
+                    return "frontIndex: array expected";
+                for (let i = 0; i < message.frontIndex.length; ++i)
+                    if (typeof message.frontIndex[i] !== "number")
+                        return "frontIndex: number[] expected";
+            }
+            if (message.backIndex != null && message.hasOwnProperty("backIndex")) {
+                if (!Array.isArray(message.backIndex))
+                    return "backIndex: array expected";
+                for (let i = 0; i < message.backIndex.length; ++i)
+                    if (typeof message.backIndex[i] !== "number")
+                        return "backIndex: number[] expected";
+            }
+            return null;
+        };
+
+        /**
+         * Creates a TreadBorder message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.TreadBorder} TreadBorder
+         */
+        TreadBorder.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.TreadBorder)
+                return object;
+            let message = new $root.Types.TreadBorder();
+            if (object.stepOutline != null) {
+                if (typeof object.stepOutline !== "object")
+                    throw TypeError(".Types.TreadBorder.stepOutline: object expected");
+                message.stepOutline = $root.Types.Outline.fromObject(object.stepOutline);
+            }
+            if (object.treadOutline != null) {
+                if (typeof object.treadOutline !== "object")
+                    throw TypeError(".Types.TreadBorder.treadOutline: object expected");
+                message.treadOutline = $root.Types.Outline.fromObject(object.treadOutline);
+            }
+            if (object.inIndex) {
+                if (!Array.isArray(object.inIndex))
+                    throw TypeError(".Types.TreadBorder.inIndex: array expected");
+                message.inIndex = [];
+                for (let i = 0; i < object.inIndex.length; ++i)
+                    message.inIndex[i] = Number(object.inIndex[i]);
+            }
+            if (object.outIndex) {
+                if (!Array.isArray(object.outIndex))
+                    throw TypeError(".Types.TreadBorder.outIndex: array expected");
+                message.outIndex = [];
+                for (let i = 0; i < object.outIndex.length; ++i)
+                    message.outIndex[i] = Number(object.outIndex[i]);
+            }
+            if (object.frontIndex) {
+                if (!Array.isArray(object.frontIndex))
+                    throw TypeError(".Types.TreadBorder.frontIndex: array expected");
+                message.frontIndex = [];
+                for (let i = 0; i < object.frontIndex.length; ++i)
+                    message.frontIndex[i] = Number(object.frontIndex[i]);
+            }
+            if (object.backIndex) {
+                if (!Array.isArray(object.backIndex))
+                    throw TypeError(".Types.TreadBorder.backIndex: array expected");
+                message.backIndex = [];
+                for (let i = 0; i < object.backIndex.length; ++i)
+                    message.backIndex[i] = Number(object.backIndex[i]);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a TreadBorder message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.TreadBorder
+         * @static
+         * @param {Types.TreadBorder} message TreadBorder
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        TreadBorder.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults) {
+                object.inIndex = [];
+                object.outIndex = [];
+                object.frontIndex = [];
+                object.backIndex = [];
+            }
+            if (options.defaults) {
+                object.stepOutline = null;
+                object.treadOutline = null;
+            }
+            if (message.stepOutline != null && message.hasOwnProperty("stepOutline"))
+                object.stepOutline = $root.Types.Outline.toObject(message.stepOutline, options);
+            if (message.treadOutline != null && message.hasOwnProperty("treadOutline"))
+                object.treadOutline = $root.Types.Outline.toObject(message.treadOutline, options);
+            if (message.inIndex && message.inIndex.length) {
+                object.inIndex = [];
+                for (let j = 0; j < message.inIndex.length; ++j)
+                    object.inIndex[j] = options.json && !isFinite(message.inIndex[j]) ? String(message.inIndex[j]) : message.inIndex[j];
+            }
+            if (message.outIndex && message.outIndex.length) {
+                object.outIndex = [];
+                for (let j = 0; j < message.outIndex.length; ++j)
+                    object.outIndex[j] = options.json && !isFinite(message.outIndex[j]) ? String(message.outIndex[j]) : message.outIndex[j];
+            }
+            if (message.frontIndex && message.frontIndex.length) {
+                object.frontIndex = [];
+                for (let j = 0; j < message.frontIndex.length; ++j)
+                    object.frontIndex[j] = options.json && !isFinite(message.frontIndex[j]) ? String(message.frontIndex[j]) : message.frontIndex[j];
+            }
+            if (message.backIndex && message.backIndex.length) {
+                object.backIndex = [];
+                for (let j = 0; j < message.backIndex.length; ++j)
+                    object.backIndex[j] = options.json && !isFinite(message.backIndex[j]) ? String(message.backIndex[j]) : message.backIndex[j];
+            }
+            return object;
+        };
+
+        /**
+         * Converts this TreadBorder to JSON.
+         * @function toJSON
+         * @memberof Types.TreadBorder
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        TreadBorder.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return TreadBorder;
     })();
 
     Types.StepParameters = (function() {

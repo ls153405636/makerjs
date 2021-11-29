@@ -372,6 +372,9 @@ export namespace Types {
 
         /** Outline isClose */
         isClose?: (boolean|null);
+
+        /** Outline isClock */
+        isClock?: (boolean|null);
     }
 
     /** Represents an Outline. */
@@ -388,6 +391,9 @@ export namespace Types {
 
         /** Outline isClose. */
         public isClose: boolean;
+
+        /** Outline isClock. */
+        public isClock: boolean;
 
         /**
          * Creates a new Outline instance using the specified properties.
@@ -1702,11 +1708,8 @@ export namespace Types {
         /** Tread uuid */
         uuid?: (string|null);
 
-        /** Tread stepOutline */
-        stepOutline?: (Types.IOutline|null);
-
-        /** Tread treadOutline */
-        treadOutline?: (Types.IOutline|null);
+        /** Tread border */
+        border?: (Types.ITreadBorder|null);
 
         /** Tread index */
         index?: (number|null);
@@ -1748,11 +1751,8 @@ export namespace Types {
         /** Tread uuid. */
         public uuid: string;
 
-        /** Tread stepOutline. */
-        public stepOutline?: (Types.IOutline|null);
-
-        /** Tread treadOutline. */
-        public treadOutline?: (Types.IOutline|null);
+        /** Tread border. */
+        public border?: (Types.ITreadBorder|null);
 
         /** Tread index. */
         public index: number;
@@ -1847,6 +1847,126 @@ export namespace Types {
 
         /**
          * Converts this Tread to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a TreadBorder. */
+    interface ITreadBorder {
+
+        /** TreadBorder stepOutline */
+        stepOutline?: (Types.IOutline|null);
+
+        /** TreadBorder treadOutline */
+        treadOutline?: (Types.IOutline|null);
+
+        /** TreadBorder inIndex */
+        inIndex?: (number[]|null);
+
+        /** TreadBorder outIndex */
+        outIndex?: (number[]|null);
+
+        /** TreadBorder frontIndex */
+        frontIndex?: (number[]|null);
+
+        /** TreadBorder backIndex */
+        backIndex?: (number[]|null);
+    }
+
+    /** Represents a TreadBorder. */
+    class TreadBorder implements ITreadBorder {
+
+        /**
+         * Constructs a new TreadBorder.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ITreadBorder);
+
+        /** TreadBorder stepOutline. */
+        public stepOutline?: (Types.IOutline|null);
+
+        /** TreadBorder treadOutline. */
+        public treadOutline?: (Types.IOutline|null);
+
+        /** TreadBorder inIndex. */
+        public inIndex: number[];
+
+        /** TreadBorder outIndex. */
+        public outIndex: number[];
+
+        /** TreadBorder frontIndex. */
+        public frontIndex: number[];
+
+        /** TreadBorder backIndex. */
+        public backIndex: number[];
+
+        /**
+         * Creates a new TreadBorder instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns TreadBorder instance
+         */
+        public static create(properties?: Types.ITreadBorder): Types.TreadBorder;
+
+        /**
+         * Encodes the specified TreadBorder message. Does not implicitly {@link Types.TreadBorder.verify|verify} messages.
+         * @param message TreadBorder message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ITreadBorder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified TreadBorder message, length delimited. Does not implicitly {@link Types.TreadBorder.verify|verify} messages.
+         * @param message TreadBorder message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ITreadBorder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a TreadBorder message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns TreadBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.TreadBorder;
+
+        /**
+         * Decodes a TreadBorder message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns TreadBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.TreadBorder;
+
+        /**
+         * Verifies a TreadBorder message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a TreadBorder message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns TreadBorder
+         */
+        public static fromObject(object: { [k: string]: any }): Types.TreadBorder;
+
+        /**
+         * Creates a plain object from a TreadBorder message. Also converts values to other types if specified.
+         * @param message TreadBorder
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.TreadBorder, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this TreadBorder to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };

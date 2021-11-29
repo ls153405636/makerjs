@@ -28,7 +28,7 @@ export class Landing extends ChildInfo {
    * @param {Object} param0 
    * @param {Types.Outline} param0.vBorder 
    */
-  constructor ({vParent, vTreadIndex, vBorder, vLastEdgeIndex, vNextEdgeIndex, vLastStepWidth, vNextStepWidth}) {
+  constructor ({vParent, vTreadIndex, vBorder, vLastEdgeIndex, vNextEdgeIndex, vLastStepWidth, vNextStepWidth, vStartHeight}) {
     super(vParent)
     this.type = Default.LANDING_TYPE
     this.corIndex = Math.max(vLastEdgeIndex, vNextEdgeIndex)
@@ -41,7 +41,7 @@ export class Landing extends ChildInfo {
     this.lastVec = new Edge(vBorder.edges[this.lastEdgeIndex]).getNormal().negate()
     this.nextVec = new Edge(vBorder.edges[this.nextEdgeIndex]).getNormal()
     this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
-    this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth})
+    this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth, vStartHeight})
   }
 
   /**
@@ -52,7 +52,7 @@ export class Landing extends ChildInfo {
    * @param {Number} param0.vLastStepWidth 上段楼梯的步宽
    * @param {Number} param0.vNextStepWidth 下段楼梯的步宽
    */
-  rebuildByParent ({vTreadIndex, vBorder, vLastStepWidth, vNextStepWidth}) {
+  rebuildByParent ({vTreadIndex, vBorder, vLastStepWidth, vNextStepWidth, vStartHeight}) {
     this.pois = []
     vBorder.edges.forEach(e => {
       this.pois.push(e.p1)
@@ -65,6 +65,9 @@ export class Landing extends ChildInfo {
     this.edgeN = this.edges[this.nextEdgeIndex]
     this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
     this.sideEdgeN = this.edges[(this.lastEdgeIndex + 2)%4]
+    this.startHeight = vStartHeight
+    this.stepHeight = this.parent.stepHeight
+    this.endHeight = this.stepHeight + this.stepHeight * this.stepNum
     //this.updateCorBigCol()
   }
 
@@ -133,18 +136,20 @@ export class Landing extends ChildInfo {
 
   createTreads() {
     let treads = []
-    let outlines = []
+    let borders = []
     if (this.type === Types.LandingCutType.lct_first) {
-      outlines = [tool.createOutlineByPois(this.pois)]
+      borders = this.createFirstBorders()
     } else if (this.type === Types.LandingCutType.lct_second) {
-      outlines = this.createSecondOutlines()
+      borders = this.createSecondBorders()
     } else {
-      outlines = this.createInCutOutlines()
+      borders = this.createInCutBorders()
     }
-    for (let i = 0; i < outlines.length; i++) {
+    for (let i = 0; i < borders.length; i++) {
+
       treads.push(new Types.Tread({
         index:this.treadIndex + i + 1,
-        stepOutline: outlines[i]
+        border:borders[i],
+        stepHeight: this.stepHeight
       }))
     }
     return treads
@@ -189,15 +194,40 @@ export class Landing extends ChildInfo {
     return cols
   }
 
-  //创建二类分割梯板轮廓
-  createSecondOutlines(){
+  createFirstBorders() {
+    let outline = this.createOutlineByPois(this.pois, 1)
+    let backOffset = this.parent.getTreadBackOffset()
+    let backEdge = new Edge(this.edges[this.nextEdgeIndex]).offset(backOffset)
+    let treadPois = [...this.pois]
+    treadPois.splice(this.nextEdgeIndex, 2, backEdge.p1, backEdge.p2)
+    let treadOutline = this.createOutlineByPois(treadPois, 1)
+    let frontIndex = [this.lastEdgeIndex]
+    let backIndex = [this.nextEdgeIndex]
+    let inIndex = [], outIndex = []
+    for (let i = 0; i < 4; i++) {
+      if (i !== this.lastEdgeIndex && i !== this.nextEdgeIndex) {
+        inIndex.push(i)
+      }
+    }
+    let border = new Types.TreadBorder({
+      stepOutline:outline,
+      treadOutline:treadOutline,
+      inIndex:inIndex,
+      outIndex:outIndex,
+      frontIndex:frontIndex,
+      backIndex:backIndex
+    })
+    return  [border]
+  }
+
+  //创建二类分割踏步轮廓
+  createSecondBorders(){
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[(this.corIndex+2)%4] //对角点
     let outlines = []
-    let tArgs = this.parent.parent.treadParameters
-    let rArgs = this.parent.parent.riserParameters
-    let backOffset = tArgs.nossing + rArgs.riserExist ? rArgs.depth : 0
+    let backOffset = this.parent.getTreadBackOffset()
     let treadOutlines = []
+    let borders = []
     let sideDisL = new Edge(this.edgeL).getLength() * Math.tan(Math.PI / 6) //上段楼梯侧边断点的偏移距离
     let sideDisN = new Edge(this.edgeN).getLength() * Math.tan(Math.PI / 6) //下段楼梯侧边断点的偏移距离
     if (this.lastEdgeIndex === this.corIndex) {
@@ -207,16 +237,16 @@ export class Landing extends ChildInfo {
       let pN = this.edgeN.p1 //下段楼梯对应边的另个端点
 
       let pois1 = [this.bpl, cor, pL]
-      outlines.push(tool.createOutlineByPois(pois1))
-      treadOutlines.push(this.createSecondTreadOutline(pois1, this.lastVec, this.lastVec, backOffset))
+      outlines.push(this.createOutlineByPois(pois1, 1))
+      treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec], backOffset, 1))
 
       let pois2 = [this.bpN, cor, this.bpl, oppo]
-      outlines.push(tool.createOutlineByPois(pois2))
-      treadOutlines.push(this.createSecondTreadOutline(pois2, this.nextVec, this.lastVec, backOffset))
+      outlines.push(this.createOutlineByPois(pois2, 2))
+      treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec,this.lastVec], backOffset, 2))
 
       let pois3 = [pN, cor, this.bpN]
-      outlines.push(tool.createOutlineByPois(pois3))
-      treadOutlines.push(this.createSecondTreadOutline(pois3, this.nextVec, this.nextVec, backOffset))
+      outlines.push(this.createOutlineByPois(pois3, 3))
+      treadOutlines.push(this.createTreadOutline(pois3, [this.nextVec,this.nextVec], backOffset, 3))
     } else {
       this.bpl = new Edge(this.sideEdgeL).extendP2(-sideDisL).p2 //上段楼梯侧边断点
       this.bpN = new Edge(this.sideEdgeN).extendP1(-sideDisN).p1 //下段楼梯侧边断点
@@ -224,32 +254,38 @@ export class Landing extends ChildInfo {
       let pN = this.edgeN.p2 //下段楼梯对应边的另个端点
 
       let pois1 = [cor, this.bpl, pL]
-      outlines.push(tool.createOutlineByPois(pois1))
-      treadOutlines.push(this.createSecondTreadOutline(pois1, this.lastVec, this.lastVec, backOffset))
+      outlines.push(this.createOutlineByPois(pois1, 1))
+      treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec], backOffset, 1))
 
       let pois2 = [cor, this.bpN, oppo, this.bpl]
-      outlines.push(tool.createOutlineByPois())
-      treadOutlines.push(this.createSecondTreadOutline(pois2, this.lastVec, this.nextVec, backOffset))
+      outlines.push(this.createOutlineByPois(pois2, 2))
+      treadOutlines.push(this.createTreadOutline(pois2, [this.lastVec,this.nextVec], backOffset, 2))
 
       let pois3 = [cor, pN, this.bpN]
-      outlines.push(tool.createOutlineByPois(pois3))
-      treadOutlines.push(this.createSecondOutlines(pois3, this.nextVec, this.nextVec, backOffset))
+      outlines.push(this.createOutlineByPois(pois3, 3))
+      treadOutlines.push(this.createTreadOutline(pois3, [this.nextVec,this.nextVec], backOffset, 3))
     }
-    return {outlines, treadOutlines}
+    for (let i = 0; i < 3; i++) {
+      let border = new Types.TreadBorder({stepOutline:outlines[i],
+                                          treadOutline:treadOutlines[i],
+                                          backIndex:[0],
+                                          frontIndex:this.lastEdgeIndex === this.corIndex ? [1]:[outlines[i].edges.length - 1]})
+      if(i === 0 || i === 2) {
+        border.inIndex = this.lastEdgeIndex === this.corIndex ? [2] : [1]
+      } else {
+        border.inIndex = this.lastEdgeIndex === this.corIndex ? [2, 3] : [1, 2]
+      }
+      borders.push(border)
+    }
+    return borders
   }
 
-  createSecondTreadOutline (vPois, vVec1, vVec2, vBackOffset) {
-    let p1 = vPois[0]
-    let p2 = vPois[1]
-    let p1_b = new Edge().setByVec(p1, vVec1, vBackOffset).p2
-    let p2_b = new Edge().setByVec(p2, vVec2, vBackOffset).p2
-    vPois.splice(1, 0, p1_b, p2_b)
-    return tool.createOutlineByPois(vPois)
-  }
-
-  //创建三四五类分割梯板轮廓
-  createInCutOutlines() {
+  //创建三四五类分割踏步轮廓
+  createInCutBorders() {
     let outlines = []
+    let backOffset = this.parent.getTreadBackOffset()
+    let treadOutlines = []
+    let borders = []
     let inEdgeL = new Edge(this.edgeL).offset(this.lastStepWidth, false)
     let cor = this.pois[this.corIndex] //转角点
     let oppo = this.pois[(this.corIndex+2)%4] //对角点
@@ -260,15 +296,35 @@ export class Landing extends ChildInfo {
       let pN = this.edgeN.p1 //下段楼梯对应边的另个端点
       let cutP = new Edge(inEdgeL).extendP1(-this.nextStepWidth).p1 //内部切割点
       if (this.type === Types.LandingCutType.lct_third) {
-        outlines.push(tool.createOutlineByPois([this.bpL, cutP, cor, pL]))
-        outlines.push(tool.createOutlineByPois([pN, cor, cutP, this.bpL, oppo]))
+        let pois1 = [this.bpL, cutP, cor, pL]
+        outlines.push(this.createOutlineByPois(pois1, 1))
+        treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+
+        let pois2 = [pN, cor, cutP, this.bpL, oppo]
+        outlines.push(this.createOutlineByPois(pois2, 2))
+        treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
+
       } else if (this.type === Types.LandingCutType.lct_fourth) {
-        outlines.push(tool.createOutlineByPois([this.bpN, cutP, cor, pL, oppo]))
-        outlines.push(tool.createOutlineByPois([pN, cor, cutP, this.bpN]))
+        let pois1 = [this.bpN, cutP, cor, pL, oppo]
+        outlines.push(this.createOutlineByPois(pois1, 1))
+        treadOutlines.push(this.createTreadOutline(pois1, [this.nextVec, this.nextVec, this.lastVec], backOffset, 1))
+
+        let pois2 = [pN, cor, cutP, this.bpN]
+        outlines.push(this.createOutlineByPois(pois2, 2))
+        treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
       } else {
-        outlines.push(tool.createOutlineByPois([this.bpL, cutP, cor, pL]))
-        outlines.push(tool.createOutlineByPois([this.bpN, cutP, this.bpL, oppo]))
-        outlines.push(tool.createOutlineByPois([pN, cor, cutP, this.bpN]))
+        let pois1 = [this.bpL, cutP, cor, pL]
+        outlines.push(this.createOutlineByPois(pois1, 1))
+        treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+
+        let pois2 = [this.bpN, cutP, this.bpL, oppo]
+        outlines.push(this.createOutlineByPois(pois2, 2))
+        //let t_pois2 = [this.bpN, cutP, cor, cutP, this.bpL, oppo]
+        treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec, /*this.lastVec*/], backOffset, 2))
+
+        let pois3 = [pN, cor, cutP, this.bpN]
+        outlines.push(this.createOutlineByPois(pois3, 3))
+        treadOutlines.push(this.createTreadOutline(pois3, [this.nextVec, this.nextVec], backOffset, 3))
       }
     } else {
       this.bpL = new Edge(this.sideEdgeL).extendP2(-this.lastStepWidth).p2
@@ -277,21 +333,92 @@ export class Landing extends ChildInfo {
       let pN = this.edgeN.p2 //下段楼梯对应边的另个端点
       let cutP = new Edge(inEdgeL).extendP2(-this.nextStepWidth).p2 //内部切割点
       if (this.type === Types.LandingCutType.lct_third) {
-        outlines.push(tool.createOutlineByPois([cor, cutP, this.bpL, pL]))
-        outlines.push(tool.createOutlineByPois([cor, pN, oppo, this.bpL, cutP]))
+        let pois1 = [cor, cutP, this.bpL, pL]
+        outlines.push(this.createOutlineByPois(pois1, 1))
+        treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+
+        let pois2 = [cor, pN, oppo, this.bpL, cutP]
+        outlines.push(this.createOutlineByPois(pois2, 2))
+        treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
+
       } else if (this.type === Types.LandingCutType.lct_fourth) {
-        outlines.push(tool.createOutlineByPois([cor, cutP, this.bpN, oppo, pL]))
-        outlines.push(tool.createOutlineByPois([cor, pN, this.bpN, cutP]))
+        let pois1 = [cor, cutP, this.bpN, oppo, pL]
+        outlines.push(this.createOutlineByPois(pois1, 1))
+        treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec, this.nextVec, this.nextVec], backOffset, 1))
+
+        let pois2 = [cor, pN, this.bpN, cutP]
+        outlines.push(this.createOutlineByPois(pois2, 2))
+        treadOutlines.push(this.createTreadOutline(pois2, [this.nextVec, this.nextVec], backOffset, 2))
       } else {
-        outlines.push(tool.createOutlineByPois([cor, cutP, this.bpL, pL]))
-        outlines.push(tool.createOutlineByPois([cutP, this.bpN, oppo, this.bpL]))
-        outlines.push(tool.createOutlineByPois([cor, pN, this.bpN, cutP]))
+        let pois1 = [cor, cutP, this.bpL, pL]
+        outlines.push(this.createOutlineByPois(pois1, 1))
+        treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
+
+        let pois2 = [cutP, this.bpN, oppo, this.bpL]
+        outlines.push(this.createOutlineByPois(pois2, 2))
+        //let t_pois2 = [cor, cutP, this.bpN, oppo, this.bpL, cutP]
+        treadOutlines.push(this.createTreadOutline(pois2, [/*this.lastVec,*/ this.nextVec, this.nextVec], backOffset, 2))
+
+        let pois3 = [cor, pN, this.bpN, cutP]
+        outlines.push(this.createOutlineByPois(pois3, 3))
+        treadOutlines.push(this.createTreadOutline(pois3, [this.nextVec, this.nextVec], backOffset, 3))
       }
     }
-    return outlines
+    for (let i = 0; i < outlines.length; i++) {
+      let border = new Types.TreadBorder({
+        stepOutline: outlines[i],
+        treadOutline: treadOutlines[i],
+        backIndex:[0]
+      })
+      if (i === 2) {
+        border.frontIndex = [2]
+        border.inIndex = this.lastEdgeIndex === this.corIndex ? [3] : [1]
+      }
+      if (i === 0) {
+        border.frontIndex = this.lastEdgeIndex === this.corIndex ? [2] : [3]
+        border.inIndex = this.lastEdgeIndex === this.corIndex ? [3] : [2]
+      } else if (i === 1) {
+        if (this.lastEdgeIndex === this.corIndex) {
+          border.inIndex = [outlines[i].edges.length - 1, outlines[i].edges.length - 2]
+          border.frontIndex = [outlines[i].edges.length - 3]
+        } else {
+          border.inIndex = [1, 2]
+          border.frontIndex = [3]
+        }
+      } 
+      borders.push(border)
+    }
+    return borders
   }
 
-  createInCutTreadOutline () {
-    
+  createTreadOutline (vPois, vVecs, vBackOffset, vIndex) {
+    let i = 0
+    let backPois = []
+    for (; i < vVecs.length; i++) {
+      backPois.push(new Edge().setByVec(vPois[i], vVecs[i], vBackOffset).p2)
+    }
+    vPois.splice(1, i-2)
+    for (let k = 1; k <= backPois.length; k++) {
+      vPois.splice(k, 0, backPois[k-1])
+    }
+    return this.createOutlineByPois(vPois, vIndex)
+  }
+
+  createOutlineByPois (vPois, vIndex) {
+    let height = this.startHeight + this.stepHeight * vIndex
+    let outline = tool.createOutlineByPois(vPois)
+    outline.isClock = true
+    outline = new Outline(outline).setZCoord(height)
+    return outline
+  }
+
+  /**
+   * 获取休台的终止高度
+   * @param {Number} vStartHeight 起始高度 本函数会在rebuildByParent之前调用，类内部的起始高度可能还未更新
+   * @returns 
+   */
+  getEndHeight (vStartHeight) {
+    let height = vStartHeight || this.startHeight
+    return height + this.stepNum * this.parent.stepHeight
   }
 }

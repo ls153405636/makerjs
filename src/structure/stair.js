@@ -50,6 +50,7 @@ export class Stair extends Info {
       sideNossing: Default.TREAD_SIDE_NOSSING,
     })
     this.riserParameters = new Types.RiserParameters({
+      riserExist: true,
       depth: Default.RISER_DEPTH,
     })
     this.smallColParameters = new Types.SmallColParameters({
@@ -87,11 +88,11 @@ export class Stair extends Info {
     } else {
       this.initFlights()
     }
+    this.updateStartFlight()
     this.updateLandings()
     this.computeSize()
     this.computePosition()
     this.updateBorder()
-    this.updateStartFlight()
     this.updateGirders()
     this.updateHandrails()
     this.updateSmallColumns()
@@ -232,6 +233,15 @@ export class Stair extends Info {
                                         vWVec:new Types.Vector3({y:1}),
                                         vStepLength: f1.stepLength})
     }
+  }
+
+  /**
+   * 计算实际踏板轮廓的后边，比平面图中需向后偏移的距离
+   */
+  getTreadBackOffset() {
+    let tArgs = this.treadParameters
+    let rArgs = this.riserParameters
+    return tArgs.nossing + (rArgs.riserExist ? rArgs.depth : 0)
   }
 
 

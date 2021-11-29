@@ -53,7 +53,8 @@ export class LTypeStair extends Stair {
                                   vPos:pos1, 
                                   vLVec:new Types.Vector3({x:1}), 
                                   vWVec:new Types.Vector3({y:1}), 
-                                  vLength:depth - Default.STEP_LENGTH})
+                                  vLength:depth - Default.STEP_LENGTH,
+                                  vStartHeight: 0})
     this.flights[1] = new Flight({vParent:this, 
                                   vStepNum:num2, 
                                   vStepNumRule:this.stepNumRule, 
@@ -64,7 +65,8 @@ export class LTypeStair extends Stair {
                                   vLVec:new Types.Vector3({y:1}), 
                                   vWVec:wVec2, 
                                   vLength:width - Default.STEP_LENGTH,
-                                  vClock:this.floadSide === Types.Side.si_right})
+                                  vClock:this.floadSide === Types.Side.si_right,
+                                  vStartHeight:(num1+Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE))*this.stepHeight})
   }
 
   /** 更新楼梯段*/
@@ -83,11 +85,13 @@ export class LTypeStair extends Stair {
     f1.rebuildByParent({vTreadIndex:this.startStepNum, 
                         vPos:pos1, 
                         vLVec:new Types.Vector3({x:1}), 
-                        vWVec:new Types.Vector3({y:1})})
+                        vWVec:new Types.Vector3({y:1}),
+                        vStartHeight:this.startFlight?.getEndHeight() || 0})
     f2.rebuildByParent({vTreadIndex:this.startStepNum + f1.stepNum + this.landings[0].stepNum, 
                         vPos:pos2, 
                         vLVec:new Types.Vector3({y:1}), 
-                        vWVec:wVec2})
+                        vWVec:wVec2,
+                        vStartHeight:this.landings[0].getEndHeight(f1.getEndHeight())})
   }
 
   /** 根据楼梯段、起步踏、休息平台等计算总步数*/
@@ -199,7 +203,8 @@ export class LTypeStair extends Stair {
                 vLastEdgeIndex:2, 
                 vNextEdgeIndex:nextIndex, 
                 vLastStepWidth:f1.stepWidth, 
-                vNextStepWidth:f2.stepWidth}
+                vNextStepWidth:f2.stepWidth,
+                vStartHeight:f1.getEndHeight()}
     if (this.landings[0]) {
       this.landings[0].rebuildByParent(paras)
     } else {

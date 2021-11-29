@@ -2,7 +2,6 @@ import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
 import { ChildInfo } from './child_info'
 import { Default } from './config'
-import { StartTread } from './start_tread'
 import tool from './tool'
 import { Tread } from './tread'
 
@@ -11,7 +10,7 @@ export class Flight extends ChildInfo {
     { value: Types.StepNumRule.snr_n, label: 'n步' },
     { value: Types.StepNumRule.snr_n_add_1, label: 'n+1步' },
   ]
-  constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vPos, vLVec, vWVec, vLength, vClock = true}) {
+  constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vPos, vLVec, vWVec, vLength, vClock = true, vStartHeight}) {
     super(vParent)
     this.stepLength = Default.STEP_LENGTH
     this.length = vLength
@@ -23,7 +22,7 @@ export class Flight extends ChildInfo {
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
     this.clock = vClock
-    this.rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec })
+    this.rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec, vStartHeight })
   }
 
   /**
@@ -31,13 +30,15 @@ export class Flight extends ChildInfo {
    * @param {Object} param0
    * 所有index均为在程序数组中从0开始的index
    */
-  rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec }) {
+  rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec, vStartHeight }) {
     this.treadIndex = vTreadIndex
     this.pos = vPos
     this.lVec = vLVec
     this.wVec = vWVec
     this.stepHeight = this.parent.stepHeight
+    this.startHeight = vStartHeight
     this.computeStepWidth()
+    this.computeEndHeight()
     this.updateTreads()
   }
 
@@ -86,40 +87,33 @@ export class Flight extends ChildInfo {
   updateTreads() {
     let step_num = this.stepNum + 1 - this.stepNumRule
     let widthSum = 0
+    let heightSum = this.endHeight
+    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
+      if (this.treads[this.stepNum - 1] && (!this.treads[this.stepNum - 1].inheritH)) {
+        heightSum = heightSum - this.treads[this.stepNum - 1].stepHeight
+      } else {
+        heightSum = heightSum - this.stepHeight
+      }
+    }
     let commonParas = { vParent: this, vIsLast: false }
     for (let i = 0; i < step_num; i++) {
       let index = step_num - i + this.treadIndex
-      let pos = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(this.wVec,widthSum)
+      let pos = new Edge().setByVec(this.pos, this.wVec, widthSum).p2
+      pos.z = heightSum
       let paras = { ...commonParas, vIndex: index, vPos: pos, vIsLast: false }
       if (this.treads[step_num - i - 1]) {
-        if (i === step_num - 1 && this.startTread) {
-          let gArgs = this.parent.girderParameters
-          if (gArgs.type === Types.GirderType.gslab) {
-            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth).p2
-          }
-        }
         this.treads[step_num - i - 1].rebuildByParent(paras)
         widthSum = widthSum + this.treads[step_num - i - 1].stepWidth
+        heightSum = heightSum - this.treads[step_num - i - 1].stepHeight
       } else {
-        if (i === step_num - 1 && this.startTread) {
-          let gArgs = this.parent.girderParameters
-          if (gArgs.type === Types.GirderType.gslab) {
-            paras.pos = new Edge().setByVec(pos, this.lVec, -gArgs.depth).p2
-          }
-          
-          this.treads[step_num - i - 1] = new StartTread(paras)
-        }
-        else {
-          this.treads[step_num - i - 1] = new Tread(paras)
-        }
+        this.treads[step_num - i - 1] = new Tread(paras)
         widthSum = widthSum + this.stepWidth
+        heightSum = heightSum - this.stepHeight
       }
     }
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      let pos = new THREE.Vector2(this.pos.x, this.pos.y).addScaledVector(
-        this.wVec,
-        -this.stepWidth - this.parent.hangOffset
-      )
+      let pos = new Edge().setByVec(this.pos, this.wVec, -this.stepWidth - this.parent.hangOffset).p2
+      pos.z = this.endHeight
       let paras = {
         ...commonParas,
         vPos: pos,
@@ -169,6 +163,24 @@ export class Flight extends ChildInfo {
       length = length + this.treads[i].stepWidth
     }
     return length
+  }
+
+  computeEndHeight() {
+    this.endHeight = this.startHeight
+    for (const t of this.treads) {
+      if (t.inheritH) {
+        this.endHeight += this.stepHeight
+      } else {
+        this.endHeight += this.endHeight + t.stepHeight
+      }
+    }
+    if (this.endHeight === this.startHeight) {
+      this.endHeight += this.stepNum * this.stepHeight
+    }
+  }
+
+  getEndHeight () {
+    return this.endHeight
   }
 
   getTreadByNum(vNum) {

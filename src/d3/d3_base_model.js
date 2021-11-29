@@ -1,7 +1,7 @@
 import { D3Scene } from "./d3_scene"
 
 
-export class BaseObj {
+export class BaseModel {
   constructor(vUuid) {
     this.obj = null
     this.uuid = vUuid
@@ -14,4 +14,12 @@ export class BaseObj {
       new D3Scene().addEle(this.obj)
     }
   }
+
+  getObj() {
+    return this.obj
+  }
+
+  update() {}
+
+  createObj() {}
 }
