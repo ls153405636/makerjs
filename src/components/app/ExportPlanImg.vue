@@ -1,8 +1,10 @@
 <template>
+<div class="export-plan-img">
   <!-- 顶部 -->
   <div class="header-export" id="q123">
-       <el-button type="primary" class="export" @click="createdImg()">下载图片</el-button>
-       <el-button type="primary" class="back-index" @click="back()">返回</el-button>
+       <!-- <el-button type="primary" class="export" @click="adddownloadImg()">载入截图</el-button> -->
+       <el-button type="primary" class="export" @click="downloadImg()">下载图片</el-button>
+       <el-button type="primary" class="back-index" @click="backHome()">返回</el-button>
   </div>
 
   <!-- 内容 -->
@@ -24,7 +26,7 @@
       </div>
       <!-- 平面图展示区域 -->
       <div id="plan-pic">
-        <div id="canvas"></div>
+        <!-- <div id="canvas"></div> -->
         <!-- <img src=""  class="show-img"> -->
       </div>
       <!-- 内容-左侧-底部 -->
@@ -55,21 +57,14 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 <script>
 import html2canvas from 'html2canvas'
-import { Core } from '../../common/core'
-import { Command } from '../../common/command'
 export default {
   name: 'exportPlanImg',
-  provide () {
-    return {
-      reload: this.reload
-    }
-  },
   data() {
     return {
-      isRouterAlive: true,
       tableData: [
         {
           date: '2016-05-03',
@@ -151,36 +146,26 @@ export default {
     }
   },
   methods:{
-    back() {
-      this.$router.push('/')
+    backHome() {
+      window.stage[0].visible = 1
+      localStorage.clear()
+      document.querySelector("#plan-pic").innerHTML = '' // 清除图片
+      document.querySelector(".components").style.display = 'block'
+      document.querySelector("#canvas").style.display = 'block'
+      document.querySelector('.export-plan').style.display = 'none'
+      document.querySelector('.shot-img').style.display = 'none'
+      
     },
-    reload () {
-      this.isRouterAlive = false
-      this.$nextTick(function() {
-         this.isRouterAlive = true
-      })
-    },
-    onSubmit() {
-      let imgUrl = localStorage.getItem('img_url')
-      let b = document.querySelector('#plan-pic')
-      var img = document.createElement('img')
-      img.setAttribute("class", "show-img")
-      b.appendChild(img)
-      img.src = imgUrl
-      // document.querySelector('.show-img').src = imgUrl
-    },
-    async createdImg(){
+    async downloadImg(){
       let canvas = await html2canvas(document.querySelector(".main-export"),{
-          dpi: window.devicePixelRatio * 2, // 对应屏幕的dpi，适配高清屏，解决canvas模糊问题
-          scale: 1, // 缩放
-          allowTaint: true, // 是否使用图片跨域
-          useCORS: true, // 是否使用图片跨域
-          // y: window.scrollY // 根据滚动条来截取--主要用于截取某一个区域
+          dpi: window.devicePixelRatio,
+          scale: 1, 
+          allowTaint: true, 
+          useCORS: true, 
       });
-      // canvas参数为生成的canvas的dom节点，可以对其进行dom操作
+      
       // 下载功能
       var save_url=canvas.toDataURL("image/png");
-      console.log(save_url)
       var a=document.createElement('a')
       document.body.appendChild(a)
       a.href=save_url
@@ -188,22 +173,6 @@ export default {
       a.click()
     },
   },
-  created(){
-    setTimeout(()=>{
-      let imgUrl = localStorage.getItem('img_url')
-      let b = document.querySelector('#plan-pic')
-      var img = document.createElement('img')
-      img.setAttribute("class", "show-img")
-      b.appendChild(img)
-      img.src = imgUrl
-      // document.querySelector('.show-img').src = imgUrl
-      // this.createdImg(); 
-    },100)
-                
-  },
-  // mounted() {
-  //   new Core().execute(new Command(new Core().cmds.BootCmd))
-  // },
 }
 </script>
 

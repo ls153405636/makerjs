@@ -1,5 +1,5 @@
 <template>
-  <div class="component-top" >
+  <div class="component-top">
     <div class="top-name">楼梯设计工具</div>
     <div class="center-icons">
       <div class="options">
@@ -32,7 +32,7 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="onSubmit()">导出平面图</el-dropdown-item>
+              <el-dropdown-item @click="exportImg()">导出平面图</el-dropdown-item>
               <el-dropdown-item disabled>导出报价清单</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -74,15 +74,14 @@ export default {
   name: 'componentTop',
   data() {
     return {
-      imgUrl: ''
+      imgUrl: '',
     }
   },
   methods: {
-    onSubmit() {
-      console.log(app)
-      document.querySelector(".shot").style.display = 'block'
-      document.querySelector("#home-components").style.display = 'none'
-      document.querySelector(".shot-header").style.display = 'flex'
+    exportImg() {
+      console.log(localStorage)
+      document.querySelector('.components').style.display = 'none'
+      document.querySelector('.shot-img').style.display = 'flex'
       window.stage[0].visible = 0
       let core = new Core()
       core.execute(
@@ -92,32 +91,6 @@ export default {
         })
       )
     },
-    app() {
-      let el = document.querySelector("#canvas");
-      html2canvas(el, {
-        scale: window.devicePixelRatio,
-        width: 950,
-        height: 680,
-        x: 485,
-        y: 113.5,
-        allowTaint: true,
-      })
-      .then((canvas) => {
-        this.imgUrl = canvas.toDataURL();
-        this.$store.commit({
-          type: 'show_img/getImgUrl',
-          url: this.imgUrl
-        })
-        localStorage.setItem('img_url',this.imgUrl)
-        this.$router.push({
-          name: 'export',
-        })
-        setTimeout(() => {
-          window.location.reload()
-        },100)
-        
-      })
-    }
   }
 }
 </script>
