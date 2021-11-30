@@ -1,5 +1,6 @@
 const state = {
   showImgUrl: '',
+  isShow: false
 }
 
 const getters = {
@@ -11,6 +12,7 @@ const getters = {
 const mutations = {
   getImgUrl(state, payload) {
     state.showImgUrl = payload.url
+    state.isShow = payload.value
   },
 }
 

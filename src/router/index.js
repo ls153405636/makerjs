@@ -5,13 +5,19 @@ const routes =  [
   {
     path: '/',
     name: '',
-    component: () => import('@/components/app/index.vue')
+    component: () => import('@/components/app/index.vue'),
+    meta: {
+      keepAlive: true // 需要被缓存
+    }
   },
-  {
-    path: '/export',
-    name: 'export',
-    component: () => import('@/components/app/ExportPlanImg.vue')
-  },
+  // {
+  //   path: '/shot',
+  //   name: 'shot',
+  //   component: () => import('@/components/app/ShotImg.vue'),
+  //   meta: {
+  //     keepAlive: false // 不需要被缓存
+  //   }
+  // },
 ]
 
 
