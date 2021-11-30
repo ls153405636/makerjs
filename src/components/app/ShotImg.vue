@@ -41,6 +41,7 @@ export default {
         y: 113.5,
         allowTaint: true,
       })
+<<<<<<< HEAD
       localStorage.clear()
       this.imgUrl = canvas.toDataURL();
       // this.$store.commit({
@@ -56,6 +57,14 @@ export default {
       b.appendChild(img)
       img.src = imgUrl
       
+=======
+      this.imgUrl = canvas.toDataURL();
+      this.$store.commit({
+        type: 'show_img/getImgUrl',
+        url: this.imgUrl,
+      })
+      // localStorage.setItem('img_url',this.imgUrl)
+>>>>>>> 44c44c3f5ca0d8ea8dcd01e7e25d228ccecee45f
       
       setTimeout(() => {
         document.querySelector('#canvas').style.display = 'none'
