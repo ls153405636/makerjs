@@ -89,7 +89,7 @@ export class Stair extends BaseWidget {
 
     // sortableChildren = true 子级根据zIndex排序
     // 跟元素添加顺序有冲突
-    // this.sprite.sortableChildren = true
+    this.sprite.sortableChildren = true
 
     this.addSprites(this.flights)
     this.addSprites(this.hangingBoard)
@@ -98,14 +98,14 @@ export class Stair extends BaseWidget {
     if (
       this.girders[0] &&
       this.handrails[0] &&
-      this.girders[0].sprite.width >
-        this.handrails[0].width / D2Config.SCREEN_RATE
-    ) {
-      this.addSprites(this.girders)
-      this.addSprites(this.handrails)
+      this.girders[0].sprite.width >this.handrails[0].width / D2Config.SCREEN_RATE) {
+        this.addSprites(this.girders)
+        this.addSprites(this.handrails)
+        this.sprite.sortableChildren = false
     } else {
       this.addSprites(this.handrails)
       this.addSprites(this.girders)
+      this.sprite.sortableChildren = true
     }
     this.addSprites(this.smallColumns)
     this.addSprites(this.bigColumns)

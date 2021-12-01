@@ -4,7 +4,7 @@ import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
 import { Default } from '../../structure/config'
 import { Types } from '../../types/stair_v2'
-import { D2Config } from '../config'
+import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
 
@@ -18,6 +18,7 @@ export class Tread extends ChildWidget {
     this.p1 = d2_tool.translateCoord(vPB.stepOutline.edges[3].p1)
     this.p2 = d2_tool.translateCoord(vPB.stepOutline.edges[3].p2)
     this.edges = vPB.stepOutline.edges
+    this.isLast = vPB.isLast
     this.index = vPB.index
     this.parent = vParent
     this.depth = Default.WALL_DEPTH
@@ -203,7 +204,7 @@ export class Tread extends ChildWidget {
     if (this.index === 1) {
       this.sprite.zIndex = 0
     }else {
-      this.sprite.zIndex = 100
+      this.sprite.zIndex = Z_INDEX.TREAD_ZINDEX
     }
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
@@ -215,7 +216,7 @@ export class Tread extends ChildWidget {
     if (this.index === 1) {
       this.sprite.zIndex = 0
     }else {
-      this.sprite.zIndex = 100
+      this.sprite.zIndex = Z_INDEX.TREAD_ZINDEX
     }
     this.sprite.children[0].visible = true
     this.sprite.children[1].visible = false
@@ -223,7 +224,6 @@ export class Tread extends ChildWidget {
   // 鼠标离开踏板效果
   cancelHover() {
     if (!this.isSelected) {
-      // this.zIndex = 0
       this.sprite.zIndex = 0
       this.sprite.children[0].visible = false
       this.sprite.children[1].visible = true

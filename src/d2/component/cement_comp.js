@@ -46,7 +46,7 @@ export class CementComp extends BaseWidget {
 
     let changeComp = new PIXI.Graphics()
     changeComp.visible = false
-    changeComp.lineStyle(1, 0x4478f4)
+    changeComp.lineStyle(1, 0x4478f4,1,0)
     changeComp.beginFill(0xffffff, 1)
     changeComp.drawRect(
       -this.width / 2,
@@ -59,7 +59,7 @@ export class CementComp extends BaseWidget {
     changeComp.rotation = this.rotationY
 
     let comp = new PIXI.Graphics()
-    comp.lineStyle(1, 0x000000)
+    comp.lineStyle(1, 0x000000,1,0)
     comp.beginFill(0xffffff, 1)
     comp.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
     comp.endFill()
@@ -144,7 +144,7 @@ export class CementComp extends BaseWidget {
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart } = this
     const offSet = new Victor(10, 10) // 偏移距离
-
+    const arrow = new Victor(2, 2)
     const p1 = new Victor(-this.width / 2, this.depth / 2)
     const p2 = new Victor(this.width / 2, this.depth / 2)
     const p3 = new Victor(this.width / 2, -this.depth / 2)
@@ -164,29 +164,29 @@ export class CementComp extends BaseWidget {
     const newP5 = p5.addY(offSet)
     const newP6 = p6.addY(offSet)
 
-    const newP1T = new Victor(newP1.x, newP1.y).subtractY(new Victor(2, 2))
-    const newP1B = new Victor(newP1.x, newP1.y).addY(new Victor(2, 2))
-    const newP2T = new Victor(newP2.x, newP2.y).subtractY(new Victor(2, 2))
-    const newP2B = new Victor(newP2.x, newP2.y).addY(new Victor(2, 2))
+    const newP1T = new Victor(newP1.x, newP1.y).subtractY(arrow)
+    const newP1B = new Victor(newP1.x, newP1.y).addY(arrow)
+    const newP2T = new Victor(newP2.x, newP2.y).subtractY(arrow)
+    const newP2B = new Victor(newP2.x, newP2.y).addY(arrow)
 
-    const newP3T = new Victor(newP3.x, newP3.y).subtractX(new Victor(2, 2))
-    const newP3B = new Victor(newP3.x, newP3.y).addX(new Victor(2, 2))
-    const newP4T = new Victor(newP4.x, newP4.y).subtractX(new Victor(2, 2))
-    const newP4B = new Victor(newP4.x, newP4.y).addX(new Victor(2, 2))
+    const newP3T = new Victor(newP3.x, newP3.y).subtractX(arrow)
+    const newP3B = new Victor(newP3.x, newP3.y).addX(arrow)
+    const newP4T = new Victor(newP4.x, newP4.y).subtractX(arrow)
+    const newP4B = new Victor(newP4.x, newP4.y).addX(arrow)
 
     let newP5T = 0
     let newP5B = 0
     let newP6T = 0
     let newP6B = 0
     if (disToStart !== 0) {
-      newP5T = new Victor(newP5.x, newP5.y).subtract(new Victor(2, 2))
+      newP5T = new Victor(newP5.x, newP5.y).subtract(arrow)
       newP5B = new Victor(newP5.x, newP5.y)
-        .subtractX(new Victor(2, 2))
-        .addY(new Victor(2, 2))
+        .subtractX(arrow)
+        .addY(arrow)
       newP6T = new Victor(newP6.x, newP6.y)
-        .subtractY(new Victor(2, 2))
-        .addX(new Victor(2, 2))
-      newP6B = new Victor(newP6.x, newP6.y).add(new Victor(2, 2))
+        .subtractY(arrow)
+        .addX(arrow)
+      newP6B = new Victor(newP6.x, newP6.y).add(arrow)
     }
 
     // 文字旋转角度
@@ -201,7 +201,7 @@ export class CementComp extends BaseWidget {
     const compLineContainer = new PIXI.Container()
     // 标注线
     let compLine = new PIXI.Graphics()
-    compLine.lineStyle(1, 0xff88ff, 1, 0.5, true)
+    compLine.lineStyle(1, 0x000000, 1, 0.5, true)
     // 宽度标注线
     compLine.moveTo(newP1.x, newP1.y)
     compLine.lineTo(newP2.x, newP2.y)

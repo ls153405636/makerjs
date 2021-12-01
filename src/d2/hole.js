@@ -1,9 +1,11 @@
 // 绘制洞口
 // import { initProj } from '../init_temp'
 // import { Types } from '../types/stair_v2'
+import Victor from 'victor'
 import { COMP_TYPES } from '../common/common_config'
+import { Types } from '../types/stair_v2'
 import { BaseWidget } from './base_widget'
-import { D2Config } from './config'
+import { D2Config, Z_INDEX } from './config'
 // import { Wall } from './wall'
 
 export class Hole extends BaseWidget {
@@ -27,6 +29,7 @@ export class Hole extends BaseWidget {
   }
 
   init(vPB) {
+    this.sprite = new PIXI.Container()
     this.edges = vPB.edges
     this.draw()
     this.addEvent()
@@ -40,11 +43,9 @@ export class Hole extends BaseWidget {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
     }
-    // hole.lineStyle(2, 0x000000, 1, 0)
     hole.drawPolygon(path)
     hole.endFill()
-
-    this.sprite = hole
+    this.sprite.addChild(hole)
   }
 
   addEvent() {

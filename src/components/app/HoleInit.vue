@@ -107,7 +107,7 @@ export default {
       this.cur_hole_type = value
     },
     createStair() {
-      if ([1,2,3].includes(this.current)) {
+      if ([2,3].includes(this.current)) {
         alert('尚未开发完成')
       } else {
         let holeInit = document.getElementById('component-hole-init')
