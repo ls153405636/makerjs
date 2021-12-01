@@ -134,7 +134,7 @@ export class Wall extends BaseWidget {
 
     const wall_line = new PIXI.Graphics()
     wall_line.visible = false
-    wall_line.lineStyle(0.5, 0xdc143c)
+    wall_line.lineStyle(1, 0xdc143c)
     wall_line.moveTo(this.p1.x,this.p1.y)
     wall_line.lineTo(this.p2.x,this.p2.y)
     wall_line.drawPolygon(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
@@ -153,10 +153,11 @@ export class Wall extends BaseWidget {
     if (this.type === 4) {
       wall.alpha = this.alpha
       wall_line.visible = true
-      wallContainer.zIndex = Z_INDEX.WALL_LINE_ZINDEX
+      this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
     }
-
     this.sprite.addChild(wallContainer)
+
+    console.log(this.sprite.zIndex)
   }
 
   // 取消墙体选中效果
