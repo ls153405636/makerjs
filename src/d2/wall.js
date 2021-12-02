@@ -145,7 +145,7 @@ export class Wall extends BaseWidget {
 
     const holeRedLine = new PIXI.Graphics()
       holeRedLine
-      .lineStyle(2,0x000000)
+      .lineStyle(2,0x000000,1,1)
       .moveTo(this.holeP1.x, this.holeP1.y)
       .lineTo(this.holeP2.x, this.holeP2.y)
       // this.lineContainer.addChild(holeRedLine)
