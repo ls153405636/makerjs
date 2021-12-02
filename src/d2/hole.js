@@ -43,6 +43,7 @@ export class Hole extends BaseWidget {
       let e = this.edges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
     }
+    // hole.lineStyle(1,0xdc143c,1,0)
     hole.drawPolygon(path)
     hole.endFill()
     this.sprite.addChild(hole)

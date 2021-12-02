@@ -61,6 +61,7 @@ export class Wall extends BaseWidget {
     })
     this.lineSprite.destroy()
     this.textSprite.destroy()
+    this.holeLineSprite.destroy()
     super.destroy()
   }
 
@@ -75,6 +76,7 @@ export class Wall extends BaseWidget {
    */
   init(vPB) {
     this.sprite = new PIXI.Container()
+    this.lineContainer = new PIXI.Container()
     this.holeP1 = d2_tool.translateCoord(vPB.holeEdge.p1)
     this.holeP2 = d2_tool.translateCoord(vPB.holeEdge.p2)
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
@@ -132,14 +134,23 @@ export class Wall extends BaseWidget {
 
     const wallContainer = new PIXI.Container('wall')
 
-    const wall_line = new PIXI.Graphics()
-    wall_line.visible = false
-    wall_line.lineStyle(1, 0xdc143c)
-    wall_line.moveTo(this.p1.x,this.p1.y)
-    wall_line.lineTo(this.p2.x,this.p2.y)
-    wall_line.drawPolygon(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
+    // const wall_line = new PIXI.Graphics()
+    // wall_line.visible = false
+    // wall_line.lineStyle(1, 0xdc143c)
+    // wall_line.moveTo(this.p1.x,this.p1.y)
+    // wall_line.lineTo(this.p2.x,this.p2.y)
+    // wall_line.drawPolygon(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
 
-    wall_line.endFill()
+    // wall_line.endFill()
+
+    const holeRedLine = new PIXI.Graphics()
+      holeRedLine
+      .lineStyle(2,0x000000)
+      .moveTo(this.holeP1.x, this.holeP1.y)
+      .lineTo(this.holeP2.x, this.holeP2.y)
+      // this.lineContainer.addChild(holeRedLine)
+      this.holeLineSprite = holeRedLine
+      this.holeLineSprite.zIndex = Z_INDEX.HOLE_LINE_ZINDEX
 
     const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x929292,1,0)
@@ -148,51 +159,54 @@ export class Wall extends BaseWidget {
     wall.endFill()
 
     wall.addChild(tilingSprite)
-    wallContainer.addChild(wall_line, wall)
+    wallContainer.addChild(wall)
     wallContainer.zIndex = Z_INDEX.WALL_ZINDEX
-    if (this.type === 4) {
-      wall.alpha = this.alpha
-      wall_line.visible = true
-      this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
-    }
+    // if (this.type === 4) {
+    //   wall.alpha = this.alpha
+    //   holeRedLine.visible = true
+    //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
+    // }
+    // if(Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) < Math.hypot(this.holeP1.x - this.holeP2.x, this.holeP1.y - this.holeP2.y)) {
+    //   wall.alpha = this.alpha
+    //   holeRedLine.visible = true
+    //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
+    // }
     this.sprite.addChild(wallContainer)
 
-    console.log(this.sprite.zIndex)
   }
 
   // 取消墙体选中效果
   cancelSelected() {
-    this.sprite.children[0].children[1].tint = 0xffffff
+    this.sprite.children[0].children[0].tint = 0xffffff
     this.isSelected = false
     if (this.type === 4) {
-      this.sprite.children[0].children[1].alpha = this.alpha
+      this.sprite.children[0].children[0].alpha = this.alpha
     } else {
-      this.sprite.children[0].children[1].alpha = 1
+      this.sprite.children[0].children[0].alpha = 1
     }
   }
   // 墙体选中效果
   setSelected() {
-    this.sprite.children[0].children[1].tint = 0x818796
+    this.sprite.children[0].children[0].tint = 0x818796
     this.isSelected = true
-    this.sprite.children[0].children[1].alpha = 1
-    console.log(this.sprite.children[0].children[0])
+    // this.sprite.children[0].children[0].alpha = 1
   }
   // 鼠标进入墙体效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].children[1].tint = 0x818796
-      this.sprite.children[0].children[0].tint = 0xffffff
-      this.sprite.children[0].children[1].alpha = 1
+      this.sprite.children[0].children[0].tint = 0x818796
+      // this.sprite.children[0].children[0].tint = 0xffffff
+      this.sprite.children[0].children[0].alpha = 1
     }
   }
   // 鼠标离开墙体效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.children[0].children[1].tint = 0xffffff
+      this.sprite.children[0].children[0].tint = 0xffffff
       if (this.type === 4) {
-        this.sprite.children[0].children[1].alpha = this.alpha
+        this.sprite.children[0].children[0].alpha = this.alpha
       } else {
-        this.sprite.children[0].children[1].alpha = 1
+        this.sprite.children[0].children[0].alpha = 1
       }
     }
   }
@@ -347,7 +361,7 @@ export class Wall extends BaseWidget {
     const holeLinePos = new Victor((holeLineCP1.x + holeLineCP2.x) / 2,(holeLineCP1.y + holeLineCP2.y) / 2)
 
     // 标注线绘制
-    const lineContainer = new PIXI.Container()
+    
 
     // 判断洞口边长是否等于墙体边长（相等只保留墙体标注）
     if (Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) === Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
@@ -357,6 +371,7 @@ export class Wall extends BaseWidget {
         fontSize: 60,
         fill: 0x2d3037,
       })
+      
     } else {
       // 洞口标注文字
       const holeLineText = new PIXI.Text('洞口' + holeLinelength, {
@@ -367,6 +382,8 @@ export class Wall extends BaseWidget {
       holeLineText.anchor.set(0.5, 0.5)
       holeLineText.position.set(holeLinePos.x, holeLinePos.y)
       holeLineText.rotation = newTextRotation
+
+      
 
       const holeLine = new PIXI.Graphics()
       // 洞口标线
@@ -379,10 +396,14 @@ export class Wall extends BaseWidget {
       .lineTo(holeLineCP1.x, holeLineCP1.y)
       .moveTo(holeP2.x, holeP2.y)
       .lineTo(holeLineCP2.x, holeLineCP2.y)
-      lineContainer.addChild(holeLineText, holeLine)
+
+      
+      
+      
+      this.lineContainer.addChild(holeLineText, holeLine)
     }
     // 当墙体两层皆无时，无标注
-    if (this.type === 4 ) {
+    if (this.type === 4) {
       OutP1.multiply(new Victor(0,0))
       OutP2.multiply(new Victor(0,0))
       lineCP1.multiply(new Victor(0,0))
@@ -424,10 +445,9 @@ export class Wall extends BaseWidget {
 
     
     
-    lineContainer.addChild(wallLine)
-    // lineContainer.zIndex = 0
+    this.lineContainer.addChild(wallLine)
     
-    this.lineSprite = lineContainer
+    this.lineSprite = this.lineContainer
     
   }
 }

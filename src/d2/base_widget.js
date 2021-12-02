@@ -68,6 +68,10 @@ export class BaseWidget {
       // debugger
       new Movie().addEle(this.textSprite)
     }
+    if (this.holeLineSprite) {
+      // debugger
+      new Movie().addEle(this.holeLineSprite)
+    }
   }
 
   addEvent() {

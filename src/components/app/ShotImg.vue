@@ -14,6 +14,7 @@
 
 <script>
 import html2canvas from 'html2canvas'
+import { D2Config } from '../../d2/config'
 export default {
   data() {
     return {
@@ -37,8 +38,10 @@ export default {
         scale: window.devicePixelRatio,
         width: 950,
         height: 680,
-        x: 485,
-        y: 113.5,
+        // x: 485,
+        // y: 113.5,
+        x: (D2Config.CANVAS_WIDTH - 950) / 2,
+        y: (D2Config.CANVAS_HEIGHT - 680) / 2,
         allowTaint: true,
       })
       localStorage.clear()

@@ -175,7 +175,7 @@ export class Tread extends ChildWidget {
       treadLineLeft,
       treadLineRight
     )
-    treadContainer.addChild(changeTread, tread, stepNum, dimensionContainer)
+    treadContainer.addChild(changeTread, tread, stepNum)
     // this.sprite = treadContainer
     // treadContainer.addChild(changeTread, tread, stepNum)
     this.sprite = treadContainer
