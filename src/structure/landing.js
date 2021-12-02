@@ -6,6 +6,9 @@ import { ChildInfo } from "./child_info";
 import { Default } from "./config";
 import { SmallColumn } from "./small_column";
 import tool from "./tool";
+import { Tread } from "./tread";
+import { CorTread } from "./treads/cor_tread";
+import { SpecTread } from "./treads/spec_tread";
 
 
 export class Landing extends ChildInfo {
@@ -28,7 +31,7 @@ export class Landing extends ChildInfo {
    * @param {Object} param0 
    * @param {Types.Outline} param0.vBorder 
    */
-  constructor ({vParent, vTreadIndex, vBorder, vLastEdgeIndex, vNextEdgeIndex, vLastStepWidth, vNextStepWidth, vStartHeight}) {
+  constructor ({vParent, vTreadIndex, vBorder, vLastEdgeIndex, vNextEdgeIndex, vLastStepWidth, vNextStepWidth, vStartHeight, vIndex}) {
     super(vParent)
     this.type = Default.LANDING_TYPE
     this.corIndex = Math.max(vLastEdgeIndex, vNextEdgeIndex)
@@ -41,6 +44,7 @@ export class Landing extends ChildInfo {
     this.lastVec = new Edge(vBorder.edges[this.lastEdgeIndex]).getNormal().negate()
     this.nextVec = new Edge(vBorder.edges[this.nextEdgeIndex]).getNormal()
     this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
+    this.index = vIndex
     this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth, vStartHeight})
   }
 
@@ -61,6 +65,8 @@ export class Landing extends ChildInfo {
     this.edges = vBorder.edges
     this.lastStepWidth = vLastStepWidth
     this.nextStepWidth = vNextStepWidth
+    /**@type {Array<Tread>} */
+    this.treads = []
     this.edgeL = this.edges[this.lastEdgeIndex]
     this.edgeN = this.edges[this.nextEdgeIndex]
     this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
@@ -68,6 +74,7 @@ export class Landing extends ChildInfo {
     this.startHeight = vStartHeight
     this.stepHeight = this.parent.stepHeight
     this.endHeight = this.stepHeight + this.stepHeight * this.stepNum
+    this.updateTreads()
     //this.updateCorBigCol()
   }
 
@@ -98,7 +105,7 @@ export class Landing extends ChildInfo {
     return new Types.Landing({
       uuid:this.uuid,
       type:this.type,
-      treads: this.createTreads()
+      treads: tool.writeItemArrayPB(this.treads)
     })
   }
 
@@ -134,8 +141,7 @@ export class Landing extends ChildInfo {
     }
   }
 
-  createTreads() {
-    let treads = []
+  updateTreads() {
     let borders = []
     if (this.type === Types.LandingCutType.lct_first) {
       borders = this.createFirstBorders()
@@ -145,14 +151,33 @@ export class Landing extends ChildInfo {
       borders = this.createInCutBorders()
     }
     for (let i = 0; i < borders.length; i++) {
-
-      treads.push(new Types.Tread({
-        index:this.treadIndex + i + 1,
-        border:borders[i],
-        stepHeight: this.stepHeight
-      }))
+      let paras = {vParent:this, vIsLast:false, vIndex:this.treadIndex + i + 1, vBorder:borders[i]}
+      paras.vClock = this.lastEdgeIndex === this.corIndex
+      if (i === 1) {
+        let last, next
+        if (this.lastEdgeIndex === this.corIndex) {
+          last = borders[i].inIndex[0]
+          next = borders[i].inIndex[1]
+        } else {
+          last = borders[i].inIndex[1]
+          next = borders[i].inIndex[0]
+        }
+        paras.vLastEdgeIndex = last
+        paras.vNextEdgeIndex = next
+      } else if(this.type === Types.LandingCutType.lct_first) {
+        paras.vLastEdgeIndex = (this.nextEdgeIndex + 2)%4
+        paras.vNextEdgeIndex = (this.lastEdgeIndex + 2)%4
+      }
+      if (this.treads[i]) {
+        this.treads[i].rebuildByParent(paras)
+      } else {
+        if (i === 1 || this.type === Types.LandingCutType.lct_first) {
+          this.treads.push(new CorTread(paras))
+        } else {
+          this.treads.push(new SpecTread(paras))
+        }
+      }
     }
-    return treads
   }
 
   createSmallCols (vDis1, vDis2, vSize) {
@@ -436,5 +461,31 @@ export class Landing extends ChildInfo {
   getEndHeight (vStartHeight) {
     let height = vStartHeight || this.startHeight
     return height + this.stepNum * this.parent.stepHeight
+  }
+
+  createGirderRoute (vSide, vArgs, vOrder) {
+    let inEdges=[], inUpEdges=[], outEdges=[], outUpEdges=[]
+    let execute = vOrder === 'last' ? true : false 
+    for (let i = 0; i < this.treads.length; i++) {
+      let t = this.treads[i]
+      let rst = null
+      if (t.type === Types.TreadType.tCor) {
+        rst = t.getSawGirBorder(vOrder, vArgs)
+        execute = vOrder === 'last' ? false : true
+      }else if (execute) {
+        rst = t.getSawGirBorder(vSide, vArgs, false)
+      }
+      if (rst) {
+        inEdges = tool.concatEdges(inEdges, rst.inEdges)
+        inUpEdges = tool.concatEdges(inUpEdges, rst.inUpEdges)
+        outEdges = tool.concatEdges(outEdges, rst.outEdges)
+        outUpEdges = tool.concatEdges(outUpEdges, rst.outUpEdges)
+      } 
+    }
+    return{inEdges, inUpEdges, outEdges, outUpEdges}
+  }
+
+  createSideSawEdges () {
+
   }
 }

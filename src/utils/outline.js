@@ -152,4 +152,16 @@ export class Outline {
       isClose:this.isClose
     })
   }
+
+  /**
+   * 反转轮廓
+   */
+  reserve() {
+    this.edges.forEach(e => {
+      e.reserve()
+    })
+    this.edges.reverse()
+    this.isClock = !this.isClock
+    return this.writePB()
+  }
 }

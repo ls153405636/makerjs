@@ -61,7 +61,7 @@ export class BigUTypeStair extends UTypeStair {
     } else {
       pos1 = new Types.Vector3({x:width - Default.STEP_LENGTH + this.girOffset, y:Default.STEP_LENGTH})
       pos2 = new Types.Vector3({x:Default.STEP_LENGTH, y:this.girOffset})
-      pos3 = new Types.Vector3({x:Default.STEP_LENGTH - this.girOffset, y:depth2 - this.hangOffset})
+      pos3 = new Types.Vector3({x:this.girOffset, y:depth2 - this.hangOffset})
       wVec2 = new Types.Vector3({x:1})
     }
     this.flights[0] = new Flight({vParent:this, 
@@ -97,6 +97,7 @@ export class BigUTypeStair extends UTypeStair {
                                   vLVec:new Types.Vector3({x:-1}), 
                                   vWVec:new Types.Vector3({y:-1}), 
                                   vLength:depth2 - Default.STEP_LENGTH,
+                                  vClock:this.floadSide === Types.Side.si_right,
                                   vStartHeight:(num1+num2+Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)*2)*this.stepHeight})
   }
 
@@ -132,7 +133,8 @@ export class BigUTypeStair extends UTypeStair {
                         vPos:pos3, 
                         vLVec:new Types.Vector3({x:-1}), 
                         vWVec:new Types.Vector3({y:-1}),
-                        vStartHeight:this.landings[1].getEndHeight(f2.getEndHeight())})
+                        vStartHeight:this.landings[1].getEndHeight(f2.getEndHeight()),
+                        vClock:this.floadSide === Types.Side.si_right})
   }
 
   updateLandings () {
@@ -143,11 +145,13 @@ export class BigUTypeStair extends UTypeStair {
                   vTreadIndex:this.startStepNum + f1.stepNum,
                   vLastStepWidth:f1.stepWidth,
                   vNextStepWidth:f2.stepWidth,
-                  vStartHeight:f1.getEndHeight()}
+                  vStartHeight:f1.getEndHeight(),
+                  vIndex: 1}
     let paras2 = {vParent:this,
                   vLastStepWidth:f2.stepWidth,
                   vNextStepWidth:f3.stepWidth,
-                  vStartHeight:f2.getEndHeight()}
+                  vStartHeight:f2.getEndHeight(),
+                  vIndex: 2}
     let ori1, ori2
     if (this.floadSide === Types.Side.si_right) {
       ori1 = new Types.Vector3({x:this.girOffset, y:this.girOffset})

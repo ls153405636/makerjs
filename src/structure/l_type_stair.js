@@ -91,7 +91,8 @@ export class LTypeStair extends Stair {
                         vPos:pos2, 
                         vLVec:new Types.Vector3({y:1}), 
                         vWVec:wVec2,
-                        vStartHeight:this.landings[0].getEndHeight(f1.getEndHeight())})
+                        vStartHeight:this.landings[0].getEndHeight(f1.getEndHeight()),
+                        vClock:this.floadSide === Types.Side.si_right,})
   }
 
   /** 根据楼梯段、起步踏、休息平台等计算总步数*/
@@ -204,7 +205,8 @@ export class LTypeStair extends Stair {
                 vNextEdgeIndex:nextIndex, 
                 vLastStepWidth:f1.stepWidth, 
                 vNextStepWidth:f2.stepWidth,
-                vStartHeight:f1.getEndHeight()}
+                vStartHeight:f1.getEndHeight(),
+                vIndex: 1}
     if (this.landings[0]) {
       this.landings[0].rebuildByParent(paras)
     } else {

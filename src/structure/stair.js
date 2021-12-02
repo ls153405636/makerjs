@@ -11,6 +11,7 @@ import { BigColumn } from "./big_column"
 import { Handrail } from "./handrail"
 import { SmallColumn } from "./small_column"
 import { StartFlight } from './start_flight'
+import { StairSide } from './toolComp/stair_side'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -385,6 +386,42 @@ export class Stair extends Info {
     }
     return offset
   }
+
+  updateGirders () {
+    let girders = []
+  }
+
+  /**
+   * 
+   * @param {StairSide} vSide 
+   */
+  updateSideGirder (vSide) {
+    
+    for (let i = 0; i < this.flights.length; i++) {
+      if (f.type === 'start') {
+        continue
+      }
+      let lastL = this.landings[i - 1]
+      let nextL = this.landings[i]
+      let f = this.flights[i]
+      let inEdges=[], inUpEdges=[], outEdges=[], outUpEdges=[]
+      for (const [f,i] of [lastL, f, nextL]) {
+        if (f) {
+          let rst = f.createGirderRoute(vSide.sideName, this.girderParameters, i === 0 ? 'last':'next')
+          inEdges = tool.concatEdges(inEdges, rst.inEdges)
+          inUpEdges = tool.concatEdges(inUpEdges, rst.inUpEdges)
+          outEdges = tool.concatEdges(outEdges, rst.outEdges)
+          outUpEdges = tool.concatEdges(outUpEdges, rst.outUpEdges)
+        }
+      }
+      
+      if (vSide.girders[i]) {
+        vSide.girders[i] = new Girder()
+      }
+    }
+  }
+
+
 
   /**
    * 根据楼梯边界轮廓更新大梁

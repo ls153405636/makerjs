@@ -211,4 +211,24 @@ export class Edge {
     }
     return pb
   }
+
+  getP1PB() {
+    return new Types.Vector3({
+      x:this.p1.x,
+      y:this.p1.y,
+      z:this.zCoord
+    })
+  }
+
+  getP2PB() {
+    return new Types.Vector3({
+      x:this.p2.x,
+      y:this.p2.y,
+      z:this.zCoord
+    })
+  }
+
+  clone() {
+    return new Edge(this.writePB())
+  }
 }

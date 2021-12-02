@@ -243,12 +243,16 @@ export const Types = $root.Types = (() => {
      * @property {number} tph=0 tph value
      * @property {number} trect=1 trect value
      * @property {number} tStart=2 tStart value
+     * @property {number} tSpec=3 tSpec value
+     * @property {number} tCor=4 tCor value
      */
     Types.TreadType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "tph"] = 0;
         values[valuesById[1] = "trect"] = 1;
         values[valuesById[2] = "tStart"] = 2;
+        values[valuesById[3] = "tSpec"] = 3;
+        values[valuesById[4] = "tCor"] = 4;
         return values;
     })();
 
@@ -5188,6 +5192,8 @@ export const Types = $root.Types = (() => {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
+                case 4:
                     break;
                 }
             return null;
@@ -5240,6 +5246,14 @@ export const Types = $root.Types = (() => {
             case "tStart":
             case 2:
                 message.type = 2;
+                break;
+            case "tSpec":
+            case 3:
+                message.type = 3;
+                break;
+            case "tCor":
+            case 4:
+                message.type = 4;
                 break;
             }
             return message;
@@ -9207,10 +9221,7 @@ export const Types = $root.Types = (() => {
          * @interface IGirder
          * @property {string|null} [uuid] Girder uuid
          * @property {number|null} [length] Girder length
-         * @property {Types.IOutline|null} [inRoute] Girder inRoute
-         * @property {Types.IOutline|null} [outRoute] Girder outRoute
-         * @property {Types.IOutline|null} [inTopRoute] Girder inTopRoute
-         * @property {Types.IOutline|null} [outTopRoute] Girder outTopRoute
+         * @property {Array.<Types.ITreadGirBorder>|null} [borders] Girder borders
          */
 
         /**
@@ -9222,6 +9233,7 @@ export const Types = $root.Types = (() => {
          * @param {Types.IGirder=} [properties] Properties to set
          */
         function Girder(properties) {
+            this.borders = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -9245,36 +9257,12 @@ export const Types = $root.Types = (() => {
         Girder.prototype.length = 0;
 
         /**
-         * Girder inRoute.
-         * @member {Types.IOutline|null|undefined} inRoute
+         * Girder borders.
+         * @member {Array.<Types.ITreadGirBorder>} borders
          * @memberof Types.Girder
          * @instance
          */
-        Girder.prototype.inRoute = null;
-
-        /**
-         * Girder outRoute.
-         * @member {Types.IOutline|null|undefined} outRoute
-         * @memberof Types.Girder
-         * @instance
-         */
-        Girder.prototype.outRoute = null;
-
-        /**
-         * Girder inTopRoute.
-         * @member {Types.IOutline|null|undefined} inTopRoute
-         * @memberof Types.Girder
-         * @instance
-         */
-        Girder.prototype.inTopRoute = null;
-
-        /**
-         * Girder outTopRoute.
-         * @member {Types.IOutline|null|undefined} outTopRoute
-         * @memberof Types.Girder
-         * @instance
-         */
-        Girder.prototype.outTopRoute = null;
+        Girder.prototype.borders = $util.emptyArray;
 
         /**
          * Creates a new Girder instance using the specified properties.
@@ -9304,14 +9292,9 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.uuid);
             if (message.length != null && Object.hasOwnProperty.call(message, "length"))
                 writer.uint32(/* id 2, wireType 5 =*/21).float(message.length);
-            if (message.inRoute != null && Object.hasOwnProperty.call(message, "inRoute"))
-                $root.Types.Outline.encode(message.inRoute, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.outRoute != null && Object.hasOwnProperty.call(message, "outRoute"))
-                $root.Types.Outline.encode(message.outRoute, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-            if (message.inTopRoute != null && Object.hasOwnProperty.call(message, "inTopRoute"))
-                $root.Types.Outline.encode(message.inTopRoute, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-            if (message.outTopRoute != null && Object.hasOwnProperty.call(message, "outTopRoute"))
-                $root.Types.Outline.encode(message.outTopRoute, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+            if (message.borders != null && message.borders.length)
+                for (let i = 0; i < message.borders.length; ++i)
+                    $root.Types.TreadGirBorder.encode(message.borders[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             return writer;
         };
 
@@ -9353,16 +9336,9 @@ export const Types = $root.Types = (() => {
                     message.length = reader.float();
                     break;
                 case 3:
-                    message.inRoute = $root.Types.Outline.decode(reader, reader.uint32());
-                    break;
-                case 4:
-                    message.outRoute = $root.Types.Outline.decode(reader, reader.uint32());
-                    break;
-                case 5:
-                    message.inTopRoute = $root.Types.Outline.decode(reader, reader.uint32());
-                    break;
-                case 6:
-                    message.outTopRoute = $root.Types.Outline.decode(reader, reader.uint32());
+                    if (!(message.borders && message.borders.length))
+                        message.borders = [];
+                    message.borders.push($root.Types.TreadGirBorder.decode(reader, reader.uint32()));
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -9405,25 +9381,14 @@ export const Types = $root.Types = (() => {
             if (message.length != null && message.hasOwnProperty("length"))
                 if (typeof message.length !== "number")
                     return "length: number expected";
-            if (message.inRoute != null && message.hasOwnProperty("inRoute")) {
-                let error = $root.Types.Outline.verify(message.inRoute);
-                if (error)
-                    return "inRoute." + error;
-            }
-            if (message.outRoute != null && message.hasOwnProperty("outRoute")) {
-                let error = $root.Types.Outline.verify(message.outRoute);
-                if (error)
-                    return "outRoute." + error;
-            }
-            if (message.inTopRoute != null && message.hasOwnProperty("inTopRoute")) {
-                let error = $root.Types.Outline.verify(message.inTopRoute);
-                if (error)
-                    return "inTopRoute." + error;
-            }
-            if (message.outTopRoute != null && message.hasOwnProperty("outTopRoute")) {
-                let error = $root.Types.Outline.verify(message.outTopRoute);
-                if (error)
-                    return "outTopRoute." + error;
+            if (message.borders != null && message.hasOwnProperty("borders")) {
+                if (!Array.isArray(message.borders))
+                    return "borders: array expected";
+                for (let i = 0; i < message.borders.length; ++i) {
+                    let error = $root.Types.TreadGirBorder.verify(message.borders[i]);
+                    if (error)
+                        return "borders." + error;
+                }
             }
             return null;
         };
@@ -9444,25 +9409,15 @@ export const Types = $root.Types = (() => {
                 message.uuid = String(object.uuid);
             if (object.length != null)
                 message.length = Number(object.length);
-            if (object.inRoute != null) {
-                if (typeof object.inRoute !== "object")
-                    throw TypeError(".Types.Girder.inRoute: object expected");
-                message.inRoute = $root.Types.Outline.fromObject(object.inRoute);
-            }
-            if (object.outRoute != null) {
-                if (typeof object.outRoute !== "object")
-                    throw TypeError(".Types.Girder.outRoute: object expected");
-                message.outRoute = $root.Types.Outline.fromObject(object.outRoute);
-            }
-            if (object.inTopRoute != null) {
-                if (typeof object.inTopRoute !== "object")
-                    throw TypeError(".Types.Girder.inTopRoute: object expected");
-                message.inTopRoute = $root.Types.Outline.fromObject(object.inTopRoute);
-            }
-            if (object.outTopRoute != null) {
-                if (typeof object.outTopRoute !== "object")
-                    throw TypeError(".Types.Girder.outTopRoute: object expected");
-                message.outTopRoute = $root.Types.Outline.fromObject(object.outTopRoute);
+            if (object.borders) {
+                if (!Array.isArray(object.borders))
+                    throw TypeError(".Types.Girder.borders: array expected");
+                message.borders = [];
+                for (let i = 0; i < object.borders.length; ++i) {
+                    if (typeof object.borders[i] !== "object")
+                        throw TypeError(".Types.Girder.borders: object expected");
+                    message.borders[i] = $root.Types.TreadGirBorder.fromObject(object.borders[i]);
+                }
             }
             return message;
         };
@@ -9480,26 +9435,21 @@ export const Types = $root.Types = (() => {
             if (!options)
                 options = {};
             let object = {};
+            if (options.arrays || options.defaults)
+                object.borders = [];
             if (options.defaults) {
                 object.uuid = "";
                 object.length = 0;
-                object.inRoute = null;
-                object.outRoute = null;
-                object.inTopRoute = null;
-                object.outTopRoute = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
             if (message.length != null && message.hasOwnProperty("length"))
                 object.length = options.json && !isFinite(message.length) ? String(message.length) : message.length;
-            if (message.inRoute != null && message.hasOwnProperty("inRoute"))
-                object.inRoute = $root.Types.Outline.toObject(message.inRoute, options);
-            if (message.outRoute != null && message.hasOwnProperty("outRoute"))
-                object.outRoute = $root.Types.Outline.toObject(message.outRoute, options);
-            if (message.inTopRoute != null && message.hasOwnProperty("inTopRoute"))
-                object.inTopRoute = $root.Types.Outline.toObject(message.inTopRoute, options);
-            if (message.outTopRoute != null && message.hasOwnProperty("outTopRoute"))
-                object.outTopRoute = $root.Types.Outline.toObject(message.outTopRoute, options);
+            if (message.borders && message.borders.length) {
+                object.borders = [];
+                for (let j = 0; j < message.borders.length; ++j)
+                    object.borders[j] = $root.Types.TreadGirBorder.toObject(message.borders[j], options);
+            }
             return object;
         };
 
@@ -9515,6 +9465,344 @@ export const Types = $root.Types = (() => {
         };
 
         return Girder;
+    })();
+
+    Types.TreadGirBorder = (function() {
+
+        /**
+         * Properties of a TreadGirBorder.
+         * @memberof Types
+         * @interface ITreadGirBorder
+         * @property {Array.<Types.IEdge>|null} [inEdges] TreadGirBorder inEdges
+         * @property {Array.<Types.IEdge>|null} [outEdges] TreadGirBorder outEdges
+         * @property {Array.<Types.IEdge>|null} [inTopEdges] TreadGirBorder inTopEdges
+         * @property {Array.<Types.IEdge>|null} [outTopEdges] TreadGirBorder outTopEdges
+         */
+
+        /**
+         * Constructs a new TreadGirBorder.
+         * @memberof Types
+         * @classdesc Represents a TreadGirBorder.
+         * @implements ITreadGirBorder
+         * @constructor
+         * @param {Types.ITreadGirBorder=} [properties] Properties to set
+         */
+        function TreadGirBorder(properties) {
+            this.inEdges = [];
+            this.outEdges = [];
+            this.inTopEdges = [];
+            this.outTopEdges = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * TreadGirBorder inEdges.
+         * @member {Array.<Types.IEdge>} inEdges
+         * @memberof Types.TreadGirBorder
+         * @instance
+         */
+        TreadGirBorder.prototype.inEdges = $util.emptyArray;
+
+        /**
+         * TreadGirBorder outEdges.
+         * @member {Array.<Types.IEdge>} outEdges
+         * @memberof Types.TreadGirBorder
+         * @instance
+         */
+        TreadGirBorder.prototype.outEdges = $util.emptyArray;
+
+        /**
+         * TreadGirBorder inTopEdges.
+         * @member {Array.<Types.IEdge>} inTopEdges
+         * @memberof Types.TreadGirBorder
+         * @instance
+         */
+        TreadGirBorder.prototype.inTopEdges = $util.emptyArray;
+
+        /**
+         * TreadGirBorder outTopEdges.
+         * @member {Array.<Types.IEdge>} outTopEdges
+         * @memberof Types.TreadGirBorder
+         * @instance
+         */
+        TreadGirBorder.prototype.outTopEdges = $util.emptyArray;
+
+        /**
+         * Creates a new TreadGirBorder instance using the specified properties.
+         * @function create
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {Types.ITreadGirBorder=} [properties] Properties to set
+         * @returns {Types.TreadGirBorder} TreadGirBorder instance
+         */
+        TreadGirBorder.create = function create(properties) {
+            return new TreadGirBorder(properties);
+        };
+
+        /**
+         * Encodes the specified TreadGirBorder message. Does not implicitly {@link Types.TreadGirBorder.verify|verify} messages.
+         * @function encode
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {Types.ITreadGirBorder} message TreadGirBorder message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TreadGirBorder.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.inEdges != null && message.inEdges.length)
+                for (let i = 0; i < message.inEdges.length; ++i)
+                    $root.Types.Edge.encode(message.inEdges[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.outEdges != null && message.outEdges.length)
+                for (let i = 0; i < message.outEdges.length; ++i)
+                    $root.Types.Edge.encode(message.outEdges[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.inTopEdges != null && message.inTopEdges.length)
+                for (let i = 0; i < message.inTopEdges.length; ++i)
+                    $root.Types.Edge.encode(message.inTopEdges[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            if (message.outTopEdges != null && message.outTopEdges.length)
+                for (let i = 0; i < message.outTopEdges.length; ++i)
+                    $root.Types.Edge.encode(message.outTopEdges[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified TreadGirBorder message, length delimited. Does not implicitly {@link Types.TreadGirBorder.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {Types.ITreadGirBorder} message TreadGirBorder message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TreadGirBorder.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a TreadGirBorder message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.TreadGirBorder} TreadGirBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TreadGirBorder.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.TreadGirBorder();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    if (!(message.inEdges && message.inEdges.length))
+                        message.inEdges = [];
+                    message.inEdges.push($root.Types.Edge.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    if (!(message.outEdges && message.outEdges.length))
+                        message.outEdges = [];
+                    message.outEdges.push($root.Types.Edge.decode(reader, reader.uint32()));
+                    break;
+                case 3:
+                    if (!(message.inTopEdges && message.inTopEdges.length))
+                        message.inTopEdges = [];
+                    message.inTopEdges.push($root.Types.Edge.decode(reader, reader.uint32()));
+                    break;
+                case 4:
+                    if (!(message.outTopEdges && message.outTopEdges.length))
+                        message.outTopEdges = [];
+                    message.outTopEdges.push($root.Types.Edge.decode(reader, reader.uint32()));
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a TreadGirBorder message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.TreadGirBorder} TreadGirBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TreadGirBorder.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a TreadGirBorder message.
+         * @function verify
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        TreadGirBorder.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.inEdges != null && message.hasOwnProperty("inEdges")) {
+                if (!Array.isArray(message.inEdges))
+                    return "inEdges: array expected";
+                for (let i = 0; i < message.inEdges.length; ++i) {
+                    let error = $root.Types.Edge.verify(message.inEdges[i]);
+                    if (error)
+                        return "inEdges." + error;
+                }
+            }
+            if (message.outEdges != null && message.hasOwnProperty("outEdges")) {
+                if (!Array.isArray(message.outEdges))
+                    return "outEdges: array expected";
+                for (let i = 0; i < message.outEdges.length; ++i) {
+                    let error = $root.Types.Edge.verify(message.outEdges[i]);
+                    if (error)
+                        return "outEdges." + error;
+                }
+            }
+            if (message.inTopEdges != null && message.hasOwnProperty("inTopEdges")) {
+                if (!Array.isArray(message.inTopEdges))
+                    return "inTopEdges: array expected";
+                for (let i = 0; i < message.inTopEdges.length; ++i) {
+                    let error = $root.Types.Edge.verify(message.inTopEdges[i]);
+                    if (error)
+                        return "inTopEdges." + error;
+                }
+            }
+            if (message.outTopEdges != null && message.hasOwnProperty("outTopEdges")) {
+                if (!Array.isArray(message.outTopEdges))
+                    return "outTopEdges: array expected";
+                for (let i = 0; i < message.outTopEdges.length; ++i) {
+                    let error = $root.Types.Edge.verify(message.outTopEdges[i]);
+                    if (error)
+                        return "outTopEdges." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a TreadGirBorder message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.TreadGirBorder} TreadGirBorder
+         */
+        TreadGirBorder.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.TreadGirBorder)
+                return object;
+            let message = new $root.Types.TreadGirBorder();
+            if (object.inEdges) {
+                if (!Array.isArray(object.inEdges))
+                    throw TypeError(".Types.TreadGirBorder.inEdges: array expected");
+                message.inEdges = [];
+                for (let i = 0; i < object.inEdges.length; ++i) {
+                    if (typeof object.inEdges[i] !== "object")
+                        throw TypeError(".Types.TreadGirBorder.inEdges: object expected");
+                    message.inEdges[i] = $root.Types.Edge.fromObject(object.inEdges[i]);
+                }
+            }
+            if (object.outEdges) {
+                if (!Array.isArray(object.outEdges))
+                    throw TypeError(".Types.TreadGirBorder.outEdges: array expected");
+                message.outEdges = [];
+                for (let i = 0; i < object.outEdges.length; ++i) {
+                    if (typeof object.outEdges[i] !== "object")
+                        throw TypeError(".Types.TreadGirBorder.outEdges: object expected");
+                    message.outEdges[i] = $root.Types.Edge.fromObject(object.outEdges[i]);
+                }
+            }
+            if (object.inTopEdges) {
+                if (!Array.isArray(object.inTopEdges))
+                    throw TypeError(".Types.TreadGirBorder.inTopEdges: array expected");
+                message.inTopEdges = [];
+                for (let i = 0; i < object.inTopEdges.length; ++i) {
+                    if (typeof object.inTopEdges[i] !== "object")
+                        throw TypeError(".Types.TreadGirBorder.inTopEdges: object expected");
+                    message.inTopEdges[i] = $root.Types.Edge.fromObject(object.inTopEdges[i]);
+                }
+            }
+            if (object.outTopEdges) {
+                if (!Array.isArray(object.outTopEdges))
+                    throw TypeError(".Types.TreadGirBorder.outTopEdges: array expected");
+                message.outTopEdges = [];
+                for (let i = 0; i < object.outTopEdges.length; ++i) {
+                    if (typeof object.outTopEdges[i] !== "object")
+                        throw TypeError(".Types.TreadGirBorder.outTopEdges: object expected");
+                    message.outTopEdges[i] = $root.Types.Edge.fromObject(object.outTopEdges[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a TreadGirBorder message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.TreadGirBorder
+         * @static
+         * @param {Types.TreadGirBorder} message TreadGirBorder
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        TreadGirBorder.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults) {
+                object.inEdges = [];
+                object.outEdges = [];
+                object.inTopEdges = [];
+                object.outTopEdges = [];
+            }
+            if (message.inEdges && message.inEdges.length) {
+                object.inEdges = [];
+                for (let j = 0; j < message.inEdges.length; ++j)
+                    object.inEdges[j] = $root.Types.Edge.toObject(message.inEdges[j], options);
+            }
+            if (message.outEdges && message.outEdges.length) {
+                object.outEdges = [];
+                for (let j = 0; j < message.outEdges.length; ++j)
+                    object.outEdges[j] = $root.Types.Edge.toObject(message.outEdges[j], options);
+            }
+            if (message.inTopEdges && message.inTopEdges.length) {
+                object.inTopEdges = [];
+                for (let j = 0; j < message.inTopEdges.length; ++j)
+                    object.inTopEdges[j] = $root.Types.Edge.toObject(message.inTopEdges[j], options);
+            }
+            if (message.outTopEdges && message.outTopEdges.length) {
+                object.outTopEdges = [];
+                for (let j = 0; j < message.outTopEdges.length; ++j)
+                    object.outTopEdges[j] = $root.Types.Edge.toObject(message.outTopEdges[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this TreadGirBorder to JSON.
+         * @function toJSON
+         * @memberof Types.TreadGirBorder
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        TreadGirBorder.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return TreadGirBorder;
     })();
 
     Types.GirderParameters = (function() {

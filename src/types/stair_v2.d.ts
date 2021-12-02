@@ -104,7 +104,9 @@ export namespace Types {
     enum TreadType {
         tph = 0,
         trect = 1,
-        tStart = 2
+        tStart = 2,
+        tSpec = 3,
+        tCor = 4
     }
 
     /** StartTreadType enum. */
@@ -3367,17 +3369,8 @@ export namespace Types {
         /** Girder length */
         length?: (number|null);
 
-        /** Girder inRoute */
-        inRoute?: (Types.IOutline|null);
-
-        /** Girder outRoute */
-        outRoute?: (Types.IOutline|null);
-
-        /** Girder inTopRoute */
-        inTopRoute?: (Types.IOutline|null);
-
-        /** Girder outTopRoute */
-        outTopRoute?: (Types.IOutline|null);
+        /** Girder borders */
+        borders?: (Types.ITreadGirBorder[]|null);
     }
 
     /** Represents a Girder. */
@@ -3395,17 +3388,8 @@ export namespace Types {
         /** Girder length. */
         public length: number;
 
-        /** Girder inRoute. */
-        public inRoute?: (Types.IOutline|null);
-
-        /** Girder outRoute. */
-        public outRoute?: (Types.IOutline|null);
-
-        /** Girder inTopRoute. */
-        public inTopRoute?: (Types.IOutline|null);
-
-        /** Girder outTopRoute. */
-        public outTopRoute?: (Types.IOutline|null);
+        /** Girder borders. */
+        public borders: Types.ITreadGirBorder[];
 
         /**
          * Creates a new Girder instance using the specified properties.
@@ -3473,6 +3457,114 @@ export namespace Types {
 
         /**
          * Converts this Girder to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a TreadGirBorder. */
+    interface ITreadGirBorder {
+
+        /** TreadGirBorder inEdges */
+        inEdges?: (Types.IEdge[]|null);
+
+        /** TreadGirBorder outEdges */
+        outEdges?: (Types.IEdge[]|null);
+
+        /** TreadGirBorder inTopEdges */
+        inTopEdges?: (Types.IEdge[]|null);
+
+        /** TreadGirBorder outTopEdges */
+        outTopEdges?: (Types.IEdge[]|null);
+    }
+
+    /** Represents a TreadGirBorder. */
+    class TreadGirBorder implements ITreadGirBorder {
+
+        /**
+         * Constructs a new TreadGirBorder.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.ITreadGirBorder);
+
+        /** TreadGirBorder inEdges. */
+        public inEdges: Types.IEdge[];
+
+        /** TreadGirBorder outEdges. */
+        public outEdges: Types.IEdge[];
+
+        /** TreadGirBorder inTopEdges. */
+        public inTopEdges: Types.IEdge[];
+
+        /** TreadGirBorder outTopEdges. */
+        public outTopEdges: Types.IEdge[];
+
+        /**
+         * Creates a new TreadGirBorder instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns TreadGirBorder instance
+         */
+        public static create(properties?: Types.ITreadGirBorder): Types.TreadGirBorder;
+
+        /**
+         * Encodes the specified TreadGirBorder message. Does not implicitly {@link Types.TreadGirBorder.verify|verify} messages.
+         * @param message TreadGirBorder message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.ITreadGirBorder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified TreadGirBorder message, length delimited. Does not implicitly {@link Types.TreadGirBorder.verify|verify} messages.
+         * @param message TreadGirBorder message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.ITreadGirBorder, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a TreadGirBorder message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns TreadGirBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.TreadGirBorder;
+
+        /**
+         * Decodes a TreadGirBorder message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns TreadGirBorder
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.TreadGirBorder;
+
+        /**
+         * Verifies a TreadGirBorder message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a TreadGirBorder message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns TreadGirBorder
+         */
+        public static fromObject(object: { [k: string]: any }): Types.TreadGirBorder;
+
+        /**
+         * Creates a plain object from a TreadGirBorder message. Also converts values to other types if specified.
+         * @param message TreadGirBorder
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.TreadGirBorder, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this TreadGirBorder to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };

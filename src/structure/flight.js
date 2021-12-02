@@ -3,7 +3,8 @@ import { Edge } from '../utils/edge'
 import { ChildInfo } from './child_info'
 import { Default } from './config'
 import tool from './tool'
-import { Tread } from './tread'
+//import { Tread } from './tread'
+import { RectTread } from './treads/rect_tread'
 
 export class Flight extends ChildInfo {
   static NUM_RULE_OPTIONS = [
@@ -16,7 +17,7 @@ export class Flight extends ChildInfo {
     this.length = vLength
     this.isLast = isLast
     this.index = vIndex
-    /**@type {Array<Tread>} */
+    /**@type {Array<RectTread>} */
     this.treads = []
     this.startTread = false
     this.stepNum = vStepNum
@@ -123,7 +124,7 @@ export class Flight extends ChildInfo {
       if (this.treads[step_num]) {
         this.treads[step_num].rebuildByParent(paras)
       } else {
-        this.treads[step_num] = new Tread(paras)
+        this.treads[step_num] = new RectTread(paras)
       }
     }
   }
@@ -185,6 +186,30 @@ export class Flight extends ChildInfo {
 
   getTreadByNum(vNum) {
     return this.treads[vNum]
+  }
+
+  /**
+   * 
+   * @param {string} vSide 
+   * @param {Types.GirderParameters} vArgs 
+   */
+  createGirderRoute(vSide, vArgs) {
+    let inEdges=[], inUpEdges=[], outEdges=[], outUpEdges=[]
+    for (let i = 0; i < this.treads.length; i++) {
+      let isExtend = false
+      if (i === this.treads.length - 1 && (!this.isLast)) {
+        let nextL = this.parent.landings[this.index]
+        if (nextL && nextL.tread[0].type === Types.TreadType.tCor) {
+          isExtend = true
+        }
+      }
+      let rst = this.treads[i].getSawGirBorder(vSide, vArgs, i === 0, isExtend)
+      inEdges = tool.concatEdges(inEdges, rst.inEdges)
+      inUpEdges = tool.concatEdges(inUpEdges, rst.inUpEdges)
+      outEdges = tool.concatEdges(outEdges, rst.outEdges)
+      outUpEdges = tool.concatEdges(outUpEdges, rst.outUpEdges)
+    } 
+    return{inEdges, inUpEdges, outEdges, outUpEdges}
   }
 
   writePB() {

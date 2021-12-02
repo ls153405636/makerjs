@@ -105,8 +105,10 @@ enum GirderType {
 //踏板类型
 enum TreadType {
   tph  = 0;
-  trect = 1;
-  tStart = 2;
+  trect = 1; //普通矩形踏
+  tStart = 2; //起步踏
+  tSpec = 3; //针对休息平台的异性踏
+  tCor = 4; //有两条侧边的转角踏
 }
 
 //起步踏板类型
@@ -388,10 +390,18 @@ message HandrailParameters {
 message Girder {
   string  uuid        = 1;
   float   length      = 2;  //长度 
-  Outline inRoute     = 3;  //内侧轮廓路径，贴近楼梯方向的一侧
-  Outline outRoute    = 4;  //外侧路径
-  Outline inTopRoute  = 5;  //内侧上方路径   
-  Outline outTopRoute = 6;  //外侧上方路径
+  // Outline inRoute     = 3;  //内侧轮廓路径，贴近楼梯方向的一侧
+  // Outline outRoute    = 4;  //外侧路径
+  // Outline inTopRoute  = 5;  //内侧上方路径   
+  // Outline outTopRoute = 6;  //外侧上方路径
+  repeated TreadGirBorder borders = 3;
+}
+
+message TreadGirBorder {
+  repeated Edge inEdges = 1;
+  repeated Edge outEdges = 2;
+  repeated Edge inTopEdges = 3;
+  repeated Edge outTopEdges = 4;
 }
 
 //大梁参数

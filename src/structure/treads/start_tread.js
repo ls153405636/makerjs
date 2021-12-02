@@ -1,9 +1,9 @@
-import { Types } from '../types/stair_v2'
-import { Edge } from '../utils/edge'
-import { Outline } from '../utils/outline'
-import { ChildInfo } from './child_info'
-import { Default } from './config'
-import tool from './tool'
+import { Types } from '../../types/stair_v2'
+import { Edge } from '../../utils/edge'
+import { Outline } from '../../utils/outline'
+import { ChildInfo } from '../child_info'
+import { Default } from '../config'
+import tool from '../tool'
 
 export class StartTread extends ChildInfo {
 

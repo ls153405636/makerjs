@@ -115,7 +115,7 @@ export class SmallUTypeStair extends UTypeStair {
       pos2 = new Types.Vector3({x:width - this.girOffset, y:depth2 - this.hangOffset})
     } else {
       pos1 = new Types.Vector3({x:Default.STEP_LENGTH+this.gap+this.girOffset, y:this.landingWidth})
-      pos2 = new Types.Vector3({x:Default.STEP_LENGTH-this.girOffset, y:depth2 - this.hangOffset})
+      pos2 = new Types.Vector3({x:this.girOffset, y:depth2 - this.hangOffset})
     }
     this.flights[0] = new Flight({vParent:this, 
                                   vStepNum:num1, 
@@ -138,7 +138,8 @@ export class SmallUTypeStair extends UTypeStair {
                                   vLVec:new Types.Vector3({x:-1}), 
                                   vWVec:new Types.Vector3({y:-1}), 
                                   vLength:depth2 - this.landingWidth - this.hangOffset,
-                                  vStartHeight:(num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2)*this.stepHeight})
+                                  vStartHeight:(num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2)*this.stepHeight,
+                                  vClock:this.floadSide === Types.Side.si_right})
   }
 
   updateFlights() {
@@ -152,7 +153,7 @@ export class SmallUTypeStair extends UTypeStair {
       pos2 = new Types.Vector3({x:width - this.girOffset, y:depth2 - this.hangOffset})
     } else {
       pos1 = new Types.Vector3({x:f2.stepLength+this.gap+this.girOffset, y:this.landingWidth})
-      pos2 = new Types.Vector3({x:f2.stepLength-this.girOffset, y:depth2 - this.hangOffset})
+      pos2 = new Types.Vector3({x:this.girOffset, y:depth2 - this.hangOffset})
     }
     let startHeight2 = this.landings[1].getEndHeight(this.landings[0].getEndHeight(f1.getEndHeight()))
     f1.rebuildByParent({vTreadIndex:this.startStepNum, 
@@ -164,7 +165,8 @@ export class SmallUTypeStair extends UTypeStair {
                         vPos:pos2, 
                         vLVec:new Types.Vector3({x:-1}), 
                         vWVec:new Types.Vector3({y:-1}),
-                        vStartHeight:startHeight2})
+                        vStartHeight:startHeight2,
+                        vClock:this.floadSide === Types.Side.si_right})
   }
 
   updateLandings () {
@@ -176,10 +178,12 @@ export class SmallUTypeStair extends UTypeStair {
                   vTreadIndex:this.startStepNum + f1.stepNum,
                   vLastStepWidth:f1.stepWidth,
                   vNextStepWidth:f2.stepWidth,
-                  vStartHeight:f1.getEndHeight()}
+                  vStartHeight:f1.getEndHeight(),
+                  vIndex: 1}
     let paras2 = {vParent:this,
                   vLastStepWidth:f1.stepWidth,
-                  vNextStepWidth:f2.stepWidth}
+                  vNextStepWidth:f2.stepWidth,
+                  vIndex: 1}
     let ori1, ori2
     if (this.floadSide === Types.Side.si_right) {
       ori1 = new Types.Vector3({x:this.girOffset, y:this.girOffset})

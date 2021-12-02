@@ -7,14 +7,13 @@ export class Girder extends ChildInfo {
     {value:Types.GirderType.gsaw, label:'锯齿型'},
     {value:Types.GirderType.gslab, label:'平板型'}
   ]
-  constructor (vParent, vInEdges, vOutEdges) {
+  constructor (vParent, vBorders) {
     super(vParent)
-    this.rebuildByParent(vInEdges, vOutEdges)
+    this.rebuildByParent(vBorders)
   }
 
-  rebuildByParent (vInEdges, vOutEdges) {
-    this.inRoute = new Types.Outline({ edges: vInEdges })
-    this.outRoute = new Types.Outline({ edges: vOutEdges })
+  rebuildByParent (vBorders) {
+    this.borders = vBorders
     this.paras = this.parent.girderParameters
   }
 
@@ -41,8 +40,7 @@ export class Girder extends ChildInfo {
   writePB () {
     return new Types.Girder({
       uuid: this.uuid,
-      inRoute: this.inRoute,
-      outRoute: this.outRoute,
+      borders: this.borders
     })
   }
 }

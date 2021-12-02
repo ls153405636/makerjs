@@ -64,10 +64,43 @@ export function writeItemArrayPB(vInfoArr) {
   return pbArr
 }
 
+/**
+ * 
+ * @param {Types.Vector3} vP1 
+ * @param {Types.Vector3} vP2 
+ */
+export function isVec3Equal(vP1, vP2) {
+  let p1 = new THREE.Vector3(vP1.x, vP1.z, vP1.y)
+  let p2 = new THREE.Vector3(vP2.x, vP2.z, vP2.y)
+  if (p1.distanceTo(p2) < 1) {
+    return true
+  } else {
+    return false
+  }
+}
+
+/**
+   * 
+   * @param {Array<Types.Edge>} vPriEdges 
+   * @param {Array<Types.Edge>} vAddEdges 
+   */
+export function  concatEdges (vPriEdges, vAddEdges) {
+  let lastE = vPriEdges[vPriEdges.lastIndex]
+  let firstE = vAddEdges[0]
+  if (lastE && firstE) {
+    if (!tool.isVec3Equal(lastE.p2, firstE.p1)) {
+      vPriEdges.push(new Types.Edge({p1:lastE.p2, p2:firstE.p1,type:Types.EdgeType.estraight}))
+    }
+  }
+  return vPriEdges.concat(vAddEdges)
+}
+
 export default {
   parseSpecification,
   createRectOutline,
   getItemFromOptions,
   createOutlineByPois,
-  writeItemArrayPB
+  writeItemArrayPB,
+  isVec3Equal,
+  concatEdges
 }

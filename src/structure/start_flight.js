@@ -31,6 +31,7 @@ export class StartFlight extends ChildInfo{
     this.treads = []
     this.length = 0
     this.startHeight = 0
+    this.type = 'start'
     this.rebuildByParent({vPos, vLVec, vWVec, vStepLength})
   }
 

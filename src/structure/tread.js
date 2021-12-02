@@ -20,6 +20,8 @@ export class Tread extends ChildInfo {
     this.inheritH = true
     this.isLast = vIsLast
     this.type = vType
+    /**@type {Types.TreadBorder} */
+    this.border = null
     this.rebuildByParent({ vIndex, vBorder, vPos })
   }
 
@@ -143,6 +145,79 @@ export class Tread extends ChildInfo {
     else {
       super.updateItem(vValue, vKey, vSecondKey)
     }
+  }
+
+  /**
+   * 
+   * @param {string} vSide 
+   * @param {Types.GirderParameters} vArgs 
+   */
+  getSawGirEdges (vSide, vArgs, vIsFirst, vIsExtend) {
+    let sEdges = []
+    for (const i of this.border[vSide+'Index']) {
+      sEdges.push(this.border.stepOutline.edges[i])
+    }
+    let edge = sEdges[0]
+    let utilE = new Edge(edge)
+    utilE.offset(this.parent.parent.sideOffset)
+    if ((this.clock && vSide === 'out') || (!this.clock && vSide === 'in')) {
+      utilE.reserve()
+    } 
+    let backOffset = this.parent.parent.getTreadBackOffset()
+    utilE.extendP1(-backOffset)
+    utilE.extendP2(backOffset)
+    let depth = this.parent.parent.treadParameters.depth
+    let angle = Math.atan(this.stepHeight / this.stepWidth)
+    let verHeight = vArgs.height / Math.cos(angle)
+    utilE.setZCoord(this.position.z - depth)
+    if (vIsExtend) {
+      let horDis = vArgs.height * Math.sin(angle)
+      verHeight = vArgs.height * Math.cos(angle)
+      utilE.extendP2(horDis)
+    }
+    let inUtilE = utilE.clone(), outUtilE = utilE.clone()
+    inUtilE.offset(vArgs.depth/2)
+    outUtilE.offset(vArgs.depth/2, false)
+    let inRoute = this.createSideSawEdges(inUtilE, vIsFirst, verHeight, angle)
+    let outRoute = this.createSideSawEdges(outUtilE, vIsFirst, verHeight, angle)
+    return {
+      inEdges:inRoute.edges,
+      inUpEdges:inRoute.upEdges,
+      outEdges:outRoute.edges,
+      outUpEdges:outRoute.upEdges
+    }
+  }
+
+  createSideSawEdges (utilE, vIsFirst, verHeight, angle) {
+    let botPois = [], topPois = []
+    topPois[0] = utilE.getP1PB()
+    topPois[1] = utilE.getP1PB()
+    topPois[2] = utilE.getP2PB()
+    botPois[0] = utilE.getP1PB()
+    botPois[1] = utilE.getP2PB()
+    if (this.parent.index === 0 && this.parent.startHeight >= verHeight) {
+      botPois[0].z = 0
+      botPois[1].z = 0
+    } else {
+      botPois[0].z = Math.max(botPois[0].z - this.stepHeight - verHeight, 0)
+      botPois[1].z = Math.max(botPois[1].z -verHeight, 0)
+      if (botPois[0].z === 0 && botPois[1].z > 0) {
+        let p = utilE.clone().extendP2(-botPois[1].z / Math.tan(angle)).p2
+        botPois.splice(1, 0, p)
+      }
+    }
+    if (vIsFirst) {
+      topPois[0].z = botPois[0].z
+    } else {
+      topPois[0].z -= this.stepHeight
+    }
+    let edges = tool.createOutlineByPois(botPois, false).edges
+    let upEdges = tool.createOutlineByPois(topPois, false).edges
+    return {edges, upEdges}
+  }
+
+  getSlabGirEdges (vSide) {
+
   }
 
   writePB() {
