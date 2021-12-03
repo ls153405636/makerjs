@@ -15,9 +15,10 @@ export class CementComp extends BaseWidget {
    *
    * @param {Types.Component} vPB
    */
-  constructor(vPB) {
+  constructor(vPB, vParent) {
     super(vPB.uuid)
     this.init(vPB)
+    console.log(vPB)
   }
 
   getWidgetType() {
@@ -33,6 +34,7 @@ export class CementComp extends BaseWidget {
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.rotationY = vPB.rotation.y
     this.disToStart = vPB.disToStart
+    this.wallDepth = vPB.wallDepth
     this.draw()
     this.addDimension()
     this.addEvent()
@@ -84,6 +86,7 @@ export class CementComp extends BaseWidget {
     compContainer.addChild(changeComp, comp, text)
     compContainer.zIndex = Z_INDEX.COMPONENT_ZINDEX
     this.sprite.addChild(compContainer)
+    this.sprite.zIndex = 100
   }
 
   // 取消 cement 选中效果
@@ -145,8 +148,8 @@ export class CementComp extends BaseWidget {
     const { positionX, positionY, rotationY, disToStart } = this
     const offSet = new Victor(10, 10) // 偏移距离
     const arrow = new Victor(2, 2)
-    const p1 = new Victor(-this.width / 2, this.depth / 2)
-    const p2 = new Victor(this.width / 2, this.depth / 2)
+    const p1 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
+    const p2 = new Victor(this.width / 2, -this.depth / 2 -this.wallDepth / D2Config.SCREEN_RATE)
     const p3 = new Victor(this.width / 2, -this.depth / 2)
     const p4 = new Victor(this.width / 2, this.depth / 2)
 
@@ -155,11 +158,19 @@ export class CementComp extends BaseWidget {
       new Victor(disToStart / D2Config.SCREEN_RATE, 0)
     )
 
-    const newP1 = p1.addY(offSet)
-    const newP2 = p2.addY(offSet)
+    const newP1 = p1.subtractY(offSet)
+    const newP2 = p2.subtractY(offSet)
 
-    const newP3 = p3.addX(offSet)
-    const newP4 = p4.addX(offSet)
+    let newP3
+    let newP4
+    // 如果是梁，深度标注在梁内部
+    if (this.type === 4) {
+      newP3 = p3.subtractX(offSet)
+      newP4 = p4.subtractX(offSet)
+    }else {
+      newP3 = p3.addX(offSet)
+      newP4 = p4.addX(offSet)
+    }
 
     const newP5 = p5.addY(offSet)
     const newP6 = p6.addY(offSet)

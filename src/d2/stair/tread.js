@@ -293,17 +293,23 @@ export class Tread extends ChildWidget {
           if (eventC === null) {
             _this.parent.setHover()
           }
-          eventC = document.addEventListener('keydown', (e) => {
-            if (e.keyCode == 17) {
-              return
-              // _this.cancelHover()
-            }
-          })
-          // _this.parent.setHover()
-          if (eventC !== null) {
-            _this.parent.cancelHover()
-            _this.setHover()
+          while(D2Config.IS_SINGLE_SELECTED) {
+
+            eventC = document.addEventListener('keydown', (e) => {
+              // if (e.keyCode == 17) {
+                console.log(eventC)
+                // _this.parent.setHover()
+                // _this.cancelHover()
+              // }
+            })
           }
+          // if (D2Config.IS_SINGLE_SELECTED) {
+          // }
+          // console.log(eventC)
+          // if (eventC !== null) {
+          //   _this.parent.cancelHover()
+          //   _this.setHover()
+          // }
           // document.addEventListener('keyup', (e) => {
           //   if (e.keyCode == 17) {
           //     _this.parent.setHover()

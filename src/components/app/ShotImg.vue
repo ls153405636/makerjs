@@ -72,6 +72,9 @@ export default {
 #canvas {
   display: block;
 }
+.shot {
+  border: 1px solid #409eff;
+}
 .shot-img { 
   position: fixed;
   display: flex;
@@ -103,7 +106,7 @@ export default {
   left: 500px;
   display: block;
   width: 950px;
-  height: 710px;
+  height: 680px;
   pointer-events: none;
 }
 .shot i:nth-child(1) {

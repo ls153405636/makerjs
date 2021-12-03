@@ -32,6 +32,7 @@ export class Inlay extends BaseWidget {
     this.depth = d2_tool.translateValue(vPB.depth)
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
+    this.disToStart = vPB.disToStart
     this.rotationY = vPB.rotation.y
     this.draw()
     this.addDimension()
@@ -94,6 +95,7 @@ export class Inlay extends BaseWidget {
     inlayContainer.zIndex = Z_INDEX.COMPONENT_ZINDEX
     // this.sprite = inlayContainer
     this.sprite.addChild(inlayContainer)
+    this.sprite.zIndex = 100
   }
 
   getSprite() {
@@ -158,8 +160,8 @@ export class Inlay extends BaseWidget {
     const { positionX, positionY, rotationY, disToStart } = this
     const offSet = new Victor(10, 10) // 偏移距离
 
-    const p1 = new Victor(-this.width / 2, this.depth / 2)
-    const p2 = new Victor(this.width / 2, this.depth / 2)
+    const p1 = new Victor(-this.width / 2, -this.depth / 2)
+    const p2 = new Victor(this.width / 2, -this.depth / 2)
     const p3 = new Victor(this.width / 2, -this.depth / 2)
     const p4 = new Victor(this.width / 2, this.depth / 2)
 
@@ -168,8 +170,8 @@ export class Inlay extends BaseWidget {
       new Victor(disToStart / D2Config.SCREEN_RATE, 0)
     )
 
-    const newP1 = p1.addY(offSet)
-    const newP2 = p2.addY(offSet)
+    const newP1 = p1.subtractY(offSet)
+    const newP2 = p2.subtractY(offSet)
 
     const newP3 = p3.addX(offSet)
     const newP4 = p4.addX(offSet)
@@ -232,16 +234,16 @@ export class Inlay extends BaseWidget {
     compLine.lineTo(newP4B.x, newP4B.y)
 
     // 距离标注线
-    // compLine.moveTo(newP5.x, newP5.y)
-    // compLine.lineTo(newP6.x, newP6.y)
+    compLine.moveTo(newP5.x, newP5.y)
+    compLine.lineTo(newP6.x, newP6.y)
 
-    // compLine.moveTo(newP5T.x, newP5T.y)
-    // compLine.lineTo(newP5.x, newP5.y)
-    // compLine.lineTo(newP5B.x, newP5B.y)
+    compLine.moveTo(newP5T.x, newP5T.y)
+    compLine.lineTo(newP5.x, newP5.y)
+    compLine.lineTo(newP5B.x, newP5B.y)
 
-    // compLine.moveTo(newP6T.x, newP6T.y)
-    // compLine.lineTo(newP6.x, newP6.y)
-    // compLine.lineTo(newP6B.x, newP6B.y)
+    compLine.moveTo(newP6T.x, newP6T.y)
+    compLine.lineTo(newP6.x, newP6.y)
+    compLine.lineTo(newP6B.x, newP6B.y)
 
     // 标注文字
     // 宽度标注文字
