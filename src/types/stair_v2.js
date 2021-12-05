@@ -9477,6 +9477,7 @@ export const Types = $root.Types = (() => {
          * @property {Array.<Types.IEdge>|null} [outEdges] TreadGirBorder outEdges
          * @property {Array.<Types.IEdge>|null} [inTopEdges] TreadGirBorder inTopEdges
          * @property {Array.<Types.IEdge>|null} [outTopEdges] TreadGirBorder outTopEdges
+         * @property {Types.IVector3|null} [dir] TreadGirBorder dir
          */
 
         /**
@@ -9531,6 +9532,14 @@ export const Types = $root.Types = (() => {
         TreadGirBorder.prototype.outTopEdges = $util.emptyArray;
 
         /**
+         * TreadGirBorder dir.
+         * @member {Types.IVector3|null|undefined} dir
+         * @memberof Types.TreadGirBorder
+         * @instance
+         */
+        TreadGirBorder.prototype.dir = null;
+
+        /**
          * Creates a new TreadGirBorder instance using the specified properties.
          * @function create
          * @memberof Types.TreadGirBorder
@@ -9566,6 +9575,8 @@ export const Types = $root.Types = (() => {
             if (message.outTopEdges != null && message.outTopEdges.length)
                 for (let i = 0; i < message.outTopEdges.length; ++i)
                     $root.Types.Edge.encode(message.outTopEdges[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            if (message.dir != null && Object.hasOwnProperty.call(message, "dir"))
+                $root.Types.Vector3.encode(message.dir, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
             return writer;
         };
 
@@ -9619,6 +9630,9 @@ export const Types = $root.Types = (() => {
                     if (!(message.outTopEdges && message.outTopEdges.length))
                         message.outTopEdges = [];
                     message.outTopEdges.push($root.Types.Edge.decode(reader, reader.uint32()));
+                    break;
+                case 5:
+                    message.dir = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -9691,6 +9705,11 @@ export const Types = $root.Types = (() => {
                         return "outTopEdges." + error;
                 }
             }
+            if (message.dir != null && message.hasOwnProperty("dir")) {
+                let error = $root.Types.Vector3.verify(message.dir);
+                if (error)
+                    return "dir." + error;
+            }
             return null;
         };
 
@@ -9746,6 +9765,11 @@ export const Types = $root.Types = (() => {
                     message.outTopEdges[i] = $root.Types.Edge.fromObject(object.outTopEdges[i]);
                 }
             }
+            if (object.dir != null) {
+                if (typeof object.dir !== "object")
+                    throw TypeError(".Types.TreadGirBorder.dir: object expected");
+                message.dir = $root.Types.Vector3.fromObject(object.dir);
+            }
             return message;
         };
 
@@ -9768,6 +9792,8 @@ export const Types = $root.Types = (() => {
                 object.inTopEdges = [];
                 object.outTopEdges = [];
             }
+            if (options.defaults)
+                object.dir = null;
             if (message.inEdges && message.inEdges.length) {
                 object.inEdges = [];
                 for (let j = 0; j < message.inEdges.length; ++j)
@@ -9788,6 +9814,8 @@ export const Types = $root.Types = (() => {
                 for (let j = 0; j < message.outTopEdges.length; ++j)
                     object.outTopEdges[j] = $root.Types.Edge.toObject(message.outTopEdges[j], options);
             }
+            if (message.dir != null && message.hasOwnProperty("dir"))
+                object.dir = $root.Types.Vector3.toObject(message.dir, options);
             return object;
         };
 
@@ -9816,6 +9844,8 @@ export const Types = $root.Types = (() => {
          * @property {Types.GirderType|null} [type] GirderParameters type
          * @property {Types.IMaterial|null} [material] GirderParameters material
          * @property {number|null} [fOffsetStep] GirderParameters fOffsetStep
+         * @property {number|null} [bSuppotHeight] GirderParameters bSuppotHeight
+         * @property {number|null} [aboveHeight] GirderParameters aboveHeight
          */
 
         /**
@@ -9874,6 +9904,22 @@ export const Types = $root.Types = (() => {
         GirderParameters.prototype.fOffsetStep = 0;
 
         /**
+         * GirderParameters bSuppotHeight.
+         * @member {number} bSuppotHeight
+         * @memberof Types.GirderParameters
+         * @instance
+         */
+        GirderParameters.prototype.bSuppotHeight = 0;
+
+        /**
+         * GirderParameters aboveHeight.
+         * @member {number} aboveHeight
+         * @memberof Types.GirderParameters
+         * @instance
+         */
+        GirderParameters.prototype.aboveHeight = 0;
+
+        /**
          * Creates a new GirderParameters instance using the specified properties.
          * @function create
          * @memberof Types.GirderParameters
@@ -9907,6 +9953,10 @@ export const Types = $root.Types = (() => {
                 $root.Types.Material.encode(message.material, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             if (message.fOffsetStep != null && Object.hasOwnProperty.call(message, "fOffsetStep"))
                 writer.uint32(/* id 5, wireType 5 =*/45).float(message.fOffsetStep);
+            if (message.bSuppotHeight != null && Object.hasOwnProperty.call(message, "bSuppotHeight"))
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.bSuppotHeight);
+            if (message.aboveHeight != null && Object.hasOwnProperty.call(message, "aboveHeight"))
+                writer.uint32(/* id 7, wireType 5 =*/61).float(message.aboveHeight);
             return writer;
         };
 
@@ -9955,6 +10005,12 @@ export const Types = $root.Types = (() => {
                     break;
                 case 5:
                     message.fOffsetStep = reader.float();
+                    break;
+                case 6:
+                    message.bSuppotHeight = reader.float();
+                    break;
+                case 7:
+                    message.aboveHeight = reader.float();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -10014,6 +10070,12 @@ export const Types = $root.Types = (() => {
             if (message.fOffsetStep != null && message.hasOwnProperty("fOffsetStep"))
                 if (typeof message.fOffsetStep !== "number")
                     return "fOffsetStep: number expected";
+            if (message.bSuppotHeight != null && message.hasOwnProperty("bSuppotHeight"))
+                if (typeof message.bSuppotHeight !== "number")
+                    return "bSuppotHeight: number expected";
+            if (message.aboveHeight != null && message.hasOwnProperty("aboveHeight"))
+                if (typeof message.aboveHeight !== "number")
+                    return "aboveHeight: number expected";
             return null;
         };
 
@@ -10054,6 +10116,10 @@ export const Types = $root.Types = (() => {
             }
             if (object.fOffsetStep != null)
                 message.fOffsetStep = Number(object.fOffsetStep);
+            if (object.bSuppotHeight != null)
+                message.bSuppotHeight = Number(object.bSuppotHeight);
+            if (object.aboveHeight != null)
+                message.aboveHeight = Number(object.aboveHeight);
             return message;
         };
 
@@ -10076,6 +10142,8 @@ export const Types = $root.Types = (() => {
                 object.type = options.enums === String ? "gph" : 0;
                 object.material = null;
                 object.fOffsetStep = 0;
+                object.bSuppotHeight = 0;
+                object.aboveHeight = 0;
             }
             if (message.height != null && message.hasOwnProperty("height"))
                 object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
@@ -10087,6 +10155,10 @@ export const Types = $root.Types = (() => {
                 object.material = $root.Types.Material.toObject(message.material, options);
             if (message.fOffsetStep != null && message.hasOwnProperty("fOffsetStep"))
                 object.fOffsetStep = options.json && !isFinite(message.fOffsetStep) ? String(message.fOffsetStep) : message.fOffsetStep;
+            if (message.bSuppotHeight != null && message.hasOwnProperty("bSuppotHeight"))
+                object.bSuppotHeight = options.json && !isFinite(message.bSuppotHeight) ? String(message.bSuppotHeight) : message.bSuppotHeight;
+            if (message.aboveHeight != null && message.hasOwnProperty("aboveHeight"))
+                object.aboveHeight = options.json && !isFinite(message.aboveHeight) ? String(message.aboveHeight) : message.aboveHeight;
             return object;
         };
 

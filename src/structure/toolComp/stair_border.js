@@ -27,7 +27,7 @@ export class StairBorder {
     //   name:'out',
     // }
     this.in = new StairSide('in', vInEdges)
-    this.out = new StairBorder('out', vOutEdges)
+    this.out = new StairSide('out', vOutEdges)
   }
 
   rebuild (vInEdges, vOutEdges) {

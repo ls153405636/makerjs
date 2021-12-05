@@ -1,3 +1,4 @@
+import { COMP_TYPES } from "../common/common_config";
 import { Types } from "../types/stair_v2";
 import { Edge } from "../utils/edge";
 import { Outline } from "../utils/outline";
@@ -74,6 +75,7 @@ export class Landing extends ChildInfo {
     this.startHeight = vStartHeight
     this.stepHeight = this.parent.stepHeight
     this.endHeight = this.stepHeight + this.stepHeight * this.stepNum
+    this.compType = COMP_TYPES.LANDING
     this.updateTreads()
     //this.updateCorBigCol()
   }
@@ -153,25 +155,26 @@ export class Landing extends ChildInfo {
     for (let i = 0; i < borders.length; i++) {
       let paras = {vParent:this, vIsLast:false, vIndex:this.treadIndex + i + 1, vBorder:borders[i]}
       paras.vClock = this.lastEdgeIndex === this.corIndex
-      if (i === 1) {
-        let last, next
-        if (this.lastEdgeIndex === this.corIndex) {
-          last = borders[i].inIndex[0]
-          next = borders[i].inIndex[1]
+      let isCor = (this.type === Types.LandingCutType.lct_first)
+                  || (borders.length === 3 && i === 1)
+                  || (this.type === Types.LandingCutType.lct_third && i === 1)
+                  || (this.type === Types.LandingCutType.lct_fourth && i === 0)
+      if (isCor) {
+        if (this.type === Types.LandingCutType.lct_first) {
+          paras.vLastEdgeIndex = (this.nextEdgeIndex + 2)%4
+          paras.vNextEdgeIndex = (this.lastEdgeIndex + 2)%4
+        } else if (this.lastEdgeIndex === this.corIndex) {
+          paras.vLastEdgeIndex = borders[i].inIndex[0]
+          paras.vNextEdgeIndex = borders[i].inIndex[1]
         } else {
-          last = borders[i].inIndex[1]
-          next = borders[i].inIndex[0]
+          paras.vLastEdgeIndex = borders[i].inIndex[1]
+          paras.vNextEdgeIndex = borders[i].inIndex[0]
         }
-        paras.vLastEdgeIndex = last
-        paras.vNextEdgeIndex = next
-      } else if(this.type === Types.LandingCutType.lct_first) {
-        paras.vLastEdgeIndex = (this.nextEdgeIndex + 2)%4
-        paras.vNextEdgeIndex = (this.lastEdgeIndex + 2)%4
       }
       if (this.treads[i]) {
         this.treads[i].rebuildByParent(paras)
       } else {
-        if (i === 1 || this.type === Types.LandingCutType.lct_first) {
+        if (isCor) {
           this.treads.push(new CorTread(paras))
         } else {
           this.treads.push(new SpecTread(paras))
@@ -463,26 +466,42 @@ export class Landing extends ChildInfo {
     return height + this.stepNum * this.parent.stepHeight
   }
 
-  createGirderRoute (vSide, vArgs, vOrder) {
-    let inEdges=[], inUpEdges=[], outEdges=[], outUpEdges=[]
+  /**
+   * 
+   * @param {Object} param0 
+   * @param {string} param0.vOrder 当前休台所接楼梯的顺序，前接楼梯为'last',后接楼梯为'next'
+   * @returns 
+   */
+  createGirderRoute ({vSide, vArgs, vOrder, vInLast, vOutLast}) {
+    if (vSide === 'out') {
+      return []
+    }
+    let borders = []
     let execute = vOrder === 'last' ? true : false 
+    let inLast = vInLast, outLast = vOutLast
     for (let i = 0; i < this.treads.length; i++) {
       let t = this.treads[i]
-      let rst = null
+      let border = null
       if (t.type === Types.TreadType.tCor) {
-        rst = t.getSawGirBorder(vOrder, vArgs)
+        t.setCurOrder(vOrder)
+        border = t.getGirBorder(vSide, vArgs, vOrder === 'next', inLast, outLast)
         execute = vOrder === 'last' ? false : true
       }else if (execute) {
-        rst = t.getSawGirBorder(vSide, vArgs, false)
+        border = t.getGirBorder(vSide, vArgs, false, inLast, outLast)
       }
-      if (rst) {
-        inEdges = tool.concatEdges(inEdges, rst.inEdges)
-        inUpEdges = tool.concatEdges(inUpEdges, rst.inUpEdges)
-        outEdges = tool.concatEdges(outEdges, rst.outEdges)
-        outUpEdges = tool.concatEdges(outUpEdges, rst.outUpEdges)
+      if (border) {
+        inLast = {
+          poi:border.inEdges[border.inEdges.length - 1].p2,
+          topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2
+        }
+        outLast = {
+          poi:border.outEdges[border.outEdges.length - 1].p2,
+          topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2
+        }
+        borders.push(border)
       } 
     }
-    return{inEdges, inUpEdges, outEdges, outUpEdges}
+    return borders
   }
 
   createSideSawEdges () {

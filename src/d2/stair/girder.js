@@ -9,7 +9,7 @@ import { ChildWidget } from './child_widget'
 export class Girder extends ChildWidget {
   /**
    *
-   * @param {Types.HanginGirdergBoard} vPB
+   * @param {Types.Girder} vPB
    */
   constructor(vPB) {
     super(vPB.uuid)
@@ -23,6 +23,7 @@ export class Girder extends ChildWidget {
     const girderContainer = new PIXI.Container()
 
     const path = []
+
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
       path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)

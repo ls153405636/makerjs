@@ -15,10 +15,10 @@ export class StartFlight extends ChildInfo{
   ]
   static SHAPE_TYPE_OPTIONS = [
     {value: Types.StartTreadShapeType.sts_no, label: '保留两边造型'},
-    {value: Types.StartTreadShapeType.sts_left, label: '去掉左边造型'},
-    {value: Types.StartTreadShapeType.sts_right, label: '去掉右边造型'},
+    {value: Types.StartTreadShapeType.sts_left, label: '去掉内侧造型'},
+    {value: Types.StartTreadShapeType.sts_right, label: '去掉外侧造型'},
   ]
-  constructor ({vParent, vPos, vLVec, vWVec, vStepLength, vStepWidth, vStepHeight}) {
+  constructor ({vParent, vPos, vLVec, vWVec, vStepLength, vStepWidth, vStepHeight, vClock}) {
     super(vParent)
     this.stepLength = vStepLength
     this.initStePlength = vStepLength
@@ -32,6 +32,7 @@ export class StartFlight extends ChildInfo{
     this.length = 0
     this.startHeight = 0
     this.type = 'start'
+    this.isClock = vClock
     this.rebuildByParent({vPos, vLVec, vWVec, vStepLength})
   }
 
@@ -58,9 +59,9 @@ export class StartFlight extends ChildInfo{
     this.lVec = vLVec
     this.wVec = vWVec
     this.pos = vPos
-    this.positionL = this.pos || new Types.Vector3()
-    this.positionC = new Edge().setByVec(this.positionL, this.lVec, vStepLength/2).p2
-    this.positionR = new Edge().setByVec(this.positionL, this.lVec, vStepLength).p2
+    this.positionIn = this.pos || new Types.Vector3()
+    this.positionC = new Edge().setByVec(this.positionIn, this.lVec, vStepLength/2).p2
+    this.positionOut = new Edge().setByVec(this.positionIn, this.lVec, vStepLength).p2
 
     if (vStepLength > this.stepLength) {
       this.stepLength = vStepLength
@@ -140,11 +141,11 @@ export class StartFlight extends ChildInfo{
    * 计算实际的顶点postion
    */
    computeRealPos () {
-    let pos = new Types.Vector3(this.positionL)
+    let pos = new Types.Vector3(this.positionIn)
     if (this.shapeType === 1) {
       pos = new Edge().setByVec(this.positionC, this.lVec, -this.stepLength / 2).p2
     } else if (this.shapeType === 3) {
-      pos = new Edge().setByVec(this.positionR, this.lVec, -this.stepLength).p2
+      pos = new Edge().setByVec(this.positionOut, this.lVec, -this.stepLength).p2
     }
     return pos
   }
@@ -375,12 +376,12 @@ export class StartFlight extends ChildInfo{
         this.positionY = this.positionC.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        this.positionX = this.positionL.x + this.sideOffset
-        this.positionY = this.positionL.y + this.stepWidth / 2
+        this.positionX = this.positionIn.x + this.sideOffset
+        this.positionY = this.positionIn.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        this.positionX = this.positionR.x - this.stepLength - this.offset1 / 2
-        this.positionY = this.positionR.y + this.stepWidth / 2
+        this.positionX = this.positionOut.x - this.stepLength - this.offset1 / 2
+        this.positionY = this.positionOut.y + this.stepWidth / 2
       }
     }
     else {
@@ -389,12 +390,12 @@ export class StartFlight extends ChildInfo{
         this.positionY = this.positionC.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        this.positionX = this.positionL.x + this.sideOffset
-        this.positionY = this.positionL.y + this.stepWidth / 2
+        this.positionX = this.positionIn.x + this.sideOffset
+        this.positionY = this.positionIn.y + this.stepWidth / 2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        this.positionX = this.positionR.x - this.stepLength - this.stepWidth / 8
-        this.positionY = this.positionR.y + this.stepWidth / 2
+        this.positionX = this.positionOut.x - this.stepLength - this.stepWidth / 8
+        this.positionY = this.positionOut.y + this.stepWidth / 2
       }
     }
     let left = new Types.Vector3({
@@ -411,11 +412,11 @@ export class StartFlight extends ChildInfo{
         this.positionY_R = left.y
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        this.positionX_R = this.positionL.x + this.stepLength + this.offset1 / 2
+        this.positionX_R = this.positionIn.x + this.stepLength + this.offset1 / 2
         this.positionY_R = left.y
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        this.positionX_R = this.positionR.x -this.sideOffset
+        this.positionX_R = this.positionOut.x -this.sideOffset
         this.positionY_R = left.y
       }
     }
@@ -425,11 +426,11 @@ export class StartFlight extends ChildInfo{
         this.positionY_R = left.y
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        this.positionX_R = this.positionL.x + this.stepLength + this.stepWidth / 8
+        this.positionX_R = this.positionIn.x + this.stepLength + this.stepWidth / 8
         this.positionY_R = left.y
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        this.positionX_R = this.positionR.x -this.sideOffset
+        this.positionX_R = this.positionOut.x -this.sideOffset
         this.positionY_R = left.y
       }
 
@@ -477,8 +478,8 @@ export class StartFlight extends ChildInfo{
     if (this.modelType === Types.StartTreadType.st_el || this.modelType === Types.StartTreadType.st_el_2) {
       if (this.shapeType === Types.StartTreadShapeType.sts_right) {
         leftPois[0] = new Types.Vector3({
-          x: this.positionR.x - this.stepLength - this.offset1 / 2 ,
-          y: this.positionR.y + stepWidth / 2,
+          x: this.positionOut.x - this.stepLength - this.offset1 / 2 ,
+          y: this.positionOut.y + stepWidth / 2,
           z: handrailHeight,
         })
       } else {
@@ -493,8 +494,8 @@ export class StartFlight extends ChildInfo{
     else {
       if (this.shapeType === Types.StartTreadShapeType.sts_right) {
         leftPois[0] = new Types.Vector3({
-          x: this.positionR.x - this.stepLength - this.stepWidth / 4 ,
-          y: this.positionR.y + this.stepWidth / 2,
+          x: this.positionOut.x - this.stepLength - this.stepWidth / 4 ,
+          y: this.positionOut.y + this.stepWidth / 2,
           z: handrailHeight,
         })
       }else {
@@ -506,17 +507,17 @@ export class StartFlight extends ChildInfo{
       }
     }
     leftPois[1] = new Types.Vector3({
-      x: this.positionL.x + sideOffset - arcRL,
+      x: this.positionIn.x + sideOffset - arcRL,
       y: this.positionC.y + this.stepWidth / 2,
       z: handrailHeight,
     })
     leftPois[2] = new Types.Vector3({
-      x: this.positionL.x + sideOffset,
+      x: this.positionIn.x + sideOffset,
       y: this.positionC.y + this.stepWidth / 2 - arcRL,
       z: handrailHeight,
     })
     leftPois[3] = new Types.Vector3({
-      x: this.positionL.x + sideOffset,
+      x: this.positionIn.x + sideOffset,
       y: this.positionC.y,
       z: handrailHeight
     })
@@ -525,8 +526,8 @@ export class StartFlight extends ChildInfo{
     if (this.modelType === Types.StartTreadType.st_el || this.modelType === Types.StartTreadType.st_el_2) {
       if (this.shapeType === Types.StartTreadShapeType.sts_left) {
         rightPois[0] = new Types.Vector3({
-          x: this.positionL.x + this.stepLength + this.offset1 / 2,
-          y: this.positionL.y + this.stepWidth / 2,
+          x: this.positionIn.x + this.stepLength + this.offset1 / 2,
+          y: this.positionIn.y + this.stepWidth / 2,
           z: handrailHeight
         })
       }else {
@@ -539,8 +540,8 @@ export class StartFlight extends ChildInfo{
     }else {
       if (this.shapeType === Types.StartTreadShapeType.sts_left) {
         rightPois[0] = new Types.Vector3({
-          x: this.positionL.x + this.stepLength + this.stepWidth / 4,
-          y: this.positionL.y + this.stepWidth / 2,
+          x: this.positionIn.x + this.stepLength + this.stepWidth / 4,
+          y: this.positionIn.y + this.stepWidth / 2,
           z: handrailHeight
         })
       }else {
@@ -552,17 +553,17 @@ export class StartFlight extends ChildInfo{
       }
     }
     rightPois[1] = new Types.Vector3({
-      x: this.positionL.x + this.width - sideOffset + arcRR,
+      x: this.positionIn.x + this.width - sideOffset + arcRR,
       y: this.positionC.y + this.stepWidth / 2,
       z: handrailHeight
     })
     rightPois[2] = new Types.Vector3({
-      x: this.positionL.x + this.width - sideOffset,
+      x: this.positionIn.x + this.width - sideOffset,
       y: this.positionC.y + this.stepWidth / 2 - arcRR,
       z: handrailHeight
     })
     rightPois[3] = new Types.Vector3({
-      x: this.positionL.x + this.width - sideOffset,
+      x: this.positionIn.x + this.width - sideOffset,
       y: this.positionC.y,
       z: handrailHeight
     })

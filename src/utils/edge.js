@@ -15,12 +15,13 @@ export class Edge {
     if (vPB) {
       this.p1 = new THREE.Vector2(vPB.p1.x, vPB.p1.y)
       this.p2 = new THREE.Vector2(vPB.p2.x, vPB.p2.y)
-      this.zCoord = vPB.p1.z
+      this.zCoord = vPB.p1.z || 0
       if (vPB.controlPos) {
         this.controlPos = new THREE.Vector2(vPB.controlPos.x, vPB.controlPos.y)
       }
       this.type = vPB.type
     } else {
+      this.zCoord = 0
       this.type === Types.EdgeType.estraight
     }
     this.vec = null
@@ -37,7 +38,7 @@ export class Edge {
     this.p1 = new THREE.Vector2(vP1.x, vP1.y)
     this.vec = new THREE.Vector2(vVec.x, vVec.y)
     this.p2 = this.p1.clone().addScaledVector(this.vec, vLength)
-    this.zCoord = vP1.z
+    this.zCoord = vP1.z || 0
     return this.writePB()
   }
 
@@ -184,6 +185,7 @@ export class Edge {
     let temp = this.p1
     this.p1 = this.p2
     this.p2 = temp
+    this.vec = null
     return this.writePB()
   }
 
@@ -200,31 +202,35 @@ export class Edge {
     })
   }
 
+  fixed (vNumber) {
+    return Number(vNumber.toFixed(2))
+  }
+
   writePB () {
     let pb = new Types.Edge({
-      p1: new Types.Vector3({ x: this.p1.x, y: this.p1.y, z: this.zCoord}),
-      p2: new Types.Vector3({ x: this.p2.x, y: this.p2.y, z: this.zCoord }),
+      p1: new Types.Vector3({ x: this.fixed(this.p1.x), y: this.fixed(this.p1.y), z: this.fixed(this.zCoord)}),
+      p2: new Types.Vector3({ x: this.fixed(this.p2.x), y: this.fixed(this.p2.y), z: this.fixed(this.zCoord)}),
       type: this.type
     })
     if (this.controlPos) {
-      pb.controlPos = new Types.Vector3({x:this.controlPos.x, y:this.controlPos.y, z:this.zCoord})
+      pb.controlPos = new Types.Vector3({x:this.fixed(this.controlPos.x), y:this.fixed(this.controlPos.y), z:this.fixed(this.zCoord)})
     }
     return pb
   }
 
   getP1PB() {
     return new Types.Vector3({
-      x:this.p1.x,
-      y:this.p1.y,
-      z:this.zCoord
+      x:this.fixed(this.p1.x),
+      y:this.fixed(this.p1.y),
+      z:this.fixed(this.zCoord)
     })
   }
 
   getP2PB() {
     return new Types.Vector3({
-      x:this.p2.x,
-      y:this.p2.y,
-      z:this.zCoord
+      x:this.fixed(this.p2.x),
+      y:this.fixed(this.p2.y),
+      z:this.fixed(this.zCoord)
     })
   }
 

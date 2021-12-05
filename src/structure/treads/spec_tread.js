@@ -8,7 +8,7 @@ export class SpecTread extends Tread {
     super({vParent, vIsLast})
     this.type === Types.TreadType.tSpec
     this.clock = vClock
-    this.rebuildByParent(vIndex, vBorder)
+    this.rebuildByParent({vIndex, vBorder})
   }
 
   rebuildByParent({vIndex, vBorder}) {
@@ -16,5 +16,11 @@ export class SpecTread extends Tread {
     this.border = vBorder
     let inEdge = this.border.stepOutline.edges[this.border.inIndex[0]]
     this.stepWidth = new Edge(inEdge).getLength()
+    this.position = this.border.stepOutline.edges[0].p1
+    if (this.clock) {
+      this.wVec = new Edge(inEdge).getVec()
+    } else {
+      this.wVec = new Edge(inEdge).getVec().negate()
+    }
   }
 }

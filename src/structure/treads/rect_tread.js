@@ -1,6 +1,7 @@
 import { Types } from "../../types/stair_v2"
 import { Edge } from "../../utils/edge"
 import { Outline } from "../../utils/outline"
+import tool from "../tool"
 import { Tread } from "./tread"
 
 
@@ -15,7 +16,7 @@ export class RectTread extends Tread {
   }
 
   rebuildByParent({ vIndex, vPos }) {
-    super({vIndex})
+    super.rebuildByParent({vIndex})
     this.position = vPos || new Types.Vector3()
     this.lVec = this.parent.lVec || new Types.Vector3()
     this.wVec = this.parent.wVec || new Types.Vector3()

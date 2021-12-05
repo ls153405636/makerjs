@@ -13,7 +13,7 @@ export class Tread extends ChildWidget {
    */
   constructor(vPB, vParent) {
     super(vPB.uuid)
-    this.edges = vPB.stepOutline.edges
+    this.edges = vPB.border.stepOutline.edges
     this.index = vPB.index
     this.parent = vParent
     this.type = vPB.type

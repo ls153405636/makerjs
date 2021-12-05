@@ -3476,6 +3476,9 @@ export namespace Types {
 
         /** TreadGirBorder outTopEdges */
         outTopEdges?: (Types.IEdge[]|null);
+
+        /** TreadGirBorder dir */
+        dir?: (Types.IVector3|null);
     }
 
     /** Represents a TreadGirBorder. */
@@ -3498,6 +3501,9 @@ export namespace Types {
 
         /** TreadGirBorder outTopEdges. */
         public outTopEdges: Types.IEdge[];
+
+        /** TreadGirBorder dir. */
+        public dir?: (Types.IVector3|null);
 
         /**
          * Creates a new TreadGirBorder instance using the specified properties.
@@ -3587,6 +3593,12 @@ export namespace Types {
 
         /** GirderParameters fOffsetStep */
         fOffsetStep?: (number|null);
+
+        /** GirderParameters bSuppotHeight */
+        bSuppotHeight?: (number|null);
+
+        /** GirderParameters aboveHeight */
+        aboveHeight?: (number|null);
     }
 
     /** Represents a GirderParameters. */
@@ -3612,6 +3624,12 @@ export namespace Types {
 
         /** GirderParameters fOffsetStep. */
         public fOffsetStep: number;
+
+        /** GirderParameters bSuppotHeight. */
+        public bSuppotHeight: number;
+
+        /** GirderParameters aboveHeight. */
+        public aboveHeight: number;
 
         /**
          * Creates a new GirderParameters instance using the specified properties.

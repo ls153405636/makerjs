@@ -1,5 +1,6 @@
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
+import tool from "../tool";
 import { Tread } from "./tread";
 
 
@@ -10,60 +11,116 @@ export class CorTread extends Tread {
     this.nextEdgeIndex = vNextEdgeIndex
     this.type = Types.TreadType.tCor
     this.clock = vClock
+    this.curOrder = 'last'
     this.rebuildByParent({vIndex, vBorder})
   }
 
   rebuildByParent({vIndex, vBorder}) {
-    super({vIndex})
+    super.rebuildByParent({vIndex})
     this.border = vBorder
+    this.position = this.border.stepOutline.edges[0].p1
   }
 
-  getSawGirBorder (vOrder, vArgs) {
-    this.girOrder = vOrder
-    return super.getSawGirBorder(vOrder, vArgs, false)
+  setCurOrder(vOrder) {
+    this.curOrder = vOrder
   }
 
-  getGirUtilE (vOrder) {
-    let edge = this.border.stepOutline.edges[this[vOrder+'EdgeIndex']]
+  getDirection() {
+    let index = this[this.curOrder+'EdgeIndex']
+    let edge = this.border.stepOutline.edges[index]
+    let vec
+    if (this.clock) {
+      vec = new Edge(edge).getVec()
+    } else {
+      vec = new Edge(edge).getVec().negate()
+    }
+    return new Types.Vector3({x:vec.x, y:vec.y, z:vec.z})
+  }
+
+  getGirUtilE (vSide, vArgs) {
+    let edge = this.border.stepOutline.edges[this[this.curOrder+'EdgeIndex']]
     let utilE = new Edge(edge)
-    utilE.offset(this.parent.parent.sideOffset, false)
+    let sideOffset = vArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
+    utilE.offset(sideOffset, false)
     if (!this.clock) {
       utilE.reserve()
     }
     let backOffset = this.parent.parent.getTreadBackOffset()
-    if (vOrder === 'last') {
-      utilE.extendP1(-backOffset)
+    if (vArgs.type === Types.GirderType.gsaw) {
+      if (this.curOrder === 'last') {
+        utilE.extendP1(-backOffset)
+      } else {
+        utilE.extendP1(-(this.parent.parent.sideOffset + vArgs.depth / 2))
+        utilE.extendP2(backOffset)
+      }
     } else {
-      utilE.extendP2(backOffset)
+      if(this.curOrder === 'last') {
+        utilE.extendP2(vArgs.depth)
+      }
     }
     return utilE
   }
 
-  getGirVerHeight() {
-    let refT = this.parent.treads[2]
-    if (!refT) {
-      let nextF = this.parent.parent.flights[this.parent.index]
-      refT = nextF?.treads[0]
+  getGirVerHeight(vArgs) {
+    let refT = this.getNextTread()
+    if (vArgs.type === Types.GirderType.gsaw || refT.type === Types.TreadType.tCor) {
+      return refT.getGirVerHeight(vArgs)
+    } else {
+      return refT.getGirVerHeight(vArgs) - refT.stepHeight
     }
-    return refT.getGirVerHeight()
   }
 
-  getLastTread() {
-    let lastT = this.parent.treads[this.index - this.parent.treadIndex - 2]
-    if (!t) {
-      let lastF = this.parent.parent.flights[this.parent.index - 1]
-      lastT = lastF?.treads[lastF.treads.length - 1]
-    }
-    return lastT
+  getUpGirVerHeight (vArgs) {
+    let refT = this.getLastTread()
+    return refT.getUpGirVerHeight(vArgs)
   }
 
-  createSideSawBorder (utilE, vIsFirst, verHeight) {
-    let {edges, upEdges} = super.createSideSawBorder(utilE, vIsFirst, verHeight)
-    edges[0].p1.z = edges[0].p2.z
-    if (this.girOrder === 'last') {
-      let lastT = this.getLastTread()
-      edges[0].p1 = utilE.clone().extendP1(-lastT.stepWidth).p1
+  createSideSlabBorder(utilE, vArgs, vLast) {
+    let botPois = [], topPois = []
+    topPois[0] = utilE.getP1PB()
+    topPois[1] = utilE.getP2PB()
+    botPois[0] = utilE.getP1PB()
+    botPois[1] = utilE.getP2PB()
+    let verHeight = this.getGirVerHeight(vArgs)
+    let upVerHeight = this.getUpGirVerHeight(vArgs)
+    topPois[0].z += upVerHeight
+    topPois[1].z += upVerHeight
+    botPois[0].z -= verHeight
+    botPois[1].z -= verHeight
+    if (this.curOrder === 'last') {
+      let lastT = this.getLastTread(), heightDiff
+      if (lastT.type === Types.TreadType.tCor) {
+        heightDiff = this.stepHeight
+      } else {
+        heightDiff = lastT.getGirVerHeight(vArgs) - verHeight
+      }
+      botPois[0] = utilE.clone().extendP1(- heightDiff / (Math.atan(this.stepHeight / lastT.stepWidth))).p1
+      botPois[0].z -= verHeight
+      let p = utilE.getP1PB()
+      p.z = botPois[0].z - heightDiff
+      botPois.splice(0, 0, p)
     }
-    return {edges, upEdges}
+    if (this.curOrder === 'next') {
+      let nextT = this.getNextTread(), heightDiff
+      if (nextT.type === Types.TreadType.tCor) {
+        heightDiff = nextT.stepHeight
+      } else {
+        heightDiff = nextT.getUpGirVerHeight(vArgs) + nextT.stepHeight - upVerHeight
+      }
+      topPois[1] = utilE.clone().extendP2(-heightDiff / (Math.atan(nextT.stepHeight / nextT.stepWidth))).p2
+      topPois[1].z += upVerHeight
+      let p = utilE.getP2PB()
+      p.z = topPois[1].z + heightDiff
+      topPois.push(p)
+    }
+    if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
+      botPois.splice(0, 0, vLast.poi)
+    } 
+    if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
+      topPois.splice(0, 0, vLast.topPoi)
+    }
+    let edges = tool.createOutlineByPois(botPois, false).edges
+    let topEdges = tool.createOutlineByPois(topPois, false).edges
+    return {edges, topEdges}
   }
 }

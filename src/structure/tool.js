@@ -80,6 +80,21 @@ export function isVec3Equal(vP1, vP2) {
 }
 
 /**
+ * 
+ * @param {Types.Vector3} vP1 
+ * @param {Types.Vector3} vP2 
+ */
+export function isVec2Equal(vP1, vP2) {
+  let p1 = new THREE.Vector2(vP1.x, vP1.y)
+  let p2 = new THREE.Vector2(vP2.x, vP2.y)
+  if (p1.distanceTo(p2) < 1) {
+    return true
+  } else {
+    return false
+  }
+}
+
+/**
    * 
    * @param {Array<Types.Edge>} vPriEdges 
    * @param {Array<Types.Edge>} vAddEdges 
@@ -102,5 +117,6 @@ export default {
   createOutlineByPois,
   writeItemArrayPB,
   isVec3Equal,
-  concatEdges
+  concatEdges,
+  isVec2Equal
 }

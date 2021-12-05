@@ -12,6 +12,7 @@ import { Handrail } from "./handrail"
 import { SmallColumn } from "./small_column"
 import { StartFlight } from './start_flight'
 import { StairSide } from './toolComp/stair_side'
+import { COMP_TYPES } from '../common/common_config'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -44,6 +45,7 @@ export class Stair extends Info {
     this.startFlight = null
     /**@type {import('./toolComp/stair_border').StairBorder} */
     this.border = null
+    this.segments = []
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
       nossingType: Default.TREAD_NOSSING_TYPE,
@@ -66,7 +68,9 @@ export class Stair extends Info {
       height: Default.GIRDER_HEIGHT,
       depth: Default.GIRDER_DEPTH,
       type: Default.GIRDER_TYPE,
-      fOffsetStep: 20,
+      fOffsetStep: Default.GIRDER_F_OFFSET,
+      bSuppotHeight: Default.GIRDER_B_HEIGHT,
+      aboveHeight: Default.GIRDER_ABOVE_HEIGHT
     })
     this.handrailParameters = new Types.HandrailParameters({
       height: Default.HAND_HEIGHT,
@@ -91,6 +95,7 @@ export class Stair extends Info {
     }
     this.updateStartFlight()
     this.updateLandings()
+    this.updateSegments()
     this.computeSize()
     this.computePosition()
     this.updateBorder()
@@ -134,6 +139,9 @@ export class Stair extends Info {
    * 获得外侧边界边偏移时为法线方向还是法线反方向
    */
   getOutSideOffsetPlus() {}
+
+  /**更新楼梯分段 */
+  updateSegments() {}
 
 
   /**计算步高 */
@@ -189,8 +197,8 @@ export class Stair extends Info {
       pos = new Edge().setByVec(pos, f1.lVec, -gArgs.depth).p2
     }
     return new StartFlight({vParent:this,
-                            vLVec:new Types.Vector3({x:1}),
-                            vWVec:new Types.Vector3({y:1}),
+                            vLVec:firstTread.lVec,
+                            vWVec:firstTread.wVec,
                             vPos:new Types.Vector3(pos),
                             vStepLength:firstTread.stepLength,
                             vStepWidth:firstTread.stepWidth,
@@ -230,8 +238,8 @@ export class Stair extends Info {
       let pos = new Edge().setByVec(f1.pos, f1.wVec, f1.length).p2
       pos = new Edge().setByVec(pos, f1.lVec, -this.girOffset).p2
       this.startFlight.rebuildByParent({vPos:pos, 
-                                        vLVec:new Types.Vector3({x:1}),
-                                        vWVec:new Types.Vector3({y:1}),
+                                        vLVec:f1.lVec,
+                                        vWVec:f1.wVec,
                                         vStepLength: f1.stepLength})
     }
   }
@@ -388,7 +396,9 @@ export class Stair extends Info {
   }
 
   updateGirders () {
-    let girders = []
+    this.girders = []
+    this.updateSideGirder(this.border.in)
+    this.updateSideGirder(this.border.out)
   }
 
   /**
@@ -396,28 +406,41 @@ export class Stair extends Info {
    * @param {StairSide} vSide 
    */
   updateSideGirder (vSide) {
-    
     for (let i = 0; i < this.flights.length; i++) {
-      if (f.type === 'start') {
+      if (this.flights[i].type === 'start') {
         continue
       }
       let lastL = this.landings[i - 1]
       let nextL = this.landings[i]
-      let f = this.flights[i]
-      let inEdges=[], inUpEdges=[], outEdges=[], outUpEdges=[]
-      for (const [f,i] of [lastL, f, nextL]) {
+      let flight = this.flights[i]
+      let borders = [], inLast = null, outLast = null
+      let flights = [lastL, flight, nextL]
+      for (let i = 0; i < 3; i++) {
+        let f = flights[i]
         if (f) {
-          let rst = f.createGirderRoute(vSide.sideName, this.girderParameters, i === 0 ? 'last':'next')
-          inEdges = tool.concatEdges(inEdges, rst.inEdges)
-          inUpEdges = tool.concatEdges(inUpEdges, rst.inUpEdges)
-          outEdges = tool.concatEdges(outEdges, rst.outEdges)
-          outUpEdges = tool.concatEdges(outUpEdges, rst.outUpEdges)
+          let rst = f.createGirderRoute({vSide:vSide.sideName, 
+                                        vArgs:this.girderParameters, 
+                                        vOrder:i === 0 ? 'next':'last',
+                                        vInLast:inLast,
+                                        vOutLast:outLast})
+          let border = rst[rst.length - 1]
+          inLast = border ? {
+            poi:border.inEdges[border.inEdges.length - 1].p2,
+            topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2
+          } : null
+          outLast = border ? {
+            poi:border.outEdges[border.outEdges.length - 1].p2,
+            topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2
+          } : null
+          borders = borders.concat(rst)
         }
       }
-      
       if (vSide.girders[i]) {
-        vSide.girders[i] = new Girder()
+        vSide.girders[i].rebuildByParent(borders)
+      } else {
+        vSide.girders[i] = new Girder(this, borders)
       }
+      this.girders.push(vSide.girders[i])
     }
   }
 
@@ -427,74 +450,74 @@ export class Stair extends Info {
    * 根据楼梯边界轮廓更新大梁
    * @returns 
    */
-  updateGirders () {
-    let args = this.girderParameters
-    this.girders = []
-    if (args.type === Types.GirderType.gsaw) {
-      return
-      /**平面图不需要绘制锯齿梁，故先不做处理*/
-    }
-    let bor = this.border
-    let inBorderEdges = this.getGirderInEdges()
-    for (let i = 0; i < inBorderEdges.length; i++) {
-      let e = inBorderEdges[i]
-      let start = i === 0 ? new Edge(e).extendP1(args.fOffsetStep).p1 : new Edge(e).extendP1(-args.depth).p1
-      let end = new Types.Vector3(e.p2)
-      let outEdges = [
-        new Types.Edge({
-          p1: start,
-          p2: end,
-          type: Types.EdgeType.estraight
-        })
-      ]
-      this.updateSideGirder(outEdges, 'in', args.depth, i, this.getInSideOffsetPlus())
-    }
-    for (let i = 0; i < bor.out.edges.length; i++) {
-      let e = bor.out.edges[i]
-      if (!e.flight) {
-        continue
-      }
-      let utilE = new Edge(e)
-      if (i === 0) {
-        utilE.extendP1(args.fOffsetStep)
-      }
-      if (e.startCol) {
-        let offset = (e.startCol.size.x - args.depth) / 2
-        utilE.extendP1(-offset)
-      }
-      if (e.endCol) {
-        let offSet = (e.endCol.size.x - args.depth) / 2
-        utilE.extendP2(-offSet)
-      }
-      let outEdges = [
-        utilE.writePB()
-      ]
-      this.updateSideGirder(outEdges, 'out', args.depth, i, this.getOutSideOffsetPlus())
-    }
-  }
+  // updateGirders () {
+  //   let args = this.girderParameters
+  //   this.girders = []
+  //   if (args.type === Types.GirderType.gsaw) {
+  //     return
+  //     /**平面图不需要绘制锯齿梁，故先不做处理*/
+  //   }
+  //   let bor = this.border
+  //   let inBorderEdges = this.getGirderInEdges()
+  //   for (let i = 0; i < inBorderEdges.length; i++) {
+  //     let e = inBorderEdges[i]
+  //     let start = i === 0 ? new Edge(e).extendP1(args.fOffsetStep).p1 : new Edge(e).extendP1(-args.depth).p1
+  //     let end = new Types.Vector3(e.p2)
+  //     let outEdges = [
+  //       new Types.Edge({
+  //         p1: start,
+  //         p2: end,
+  //         type: Types.EdgeType.estraight
+  //       })
+  //     ]
+  //     this.updateSideGirder(outEdges, 'in', args.depth, i, this.getInSideOffsetPlus())
+  //   }
+  //   for (let i = 0; i < bor.out.edges.length; i++) {
+  //     let e = bor.out.edges[i]
+  //     if (!e.flight) {
+  //       continue
+  //     }
+  //     let utilE = new Edge(e)
+  //     if (i === 0) {
+  //       utilE.extendP1(args.fOffsetStep)
+  //     }
+  //     if (e.startCol) {
+  //       let offset = (e.startCol.size.x - args.depth) / 2
+  //       utilE.extendP1(-offset)
+  //     }
+  //     if (e.endCol) {
+  //       let offSet = (e.endCol.size.x - args.depth) / 2
+  //       utilE.extendP2(-offSet)
+  //     }
+  //     let outEdges = [
+  //       utilE.writePB()
+  //     ]
+  //     this.updateSideGirder(outEdges, 'out', args.depth, i, this.getOutSideOffsetPlus())
+  //   }
+  // }
 
-  /**
-   * 每根大梁有内外上下四条路径，本函数为根据外路径边集创建大梁
-   * @param {Array<Edge>} vOutEdges 外路径边集 
-   * @param {String} vSide 当前大梁属于哪一侧 'in' or 'out'
-   * @param {Number} vDepth 大梁厚度
-   * @param {Number} vIndex 大梁在当前side中的索引
-   * @param {boolean} vPlus 由外路径偏移得到内路径，偏移方向是否为法线方向
-   */
-  updateSideGirder (vOutEdges, vSide, vDepth, vIndex, vPlus) {
-    let inEdges = []
-    let bor = this.border
-    for (const e of vOutEdges) {
-      let inE = new Edge(e).offset(vDepth, vPlus)
-      inEdges.push(inE)
-    } 
-    if (bor[vSide].girders[vIndex]) {
-      bor[vSide].girders[vIndex].rebuildByParent(inEdges, vOutEdges)
-    } else {
-      bor[vSide].girders[vIndex] = new Girder(this, inEdges, vOutEdges)
-    }
-    this.girders.push(bor[vSide].girders[vIndex])
-  }
+  // /**
+  //  * 每根大梁有内外上下四条路径，本函数为根据外路径边集创建大梁
+  //  * @param {Array<Edge>} vOutEdges 外路径边集 
+  //  * @param {String} vSide 当前大梁属于哪一侧 'in' or 'out'
+  //  * @param {Number} vDepth 大梁厚度
+  //  * @param {Number} vIndex 大梁在当前side中的索引
+  //  * @param {boolean} vPlus 由外路径偏移得到内路径，偏移方向是否为法线方向
+  //  */
+  // updateSideGirder (vOutEdges, vSide, vDepth, vIndex, vPlus) {
+  //   let inEdges = []
+  //   let bor = this.border
+  //   for (const e of vOutEdges) {
+  //     let inE = new Edge(e).offset(vDepth, vPlus)
+  //     inEdges.push(inE)
+  //   } 
+  //   if (bor[vSide].girders[vIndex]) {
+  //     bor[vSide].girders[vIndex].rebuildByParent(inEdges, vOutEdges)
+  //   } else {
+  //     bor[vSide].girders[vIndex] = new Girder(this, inEdges, vOutEdges)
+  //   }
+  //   this.girders.push(bor[vSide].girders[vIndex])
+  // }
 
   /**
    * 根据边界轮廓更新扶手
@@ -613,7 +636,7 @@ export class Stair extends Info {
     for (let i = 0; i < vStairEdges.length; i++) {
       let sideE = vStairEdges[i]
       let flight = sideE.flight
-      if (!(flight?.treads)) {
+      if (flight?.compType !== COMP_TYPES.FLIGHT) {
         continue
       }
       let k = 0
@@ -705,6 +728,7 @@ export class Stair extends Info {
         stepNumRule: this.stepNumRule,
         stepNum: this.stepNum,
       }),
+      girderParameters: this.girderParameters,
       flights: tool.writeItemArrayPB(this.flights),
       smallColumns: tool.writeItemArrayPB(this.smallColumns),
       bigColumns: tool.writeItemArrayPB(this.bigColumns),

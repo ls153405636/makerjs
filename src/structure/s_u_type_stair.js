@@ -7,6 +7,7 @@ import { Landing } from "./landing"
 import tool from "./tool"
 import { StairBorder } from "./toolComp/stair_border"
 import { StairEdge } from "./toolComp/stair_edge"
+import { Girder } from "./girder";
 
 export class SmallUTypeStair extends UTypeStair {
   constructor(vParnet, vAgainstWall, vFloadSide) {
@@ -109,13 +110,17 @@ export class SmallUTypeStair extends UTypeStair {
     this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.stepHeight = hole.floorHeight / this.stepNum
     this.stepHeight = Number(this.stepHeight.toFixed(2))
-    let pos1, pos2
+    let pos1, pos2, lVec1, lVec2
     if (this.floadSide === Types.Side.si_right) {
       pos1 = new Types.Vector3({x:this.girOffset, y:this.landingWidth})
       pos2 = new Types.Vector3({x:width - this.girOffset, y:depth2 - this.hangOffset})
+      lVec1 = new Types.Vector3({x:1})
+      lVec2 = new Types.Vector3({x:-1})
     } else {
-      pos1 = new Types.Vector3({x:Default.STEP_LENGTH+this.gap+this.girOffset, y:this.landingWidth})
+      pos1 = new Types.Vector3({x:width - this.girOffset, y:this.landingWidth})
       pos2 = new Types.Vector3({x:this.girOffset, y:depth2 - this.hangOffset})
+      lVec1 = new Types.Vector3({x:-1})
+      lVec2 = new Types.Vector3({x:1})
     }
     this.flights[0] = new Flight({vParent:this, 
                                   vStepNum:num1, 
@@ -124,18 +129,19 @@ export class SmallUTypeStair extends UTypeStair {
                                   vTreadIndex:0, 
                                   isLast:false, 
                                   vPos:pos1, 
-                                  vLVec:new Types.Vector3({x:1}), 
+                                  vLVec:lVec1, 
                                   vWVec:new Types.Vector3({y:1}), 
                                   vLength:depth1 - this.landingWidth,
-                                  vStartHeight: 0})
+                                  vStartHeight: 0,
+                                  vClock:this.floadSide === Types.Side.si_right})
     this.flights[1] = new Flight({vParent:this, 
                                   vStepNum:num2, 
                                   vStepNumRule:this.stepNumRule, 
-                                  vIndex:1, 
+                                  vIndex:3, 
                                   vTreadIndex:num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2, 
                                   isLast:true, 
                                   vPos:pos2, 
-                                  vLVec:new Types.Vector3({x:-1}), 
+                                  vLVec:lVec2, 
                                   vWVec:new Types.Vector3({y:-1}), 
                                   vLength:depth2 - this.landingWidth - this.hangOffset,
                                   vStartHeight:(num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2)*this.stepHeight,
@@ -147,24 +153,29 @@ export class SmallUTypeStair extends UTypeStair {
     let f2 = this.flights[1]
     let depth2 = f2.length + this.landingWidth
     let width = f1.stepLength + f2.stepLength + this.gap
-    let pos1, pos2
+    let pos1, pos2, lVec1, lVec2
     if (this.floadSide === Types.Side.si_right) {
       pos1 = new Types.Vector3({x:this.girOffset, y:this.landingWidth})
       pos2 = new Types.Vector3({x:width - this.girOffset, y:depth2 - this.hangOffset})
+      lVec1 = new Types.Vector3({x:1})
+      lVec2 = new Types.Vector3({x:-1})
     } else {
-      pos1 = new Types.Vector3({x:f2.stepLength+this.gap+this.girOffset, y:this.landingWidth})
+      pos1 = new Types.Vector3({x:width - this.girOffset, y:this.landingWidth})
       pos2 = new Types.Vector3({x:this.girOffset, y:depth2 - this.hangOffset})
+      lVec1 = new Types.Vector3({x:-1})
+      lVec2 = new Types.Vector3({x:1})
     }
     let startHeight2 = this.landings[1].getEndHeight(this.landings[0].getEndHeight(f1.getEndHeight()))
     f1.rebuildByParent({vTreadIndex:this.startStepNum, 
                         vPos:pos1, 
-                        vLVec:new Types.Vector3({x:1}), 
+                        vLVec:lVec1, 
                         vWVec:new Types.Vector3({y:1}),
-                        vStartHeight:this.startFlight?.getEndHeight() || 0})
+                        vStartHeight:this.startFlight?.getEndHeight() || 0,
+                        vClock:this.floadSide === Types.Side.si_right})
     f2.rebuildByParent({vTreadIndex:this.startStepNum + f1.stepNum + this.landings[0].stepNum + this.landings[1].stepNum, 
                         vPos:pos2, 
-                        vLVec:new Types.Vector3({x:-1}), 
-                        vWVec:new Types.Vector3({y:-1}),
+                        vLVec:lVec2, 
+                        vWVec:new Types.Vector3({y:-1}), 
                         vStartHeight:startHeight2,
                         vClock:this.floadSide === Types.Side.si_right})
   }
@@ -183,7 +194,7 @@ export class SmallUTypeStair extends UTypeStair {
     let paras2 = {vParent:this,
                   vLastStepWidth:f1.stepWidth,
                   vNextStepWidth:f2.stepWidth,
-                  vIndex: 1}
+                  vIndex: 2}
     let ori1, ori2
     if (this.floadSide === Types.Side.si_right) {
       ori1 = new Types.Vector3({x:this.girOffset, y:this.girOffset})
@@ -223,5 +234,55 @@ export class SmallUTypeStair extends UTypeStair {
       new Edge(edges[2]).combineEdge(edges[3]),
       new Edge(edges[4]).combineEdge(edges[5])
     ]
+  }
+
+  updateSegments() {
+    this.segments[0] = this.flights[0]
+    this.segments[1] = this.landings[0]
+    this.segments[2] = this.landings[1]
+    this.segments[3] = this.flights[1]
+  }
+
+  /**
+   * 
+   * @param {StairSide} vSide 
+   */
+   updateSideGirder (vSide) {
+    for (let i = 0; i < 3; i++) {
+      let borders = [], inLast = null, outLast = null, flights = []
+      if (i === 0) {
+        flights = [null, this.flights[0], this.landings[0]]
+      } else if (i === 1) {
+        flights = [this.landings[0], null, this.landings[1]]
+      } else if (i === 2) {
+        flights = [this.landings[1], this.flights[1], null]
+      }
+      for (let i = 0; i < 3; i++) {
+        let f = flights[i]
+        if (f) {
+          let rst = f.createGirderRoute({vSide:vSide.sideName, 
+                                        vArgs:this.girderParameters, 
+                                        vOrder:i === 0 ? 'next':'last',
+                                        vInLast:inLast,
+                                        vOutLast:outLast})
+          let border = rst[rst.length - 1]
+          inLast = border ? {
+            poi:border.inEdges[border.inEdges.length - 1].p2,
+            topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2
+          } : null
+          outLast = border ? {
+            poi:border.outEdges[border.outEdges.length - 1].p2,
+            topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2
+          } : null
+          borders = borders.concat(rst)
+        }
+      }
+      if (vSide.girders[i]) {
+        vSide.girders[i].rebuildByParent(borders)
+      } else {
+        vSide.girders[i] = new Girder(this, borders)
+      }
+      this.girders.push(vSide.girders[i])
+    }
   }
 }

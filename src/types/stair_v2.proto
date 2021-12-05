@@ -402,6 +402,7 @@ message TreadGirBorder {
   repeated Edge outEdges = 2;
   repeated Edge inTopEdges = 3;
   repeated Edge outTopEdges = 4;
+  Vector3 dir = 5;
 }
 
 //大梁参数
@@ -411,6 +412,8 @@ message GirderParameters {
   GirderType type     = 3;  //类型
   Material   material = 4;
   float      fOffsetStep = 5; //前方偏移出踏板的距离
+  float      bSuppotHeight = 6; //下方支撑高度
+  float      aboveHeight   = 7; //上方加高
 }
 
 

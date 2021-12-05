@@ -6,6 +6,9 @@ export class StairSide {
     this.girders = []
     /**@type {Array<StairEdge>} */
     this.edges = vEdges
+    this.girders = []
+    this.handrails = []
+    this.bigCol = null
   }
 
   rebuild(vEdges) {

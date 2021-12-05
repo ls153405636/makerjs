@@ -41,6 +41,10 @@ export class StraightStair extends Stair  {
     this.flights[0].rebuildByParent(paras)
   }
 
+  updateSegments() {
+    this.segments[0] = this.flights[0]
+  }
+
   computeStepNum () {
     this.stepNum = this.flights[0].stepNum + this.startFlight?.stepNum || 0
     this.stepNumRule = this.flights[0].stepNumRule
@@ -91,13 +95,13 @@ export class StraightStair extends Stair  {
     let inEdges, outEdges
     let leftEdges = [new StairEdge(0, this.depth, 0, 0, this.flights[0])]
     let rightEdges = [new StairEdge(this.width, this.depth, this.width, 0, this.flights[0])]
-    if (this.againstWallType === Types.AgainstWallType.aw_right) {
-      inEdges = rightEdges
-      outEdges = leftEdges
-    } else {
+    // if (this.againstWallType === Types.AgainstWallType.aw_right) {
+    //   inEdges = rightEdges
+    //   outEdges = leftEdges
+    // } else {
       inEdges = leftEdges
       outEdges = rightEdges
-    }
+    // }
     if (this.border) {
       this.border.rebuild(inEdges, outEdges)
     } else {

@@ -1,3 +1,4 @@
+import { COMP_TYPES } from '../common/common_config'
 import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
 import { ChildInfo } from './child_info'
@@ -23,6 +24,7 @@ export class Flight extends ChildInfo {
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
     this.clock = vClock
+    this.compType = COMP_TYPES.FLIGHT
     this.rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec, vStartHeight })
   }
 
@@ -107,7 +109,7 @@ export class Flight extends ChildInfo {
         widthSum = widthSum + this.treads[step_num - i - 1].stepWidth
         heightSum = heightSum - this.treads[step_num - i - 1].stepHeight
       } else {
-        this.treads[step_num - i - 1] = new Tread(paras)
+        this.treads[step_num - i - 1] = new RectTread(paras)
         widthSum = widthSum + this.stepWidth
         heightSum = heightSum - this.stepHeight
       }
@@ -193,23 +195,24 @@ export class Flight extends ChildInfo {
    * @param {string} vSide 
    * @param {Types.GirderParameters} vArgs 
    */
-  createGirderRoute(vSide, vArgs) {
-    let inEdges=[], inUpEdges=[], outEdges=[], outUpEdges=[]
+  createGirderRoute({vSide, vArgs, vInLast, vOutLast}) {
+    let borders = []
+    let inLast = vInLast, outLast = vOutLast
     for (let i = 0; i < this.treads.length; i++) {
-      let isExtend = false
-      if (i === this.treads.length - 1 && (!this.isLast)) {
-        let nextL = this.parent.landings[this.index]
-        if (nextL && nextL.tread[0].type === Types.TreadType.tCor) {
-          isExtend = true
+      let border = this.treads[i].getGirBorder(vSide, vArgs, i === 0 && (!inLast), inLast, outLast)
+      if (border) {
+        inLast = {
+          poi:border.inEdges[border.inEdges.length - 1].p2,
+          topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2
         }
+        outLast = {
+          poi:border.outEdges[border.outEdges.length - 1].p2,
+          topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2
+        }
+        borders.push(border)
       }
-      let rst = this.treads[i].getSawGirBorder(vSide, vArgs, i === 0, isExtend)
-      inEdges = tool.concatEdges(inEdges, rst.inEdges)
-      inUpEdges = tool.concatEdges(inUpEdges, rst.inUpEdges)
-      outEdges = tool.concatEdges(outEdges, rst.outEdges)
-      outUpEdges = tool.concatEdges(outUpEdges, rst.outUpEdges)
     } 
-    return{inEdges, inUpEdges, outEdges, outUpEdges}
+    return borders
   }
 
   writePB() {

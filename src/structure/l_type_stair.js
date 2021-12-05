@@ -36,13 +36,15 @@ export class LTypeStair extends Stair {
     this.stepNum = num1 + num2 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
     this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.stepHeight = Number((hole.floorHeight / this.stepNum).toFixed(2))
-    let wVec2X = this.floadSide === Types.Side.si_right ? -1 : 1
-    let wVec2 = new Types.Vector3({x:wVec2X}) 
+    let wVec2 = new Types.Vector3({x:-1}) 
+    let lVec1 = new Types.Vector3({x:1})
     let pos2 = new Types.Vector3({x:width - this.hangOffset, y:this.girOffset})
     let pos1 = new Types.Vector3({x:this.girOffset, y:Default.STEP_LENGTH})
     if (this.floadSide === Types.Side.si_left) {
       pos2.x = this.hangOffset
-      pos1.x = width - Default.STEP_LENGTH + this.girOffset
+      pos1.x = width - this.girOffset
+      lVec1.x = -1
+      wVec2.x = 1
     }
     this.flights[0] = new Flight({vParent:this, 
                                   vStepNum:num1, 
@@ -51,14 +53,15 @@ export class LTypeStair extends Stair {
                                   vTreadIndex:0, 
                                   isLast:false, 
                                   vPos:pos1, 
-                                  vLVec:new Types.Vector3({x:1}), 
+                                  vLVec:lVec1, 
                                   vWVec:new Types.Vector3({y:1}), 
                                   vLength:depth - Default.STEP_LENGTH,
+                                  vClock:this.floadSide === Types.Side.si_right,
                                   vStartHeight: 0})
     this.flights[1] = new Flight({vParent:this, 
                                   vStepNum:num2, 
                                   vStepNumRule:this.stepNumRule, 
-                                  vIndex:1, 
+                                  vIndex:2, 
                                   vTreadIndex:num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE), 
                                   isLast:true, 
                                   vPos:pos2, 
@@ -74,19 +77,22 @@ export class LTypeStair extends Stair {
     let f1 = this.flights[0]
     let f2 = this.flights[1] 
     let width = f1.stepLength + f2.length + this.hangOffset
-    let wVec2X = this.floadSide === Types.Side.si_right ? -1 : 1
-    let wVec2 = new Types.Vector3({x:wVec2X})  
+    let wVec2 = new Types.Vector3({x:-1})  
+    let lVec1 = new Types.Vector3({x:1})
     let pos2 = new Types.Vector3({x:width - this.hangOffset, y:this.girOffset})
     let pos1 = new Types.Vector3({x:this.girOffset, y:f2.stepLength})
     if (this.floadSide === Types.Side.si_left) {
       pos2.x = this.hangOffset
-      pos1.x = width - f1.stepLength + this.girOffset
+      pos1.x = width - this.girOffset
+      lVec1.x = -1
+      wVec2.x = 1
     }
     f1.rebuildByParent({vTreadIndex:this.startStepNum, 
                         vPos:pos1, 
-                        vLVec:new Types.Vector3({x:1}), 
+                        vLVec:lVec1, 
                         vWVec:new Types.Vector3({y:1}),
-                        vStartHeight:this.startFlight?.getEndHeight() || 0})
+                        vStartHeight:this.startFlight?.getEndHeight() || 0,
+                        vClock:this.floadSide === Types.Side.si_right,})
     f2.rebuildByParent({vTreadIndex:this.startStepNum + f1.stepNum + this.landings[0].stepNum, 
                         vPos:pos2, 
                         vLVec:new Types.Vector3({y:1}), 
@@ -213,6 +219,12 @@ export class LTypeStair extends Stair {
       this.landings[0] = new Landing(paras)
     }
     this.landings[0].updateCorBigCol()
+  }
+
+  updateSegments() {
+    this.segments[0] = this.flights[0]
+    this.segments[1] = this.landings[1]
+    this.segments[2] = this.flights[1]
   }
 
   /**
