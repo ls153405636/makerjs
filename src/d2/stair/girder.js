@@ -1,6 +1,7 @@
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
+import { isVec2Equal } from '../../structure/tool'
 import { Types } from '../../types/stair_v2'
 import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
@@ -13,8 +14,7 @@ export class Girder extends ChildWidget {
    */
   constructor(vPB) {
     super(vPB.uuid)
-    this.inEdges = vPB.inRoute.edges
-    this.outEdges = vPB.outRoute.edges
+    this.borders = vPB.borders 
     this.draw()
     this.addEvent()
   }
@@ -24,21 +24,20 @@ export class Girder extends ChildWidget {
 
     const path = []
 
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      path.push(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-      path.push(
-        this.inEdges[this.inEdges.length - 1].p2.x / D2Config.SCREEN_RATE,
-        this.inEdges[this.inEdges.length - 1].p2.y / D2Config.SCREEN_RATE
-      )
+    for (let i = 0; i < this.borders.length; i++) {
+      let e = this.borders[i]
+      path.push(e.inTopEdges[0].p1.x / D2Config.SCREEN_RATE, e.inTopEdges[0].p1.y / D2Config.SCREEN_RATE)
+      if (i === this.borders.length - 1) {
+        path.push(e.inTopEdges[0].p2.x / D2Config.SCREEN_RATE, e.inTopEdges[0].p2.y / D2Config.SCREEN_RATE)
+      }
     }
-    for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let f = this.outEdges[i]
-      path.push(f.p2.x / D2Config.SCREEN_RATE, f.p2.y / D2Config.SCREEN_RATE)
-      path.push(
-        this.outEdges[0].p1.x / D2Config.SCREEN_RATE,
-        this.outEdges[0].p1.y / D2Config.SCREEN_RATE
-      )
+    for (let i = this.borders.length - 1; i >= 0; i--) {
+      let f = this.borders[i]
+      // console.log(f.outTopEdges[0])
+      if (i === this.borders.length - 1) {
+        path.push(f.outTopEdges[0].p2.x / D2Config.SCREEN_RATE, f.outTopEdges[0].p2.y / D2Config.SCREEN_RATE)
+      }
+      path.push(f.outTopEdges[0].p1.x / D2Config.SCREEN_RATE, f.outTopEdges[0].p1.y / D2Config.SCREEN_RATE)
     }
     const changeGirder1 = new PIXI.Graphics()
     changeGirder1.lineStyle(1, 0x4478f4)

@@ -1,3 +1,4 @@
+import Victor from 'victor'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
@@ -14,10 +15,16 @@ export class Tread extends ChildWidget {
   constructor(vPB, vParent) {
     super(vPB.uuid)
     this.edges = vPB.border.stepOutline.edges
+    // console.log(vPB.border.stepOutline.isClock)
+    this.isClock = vPB.border.stepOutline.isClock
+    this.inIndex = vPB.border.inIndex
+    this.frontIndex = vPB.border.frontIndex
     this.index = vPB.index
     this.parent = vParent
     this.type = vPB.type
+    this.sprite = new PIXI.Container()
     this.draw()
+    this.addDimension()
     this.addEvent()
   }
 
@@ -101,7 +108,8 @@ export class Tread extends ChildWidget {
     )
     stepNum.anchor.set(0.5, 0.5)
     treadContainer.addChild(changeTread, tread, stepNum)
-    this.sprite = treadContainer
+    // this.sprite = treadContainer
+    this.sprite.addChild(treadContainer)
   }
 
   /**
@@ -117,8 +125,8 @@ export class Tread extends ChildWidget {
   // 取消踏板选中效果
   cancelSelected() {
     this.sprite.zIndex = 0
-    this.sprite.children[0].visible = false
-    this.sprite.children[1].visible = true
+    this.sprite.children[0].children[0].visible = false
+    this.sprite.children[0].children[1].visible = true
     this.isSelected = false
   }
 
@@ -129,8 +137,8 @@ export class Tread extends ChildWidget {
     }else {
       this.sprite.zIndex = 100
     }
-    this.sprite.children[0].visible = true
-    this.sprite.children[1].visible = false
+    this.sprite.children[0].children[0].visible = true
+    this.sprite.children[0].children[1].visible = false
     this.isSelected = true
   }
 
@@ -141,16 +149,16 @@ export class Tread extends ChildWidget {
     }else {
       this.sprite.zIndex = 100
     }
-    this.sprite.children[0].visible = true
-    this.sprite.children[1].visible = false
+    this.sprite.children[0].children[0].visible = true
+    this.sprite.children[0].children[1].visible = false
   }
   // 鼠标离开踏板效果
   cancelHover() {
     if (!this.isSelected) {
       // this.zIndex = 0
       this.sprite.zIndex = 0
-      this.sprite.children[0].visible = false
-      this.sprite.children[1].visible = true
+      this.sprite.children[0].children[0].visible = false
+      this.sprite.children[0].children[1].visible = true
     }
   }
 
@@ -195,5 +203,149 @@ export class Tread extends ChildWidget {
           _this.parent.setHover()
         }
       })
+  }
+  addDimension() {
+    // 踏板标注线绘制
+    const treadLineContainer = new PIXI.Container()
+    const treadLine = new PIXI.Graphics()
+    console.log(this.inIndex)
+    // console.log(this.edges[this.inIndex[1]])
+    const offSet = new Victor(500,500) //偏移出墙的偏移值
+    const arrow = new Victor(50,50) //偏移出墙的偏移值
+    let p1
+    let p2
+    
+    let newP1
+    let newP2
+    
+    let newP1T
+    let newP1B
+    let newP2T
+    let newP2B
+    
+    for (let i = 0; i < this.inIndex.length; i++) {
+      p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
+      p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
+      
+
+      if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
+        // 左侧
+        newP1 = p1.clone().subtractX(offSet)
+        newP2 = p2.clone().subtractX(offSet)
+        newP1T = p1.clone().subtractX(offSet).subtractX(arrow)
+        newP1B = p1.clone().subtractX(offSet).addX(arrow)
+        newP2T = p2.clone().subtractX(offSet).subtractX(arrow)
+        newP2B = p2.clone().subtractX(offSet).addX(arrow)
+      }
+      if (p1.x === p2.x && p1.y > p2.y && this.isClock === false) {
+        // 左侧
+        newP1 = p1.clone().addX(offSet)
+        newP2 = p2.clone().addX(offSet)
+        newP1T = p1.clone().addX(offSet).subtractX(arrow)
+        newP1B = p1.clone().addX(offSet).addX(arrow)
+        newP2T = p2.clone().addX(offSet).subtractX(arrow)
+        newP2B = p2.clone().addX(offSet).addX(arrow)
+      }
+      if (p1.x === p2.x && p1.y < p2.y  && this.isClock === true) {
+        // 右侧
+        newP1 = p1.clone().addX(offSet)
+        newP2 = p2.clone().addX(offSet)
+        newP1T = p1.clone().addX(offSet).addX(arrow)
+        newP1B = p1.clone().addX(offSet).subtractX(arrow)
+        newP2T = p2.clone().addX(offSet).addX(arrow)
+        newP2B = p2.clone().addX(offSet).subtractX(arrow)
+      }
+      if (p1.x === p2.x && p1.y < p2.y  && this.isClock === false) {
+        // 右侧
+        newP1 = p1.clone().subtractX(offSet)
+        newP2 = p2.clone().subtractX(offSet)
+        newP1T = p1.clone().subtractX(offSet).addX(arrow)
+        newP1B = p1.clone().subtractX(offSet).subtractX(arrow)
+        newP2T = p2.clone().subtractX(offSet).addX(arrow)
+        newP2B = p2.clone().subtractX(offSet).subtractX(arrow)
+      }
+      if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
+        // 顶侧
+        newP1 = p1.clone().subtractY(offSet)
+        newP2 = p2.clone().subtractY(offSet)
+        newP1T = p1.clone().subtractY(offSet).subtractY(arrow)
+        newP1B = p1.clone().subtractY(offSet).addY(arrow)
+        newP2T = p2.clone().subtractY(offSet).subtractY(arrow)
+        newP2B = p2.clone().subtractY(offSet).addY(arrow)
+      }
+      if (p1.x < p2.x && p1.y === p2.y && this.isClock === false) {
+        // 顶侧
+        newP1 = p1.clone().addY(offSet)
+        newP2 = p2.clone().addY(offSet)
+        newP1T = p1.clone().addY(offSet).subtractY(arrow)
+        newP1B = p1.clone().addY(offSet).addY(arrow)
+        newP2T = p2.clone().addY(offSet).subtractY(arrow)
+        newP2B = p2.clone().addY(offSet).addY(arrow)
+      }
+      if (p1.x > p2.x && p1.y === p2.y && this.isClock === true) {
+        // 顶侧
+        newP1 = p1.clone().subtractY(offSet)
+        newP2 = p2.clone().subtractY(offSet)
+        newP1T = p1.clone().subtractY(offSet).subtractY(arrow)
+        newP1B = p1.clone().subtractY(offSet).addY(arrow)
+        newP2T = p2.clone().subtractY(offSet).subtractY(arrow)
+        newP2B = p2.clone().subtractY(offSet).addY(arrow)
+      }
+      if (p1.x > p2.x && p1.y === p2.y && this.isClock === false) {
+        // 顶侧
+        newP1 = p1.clone().addY(offSet)
+        newP2 = p2.clone().addY(offSet)
+        newP1T = p1.clone().addY(offSet).subtractY(arrow)
+        newP1B = p1.clone().addY(offSet).addY(arrow)
+        newP2T = p2.clone().addY(offSet).subtractY(arrow)
+        newP2B = p2.clone().addY(offSet).addY(arrow)
+      }
+      console.log(newP1)
+      console.log(newP2)
+
+      // 文字中心位置计算
+      const position = {
+        x: (newP1T.x + newP2T.x) / 2 / 10,
+        y: (newP1T.y + newP2T.y) / 2 / 10
+      }
+
+      // 长度计算
+      const treadLinelength =
+      Math.floor(Math.hypot(p1.x - p2.x, p1.y - p2.y) * 10 ) / 10
+      const treadLineNum = new PIXI.Text(treadLinelength, {
+        fontSize: 32,
+        fill: 0x000000,
+      })
+
+      // 旋转计算
+      let newTextRotation = ''
+      const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
+      const textAngle = textRotation.angle()
+      if (textAngle == Math.PI || textAngle == 0) {
+        newTextRotation = 0
+      } else if (textAngle < Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      } else if (textAngle > Math.PI) {
+        newTextRotation = textRotation.angle()
+      }
+
+      treadLineNum.scale.set(0.25)
+      treadLineNum.position.set(position.x, position.y)
+      treadLineNum.anchor.set(0.5, 0.5)
+      treadLineNum.rotation = newTextRotation
+      treadLine
+      .lineStyle(1,0x000000)
+      .moveTo(newP1.x / 10,newP1.y / 10)
+      .lineTo(newP2.x / 10,newP2.y / 10)
+      .moveTo(newP1T.x / 10,newP1T.y / 10)
+      .lineTo(newP1B.x / 10,newP1B.y / 10)
+      .moveTo(newP2T.x / 10,newP2T.y / 10)
+      .lineTo(newP2B.x / 10,newP2B.y / 10)
+      treadLineContainer.addChild(treadLine,treadLineNum)
+    }
+
+
+    
+    this.sprite.addChild(treadLineContainer)
   }
 }
