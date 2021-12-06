@@ -16,6 +16,7 @@ export class Component extends Info {
     let angle = new Edge(this.parent.edge).getAngle()
     this.rotation = new Types.Vector3({ y: angle })
     this.interval = 0
+    this.wallDepth = vParent.depth
   }
 
   addInfo() {
@@ -61,6 +62,7 @@ export class Component extends Info {
       rotation: this.rotation,
       interval: this.interval,
       position: this.position,
+      wallDepth: this.wallDepth
     })
   }
 }
@@ -71,19 +73,21 @@ export class Inlay extends Component {
     this.width = Default.INLAY_WIDTH
     this.height = Default.INLAY_HEIGHT
     this.depth = this.parent.depth
+    this.offGround = 0 // 门默认离地0，窗、洞另考虑
     this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
     this.rebuild()
   }
 
   getArgs() {
     return {
-      width: { name: '宽度', value: this.width, type: 'input' },
-      height: { name: '高度', value: this.height, type: 'input' },
       disToStart: {
         name: '距端点的距离',
         value: this.disToStart,
         type: 'input',
       },
+      width: { name: '宽度', value: this.width, type: 'input' },
+      height: { name: '高度', value: this.height, type: 'input' },
+      offGround: { name: '离地高度', value: this.offGround, type: 'input',class: "is-required" }
     }
   }
 }
@@ -94,21 +98,23 @@ export class Cloumn extends Component {
     this.width = Default.CEMENT_SIZE
     this.height = this.parent.height
     this.depth = Default.CEMENT_SIZE
+    this.offGround = this.parent.height - this.height
     this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
     this.rebuild()
   }
 
   getArgs() {
     return {
-      width: { name: '宽度', value: this.width, type: 'input' },
-      depth: { name: '深度', value: this.depth, type: 'input' },
-      height: { name: '高度', value: this.height, type: 'input' },
-      interval: { name: '与墙体间的间隙', value: this.interval, type: 'input' },
       disToStart: {
         name: '距端点的距离',
         value: this.disToStart,
         type: 'input',
       },
+      width: { name: '宽度', value: this.width, type: 'input' },
+      height: { name: '高度', value: this.height, type: 'input' },
+      depth: { name: '深度', value: this.depth, type: 'input' },
+      offGround: { name: '离地高度', value: this.offGround, type: 'input',class: "is-required" },
+      interval: { name: '与墙体间的间隙', value: this.interval, type: 'input' },
     }
   }
 }
@@ -128,6 +134,7 @@ export class Beam extends Component {
     return {
       depth: { name: '宽度', value: this.depth, type: 'input' },
       height: { name: '厚度', value: this.height, type: 'input' },
+      offGround: { name: '离地高度', value: this.offGround, type: 'input',class: "is-required" },
       interval: { name: '与墙体间的间隙', value: this.interval, type: 'input' },
     }
   }

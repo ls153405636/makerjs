@@ -55,7 +55,7 @@ export class UTypeStair extends Stair {
     this.landings.forEach(l=>{
       fStepNum = fStepNum - l.stepNum
     })
-    fStepNum = fStepNum - this.startFlight?.stepNum || 0
+    fStepNum = fStepNum - (this.startFlight?.stepNum || 0)
     let stepNumArr = []
     let stepNumSum = 0
     let i = 0

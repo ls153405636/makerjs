@@ -61,6 +61,7 @@ export class Wall extends BaseWidget {
     })
     this.lineSprite.destroy()
     this.textSprite.destroy()
+    this.holeLineSprite.destroy()
     super.destroy()
   }
 
@@ -74,6 +75,10 @@ export class Wall extends BaseWidget {
    * @param {Types.Wall} vPB
    */
   init(vPB) {
+    this.sprite = new PIXI.Container()
+    this.lineContainer = new PIXI.Container()
+    this.holeP1 = d2_tool.translateCoord(vPB.holeEdge.p1)
+    this.holeP2 = d2_tool.translateCoord(vPB.holeEdge.p2)
     this.p1 = d2_tool.translateCoord(vPB.edge.p1)
     this.p2 = d2_tool.translateCoord(vPB.edge.p2)
     this.outP1 = d2_tool.translateCoord(vPB.outEdge.p1)
@@ -85,93 +90,13 @@ export class Wall extends BaseWidget {
     this.components = []
     this.createComponents(vPB.components)
     this.draw()
+    this.addDimension()
     this.addEvent()
   }
 
   // 墙体绘制
   draw() {
-    // 标注线偏移计算
-    const { p1, p2, outP1, outP2, depth, normal } = this
-    const newNormal = new Victor(normal.x, normal.y)
-    const offset = new Victor(depth * 3, depth * 3)
-    newNormal.multiply(offset)
-    const newP1 = new Victor(p1.x, p1.y)
-    const newP2 = new Victor(p2.x, p2.y)
-    const newOutP1 = new Victor(outP1.x, outP1.y)
-    const newOouP2 = new Victor(outP2.x, outP2.y)
 
-    let newTextRotation = ''
-    const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
-    const textAngle = textRotation.angle()
-    if (textAngle == Math.PI || textAngle == 0) {
-      newTextRotation = 0
-    } else if (textAngle < Math.PI) {
-      newTextRotation = textRotation.invert().angle()
-    } else if (textAngle > Math.PI) {
-      newTextRotation = textRotation.angle()
-    }
-
-    if (p1.x - p2.x < 0 && p1.y - p2.y == 0) {
-      newP1.addY(newNormal)
-      newP2.addY(newNormal)
-      newOutP1.addY(newNormal)
-      newOouP2.addY(newNormal)
-    }
-    if (p1.x - p2.x < 0 && p1.y - p2.y < 0) {
-      newP1.add(newNormal)
-      newP2.add(newNormal)
-      newOutP1.add(newNormal)
-      newOouP2.add(newNormal)
-    }
-    if (p1.x - p2.x > 0 && p1.y - p2.y > 0) {
-      newP1.add(newNormal)
-      newP2.add(newNormal)
-      newOutP1.add(newNormal)
-      newOouP2.add(newNormal)
-    }
-    if (p1.x - p2.x > 0 && p1.y - p2.y == 0) {
-      newP1.addY(newNormal)
-      newP2.addY(newNormal)
-      newOutP1.addY(newNormal)
-      newOouP2.addY(newNormal)
-    }
-    if (p1.x - p2.x == 0 && p1.y - p2.y > 0) {
-      newP1.addX(newNormal)
-      newP2.addX(newNormal)
-      newOutP1.addX(newNormal)
-      newOouP2.addX(newNormal)
-    }
-    if (p1.x - p2.x < 0 && p1.y - p2.y > 0) {
-      newP1.add(newNormal)
-      newP2.add(newNormal)
-      newOutP1.add(newNormal)
-      newOouP2.add(newNormal)
-    }
-    if (p1.x - p2.x == 0 && p1.y - p2.y < 0) {
-      newP1.addX(newNormal)
-      newP2.addX(newNormal)
-      newOutP1.addX(newNormal)
-      newOouP2.addX(newNormal)
-    }
-
-    // 获取标注线长度
-    const linelength =
-      Math.floor(Math.hypot(newP1.x - newP2.x, newP1.y - newP2.y) * 10 * 100) /
-      100
-
-    // 计算标注线中心位置
-    const innerlineCenter = {
-      x: (newP1.x + newP2.x) / 2,
-      y: (newP1.y + newP2.y) / 2,
-    }
-    const outterlineCenter = {
-      x: (newOutP1.x + newOouP2.x) / 2,
-      y: (newOutP1.y + newOouP2.y) / 2,
-    }
-    const linePos = {
-      x: (innerlineCenter.x + outterlineCenter.x) / 2,
-      y: (innerlineCenter.y + outterlineCenter.y) / 2,
-    }
 
     //创建墙体纹理
     var texture = null
@@ -207,102 +132,81 @@ export class Wall extends BaseWidget {
       this.outP1.y,
     ]
 
-    const wallContainer = new PIXI.Container()
+    const wallContainer = new PIXI.Container('wall')
 
-    const wall_line = new PIXI.Graphics()
-    wall_line.visible = false
-    wall_line.lineStyle(0.5, 0xdc143c)
-    wall_line.drawPolygon(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
+    // const wall_line = new PIXI.Graphics()
+    // wall_line.visible = false
+    // wall_line.lineStyle(1, 0xdc143c)
+    // wall_line.moveTo(this.p1.x,this.p1.y)
+    // wall_line.lineTo(this.p2.x,this.p2.y)
+    // wall_line.drawPolygon(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
 
-    wall_line.endFill()
+    // wall_line.endFill()
+
+    const holeBlackLine = new PIXI.Graphics()
+      holeBlackLine
+      .lineStyle(2,0x000000,1,1)
+      .moveTo(this.holeP1.x, this.holeP1.y)
+      .lineTo(this.holeP2.x, this.holeP2.y)
+      // this.lineContainer.addChild(holeBlackLine)
+      this.holeLineSprite = holeBlackLine
+      this.holeLineSprite.zIndex = Z_INDEX.HOLE_LINE_ZINDEX
 
     const wall = new PIXI.Graphics()
-    wall.lineStyle(1, 0x929292)
+    wall.lineStyle(1, 0x929292,1,0)
     wall.beginFill(0xe5e5e5, 1)
     wall.drawPolygon(path)
     wall.endFill()
 
     wall.addChild(tilingSprite)
-    wallContainer.addChild(wall_line, wall)
+    wallContainer.addChild(wall)
     wallContainer.zIndex = Z_INDEX.WALL_ZINDEX
-    if (this.type === 4) {
-      wall.alpha = this.alpha
-      wall_line.visible = true
-      wallContainer.zIndex = Z_INDEX.WALL_LINE_ZINDEX
-    }
+    // if (this.type === 4) {
+    //   wall.alpha = this.alpha
+    //   holeBlackLine.visible = true
+    //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
+    // }
+    // if(Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) < Math.hypot(this.holeP1.x - this.holeP2.x, this.holeP1.y - this.holeP2.y)) {
+    //   wall.alpha = this.alpha
+    //   holeBlackLine.visible = true
+    //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
+    // }
+    this.sprite.addChild(wallContainer)
 
-    // 标注线绘制
-    const lineContainer = new PIXI.Container()
-    // 标注线左右端线绘制
-    const dobuleLineLeft = new PIXI.Graphics()
-    dobuleLineLeft
-      .lineStyle(2, 0x2d3037, 1)
-      .moveTo(this.p1.x, this.p1.y)
-      .lineTo(newOutP1.x, newOutP1.y)
-
-    const dobuleLineRight = new PIXI.Graphics()
-    dobuleLineRight
-      .lineStyle(2, 0x2d3037, 1)
-      .moveTo(this.p2.x, this.p2.y)
-      .lineTo(newOouP2.x, newOouP2.y)
-
-    const line = new PIXI.Graphics()
-    const lPath = [newP1.x, newP1.y, newP2.x, newP2.y]
-    line.position.set()
-    line.lineStyle(1, 0x2d3037, 1)
-    line.drawPolygon(lPath)
-
-    // 标注文字添加
-    const lineText = new PIXI.Text(linelength, {
-      fontSize: 72,
-      fill: 0x2d3037,
-    })
-    lineText.scale.set(0.25)
-    lineText.anchor.set(0.375, 0.5)
-    lineText.position.set(linePos.x, linePos.y)
-    lineText.pivot.set(lineText.width / 2, lineText.height / 2)
-    lineText.rotation = newTextRotation
-
-    lineContainer.addChild(dobuleLineLeft, dobuleLineRight, line)
-    lineContainer.zIndex = 0
-
-    this.sprite = wallContainer
-    this.lineSprite = lineContainer
-    this.textSprite = lineText
   }
 
   // 取消墙体选中效果
   cancelSelected() {
-    this.sprite.children[1].tint = 0xffffff
+    this.sprite.children[0].children[0].tint = 0xffffff
     this.isSelected = false
     if (this.type === 4) {
-      this.sprite.children[1].alpha = this.alpha
+      this.sprite.children[0].children[0].alpha = this.alpha
     } else {
-      this.sprite.children[1].alpha = 1
+      this.sprite.children[0].children[0].alpha = 1
     }
   }
   // 墙体选中效果
   setSelected() {
-    this.sprite.children[1].tint = 0x818796
+    this.sprite.children[0].children[0].tint = 0x818796
     this.isSelected = true
-    this.sprite.children[1].alpha = 1
+    // this.sprite.children[0].children[0].alpha = 1
   }
   // 鼠标进入墙体效果
   setHover() {
     if (!this.isSelected) {
-      this.sprite.children[1].tint = 0x818796
-      this.sprite.children[0].tint = 0xffffff
-      this.sprite.children[1].alpha = 1
+      this.sprite.children[0].children[0].tint = 0x818796
+      // this.sprite.children[0].children[0].tint = 0xffffff
+      this.sprite.children[0].children[0].alpha = 1
     }
   }
   // 鼠标离开墙体效果
   cancelHover() {
     if (!this.isSelected) {
-      this.sprite.children[1].tint = 0xffffff
+      this.sprite.children[0].children[0].tint = 0xffffff
       if (this.type === 4) {
-        this.sprite.children[1].alpha = this.alpha
+        this.sprite.children[0].children[0].alpha = this.alpha
       } else {
-        this.sprite.children[1].alpha = 1
+        this.sprite.children[0].children[0].alpha = 1
       }
     }
   }
@@ -368,5 +272,175 @@ export class Wall extends BaseWidget {
       .on('mouseover', () => {
         _this.setHover()
       })
+  }
+  addDimension() {
+    // 标注线偏移计算
+    const { p1, p2, outP1, outP2, depth, normal, holeP1, holeP2 } = this
+    const newNormal = new Victor(normal.x, normal.y)
+    const offSet = new Victor(40, 40) // 墙体标线偏移距离
+    const holeLineOffSet = new Victor(60 + this.depth, 60 + this.depth) // 洞口标线偏移距离
+    const LineTextoffSet = new Victor(8, 8) // 文字标线偏移距离
+    
+    newNormal.multiply(offSet)
+    const newNormalText = new Victor(normal.x, normal.y).multiply(LineTextoffSet)
+    const newNormalHole = new Victor(normal.x, normal.y).multiply(holeLineOffSet)
+    const P1 = new Victor(p1.x, p1.y)
+    const P2 = new Victor(p2.x, p2.y)
+    const OutP1 = new Victor(outP1.x, outP1.y)
+    const OutP2 = new Victor(outP2.x, outP2.y)
+    const newOutP1 = new Victor(outP1.x, outP1.y)
+    const newOutP2 = new Victor(outP2.x, outP2.y)
+    const newHoleP1 = new Victor(holeP1.x, holeP1.y)
+    const newHoleP2 = new Victor(holeP2.x, holeP2.y)
+    
+    let newTextRotation = ''
+    const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
+    const textAngle = textRotation.angle()
+    if (textAngle == Math.PI || textAngle == 0) {
+      newTextRotation = 0
+    } else if (textAngle < Math.PI) {
+      newTextRotation = textRotation.invert().angle()
+    } else if (textAngle > Math.PI) {
+      newTextRotation = textRotation.angle()
+    }
+    
+    let lineCP1 = 0
+    let lineCP2 = 0
+    let holeLineCP1 = 0
+    let holeLineCP2 = 0
+    if (p1.x - p2.x < 0 && p1.y - p2.y == 0 || p1.x - p2.x > 0 && p1.y - p2.y == 0) {
+      P1.addY(newNormal)
+      P2.addY(newNormal)
+      newOutP1.addY(newNormal)
+      newOutP2.addY(newNormal)
+      newHoleP1.addY(newNormalHole)
+      newHoleP2.addY(newNormalHole)
+
+      lineCP1 = newOutP1.clone().addY(newNormalText)
+      lineCP2 = newOutP2.clone().addY(newNormalText)
+      holeLineCP1 = newHoleP1.clone().addY(newNormalText)
+      holeLineCP2 = newHoleP2.clone().addY(newNormalText)
+    }
+    if (p1.x - p2.x < 0 && p1.y - p2.y < 0 || p1.x - p2.x > 0 && p1.y - p2.y > 0 ||p1.x - p2.x < 0 && p1.y - p2.y > 0) {
+      P1.add(newNormal)
+      P2.add(newNormal)
+      newOutP1.add(newNormal)
+      newOutP2.add(newNormal)
+      newHoleP1.add(newNormalHole)
+      newHoleP2.add(newNormalHole)
+
+      lineCP1 = newOutP1.clone().add(newNormalText)
+      lineCP2 = newOutP2.clone().add(newNormalText)
+      holeLineCP1 = newHoleP1.clone().add(newNormalText)
+      holeLineCP2 = newHoleP2.clone().add(newNormalText)
+    }
+    if (p1.x - p2.x == 0 && p1.y - p2.y > 0 || p1.x - p2.x == 0 && p1.y - p2.y < 0) {
+      P1.addX(newNormal)
+      P2.addX(newNormal)
+      newOutP1.addX(newNormal)
+      newOutP2.addX(newNormal)
+      newHoleP1.addX(newNormalHole)
+      newHoleP2.addX(newNormalHole)
+
+      lineCP1 = newOutP1.clone().addX(newNormalText)
+      lineCP2 = newOutP2.clone().addX(newNormalText)
+      holeLineCP1 = newHoleP1.clone().addX(newNormalText)
+      holeLineCP2 = newHoleP2.clone().addX(newNormalText)
+    }
+    
+    // 获取标注线长度
+    const linelength =
+      Math.floor(Math.hypot(P1.x - P2.x, P1.y - P2.y) * 10 * 100) / 100
+
+    const holeLinelength =
+      Math.floor(Math.hypot(holeP1.x - holeP2.x, holeP1.y - holeP2.y) * 10 * 100) / 100
+    
+    // 计算标注线中心位置
+    const linePos = new Victor((lineCP1.x + lineCP2.x) / 2,(lineCP1.y + lineCP2.y) / 2)
+    const holeLinePos = new Victor((holeLineCP1.x + holeLineCP2.x) / 2,(holeLineCP1.y + holeLineCP2.y) / 2)
+
+    // 标注线绘制
+    
+
+    // 判断洞口边长是否等于墙体边长（不相等或墙消失，让洞口标线显示）
+    if (this.type ===4 || Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) !== Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
+      // 洞口标注文字
+      const holeLineText = new PIXI.Text('洞口' + holeLinelength, {
+        fontSize: 60,
+        fill: 0x2d3037,
+      })
+      holeLineText.scale.set(0.25)
+      holeLineText.anchor.set(0.5, 0.5)
+      holeLineText.position.set(holeLinePos.x, holeLinePos.y)
+      holeLineText.rotation = newTextRotation
+
+      const holeLine = new PIXI.Graphics()
+      // 洞口标线
+      holeLine
+      .lineStyle(1, 0x000000, 1)
+      .moveTo(newHoleP1.x, newHoleP1.y)
+      .lineTo(newHoleP2.x, newHoleP2.y)
+      .moveTo(holeP1.x, holeP1.y)
+      .lineTo(holeLineCP1.x, holeLineCP1.y)
+      .moveTo(holeP2.x, holeP2.y)
+      .lineTo(holeLineCP2.x, holeLineCP2.y)
+      this.lineContainer.addChild(holeLineText, holeLine)
+    }else {
+      newHoleP1.multiply(new Victor(0,0)) // 洞口标注点清零
+      newHoleP2.multiply(new Victor(0,0))
+      const holeLineText = new PIXI.Text('', {
+        fontSize: 60,
+        fill: 0x2d3037,
+      })
+      this.lineContainer.addChild(holeLineText)
+    }
+    // 当墙体两层皆无时，无标注
+    if (this.type === 4) {
+      // 墙体标注线消失
+      OutP1.multiply(new Victor(0,0))
+      OutP2.multiply(new Victor(0,0))
+      lineCP1.multiply(new Victor(0,0))
+      lineCP2.multiply(new Victor(0,0))
+      newOutP1.multiply(new Victor(0,0))
+      newOutP2.multiply(new Victor(0,0))
+      // 标注文字添加
+      // 墙体标注文字
+      const lineText = new PIXI.Text('', {
+        fontSize: 60,
+        fill: 0x000000,
+      })
+      this.textSprite = lineText
+    }else {
+      // 标注文字添加
+      // 墙体标注文字
+      const lineText = new PIXI.Text(linelength, {
+        fontSize: 60,
+        fill: 0x2d3037,
+      })
+      lineText.scale.set(0.25)
+      lineText.anchor.set(0.5, 0.5)
+      lineText.position.set(linePos.x, linePos.y)
+      lineText.rotation = newTextRotation
+      this.textSprite = lineText
+    }
+    // 墙体标注线绘制
+    const wallLine = new PIXI.Graphics()
+    wallLine
+      .lineStyle(1, 0x000000, 1)
+      .moveTo(OutP1.x, OutP1.y)
+      .lineTo(lineCP1.x, lineCP1.y)
+    
+      .moveTo(OutP2.x, OutP2.y)
+      .lineTo(lineCP2.x, lineCP2.y)
+    
+      .moveTo(newOutP1.x,newOutP1.y)
+      .lineTo(newOutP2.x, newOutP2.y)
+
+    
+    
+    this.lineContainer.addChild(wallLine)
+    
+    this.lineSprite = this.lineContainer
+    
   }
 }

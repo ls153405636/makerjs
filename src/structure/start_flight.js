@@ -5,6 +5,7 @@ import { ChildInfo } from "./child_info";
 import { Default } from "./config";
 import tool from "./tool";
 import { Tread } from "./tread";
+import { StartTread } from "./treads/start_tread";
 
 export class StartFlight extends ChildInfo{
   static START_TYPE_OPTION = [
@@ -116,7 +117,7 @@ export class StartFlight extends ChildInfo{
         stepOutline:outlines[i],
         treadOutline:treadOutlines[i],
       })
-      border.backIndex = 0
+      border.backIndex = [0]
       border.inIndex = [1]
       border.outIndex = [outlines[i].edges.length - 1]
       if ([Types.StartTreadType.st_el, Types.StartTreadType.st_el_2].includes(this.modelType)) {
@@ -127,11 +128,9 @@ export class StartFlight extends ChildInfo{
       if (this.treads[i]) {
         this.treads[i].rebuildByParent({vIndex:i+1, vBorder:border})
       } else {
-        this.treads.push(new Tread({vParent:this,
-                                    vIndex:i+1,
-                                    vBorder:border,
-                                    vIsLast:false,
-                                    vType:Types.TreadType.tStart}))
+        this.treads.push(new StartTread({vParent:this,
+                                          vIndex:i+1,
+                                          vBorder:border,}))
       }
 
     }
@@ -203,7 +202,7 @@ export class StartFlight extends ChildInfo{
 
   // 单层椭圆
   createElOutline({start, stepWidth = this.stepWidth, offset1 = this.offset1, offset2 = this.offset2}) {
-    let outline = new Types.Outline({isClock:true, isClose:true})
+    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]
@@ -229,8 +228,8 @@ export class StartFlight extends ChildInfo{
   //双层椭圆
   createElDOutline({start, stepWidth = this.stepWidth, offset1 = this.offset1, offset2 = this.offset2}) {
 
-    let outline = new Types.Outline({isClock:true, isClose:true})
-    let outline1 = new Types.Outline({isClock:true, isClose:true})
+    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
+    let outline1 = new Types.Outline({isClock:this.isClock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边
@@ -267,7 +266,7 @@ export class StartFlight extends ChildInfo{
 
   // 单层圆角矩形
   createRROutline({start, stepWidth = this.stepWidth}) {
-    let outline = new Types.Outline({isClock:true, isClose:true})
+    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边
@@ -298,8 +297,8 @@ export class StartFlight extends ChildInfo{
 
   // 双层圆角矩形
   createRRDOutline({start, stepWidth = this.stepWidth}) {
-    let outline = new Types.Outline({isClock:true, isClose:true})
-    let outline1 = new Types.Outline({isClock:true, isClose:true})
+    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
+    let outline1 = new Types.Outline({isClock:this.isClock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边

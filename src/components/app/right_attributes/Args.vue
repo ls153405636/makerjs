@@ -6,7 +6,7 @@
       @submit.native.prevent
     >
       <!-- 输入 -->
-      <el-form-item v-if="arg.type === 'input'" :label="arg.name">
+      <el-form-item v-if="arg.type === 'input'" :label="arg.name" :class="arg.class">
         <el-input
           :disabled="arg.disabled"
           v-model.lazy="arg.value"

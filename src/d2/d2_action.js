@@ -38,14 +38,21 @@ export function initD2() {
   new Movie().bootstrap()
 }
 
+let once = true
 document.addEventListener('keydown', (e) => {
   if (e.keyCode == 17) {
     D2Config.IS_SINGLE_SELECTED = true
+    if (once) {
+      console.log(D2Config.IS_SINGLE_SELECTED)
+    }
+    once = false
   }
 })
 document.addEventListener('keyup', (e) => {
   if (e.keyCode == 17) {
     D2Config.IS_SINGLE_SELECTED = false
+    once = true
+    console.log(D2Config.IS_SINGLE_SELECTED)
   }
 })
 
