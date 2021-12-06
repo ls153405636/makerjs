@@ -1,5 +1,4 @@
 import Victor from 'victor'
-import { e } from '../../../dist/assets/vendor.8f8e3646'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
