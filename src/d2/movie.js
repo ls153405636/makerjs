@@ -28,7 +28,7 @@ export class Movie {
       app.stage.interactive = true
       app.stage.buttonMode = true
       app.stage.sortableChildren = true
-      app.renderer.backgroundColor = 0xdfdfdf
+      app.renderer.backgroundColor = 0xffffff
 
       app.ticker.maxFPS = 60
 

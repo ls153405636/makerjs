@@ -123,7 +123,7 @@ export class BigUTypeStair extends UTypeStair {
     } else {
       pos1 = new Types.Vector3({x:width - this.girOffset, y:f2.stepLength})
       pos2 = new Types.Vector3({x:f3.stepLength, y:this.girOffset})
-      pos3 = new Types.Vector3({x:f2.stepLength - this.girOffset, y:depth2 - this.hangOffset})
+      pos3 = new Types.Vector3({x:this.girOffset, y:depth2 - this.hangOffset})
       wVec2 = new Types.Vector3({x:1})
       lVec1 = new Types.Vector3({x:-1})
       lVec3 = new Types.Vector3({x:1})
