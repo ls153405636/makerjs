@@ -123,7 +123,7 @@ export class Info {
    * 本组件重新计算完成后，更新23d画布
    */
   updateCanvas(vName) {
-    if (CUR_DATA.MODE === '2D' && this.isUpdate2D) {
+    if (CUR_DATA.MODE === '2d' && this.isUpdate2D) {
       let widget = D2Config.WIDGETS.get(this.uuid)
       if (!widget) {
         d2_action.createWidget(this.writePB(), vName)
@@ -131,7 +131,7 @@ export class Info {
         widget.update(this.writePB())
       }
     }
-    if (CUR_DATA.MODE === '3D' && this.isUpdate3D) {
+    if (CUR_DATA.MODE === '3d' && this.isUpdate3D) {
       let model = D3Config.MODELS.get(this.uuid)
       if (!model) {
         d3_action.createModel(this.writePB(), vName)

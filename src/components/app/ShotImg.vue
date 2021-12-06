@@ -9,7 +9,7 @@
     <i></i>
   </div>
   </div>
-  <div id="canvas"></div>
+  <!-- <div id="canvas"></div> -->
 </template>
 
 <script>

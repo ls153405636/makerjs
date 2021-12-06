@@ -14,6 +14,16 @@ export function createModel(vPB, vName) {
   return model
 }
 
+export function clear() {
+
+}
+
+export function importProject(vPB) {
+  
+}
+
 export default {
-  createModel
+  createModel,
+  clear,
+  importProject,
 }

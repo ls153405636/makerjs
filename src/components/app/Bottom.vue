@@ -2,8 +2,8 @@
   <div class="component-bottom">
     <div class="D23">
       <div class="d2-d3">
-        <span class="left">2D</span>
-        <span class="right">3D</span>
+        <span class="left" @click="changleMode('2d')">2D</span>
+        <span class="right" @click="changleMode('3d')">3D</span>
       </div>
     </div>
     <div class="add-stair-btn" @click="addStair">添加楼梯</div>
@@ -38,6 +38,10 @@
 import { stage_scale_context } from '../../d2/fsm/stage_scale'
 
 import { ref, defineComponent } from 'vue'
+import { Core } from '../../common/core'
+import { Command } from '../../common/command'
+import { mapState } from 'vuex'
+import { CUR_DATA } from '../../common/common_config'
 export default defineComponent({
   name: 'componentBottom',
   data() {
@@ -50,6 +54,9 @@ export default defineComponent({
       value,
       formatTooltip,
     }
+  },
+  computed: {
+    ...mapState('canvas', ['cur_mode']),
   },
   methods: {
     // 恢复默认缩放
@@ -77,6 +84,12 @@ export default defineComponent({
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'block'
     },
+    changleMode(vMode) {
+      if(CUR_DATA.MODE !== vMode) {
+        let core = new Core()
+        core.execute(new Command(core.cmds.SwitchCmd, vMode))
+      }
+    }
   },
   computed: {
     // 缩放画布滑块同步

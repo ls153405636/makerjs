@@ -34,8 +34,20 @@ export function importProject(vPB) {
   new Stair(vPB.stair).addToStage()
 }
 
+export function clear() {
+  /**补全 */
+}
+
 export function initD2() {
   new Movie().bootstrap()
+}
+
+function dispose() {
+  /**补全 */
+}
+
+function dispatch() {
+  /**补全 */
 }
 
 let once = true
@@ -60,4 +72,7 @@ export default {
   importProject,
   initD2,
   createWidget,
+  clear,
+  dispatch,
+  dispose
 }

@@ -65,6 +65,10 @@ export class Movie {
     window.beta = this.service
   }
 
+  exit() {
+    this.app.stop()
+  }
+
   initialize_interaction_manager() {
     // ! 阻止鼠标中键导航到上一页和下一页
     window.history.pushState(null, '', window.location.href)

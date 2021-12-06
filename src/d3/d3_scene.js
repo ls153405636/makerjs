@@ -29,7 +29,7 @@ export class D3Scene {
   }
 
   addToPage() {
-    document.querySelector('#canvas').appendChild(this.renderer.domElement)
+    document.querySelector('#scene').appendChild(this.renderer.domElement)
     this.render()
   }
 
