@@ -26,26 +26,6 @@
           <div class="stair-1">
             <img src="../../assets/stairs1.png" alt="" />
           </div>
-          <p class="type-text">{{ stair_against_wall_options.name }}</p>
-          <el-select
-            v-model="stair_against_wall_options.value.value"
-            :label="stair_against_wall_options.value.label"
-            @change="getMsg(stair_against_wall_options.value.value)"
-          >
-            <el-option
-              v-for="item in stair_against_wall_options.options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="type">
-          <div class="stair-1">
-            <img src="../../assets/stairs1.png" alt="" />
-          </div>
           <p class="type-text">{{ stair_shape_options.name }}</p>
           <el-select
             v-model="stair_shape_options.value.value"
@@ -65,23 +45,54 @@
           <div class="stair-1">
             <img src="../../assets/stairs1.png" alt="" />
           </div>
+          <p class="type-text">{{ stair_against_wall_options.name }}</p>
+          <el-select
+            v-model="stair_against_wall_options.value.value"
+            :label="stair_against_wall_options.value.label"
+          >
+            <el-option
+              v-for="item in stair_against_wall_options.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <div class="type">
+          <div class="stair-1">
+            <img src="../../assets/stairs1.png" alt="" />
+          </div>
           <p class="type-text">{{ stair_dir_options.name }}</p>
           <el-select
-            
             v-model="stair_dir_options.value.value"
             :label="stair_dir_options.value.label"
-            @change="getMsg1(stair_dir_options.value.value)"
+           
           >
             <el-option
               v-for="item in stair_dir_options.options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              :disabled="isDisabled"
+              :disabled="stair_shape_options"
             >
             </el-option>
           </el-select>
         </div>
+        <!-- <div class="type">
+          <div class="stair-1">
+            <img src="../../assets/stairs1.png" alt="" />
+          </div>
+          <div class="block">
+          <p class="type-text">{{ stair_against_wall_options.name }}</p>
+            <el-cascader
+              
+              :options="stair_against_wall_options.options"
+              :props="{ expandTrigger: 'hover' }"
+            ></el-cascader>
+          </div>
+        </div> -->
       </div>
       <div class="btn-stair" @click="clickCreate" id="btn-stair">确认创建</div>
     </div>
@@ -89,35 +100,88 @@
 </template>
 
 <script>
-import { ref, defineComponent } from 'vue'
+import { defineComponent, reactive, toRefs } from 'vue'
+import { ref } from 'vue'
 import { Core } from '../../common/core'
 import { Command } from '../../common/command'
 import { mapState } from 'vuex'
+
 export default defineComponent({
-  name: 'componentStairInit',
-  data() {
-    return {
-      isDisabled: false,
-      
-    }
+  setup() {
+    // const state = reactive({
+    //   value: {
+        
+    //       value: '左靠墙',
+    //       label: '左靠墙',
+    //       children: [
+    //         {
+    //           value: '右转',
+    //           label: '右转',
+    //         },
+    //       ],
+    //   },
+    //   options: [
+    //     {
+    //       value: '左靠墙',
+    //       label: '左靠墙',
+    //       children: [
+    //         {
+    //           value: '右转',
+    //           label: '右转',
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       value: '右靠墙',
+    //       label: '右靠墙',
+    //       children: [
+    //         {
+    //           value: '左转',
+    //           label: '左转',
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       value: '不靠墙',
+    //       label: '不靠墙',
+    //       children: [
+    //         {
+    //           value: '左转',
+    //           label: '左转',
+    //         },
+    //         {
+    //           value: '右转',
+    //           label: '右转',
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // })
+    // const handleChange = (value) => {
+    //   console.log(value)
+    // }
+    // return {
+    //   ...toRefs(state),
+    //   handleChange,
+    // }
   },
   methods: {
-    getMsg (value) {
-      console.log(value)
-      if (value === 3) {
-        this.isDisabled = false
-      } else {
-        this.isDisabled = false
-      }
-    },
-    getMsg1(value) {
-      // console.log(value)
-      // if (value === 2) {
-      //   this.isDisabled = true
-      // } else {
-      //   this.isDisabled = false
-      // }
-    },
+    // getMsg (value) {
+    //   console.log(value)
+    //   if (value === 3) {
+    //     this.isDisabled = false
+    //   } else {
+    //     this.isDisabled = false
+    //   }
+    // },
+    // getMsg1(value) {
+    //   // console.log(value)
+    //   // if (value === 2) {
+    //   //   this.isDisabled = true
+    //   // } else {
+    //   //   this.isDisabled = false
+    //   // }
+    // },
     clickCreate() {
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'none'
@@ -135,11 +199,23 @@ export default defineComponent({
     ...mapState('init', [
       'stair_types',
       'stair_against_wall_options',
+      'stair_against_wall_options1',
       'stair_shape_options',
       'stair_dir_options',
     ]),
   },
 })
+
+// export default defineComponent({
+//   name: 'componentStairInit',
+//   data() {
+//     return {
+//       isDisabled: false,
+      
+//     }
+//   },
+  
+// })
 </script>
 
 <style>

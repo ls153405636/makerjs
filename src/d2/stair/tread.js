@@ -37,31 +37,37 @@ export class Tread extends ChildWidget {
     positionX = positionX / this.edges.length
     positionY = positionY / this.edges.length
 
-    let treadContainer = new PIXI.Container()
+    this.sprite = new PIXI.Container()
 
 
     let changeTread = new PIXI.Graphics()
-    changeTread.visible = true
-    changeTread.lineStyle(1, 0x4478f4)
-    changeTread.beginFill(0xe9efff)
+    if (this.isLast === true) {
 
-    for (let i = 0; i < this.edges.length; i++) {
-      let e = this.edges[i]
-      let p1 = d2_tool.translateCoord(this.edges[i].p1)
-      let p2 = d2_tool.translateCoord(this.edges[i].p2)
-      if (i === 0) {
-        changeTread.moveTo(p1.x, p1.y)
-      }
-      if (e.type === Types.EdgeType.estraight) {
-        changeTread.lineTo(p2.x, p2.y)
-      } else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        changeTread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
-      } else if (e.type === Types.EdgeType.ebeszer) {
-        let conPoi = d2_tool.translateCoord(e.controlPos)
-        changeTread.quadraticCurveTo(conPoi.x, conPoi.y, p2.x, p2.y)
-      }
+      changeTread.visible = false
+    } else{
+
+      changeTread.visible = true
+      changeTread.lineStyle(1, 0x4478f4)
+      changeTread.beginFill(0xe9efff)
+  
+      for (let i = 0; i < this.edges.length; i++) {
+        let e = this.edges[i]
+        let p1 = d2_tool.translateCoord(this.edges[i].p1)
+        let p2 = d2_tool.translateCoord(this.edges[i].p2)
+        if (i === 0) {
+          changeTread.moveTo(p1.x, p1.y)
+        }
+        if (e.type === Types.EdgeType.estraight) {
+          changeTread.lineTo(p2.x, p2.y)
+        } else if (e.type === Types.EdgeType.earc) {
+          let pos = d2_tool.translateCoord(e.position)
+          let radius = d2_tool.translateValue(e.radius)
+          changeTread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+        } else if (e.type === Types.EdgeType.ebeszer) {
+          let conPoi = d2_tool.translateCoord(e.controlPos)
+          changeTread.quadraticCurveTo(conPoi.x, conPoi.y, p2.x, p2.y)
+        }
+    }
     }
 
 
@@ -69,32 +75,34 @@ export class Tread extends ChildWidget {
 
     // 踏板绘制
     let tread = new PIXI.Graphics()
-    tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
-    tread.beginFill(0xffffff)
-    tread.visible = true
-
-    for (let i = 0; i < this.edges.length; i++) {
-      let e = this.edges[i]
-      let p1 = d2_tool.translateCoord(this.edges[i].p1)
-      let p2 = d2_tool.translateCoord(this.edges[i].p2)
-      if (i === 0) {
-        tread.moveTo(p1.x, p1.y)
-      }
-      if (e.type === Types.EdgeType.estraight) {
-        tread.lineTo(p2.x, p2.y)
-      }
-      else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        tread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
-      }
-      else if (e.type === Types.EdgeType.ebeszer) {
-        let conPoi = d2_tool.translateCoord(e.controlPos)
-        tread.quadraticCurveTo(conPoi.x, conPoi.y, p2.x, p2.y)
+    if (this.isLast === true) {
+      tread.visible = false
+    } else {
+      tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
+      tread.beginFill(0xffffff)
+      tread.visible = true
+  
+      for (let i = 0; i < this.edges.length; i++) {
+        let e = this.edges[i]
+        let p1 = d2_tool.translateCoord(this.edges[i].p1)
+        let p2 = d2_tool.translateCoord(this.edges[i].p2)
+        if (i === 0) {
+          tread.moveTo(p1.x, p1.y)
+        }
+        if (e.type === Types.EdgeType.estraight) {
+          tread.lineTo(p2.x, p2.y)
+        }
+        else if (e.type === Types.EdgeType.earc) {
+          let pos = d2_tool.translateCoord(e.position)
+          let radius = d2_tool.translateValue(e.radius)
+          tread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+        }
+        else if (e.type === Types.EdgeType.ebeszer) {
+          let conPoi = d2_tool.translateCoord(e.controlPos)
+          tread.quadraticCurveTo(conPoi.x, conPoi.y, p2.x, p2.y)
+        }
       }
     }
-
-
 
     // 踏板编号
     let stepNum = new PIXI.Text(this.index, { fontSize: 56 })
@@ -173,10 +181,10 @@ export class Tread extends ChildWidget {
     //   treadLineLeft,
     //   treadLineRight
     // )
-    treadContainer.addChild(changeTread, tread, stepNum)
+    this.sprite.addChild(changeTread, tread, stepNum)
     // this.sprite = treadContainer
     // treadContainer.addChild(changeTread, tread, stepNum)
-    this.sprite = treadContainer
+    // this.sprite = treadContainer
   }
 
   /**
@@ -199,6 +207,7 @@ export class Tread extends ChildWidget {
 
   // 踏板选中效果
   setSelected() {
+    console.log(this.sprite)
     if (this.index === 1) {
       this.sprite.zIndex = 0
     }else {
@@ -260,13 +269,49 @@ export class Tread extends ChildWidget {
           _this.cancelHover()
         } else {
           _this.parent.cancelHover()
+          // document.addEventListener('keydown', (e) => {
+          //   if (e.keyCode == 17) {
+
+          //   }
+          // })
+          // document.addEventListener('keyup', (e) => {
+          //   if (e.keyCode == 17) {
+          //   }
+          // })
         }
+
       })
       .on('mouseover', () => {
         if (D2Config.IS_SINGLE_SELECTED) {
           _this.setHover()
         } else {
-          _this.parent.setHover()
+          let eventC = null
+          if (eventC === null) {
+            _this.parent.setHover()
+          }
+          while(D2Config.IS_SINGLE_SELECTED) {
+
+            eventC = document.addEventListener('keydown', (e) => {
+              // if (e.keyCode == 17) {
+                console.log(eventC)
+                // _this.parent.setHover()
+                // _this.cancelHover()
+              // }
+            })
+          }
+          // if (D2Config.IS_SINGLE_SELECTED) {
+          // }
+          // console.log(eventC)
+          // if (eventC !== null) {
+          //   _this.parent.cancelHover()
+          //   _this.setHover()
+          // }
+          // document.addEventListener('keyup', (e) => {
+          //   if (e.keyCode == 17) {
+          //     _this.parent.setHover()
+          //     // _this.cancelHover()
+          //   }
+          // })
         }
       })
   }

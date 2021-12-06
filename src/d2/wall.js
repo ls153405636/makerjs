@@ -143,13 +143,13 @@ export class Wall extends BaseWidget {
 
     // wall_line.endFill()
 
-    const holeRedLine = new PIXI.Graphics()
-      holeRedLine
+    const holeBlackLine = new PIXI.Graphics()
+      holeBlackLine
       .lineStyle(2,0x000000,1,1)
       .moveTo(this.holeP1.x, this.holeP1.y)
       .lineTo(this.holeP2.x, this.holeP2.y)
-      // this.lineContainer.addChild(holeRedLine)
-      this.holeLineSprite = holeRedLine
+      // this.lineContainer.addChild(holeBlackLine)
+      this.holeLineSprite = holeBlackLine
       this.holeLineSprite.zIndex = Z_INDEX.HOLE_LINE_ZINDEX
 
     const wall = new PIXI.Graphics()
@@ -163,12 +163,12 @@ export class Wall extends BaseWidget {
     wallContainer.zIndex = Z_INDEX.WALL_ZINDEX
     // if (this.type === 4) {
     //   wall.alpha = this.alpha
-    //   holeRedLine.visible = true
+    //   holeBlackLine.visible = true
     //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
     // }
     // if(Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) < Math.hypot(this.holeP1.x - this.holeP2.x, this.holeP1.y - this.holeP2.y)) {
     //   wall.alpha = this.alpha
-    //   holeRedLine.visible = true
+    //   holeBlackLine.visible = true
     //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
     // }
     this.sprite.addChild(wallContainer)
@@ -237,7 +237,6 @@ export class Wall extends BaseWidget {
         ].includes(c.type)
       ) {
         _this.components.push(new Inlay(c))
-        console.log(_this.components)
       } else if (
         [
           Types.ComponentType.cpillar, // 柱
@@ -363,16 +362,8 @@ export class Wall extends BaseWidget {
     // 标注线绘制
     
 
-    // 判断洞口边长是否等于墙体边长（相等只保留墙体标注）
-    if (Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) === Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
-      newHoleP1.multiply(new Victor(0,0)) // 洞口标注点清零
-      newHoleP2.multiply(new Victor(0,0))
-      const holeLineText = new PIXI.Text(holeLinelength, {
-        fontSize: 60,
-        fill: 0x2d3037,
-      })
-      
-    } else {
+    // 判断洞口边长是否等于墙体边长（不相等或墙消失，让洞口标线显示）
+    if (this.type ===4 || Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) !== Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
       // 洞口标注文字
       const holeLineText = new PIXI.Text('洞口' + holeLinelength, {
         fontSize: 60,
@@ -383,27 +374,29 @@ export class Wall extends BaseWidget {
       holeLineText.position.set(holeLinePos.x, holeLinePos.y)
       holeLineText.rotation = newTextRotation
 
-      
-
       const holeLine = new PIXI.Graphics()
       // 洞口标线
       holeLine
       .lineStyle(1, 0x000000, 1)
       .moveTo(newHoleP1.x, newHoleP1.y)
       .lineTo(newHoleP2.x, newHoleP2.y)
-
       .moveTo(holeP1.x, holeP1.y)
       .lineTo(holeLineCP1.x, holeLineCP1.y)
       .moveTo(holeP2.x, holeP2.y)
       .lineTo(holeLineCP2.x, holeLineCP2.y)
-
-      
-      
-      
       this.lineContainer.addChild(holeLineText, holeLine)
+    }else {
+      newHoleP1.multiply(new Victor(0,0)) // 洞口标注点清零
+      newHoleP2.multiply(new Victor(0,0))
+      const holeLineText = new PIXI.Text('', {
+        fontSize: 60,
+        fill: 0x2d3037,
+      })
+      this.lineContainer.addChild(holeLineText)
     }
     // 当墙体两层皆无时，无标注
     if (this.type === 4) {
+      // 墙体标注线消失
       OutP1.multiply(new Victor(0,0))
       OutP2.multiply(new Victor(0,0))
       lineCP1.multiply(new Victor(0,0))
