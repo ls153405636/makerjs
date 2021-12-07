@@ -58,7 +58,6 @@ export class Tread extends ChildWidget {
       changeTread.visible = true
       changeTread.lineStyle(1, 0x4478f4)
       changeTread.beginFill(0xe9efff)
-      changeTread.alpha = 0.1
   
       for (let i = 0; i < this.edges.length; i++) {
         let e = this.edges[i]
@@ -88,8 +87,8 @@ export class Tread extends ChildWidget {
     if (this.isLast === true) {
       tread.visible = false
     } else {
-      // tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
-      // tread.beginFill(0xffffff)
+      tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
+      tread.beginFill(0xffffff)
       tread.visible = true
   
       for (let i = 0; i < this.edges.length; i++) {
