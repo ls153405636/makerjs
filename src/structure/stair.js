@@ -202,7 +202,8 @@ export class Stair extends Info {
                             vPos:new Types.Vector3(pos),
                             vStepLength:firstTread.stepLength,
                             vStepWidth:firstTread.stepWidth,
-                            vStepHeight:firstTread.stepHeight})
+                            vStepHeight:firstTread.stepHeight,
+                            vClock:f1.clock})
   }
 
   /**
@@ -240,7 +241,8 @@ export class Stair extends Info {
       this.startFlight.rebuildByParent({vPos:pos, 
                                         vLVec:f1.lVec,
                                         vWVec:f1.wVec,
-                                        vStepLength: f1.stepLength})
+                                        vStepLength: f1.stepLength,
+                                        vClock:f1.clock})
     }
   }
 

@@ -71,7 +71,7 @@ export class Tread extends ChildWidget {
         } else if (e.type === Types.EdgeType.earc) {
           let pos = d2_tool.translateCoord(e.position)
           let radius = d2_tool.translateValue(e.radius)
-          changeTread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+          changeTread.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
         } else if (e.type === Types.EdgeType.ebeszer) {
           let conPoi = d2_tool.translateCoord(e.controlPos)
           changeTread.quadraticCurveTo(conPoi.x, conPoi.y, p2.x, p2.y)
@@ -105,7 +105,7 @@ export class Tread extends ChildWidget {
           console.log(e)
           let pos = d2_tool.translateCoord(e.position)
           let radius = d2_tool.translateValue(e.radius)
-          tread.arc(pos.x, pos.y, radius, e.start_angle, e.end_angle, e.is_clockwise)
+          tread.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
         }
         else if (e.type === Types.EdgeType.ebeszer) {
           let conPoi = d2_tool.translateCoord(e.controlPos)

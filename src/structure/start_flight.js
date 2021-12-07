@@ -183,7 +183,7 @@ export class StartFlight extends ChildInfo{
       let p1 = vP1
       let p2 = new THREE.Vector2(vP1.x, vP1.y).addScaledVector(this.wVec, vRadius * 2)
       let position = new THREE.Vector2(vP1.x, vP1.y).addScaledVector(this.wVec, vRadius)
-      let radius = vRadius
+      let radius = Math.abs(vRadius)
       let start_angle = vstartAngle
       let end_angle = vEndAngle
       let is_clockwise = vIsClockwise
@@ -193,9 +193,9 @@ export class StartFlight extends ChildInfo{
         p2: p2,
         position: position,
         radius: radius,
-        start_angle: start_angle,
-        end_angle: end_angle,
-        is_clockwise: is_clockwise,
+        startAngle: start_angle,
+        endAngle: end_angle,
+        isClockwise: is_clockwise,
         type: Types.EdgeType.earc
       })
   }
@@ -271,26 +271,26 @@ export class StartFlight extends ChildInfo{
     
     let bE = rectOutline.edges[0]//后边
     let dE = rectOutline.edges[2]//底边
-    let rE = rectOutline.edges[1]//右边
-    let lE = rectOutline.edges[3]//左边
-    let rArc, lArc , rL,lL// 右圆弧、 左圆弧
+    let outE = rectOutline.edges[1]//右边
+    let inE = rectOutline.edges[3]//左边
+    let outArc, inArc , outL,inL// 右圆弧、 左圆弧
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-      rL = rE
+      outL = outE
     } else {
-      rArc = this.createArcEdge(bE.p2,this.wVec,stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
+      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.isClock)
     }
 
     if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-      lL = lE
+      inL = inE
     } else {
-      lArc = this.createArcEdge(dE.p2,this.wVec,-stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
+      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.isClock)
     }
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-      outline.edges.push(bE,rL, dE,lArc)
+      outline.edges.push(bE,outL, dE,inArc)
     }else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-      outline.edges.push(bE,rArc, dE,lL)
+      outline.edges.push(bE,outArc, dE,inL)
     }else {
-      outline.edges.push(bE,rArc, dE,lArc)
+      outline.edges.push(bE,outArc, dE,inArc)
     }
     return [outline]
   }
@@ -307,31 +307,31 @@ export class StartFlight extends ChildInfo{
     let lE = rectOutline.edges[3]// 左边
     let new_rE = new Edge(rectOutline.edges[1]).extendP2(stepWidth)
     let new_lE = new Edge(rectOutline.edges[3]).extendP2(stepWidth)
-    let new_dE = new Edge(dE).offset(stepWidth)
-    let rArc, lArc , rL,lL// 右圆弧、 左圆弧
-    let rArc_d, lArc_d // 第二层右圆弧， 第层左圆弧
+    let new_dE = new Edge(dE).offset(stepWidth, this.isClock)
+    let outArc, inArc , outL,inL// 右圆弧、 左圆弧
+    let outArc_d, inArc_d // 第二层右圆弧， 第层左圆弧
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-      rL = new_rE
+      outL = new_rE
     } else {
-      rArc = this.createArcEdge(bE.p2,this.wVec,stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
-      rArc_d = this.createArcEdge(bE.p2, this.wVec,stepWidth, -Math.PI / 2, Math.PI / 2, false)
+      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.isClock)
+      outArc_d = this.createArcEdge(bE.p2, this.wVec, stepWidth, -Math.PI / 2, Math.PI / 2, this.isClock)
     }
 
     if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-      lL = new_lE
+      inL = new_lE
     } else {
-      lArc = this.createArcEdge(dE.p2,this.wVec,-stepWidth / 2, -Math.PI / 2, Math.PI / 2, false)
-      lArc_d = this.createArcEdge(new_dE.p2,this.wVec, -stepWidth,-Math.PI / 2, Math.PI / 2, false)
+      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.isClock)
+      inArc_d = this.createArcEdge(new_dE.p2,this.wVec,  -stepWidth, Math.PI / 2, -Math.PI / 2, this.isClock)
     }
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-      outline.edges.push(bE,rE,dE,lArc)
-      outline1.edges.push(bE,new_rE,new_dE,lArc_d)
+      outline.edges.push(bE,rE,dE,inArc)
+      outline1.edges.push(bE,new_rE,new_dE,inArc_d)
     }else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-      outline.edges.push(bE,rArc,dE,lE)
-      outline1.edges.push(bE,rArc_d,new_dE,lL)
+      outline.edges.push(bE,outArc,dE,lE)
+      outline1.edges.push(bE,outArc_d,new_dE,inL)
     }else {
-      outline.edges.push(bE,rArc, dE,lArc)
-      outline1.edges.push(bE,rArc_d,new_dE,lArc_d)
+      outline.edges.push(bE,outArc, dE,inArc)
+      outline1.edges.push(bE,outArc_d,new_dE,inArc_d)
     }
     return [outline1,outline]
   }
@@ -447,7 +447,6 @@ export class StartFlight extends ChildInfo{
         // this.positionY_R = left.y
         outPos = new Edge().setByVec(this.positionOut, this.lVec, -sideOffset).p2
       }
-      outPos = new Edge().setByVec(outPos, this.wVec, this.stepWidth / 2).p2
     }
     outPos = new Edge().setByVec(outPos, this.wVec, this.stepWidth / 2).p2
     // let right = new Types.Vector3({
