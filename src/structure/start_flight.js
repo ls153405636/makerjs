@@ -472,15 +472,8 @@ export class StartFlight extends ChildInfo{
     } else {
       this.width = Default.STEP_LENGTH
     }
-<<<<<<< HEAD
     let handrailHeight = this.parent.handrailParameters.height
     let stepLength = this.parent.flights[this.parent.flights.length - 1].treads[0].stepLength
-=======
-    // console.log(this)
-    // console.log(this.parent)
-    // let handrailHeight = this.parent.handrailParameters.height
-    // let stepLength = this.parent.flights[this.parent.flights.length - 1].treads[0].stepLength
->>>>>>> 2889879eab467ddcc48aa60aeb924390e4485331
     let stepWidth = this.parent.flights[this.parent.flights.length - 1].treads[0].stepWidth
     let sideOffset = this.parent.sideOffset
     let arcRL = 90 //左弯头半径
