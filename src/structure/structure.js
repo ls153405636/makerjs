@@ -50,17 +50,17 @@ export class Structure {
   }
 
   createProject() {
-    this.initHole('rect')
-    this.initStair({ type: Types.StairType.sstright })
-    if (!this.proj) {
-      this.proj = new Types.Project()
+    let proj = new Types.Project()
+    if (this.hole) {
+      proj.hole = this.hole.writePB()
+      for (const w of this.hole.walls) {
+        proj.walls.push(w.writePB())
+      }
     }
-    this.proj.hole = this.hole.writePB()
-    for (const w of this.hole.walls) {
-      this.proj.walls.push(w.writePB())
+    if (this.stair) {
+      proj.stair = this.stair.writePB()
     }
-    this.proj.stair = this.stair.writePB()
-    return this.proj
+    return proj
   }
 
   // createProject() {

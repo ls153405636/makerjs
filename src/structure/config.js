@@ -29,7 +29,7 @@ export const Default = {
   STEP_WIDTH: 240,
   TREAD_DEPTH: 30,
   RISER_DEPTH: 20,
-  TREAD_NOSSING_TYPE: Types.NossingType.nno,
+  TREAD_NOSSING_TYPE: Types.NossingType.ncommon,
   TREAD_NOSSING: 20,
   TREAD_SIDE_NOSSING: 20,
   SMALL_COL_ARR_RULE: Types.ArrangeRule.arrThree,

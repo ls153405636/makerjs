@@ -24,18 +24,32 @@ export function createWidget(vPB, vName) {
  * @param {Types.Project} vPB
  */
 export function importProject(vPB) {
-  new Hole(vPB.hole).addToStage() // 添加洞口
+  vPB.hole && new Hole(vPB.hole).addToStage() // 添加洞口
 
   vPB.walls.forEach((w) => {
     // 添加墙体
     new Wall(w).addToStage()
   })
 
-  new Stair(vPB.stair).addToStage()
+  vPB.stair && new Stair(vPB.stair).addToStage()
+}
+
+export function clear() {
+  for(const w of D2Config.WIDGETS.values()) {
+    w.destroy()
+  }
 }
 
 export function initD2() {
   new Movie().bootstrap()
+}
+
+function dispose() {
+  /**补全 */
+}
+
+function dispatch() {
+  /**补全 */
 }
 
 let once = true
@@ -60,4 +74,7 @@ export default {
   importProject,
   initD2,
   createWidget,
+  clear,
+  dispatch,
+  dispose
 }

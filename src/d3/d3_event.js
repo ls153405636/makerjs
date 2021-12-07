@@ -17,6 +17,10 @@ export class D3Event {
     this.dom.addEventListener('wheel', D3Event.onMouseWheel, false)
   }
 
+  dispose() {
+    
+  }
+
   static onMouseDown() {
     this.isMouseDown = true
     window.addEventListener( 'mouseup', D3Event.onMouseUp, true)

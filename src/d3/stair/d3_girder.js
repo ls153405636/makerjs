@@ -15,7 +15,7 @@ export class Girder extends ChildModel {
    * @param {Types.GirderParameters} vParas 
    */
   constructor(vParent, vPB, vParas) {
-    super(vParent)
+    super(vParent, vPB.uuid)
     this.init(vPB, vParas)
   }
 

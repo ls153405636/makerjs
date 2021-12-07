@@ -250,6 +250,9 @@ export class Stair extends Info {
   getTreadBackOffset() {
     let tArgs = this.treadParameters
     let rArgs = this.riserParameters
+    if (tArgs.nossingType === Types.NossingType.nno) {
+      tArgs.nossing = 0
+    }
     return tArgs.nossing + (rArgs.riserExist ? rArgs.depth : 0)
   }
 
@@ -584,11 +587,11 @@ export class Stair extends Info {
       route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
       /**当存在起步踏板时， 扶手首边不做延伸，由起步踏板计算得出前面的边集，加入扶手轮廓*/
       if (i === 0 && this.startFlight) {
-        let {left, right} = this.startFlight.createHandRouteEdges()
+        let {inEdges, outEdges} = this.startFlight.createHandRouteEdges()
         if (vSide === 'in') {
-          route.edges = vSideOffsetPlus ? right.concat(route.edges) : left.concat(route.edges)
+          route.edges = inEdges.concat(route.edges)
         } else if (vSide === 'out') {
-          route.edges = vSideOffsetPlus ? right.concat(route.edges) : left.concat(route.edges)
+          route.edges = outEdges.concat(route.edges)
         }
       }
       if (borSide.handrails[i]) {
@@ -699,11 +702,11 @@ export class Stair extends Info {
       position = new Edge(edge).extendP1(offset).p1
     } else {
       /**有起步踏时，由起步踏计算出大柱位置 */
-      let {left, right} = this.startFlight.computeBigColPos()
+      let {inPos, outPos} = this.startFlight.computeBigColPos()
       if (vSide === 'in') {
-        position = vSideOffsetPlus ? right : left
+        position = inPos
       } else if (vSide === 'out') {
-        position = vSideOffsetPlus ? right : left
+        position = outPos
       }
     }
     if (this.border[vSide].bigCol) {

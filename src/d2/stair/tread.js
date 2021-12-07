@@ -27,7 +27,7 @@ export class Tread extends ChildWidget {
     this.parent = vParent
     this.depth = Default.WALL_DEPTH
     this.draw()
-    this.addDimension()
+    //this.addDimension()
     this.addEvent()
 
     

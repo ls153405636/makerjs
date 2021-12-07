@@ -1,4 +1,4 @@
-import { OrbitControls } from "./OrbitControls"
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export class D3Scene {
   constructor() {
@@ -29,7 +29,7 @@ export class D3Scene {
   }
 
   addToPage() {
-    document.querySelector('#canvas').appendChild(this.renderer.domElement)
+    document.querySelector('#scene').appendChild(this.renderer.domElement)
     this.render()
   }
 

@@ -12,7 +12,8 @@
   <shot-img class="shot-img"></shot-img> 
   
   <export-plan-img class="export-plan"></export-plan-img>
-  <div id="canvas"></div>
+  <div v-show="cur_mode === '2d' " id="canvas"></div>
+  <div v-show="cur_mode === '3d' " id="scene"></div>
 </template>
 <script>
 import { Command } from '../../common/command'
@@ -29,6 +30,7 @@ import rightTextureEdit from './TextureEdit.vue'
 import html2canvas from 'html2canvas'
 import ExportPlanImg from './ExportPlanImg.vue'
 import ShotImg from './ShotImg.vue'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -47,6 +49,9 @@ export default {
       shotImgShow: false,
       exportImgShow: false
     }
+  },
+ computed: {
+    ...mapState('canvas', ['cur_mode']),
   },
   methods: {
     

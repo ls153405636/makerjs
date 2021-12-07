@@ -36,8 +36,8 @@ export class BaseWidget {
    */
   update (vPB) {
     this.destroy()
-    this.init(vPB)
     D2Config.WIDGETS.set(this.uuid, this)
+    this.init(vPB)
     this.addToStage()
   }
 

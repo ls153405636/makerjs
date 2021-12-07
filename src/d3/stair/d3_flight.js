@@ -19,10 +19,16 @@ export class Flight extends ChildModel {
     this.createObj()
   }
 
+  dispose() {
+    for (const t of this.treads) {
+      t.dispose()
+    }
+  }
+
   createObj() {
     this.obj = new THREE.Group()
     for (const t of this.treads) {
-      this.obj.add(t.getObj())
+      t.getObj() && this.obj.add(t.getObj())
     }
   }
 }

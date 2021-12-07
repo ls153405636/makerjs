@@ -17,7 +17,7 @@ export const COMP_TYPES = {
 export const CUR_DATA = {
   SELECTED_TYPE: COMP_TYPES.HOLE,
   SELECTED_ID: '',
-  MODE: '2D',
+  MODE: '2d',
 }
 
 export default {
