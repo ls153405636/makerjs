@@ -14,9 +14,17 @@ export class StraightStair extends Stair  {
   }    
   
   initFlights () {
-    let pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
     this.stepHeight = this.parent.hole.floorHeight / this.stepNum
     this.stepHeight = Number(this.stepHeight.toFixed(2))
+    let width = Default.STEP_LENGTH
+    let pos, lVec
+    if (this.againstWallType === Types.AgainstWallType.aw_left) {
+      pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
+      lVec = new Types.Vector3({x:1})
+    } else {
+      pos = new Types.Vector3({x:width - this.girOffset, y:this.hangOffset})
+      lVec = new Types.Vector3({x:-1})
+    }
     let paras = {vParent:this, 
                 vStepNum: this.stepNum, 
                 vStepNumRule: this.stepNumRule, 
@@ -24,20 +32,29 @@ export class StraightStair extends Stair  {
                 vTreadIndex:this.startFlight?.stepNum || 0, 
                 isLast:true, 
                 vPos:pos, 
-                vLVec:new Types.Vector3({x:1}), 
+                vLVec:lVec, 
                 vWVec:new Types.Vector3({y:1}), 
                 vLength:this.realStepNum * Default.STEP_WIDTH,
-                vStartHeight:0}
+                vStartHeight:0,
+                vClock: this.againstWallType !== Types.AgainstWallType.aw_right}
     this.flights[0] = new Flight(paras)
   }
 
   updateFlights() {
-    let pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
+    let pos, lVec
+    let width = this.flights[0].stepLength
+    if (this.againstWallType === Types.AgainstWallType.aw_left) {
+      pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
+      lVec = new Types.Vector3({x:1})
+    } else {
+      pos = new Types.Vector3({x:width - this.girOffset, y:this.hangOffset})
+      lVec = new Types.Vector3({x:-1})
+    }
     let paras = {vTreadIndex:this.startFlight?.stepNum || 0, 
                 vPos:pos, 
-                vLVec:new Types.Vector3({x:1}), 
+                vLVec:lVec, 
                 vWVec:new Types.Vector3({y:1}), 
-                vStartHeight:this.startFlight?.getEndHeight() || 0}
+                vStartHeight:this.startFlight?.getEndHeight() || 0,}
     this.flights[0].rebuildByParent(paras)
   }
 
@@ -95,13 +112,13 @@ export class StraightStair extends Stair  {
     let inEdges, outEdges
     let leftEdges = [new StairEdge(0, this.depth, 0, 0, this.flights[0])]
     let rightEdges = [new StairEdge(this.width, this.depth, this.width, 0, this.flights[0])]
-    // if (this.againstWallType === Types.AgainstWallType.aw_right) {
-    //   inEdges = rightEdges
-    //   outEdges = leftEdges
-    // } else {
+    if (this.againstWallType === Types.AgainstWallType.aw_right) {
+      inEdges = rightEdges
+      outEdges = leftEdges
+    } else {
       inEdges = leftEdges
       outEdges = rightEdges
-    // }
+    }
     if (this.border) {
       this.border.rebuild(inEdges, outEdges)
     } else {

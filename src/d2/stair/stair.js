@@ -52,11 +52,11 @@ export class Stair extends BaseWidget {
     for (const col of vPB.bigColumns) {
       this.bigColumns.push(new BigColumn(col))
     }
-    // if (vPB.girderParameters.type === Types.GirderType.gslab) {
-    //   for (const gd of vPB.girders) {
-    //     this.girders.push(new Girder(gd))
-    //   }
-    // }
+    if (vPB.girderParameters.type === Types.GirderType.gslab) {
+      for (const gd of vPB.girders) {
+        this.girders.push(new Girder(gd))
+      }
+    }
     if (vPB.hangingBoard) {
       this.hangingBoard.push(new HangingBoard(vPB.hangingBoard))
     }
