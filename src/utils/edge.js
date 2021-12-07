@@ -20,6 +20,11 @@ export class Edge {
         this.controlPos = new THREE.Vector2(vPB.controlPos.x, vPB.controlPos.y)
       }
       this.type = vPB.type
+      this.position = vPB.position
+      this.radius = vPB.radius
+      this.startAngle = vPB.startAngle
+      this.endAngle = vPB.endAngle
+      this.isClockwise = vPB.isClockwise
     } else {
       this.zCoord = 0
       this.type === Types.EdgeType.estraight
@@ -214,6 +219,13 @@ export class Edge {
     })
     if (this.controlPos) {
       pb.controlPos = new Types.Vector3({x:this.fixed(this.controlPos.x), y:this.fixed(this.controlPos.y), z:this.fixed(this.zCoord)})
+    }
+    if (this.type === Types.EdgeType.earc) {
+      pb.position = new Types.Vector3({x:this.fixed(this.position.x), y:this.fixed(this.position.y), z:this.fixed(this.zCoord)})
+      pb.radius = this.radius
+      pb.startAngle = this.startAngle
+      pb.endAngle = this.endAngle
+      pb.isClockwise = this.isClockwise
     }
     return pb
   }
