@@ -250,6 +250,9 @@ export class Stair extends Info {
   getTreadBackOffset() {
     let tArgs = this.treadParameters
     let rArgs = this.riserParameters
+    if (tArgs.nossingType === Types.NossingType.nno) {
+      tArgs.nossing = 0
+    }
     return tArgs.nossing + (rArgs.riserExist ? rArgs.depth : 0)
   }
 

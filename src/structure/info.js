@@ -136,7 +136,7 @@ export class Info {
       if (!model) {
         d3_action.createModel(this.writePB(), vName)
       } else {
-        model.update()
+        model.update(this.writePB())
       }
       new D3Scene().render()
     }

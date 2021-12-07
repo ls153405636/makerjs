@@ -1,3 +1,5 @@
+import { Types } from "../types/stair_v2"
+import { D3Config } from "./d3_config"
 import { Stair } from "./stair/d3_stair"
 
 
@@ -15,11 +17,21 @@ export function createModel(vPB, vName) {
 }
 
 export function clear() {
-
+  for (const m of D3Config.MODELS.values()) {
+    m.dispose()
+  }
 }
 
+/**
+ * 
+ * @param {Types.Project} vPB 
+ */
 export function importProject(vPB) {
-  
+  /**添加洞口 */
+
+  /**添加墙体 */
+
+  vPB.stair && new Stair(vPB.stair).addToScene()
 }
 
 export default {

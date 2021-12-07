@@ -10,8 +10,18 @@ export class Stair extends BaseModel {
    * @param {Types.Stair} vPB 
    */
   constructor(vPB) {
-    super()
+    super(vPB.uuid)
     this.init(vPB)
+  }
+
+  dispose() {
+    for (const f of this.flights) {
+      f.dispose()
+    }
+    for (const g of this.girders) {
+      g.dispose()
+    }
+    super.dispose()
   }
 
   /**
@@ -38,14 +48,10 @@ export class Stair extends BaseModel {
   createObj() {
     this.obj = new THREE.Group()
     for (const f of this.flights) {
-      this.obj.add(f.getObj())
+      f.getObj() && this.obj.add(f.getObj())
     }
     for (const g of this.girders) {
-      this.obj.add(g.getObj())
+      g.getObj() && this.obj.add(g.getObj())
     }
-  }
-
-  update(vPB) {
-
   }
 }

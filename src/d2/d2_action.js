@@ -24,18 +24,20 @@ export function createWidget(vPB, vName) {
  * @param {Types.Project} vPB
  */
 export function importProject(vPB) {
-  new Hole(vPB.hole).addToStage() // 添加洞口
+  vPB.hole && new Hole(vPB.hole).addToStage() // 添加洞口
 
   vPB.walls.forEach((w) => {
     // 添加墙体
     new Wall(w).addToStage()
   })
 
-  new Stair(vPB.stair).addToStage()
+  vPB.stair && new Stair(vPB.stair).addToStage()
 }
 
 export function clear() {
-  /**补全 */
+  for(const w of D2Config.WIDGETS.values()) {
+    w.destroy()
+  }
 }
 
 export function initD2() {

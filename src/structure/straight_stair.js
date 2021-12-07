@@ -46,7 +46,7 @@ export class StraightStair extends Stair  {
   }
 
   computeStepNum () {
-    this.stepNum = this.flights[0].stepNum + this.startFlight?.stepNum || 0
+    this.stepNum = this.flights[0].stepNum + (this.startFlight?.stepNum || 0)
     this.stepNumRule = this.flights[0].stepNumRule
     this.realStepNum = this.stepNum - this.stepNumRule + 1
   }

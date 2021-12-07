@@ -199,6 +199,9 @@ export class Flight extends ChildInfo {
     let borders = []
     let inLast = vInLast, outLast = vOutLast
     for (let i = 0; i < this.treads.length; i++) {
+      if (this.treads[i].isLast) {
+        continue
+      }
       let border = this.treads[i].getGirBorder(vSide, vArgs, i === 0 && (!inLast), inLast, outLast)
       if (border) {
         inLast = {

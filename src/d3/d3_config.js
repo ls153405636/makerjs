@@ -1,5 +1,6 @@
 export const D3Config = {
-  MODELS:new Map()
+  MODELS:new Map(),
+  SELECTED:null,
 }
 
 export const Default = {

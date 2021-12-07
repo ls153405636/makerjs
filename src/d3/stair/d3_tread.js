@@ -20,7 +20,8 @@ export class Tread extends ChildModel {
     this.depth = vParas.depth
     this.stepHeight = vPB.stepHeight
     this.sideNossing = vParas.sideNossing
-    this.nossing = vParas.nossing
+    this.nossing = vParas.nossingType!==Types.NossingType.nno ? vParas.nossing : 0
+    this.isLast = vPB.isLast
     let border = vPB.border
     let topOutline = new XZOutline(border.treadOutline)
     let botOutline = new XZOutline(border.treadOutline)
@@ -32,7 +33,9 @@ export class Tread extends ChildModel {
     if (vRiserParas.riserExist) {
       this.createRiser(vPB.border, vRiserParas)
     }
-    this.createObj()
+    if (!this.isLast) {
+      this.createObj()
+    }
   }
 
   createObj () {

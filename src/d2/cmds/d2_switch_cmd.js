@@ -10,7 +10,7 @@ export class D2SwitchCmd extends Action {
 
   execute() {
     if (this.mode === '3d') {
-      //d2_action.clear()
+      d2_action.clear()
       d2_action.dispose()
     } else {
       d2_action.dispatch()
