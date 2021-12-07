@@ -50,7 +50,7 @@ module.exports = {
             }
         ],
         "unicorn/filename-case": [
-            "error",
+            "off",
             {
                 "case": "snakeCase",
                 "ignore": []
