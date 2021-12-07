@@ -1,4 +1,4 @@
-import { OrbitControls } from "./OrbitControls"
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export class D3Scene {
   constructor() {
