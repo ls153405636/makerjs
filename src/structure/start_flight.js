@@ -92,11 +92,11 @@ export class StartFlight extends ChildInfo{
       treadOutlines = this.createElDOutline({start:treStart, stepWidth:treWidth, offset1:treOffset1, offset2:treOffset2})
     }
     else if (this.modelType === Types.StartTreadType.st_rr) {
-      outlines = this.createRROutline()
+      outlines = this.createRROutline({start})
       treadOutlines = this.createRROutline({start:treStart, stepWidth:treWidth})
     }
     else if (this.modelType === Types.StartTreadType.st_rr_2) {
-      outlines = this.createRRDOutline()
+      outlines = this.createRRDOutline({start})
       treadOutlines = this.createRRDOutline({start:treStart, stepWidth:treWidth})
     }
 
@@ -454,8 +454,6 @@ export class StartFlight extends ChildInfo{
     } else {
       this.width = Default.STEP_LENGTH
     }
-    console.log(this)
-    console.log(this.parent)
     let handrailHeight = this.parent.handrailParameters.height
     let stepLength = this.parent.flights[this.parent.flights.length - 1].treads[0].stepLength
     let stepWidth = this.parent.flights[this.parent.flights.length - 1].treads[0].stepWidth
