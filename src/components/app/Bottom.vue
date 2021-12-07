@@ -2,8 +2,9 @@
   <div class="component-bottom">
     <div class="D23">
       <div class="d2-d3">
-        <span class="left" @click="changleMode('2d')">2D</span>
-        <span class="right" @click="changleMode('3d')">3D</span>
+        <!-- <span  @click="changleMode('2d')" :class="cur_mode == '2d' ? isCurrent: ''">2D</span> -->
+        <span  @click="changleMode('2d')" :class="{current:this.$store.state.canvas.cur_mode == '2d'}">2D</span>
+        <span  @click="changleMode('3d')" :class="{current:this.$store.state.canvas.cur_mode == '3d'}">3D</span>
       </div>
     </div>
     <div class="add-stair-btn" @click="addStair">添加楼梯</div>
@@ -46,17 +47,21 @@ export default defineComponent({
   name: 'componentBottom',
   data() {
     const value = ref(100)
+    let isCurrent = 'current'
     const formatTooltip = (val) => {
       return val + '%'
     }
 
     return {
       value,
+      isCurrent,
+      // curMode,
       formatTooltip,
     }
   },
   computed: {
     ...mapState('canvas', ['cur_mode']),
+
   },
   methods: {
     // 恢复默认缩放
@@ -65,6 +70,7 @@ export default defineComponent({
     },
     // 放大
     upZoom() {
+      
       let upZ = this.value / 100 + 0.1
       this.value += 10
       stage_scale_context.set_scale(upZ, true)
@@ -85,6 +91,7 @@ export default defineComponent({
       stairInit.style.display = 'block'
     },
     changleMode(vMode) {
+      console.log(this.$store.state.canvas.cur_mode)
       if(CUR_DATA.MODE !== vMode) {
         let core = new Core()
         core.execute(new Command(core.cmds.SwitchCmd, vMode))
@@ -121,11 +128,11 @@ export default defineComponent({
 .component-bottom .d2-d3 {
   width: 128px;
   height: 34px;
-  background: #4478f4;
+  background: #fff;
   border-radius: 8px;
   overflow: hidden;
   font: normal 14px/34px Source Han Sans CN;
-  color: #fff;
+  color: #4478f4;
   text-align: center;
 }
 .component-bottom .d2-d3 span {
@@ -133,9 +140,12 @@ export default defineComponent({
   width: 50%;
   height: 100%;
 }
-.component-bottom .d2-d3 span:nth-child(2) {
-  background-color: aliceblue;
-  color: #4478f4;
+.component-bottom .d2-d3 .current {
+  float: left;
+  width: 50%;
+  height: 100%;
+  background-color: #4478f4;
+  color: #fff;
 }
 .component-bottom .add-stair-btn {
   width: 128px;

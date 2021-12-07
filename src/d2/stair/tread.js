@@ -58,6 +58,7 @@ export class Tread extends ChildWidget {
       changeTread.visible = true
       changeTread.lineStyle(1, 0x4478f4)
       changeTread.beginFill(0xe9efff)
+      changeTread.alpha = 0.1
   
       for (let i = 0; i < this.edges.length; i++) {
         let e = this.edges[i]
@@ -87,8 +88,8 @@ export class Tread extends ChildWidget {
     if (this.isLast === true) {
       tread.visible = false
     } else {
-      tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
-      tread.beginFill(0xffffff)
+      // tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
+      // tread.beginFill(0xffffff)
       tread.visible = true
   
       for (let i = 0; i < this.edges.length; i++) {
@@ -256,7 +257,7 @@ export class Tread extends ChildWidget {
       })
   }
   addDimension() {
-
+    console.log(this.inIndex)
     let wall = new Map(D2Config.WIDGETS)
     this.wallNormal = []
     this.wallDepth = 0
@@ -265,15 +266,10 @@ export class Tread extends ChildWidget {
         this.wallDepth = value.depth
       }
     }
-    console.log(this.wallDepth)
 
     // 踏板标注线绘制
     const treadLineContainer = new PIXI.Container()
     const treadLine = new PIXI.Graphics()
-    console.log(this.backIndex)
-    // console.log(this.index)
-    // console.log(this.isClock)
-    // console.log(this.edges[this.inIndex[1]])
     const arrow = new Victor(50,50) //偏移出墙的偏移值
     let p1
     let p2
@@ -570,56 +566,56 @@ export class Tread extends ChildWidget {
       }
     }
     // 起步踏板标注
-    // if (this.type === 0) {
-    //   const startTP1 = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
-    //   const startTP2 = new Victor(this.edges[0].p1.x, this.edges[3].p1.y)
+    if (this.type === 0) {
+      const startTP1 = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
+      const startTP2 = new Victor(this.edges[0].p1.x, this.edges[3].p1.y)
 
       
-    //   // 起步踏板宽度计算
-    //   const startTreadLinelength =
-    //   Math.floor(Math.hypot(startTP1.x - startTP2.x, startTP1.y - startTP2.y) )
+      // 起步踏板宽度计算
+      const startTreadLinelength =
+      Math.floor(Math.hypot(startTP1.x - startTP2.x, startTP1.y - startTP2.y) )
       
-    //   let newStartP1 = startTP1.subtractX(offSet)
-    //   let newStartP2 = startTP2.subtractX(offSet)
-    //   console.log(newStartP1)
-    //   console.log(newStartP2)
-    //   // 文字中心位置计算
-    //   const position = {
-    //     x: (newStartP1.x + newStartP2.x) / 2 / 10,
-    //     y: (newStartP1.y + newStartP2.y) / 2 / 10
-    //   }
+      let newStartP1 = startTP1.subtractX(offSet)
+      let newStartP2 = startTP2.subtractX(offSet)
+      console.log(newStartP1)
+      console.log(newStartP2)
+      // 文字中心位置计算
+      const position = {
+        x: (newStartP1.x + newStartP2.x) / 2 / 10,
+        y: (newStartP1.y + newStartP2.y) / 2 / 10
+      }
 
-    //   // 旋转计算
-    //   let newStartTextRotation = ''
-    //   const startTextRotation = new Victor(newStartP1.x - newStartP2.x, newStartP1.y - newStartP2.y)
-    //   const startTextAngle = startTextRotation.angle()
-    //   if (startTextAngle == Math.PI || startTextAngle == 0) {
-    //     newStartTextRotation = 0
-    //   } else if (startTextAngle > Math.PI) {
-    //     newStartTextRotation = startTextRotation.invert().angle()
-    //   } else if (startTextAngle < Math.PI) {
-    //     newStartTextRotation = startTextRotation.angle()
-    //   }
+      // 旋转计算
+      let newStartTextRotation = ''
+      const startTextRotation = new Victor(newStartP1.x - newStartP2.x, newStartP1.y - newStartP2.y)
+      const startTextAngle = startTextRotation.angle()
+      if (startTextAngle == Math.PI || startTextAngle == 0) {
+        newStartTextRotation = 0
+      } else if (startTextAngle > Math.PI) {
+        newStartTextRotation = startTextRotation.invert().angle()
+      } else if (startTextAngle < Math.PI) {
+        newStartTextRotation = startTextRotation.angle()
+      }
 
-    //   const startTreadLine = new PIXI.Graphics()
-    //   startTreadLine
-    //   .lineStyle(1,0x000000)
-    //   .moveTo(newStartP1.x / 10, newStartP1.y / 10)
-    //   .lineTo(newStartP2.x / 10, newStartP2.y / 10)
+      const startTreadLine = new PIXI.Graphics()
+      startTreadLine
+      .lineStyle(1,0x000000)
+      .moveTo(newStartP1.x / 10, newStartP1.y / 10)
+      .lineTo(newStartP2.x / 10, newStartP2.y / 10)
 
-    //   const startTreadLineNum = new PIXI.Text(startTreadLinelength, {
-    //     fontSize: 32,
-    //     fill: 0x000000,
-    //   })
+      const startTreadLineNum = new PIXI.Text(startTreadLinelength, {
+        fontSize: 32,
+        fill: 0x000000,
+      })
 
-    //   startTreadLineNum.scale.set(0.25)
-    //   startTreadLineNum.position.set(position.x, position.y)
-    //   startTreadLineNum.anchor.set(0.5, 0.5)
-    //   startTreadLineNum.rotation = newStartTextRotation
+      startTreadLineNum.scale.set(0.25)
+      startTreadLineNum.position.set(position.x, position.y)
+      startTreadLineNum.anchor.set(0.5, 0.5)
+      startTreadLineNum.rotation = newStartTextRotation
 
 
-    //   treadLineContainer.addChild(startTreadLine,startTreadLineNum)
-    // }
+      treadLineContainer.addChild(startTreadLine,startTreadLineNum)
+    }
 
 
     
