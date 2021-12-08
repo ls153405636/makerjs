@@ -15,10 +15,11 @@
 <script>
 import html2canvas from 'html2canvas'
 import { D2Config } from '../../d2/config'
+import { Stair } from '../../structure/stair'
 export default {
   data() {
     return {
-
+      Stair
     }
   },
   name: 'shotImg',
@@ -47,7 +48,12 @@ export default {
       localStorage.clear()
       this.imgUrl = canvas.toDataURL();
       // this.$store.commit({
-      //   type: 'show_img/getImgUrl',
+      //   type: 'getArgs/getArgs',
+      //   payload: Stair
+      // })
+      // console.log(this.Stair.getArgs())
+      // this.$store.commit({
+        //   type: 'show_img/getImgUrl',
       //   url: this.imgUrl,
       // })
       localStorage.setItem('img_url',this.imgUrl)

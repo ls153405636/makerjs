@@ -7,6 +7,7 @@ import init from './init'
 import change_zoom from './change_zoom'
 import show_img from './show_img'
 import canvas from './canvas'
+import getArgs from './getArgs'
 
 //Vue.use(Vuex)
 
@@ -17,5 +18,6 @@ export default createStore({
     change_zoom,
     show_img,
     canvas,
+    getArgs,
   },
 })

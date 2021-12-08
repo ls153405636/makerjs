@@ -75,7 +75,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              :disabled="stair_shape_options"
+              
             >
             </el-option>
           </el-select>

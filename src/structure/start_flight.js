@@ -120,17 +120,22 @@ export class StartFlight extends ChildInfo{
       border.backIndex = [0]
       border.inIndex = [1]
       border.outIndex = [outlines[i].edges.length - 1]
+      let stepWidth = this.stepWidth
+      if (i === 0 && outlines.length === 2) {
+        stepWidth = this.stepWidth * 2
+      }
       if ([Types.StartTreadType.st_el, Types.StartTreadType.st_el_2].includes(this.modelType)) {
         border.frontIndex = [2,3]
       } else if ([Types.StartTreadType.st_rr, Types.StartTreadType.st_rr_2].includes(this.modelType)) {
         border.frontIndex = [2]
       }
       if (this.treads[i]) {
-        this.treads[i].rebuildByParent({vIndex:i+1, vBorder:border})
+        this.treads[i].rebuildByParent({vIndex:i+1, vBorder:border, vStepWidth: stepWidth})
       } else {
         this.treads.push(new StartTread({vParent:this,
                                           vIndex:i+1,
-                                          vBorder:border,}))
+                                          vBorder:border,
+                                          vStepWidth: stepWidth}))
       }
 
     }

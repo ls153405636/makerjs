@@ -10,6 +10,7 @@ import { Flight } from './flight'
 import { Handrail } from './handrail'
 import { HangingBoard } from './hanging_board'
 import { Girder } from './girder'
+import { COMP_TYPES } from '../../common/common_config'
 
 export class Stair extends BaseWidget {
   /**
@@ -34,6 +35,7 @@ export class Stair extends BaseWidget {
     this.hangingBoard = []
     this.girders = []
     this.landings = []
+    this.position = vPB.position
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
     }
@@ -90,6 +92,11 @@ export class Stair extends BaseWidget {
     super.destroy()
   }
 
+  /**获取当前组件的类型 */
+  getWidgetType() {
+    return COMP_TYPES.STAIR
+  }
+
   draw() {
     this.sprite = new PIXI.Container()
 
@@ -134,6 +141,8 @@ export class Stair extends BaseWidget {
       }
     }
   }
+
+
 
   cancelSmallColSelected() {
     this.smallColumns.forEach((col) => {
