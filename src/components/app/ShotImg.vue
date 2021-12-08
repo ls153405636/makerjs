@@ -1,6 +1,6 @@
 <template>
   <div class="shot-img" >
-       <el-button type="primary" class="export" @mousedown="shotImg()">截图</el-button>
+       <el-button type="primary" class="export" @mousedown="shotImg()">生成平面图</el-button>
        <el-button type="primary" class="back-index" @click="back()">返回</el-button>
   <div class="shot">
     <i></i>

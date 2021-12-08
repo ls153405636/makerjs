@@ -1,5 +1,6 @@
 import { Types } from '../../types/stair_v2'
 import { BaseWidget } from '../base_widget'
+import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
 import { Tread } from './tread'
 
@@ -15,9 +16,8 @@ export class Flight extends BaseWidget {
       this.treads.push(new Tread(t, this))
     }
     this.tread = vPB.treads
-    // this.stepLength = d2_tool.translateValue(vPB.stepParameters.stepLength)
-    // this.stepWidth = d2_tool.translateValue(vPB.stepParameters.stepWidth)
     this.draw()
+    
   }
 
   draw() {
