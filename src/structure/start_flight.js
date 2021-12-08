@@ -4,7 +4,6 @@ import { Outline } from "../utils/outline";
 import { ChildInfo } from "./child_info";
 import { Default } from "./config";
 import tool from "./tool";
-import { Tread } from "./tread";
 import { StartTread } from "./treads/start_tread";
 
 export class StartFlight extends ChildInfo{
