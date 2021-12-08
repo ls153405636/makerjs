@@ -2,6 +2,7 @@ import { Action } from "../../common/action";
 import { CUR_DATA } from "../../common/common_config";
 import d2_action from "../../d2/d2_action";
 import d3_action from "../../d3/d3_action";
+import { D3Scene } from "../../d3/d3_scene";
 import store from "../../store";
 import { Structure } from "../structure";
 
@@ -20,6 +21,7 @@ export class StrucSwitchCmd extends Action {
       d2_action.importProject(proj)
     } else {
       d3_action.importProject(proj)
+      new D3Scene().render()
     }
   }
 }

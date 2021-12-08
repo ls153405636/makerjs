@@ -191,6 +191,13 @@ export class Edge {
     this.p1 = this.p2
     this.p2 = temp
     this.vec = null
+    this.normal = null
+    if (this.type === Types.EdgeType.earc) {
+      let tempAngle = this.startAngle
+      this.startAngle = this.endAngle
+      this.endAngle = tempAngle
+      this.isClockwise = !this.isClockwise
+    }
     return this.writePB()
   }
 

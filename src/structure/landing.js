@@ -7,7 +7,6 @@ import { ChildInfo } from "./child_info";
 import { Default } from "./config";
 import { SmallColumn } from "./small_column";
 import tool from "./tool";
-import { Tread } from "./tread";
 import { CorTread } from "./treads/cor_tread";
 import { SpecTread } from "./treads/spec_tread";
 

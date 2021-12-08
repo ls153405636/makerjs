@@ -80,8 +80,8 @@ export class Tread extends ChildInfo {
       inRst = this.createSideSawBorder(inUtilE, vIsFirst, vArgs, vInLast)
       outRst = this.createSideSawBorder(outUtilE, vIsFirst, vArgs, vOutLast)
     } else {
-      inRst = this.createSideSlabBorder(inUtilE, vArgs, vInLast)
-      outRst = this.createSideSlabBorder(outUtilE, vArgs, vOutLast)
+      inRst = this.createSideSlabBorder(inUtilE, vIsFirst, vArgs, vInLast)
+      outRst = this.createSideSlabBorder(outUtilE, vIsFirst, vArgs, vOutLast)
     }
     return new Types.TreadGirBorder({
       inEdges: inRst.edges,
@@ -123,7 +123,7 @@ export class Tread extends ChildInfo {
     botPois[0] = utilE.getP1PB()
     botPois[1] = utilE.getP2PB()
     let verHeight = this.getGirVerHeight(vArgs)
-    if (this.parent.index === 0 && this.parent.startHeight >= verHeight) {
+    if (vIsFirst && this.parent.index === 0 && this.parent.startHeight >= verHeight) {
       botPois[0].z = 0
       botPois[1].z = 0
     } else {
@@ -169,7 +169,7 @@ export class Tread extends ChildInfo {
    * @param {Types.GirderParameters} vArgs 
    * @param {*} vLast 
    */
-  createSideSlabBorder (utilE, vArgs, vLast) {
+  createSideSlabBorder (utilE, vIsFirst, vArgs, vLast) {
     let botPois = [], topPois = []
     topPois[0] = utilE.getP1PB()
     topPois[1] = utilE.getP2PB()
@@ -183,7 +183,7 @@ export class Tread extends ChildInfo {
     botPois[1].z -= (verHeight - stepHeight)
     topPois[0].z += upVerHeight
     topPois[1].z += (upVerHeight + stepHeight)
-    if (this.parent.index === 0 && this.parent.startHeight >= verHeight) {
+    if (vIsFirst && this.parent.index === 0 && this.parent.startHeight >= (verHeight - this.stepHeight)) {
       botPois[0].z = 0
       botPois[1].z = 0
     } else {

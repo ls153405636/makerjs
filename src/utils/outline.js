@@ -43,7 +43,7 @@ export class Outline {
         }
         let points_2d = path.getPoints()
         for(const p of points_2d) {
-          pois.push(new Types.Vector3({x:p.x, y:p.y}))
+          pois.push(new Types.Vector3({x:p.x, y:p.y, z: this.zCoord}))
         }
       }
     }
@@ -116,27 +116,23 @@ export class Outline {
       }
       let newP1 = e.getP1().addScaledVector(p1OffsetDir, dis1)
       let newP2 = e.getP2().addScaledVector(p2OffsetDir, dis2)
+      let newE = e.writePB()
+      newE.p1 = new Types.Vector3({x:newP1.x, y:newP1.y, z:e.zCoord})
+      newE.p2 = new Types.Vector3({x:newP2.x, y:newP2.y, z:e.zCoord})
       if (e.type === Types.EdgeType.ebeszer) {
         let conOffsetDir = e.getNormal()
         if (!vPlus) {
           conOffsetDir.negate()
         }
-        let conPoi = new Edge().setByVec(e.controlPos, conOffsetDir, vDis).p2
-        newEdges.push(new Types.Edge({
-          p1: new Types.Vector3({x:newP1.x, y:newP1.y, z:e.zCoord}),
-          p2: new Types.Vector3({x:newP2.x, y:newP2.y, z:e.zCoord}),
-          controlPos: conPoi,
-          type: Types.EdgeType.ebeszer
-        }))
-        
-      } else {
-        newEdges.push(new Types.Edge({
-          p1: new Types.Vector3({x:newP1.x, y:newP1.y, z:e.zCoord}),
-          p2: new Types.Vector3({x:newP2.x, y:newP2.y, z:e.zCoord}),
-          type: Types.EdgeType.estraight
-        }))
-        
-      }
+        newE.controlPos = new Edge().setByVec(e.controlPos, conOffsetDir, vDis).p2
+      } else if (e.type === Types.EdgeType.earc) {
+        if (e.isClockwise) {
+          newE.radius = vPlus ? e.radius + vDis : e.radius - vDis
+        } else {
+          newE.radius = vPlus ? e.radius - vDis : e.radius + vDis
+        }
+      } 
+      newEdges.push(newE)
     }
     return new Types.Outline({
       edges: newEdges,

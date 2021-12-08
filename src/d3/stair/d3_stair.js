@@ -32,7 +32,8 @@ export class Stair extends BaseModel {
     /**@type {Flight} */
     this.flights = []
     this.girders = []
-    for (const f of vPB.flights) {
+    for (let i = 0; i < vPB.flights.length; i++) {
+      let f = vPB.flights[i]
       this.flights.push(new Flight(this, f, vPB.treadParameters, vPB.riserParameters))
     }
     for (const l of vPB.landings) {

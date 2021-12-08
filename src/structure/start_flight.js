@@ -4,7 +4,6 @@ import { Outline } from "../utils/outline";
 import { ChildInfo } from "./child_info";
 import { Default } from "./config";
 import tool from "./tool";
-import { Tread } from "./tread";
 import { StartTread } from "./treads/start_tread";
 
 export class StartFlight extends ChildInfo{
@@ -244,7 +243,8 @@ export class StartFlight extends ChildInfo{
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       rE = rectOutline.edges[1]
       rFE = this.createBeszerEdge(rE.p2, this.wVec, offset2, this.lVec, -this.stepLength / 2)
-      rE_d = this.createBeszerEdge(rE.p2, this.wVec, stepWidth, this.lVec, 0)
+      //rE_d = this.createBeszerEdge(rE.p2, this.wVec, stepWidth, this.lVec, 0)
+      rE_d = new Edge(rectOutline.edges[1]).extendP2(stepWidth)
       rFE_d = this.createBeszerEdge(rE_d.p2, this.wVec, offset2, this.lVec, -this.stepLength / 2)
     } else {
       rE = this.createBeszerEdge(bE.p2, this.lVec, offset1, this.wVec, stepWidth / 2)
@@ -257,7 +257,8 @@ export class StartFlight extends ChildInfo{
       lFE = this.createBeszerEdge(rFE.p2, this.lVec, -this.stepLength/2, this.wVec, -offset2)
       lE = rectOutline.edges[3]
       lFE_d = this.createBeszerEdge(rFE_d.p2, this.lVec, -this.stepLength / 2, this.wVec, -offset2)
-      lE_d = this.createBeszerEdge(lE.p2, this.wVec, -stepWidth / 2, this.lVec, 0)
+      //lE_d = this.createBeszerEdge(lE.p2, this.wVec, -stepWidth / 2, this.lVec, 0)
+      lE_d = new Edge(rectOutline.edges[3]).extendP1(stepWidth)
     } else {
       lFE = this.createBeszerEdge(rFE.p2, this.lVec, -this.stepLength/2-offset1, this.wVec, -stepWidth/2-offset2)
       lE = this.createBeszerEdge(lFE.p2, this.wVec, -stepWidth/2, this.lVec, offset1)
@@ -311,7 +312,7 @@ export class StartFlight extends ChildInfo{
     let rE = rectOutline.edges[1]// 右边
     let lE = rectOutline.edges[3]// 左边
     let new_rE = new Edge(rectOutline.edges[1]).extendP2(stepWidth)
-    let new_lE = new Edge(rectOutline.edges[3]).extendP2(stepWidth)
+    let new_lE = new Edge(rectOutline.edges[3]).extendP1(stepWidth)
     let new_dE = new Edge(dE).offset(stepWidth, this.isClock)
     let outArc, inArc , outL,inL// 右圆弧、 左圆弧
     let outArc_d, inArc_d // 第二层右圆弧， 第层左圆弧

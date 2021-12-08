@@ -22,6 +22,7 @@ export class Tread extends ChildModel {
     this.sideNossing = vParas.sideNossing
     this.nossing = vParas.nossingType!==Types.NossingType.nno ? vParas.nossing : 0
     this.isLast = vPB.isLast
+    this.type = vPB.type
     let border = vPB.border
     let topOutline = new XZOutline(border.treadOutline)
     let botOutline = new XZOutline(border.treadOutline)
@@ -54,8 +55,17 @@ export class Tread extends ChildModel {
   createRiser (vBorder, vRiserParas) {
     let tOutline = vBorder.stepOutline
     let rOutRoute = new Types.Outline({isClose:false, isClock:tOutline.isClock})
-    for (const i of vBorder.frontIndex) {
-      rOutRoute.edges.push(tOutline.edges[i])
+    if (this.type === Types.TreadType.tStart) {
+      tOutline = vBorder.treadOutline
+      let edges = [...tOutline.edges]
+      // for (const i of vBorder.backIndex) {
+      //   edges.splice(i, 1)
+      // }
+      rOutRoute.edges = edges
+    } else {
+      for (const i of vBorder.frontIndex) {
+        rOutRoute.edges.push(tOutline.edges[i])
+      }
     }
     let utilRoute = new Outline(rOutRoute)
     utilRoute.setZCoord(utilRoute.zCoord - this.stepHeight)
