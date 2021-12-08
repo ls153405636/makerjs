@@ -5,7 +5,7 @@ export class StartTread extends Tread {
 
   constructor({ vParent, vIndex, vBorder}) {
     super({vParent, vIsLast:false})
-    this.startTreadType = Types.TreadType.tStart
+    this.type = Types.TreadType.tStart
     this.rebuildByParent({ vIndex, vBorder })
   }
   
