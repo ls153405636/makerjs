@@ -44,6 +44,8 @@ export class Tread extends ChildModel {
     this.obj.add(this.botFace.getObj())
     this.obj.add(this.topFace.getObj())
     this.obj.add(this.sideFace.getObj())
+    this.obj.userData.uuid = this.uuid
+    this.obj.userData.d3Type = 'obj'
     this.riser && this.obj.add(this.riser.getObj())
   }
 

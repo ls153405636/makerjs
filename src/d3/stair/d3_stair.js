@@ -1,5 +1,6 @@
 import { Types } from "../../types/stair_v2";
 import { BaseModel } from "../d3_base_model";
+import { D3Config } from "../d3_config";
 import { Flight } from "./d3_flight";
 import { Girder } from "./d3_girder";
 
@@ -54,5 +55,6 @@ export class Stair extends BaseModel {
     for (const g of this.girders) {
       g.getObj() && this.obj.add(g.getObj())
     }
+    D3Config.OBJS.push(this.obj)
   }
 }

@@ -1,4 +1,4 @@
-import { Point } from '../../graphics/point'
+import { Point } from './point'
 import { events } from './state_event'
 import { RunContext } from './context'
 import { with_log } from './fsm_util'

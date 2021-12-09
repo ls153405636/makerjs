@@ -13,6 +13,7 @@ import { SmallColumn } from "./small_column"
 import { StartFlight } from './start_flight'
 import { StairSide } from './toolComp/stair_side'
 import { COMP_TYPES } from '../common/common_config'
+import { reqTemp } from './resource/temp'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -260,6 +261,7 @@ export class Stair extends Info {
 
 
   getArgs() {
+    //reqTemp()
     let f = tool.getItemFromOptions
     let args = {
       startBeamDepth: {

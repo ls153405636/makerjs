@@ -1,5 +1,5 @@
 import { D2Config } from './config'
-import { D2Grid } from '../widget2/d2_grid'
+import { D2Grid } from './d2_grid'
 
 import { interpret } from 'xstate'
 

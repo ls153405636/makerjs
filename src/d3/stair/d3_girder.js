@@ -2,9 +2,10 @@ import tool from "../../structure/tool";
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { ChildModel } from "../d3_child_model";
-import { Default } from "../d3_config";
+import { D3Config, Default } from "../d3_config";
 import d3_tool from "../d3_tool";
 import earCut from 'earcut'
+import { COMP_TYPES } from "../../common/common_config";
 
 
 export class Girder extends ChildModel {
@@ -70,70 +71,12 @@ export class Girder extends ChildModel {
     let geo = new THREE.BufferGeometry()
     geo.setAttribute('position', positionAttr)
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    this.mesh.userData.uuid = this.uuid
+    this.mesh.userData.d3Type = 'obj'
     this.obj = new THREE.Group()
     this.obj.add(this.mesh)
     this.obj.add(inFrame, outFrame)
   }
-
-  // createSawObj() {
-  //   let positionSet = []
-  //   let inFramePois = []
-  //   let outFramePois = []
-  //   let inTopFramePois = []
-  //   let outTopFramePois = []
-  //   for (let i = 0; i < this.borders.length; i++) {
-  //     let inEdges = [...this.borders[i].inEdges]
-  //     let inTEdges = [...this.borders[i].inTopEdges]
-  //     let outEdges = [...this.borders[i].outEdges]
-  //     let outTEdges = [...this.borders[i].outTopEdges]
-  //     let k = 0
-  //     for (; k < inEdges.length; k++) {
-  //       positionSet = positionSet.concat(this.createSideFace(inEdges[k], [outEdges[k]]))
-  //       inFramePois.push(d3_tool.translateCoord(inEdges[k].p1))
-  //       outFramePois.push(d3_tool.translateCoord(outEdges[k].p1))
-  //       if (tool.isVec2Equal(inEdges[k].p1, inEdges[k].p2) && k === 0) {
-  //         inEdges.splice(k, 1)
-  //         outEdges.splice(k, 1)
-  //         k--
-  //       }
-  //     }
-  //     let h = 0
-  //     for (; h < inTEdges.length; h++) {
-  //       positionSet = positionSet.concat(this.createSideFace(inTEdges[h], [outTEdges[h]]))
-  //       inTopFramePois.push(d3_tool.translateCoord(inTEdges[h].p1))
-  //       outTopFramePois.push(d3_tool.translateCoord(outTEdges[h].p1))
-  //       if (h === inTEdges.length - 2) {
-  //         continue
-  //       } else if (h === inTEdges.length - 1) {
-  //         positionSet = positionSet.concat(this.createSideFace(inTEdges[h], inEdges))
-  //         positionSet = positionSet.concat(this.createSideFace(outTEdges[h], outEdges))
-  //       } else {
-  //         positionSet = positionSet.concat(this.createSideFace(inTEdges[h], [inEdges[0]]))
-  //         positionSet = positionSet.concat(this.createSideFace(outTEdges[h], [outEdges[0]]))
-  //         inEdges.splice(0, 1)
-  //         outEdges.splice(0, 1)
-  //       }
-  //     }
-  //     if (i === this.borders.length - 1) {
-  //       let inEndEdge = new Types.Edge({p1:inEdges[inEdges.length-1].p2, p2:inTEdges[inTEdges.length-1].p2})
-  //       let outEndEdge = new Types.Edge({p1:outEdges[outEdges.length-1].p2, p2:outTEdges[outTEdges.length-1].p2})
-  //       positionSet = positionSet.concat(this.createSideFace(inEndEdge, [outEndEdge]))
-  //       inFramePois.push(d3_tool.translateCoord(inEdges[k-1].p2))
-  //       outFramePois.push(d3_tool.translateCoord(outEdges[k-1].p2))
-  //       inTopFramePois.push(d3_tool.translateCoord(inTEdges[h-1].p2))
-  //       outTopFramePois.push(d3_tool.translateCoord(outTEdges[h-1].p2))
-  //       inFramePois.push(d3_tool.translateCoord(inTEdges[h-1].p2))
-  //       outFramePois.push(d3_tool.translateCoord(outTEdges[h-1].p2))
-  //     }
-  //   }
-  //   let positionAttr = new THREE.Float32BufferAttribute(positionSet, 3)
-  //   let geo = new THREE.BufferGeometry()
-  //   geo.setAttribute('position', positionAttr)
-  //   this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
-  //   this.obj = new THREE.Group()
-  //   this.obj.add(this.mesh)
-  //   this.obj.add(this.createLine(inFramePois), this.createLine(outFramePois), this.createLine(inTopFramePois), this.createLine(outTopFramePois))
-  // }
 
   createLine(vPois) {
     let geo = new THREE.BufferGeometry().setFromPoints(vPois)
@@ -208,37 +151,4 @@ export class Girder extends ChildModel {
       e2P2.x, e2P2.y, e2P2.z
     ]
   }
-
-  /**
-   * 
-   * @param {Types.Edge} vBaseEdge 
-   * @param {Array<Types.Edge>} vAdaptEdges 
-   */
-  // createSideFace(vBaseEdge, vAdaptEdges) {
-  //   let positionSet = []
-  //   let tP1 = d3_tool.translateCoord(vBaseEdge.p1)
-  //   let tP2 = d3_tool.translateCoord(vBaseEdge.p2)
-  //   for (let i = 0; i < vAdaptEdges.length; i++) {
-  //     let bP1 = d3_tool.translateCoord(vAdaptEdges[i].p1)
-  //     let bP2 = d3_tool.translateCoord(vAdaptEdges[i].p2)
-  //     if (i === 0) {
-  //       positionSet.push(
-  //         tP1.x, tP1.y, tP1.z,
-  //         bP1.x, bP1.y, bP1.z,
-  //         bP2.x, bP2.y, bP2.z,
-
-  //         tP1.x, tP1.y, tP1.z,
-  //         tP2.x, tP2.y, tP2.z,
-  //         bP2.x, bP2.y, bP2.z
-  //       )
-  //     } else {
-  //       positionSet.push(
-  //         tP2.x, tP2.y, tP2.z,
-  //         bP1.x, bP1.y, bP1.z,
-  //         bP2.x, bP2.y, bP2.z,
-  //       )
-  //     }
-  //   }
-  //   return positionSet
-  // }
 }
