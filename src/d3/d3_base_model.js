@@ -61,9 +61,9 @@ export class BaseModel {
 
   setHover() {}
 
+  setSelected() {}
+
   getCompType() {
     return 0
   }
-
-  setSelected() {}
 }

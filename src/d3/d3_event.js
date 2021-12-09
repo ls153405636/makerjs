@@ -1,4 +1,6 @@
+import { Command } from "../common/command"
 import { COMP_TYPES } from "../common/common_config"
+import { Core } from "../common/core"
 import { D3Config } from "./d3_config"
 import { D3Scene } from "./d3_scene"
 
@@ -10,6 +12,7 @@ export class D3Event {
       this.dom = new D3Scene().renderer.domElement
       this.isMouseDown = false
       this.mouse = new THREE.Vector2()
+      this.downMouse = new THREE.Vector2()
       this.raycaster = new THREE.Raycaster()
       this.isCtrlDown = false
       D3Event.instance = this
@@ -27,9 +30,11 @@ export class D3Event {
     
   }
 
-  static onMouseDown() {
+  static onMouseDown(e) {
     new D3Event().isMouseDown = true
     window.addEventListener( 'mouseup', D3Event.onMouseUp, true)
+    new D3Event().downMouse.x = ( e.clientX / innerWidth ) * 2 - 1
+	  new D3Event().downMouse.y = - ( e.clientY / innerHeight ) * 2 + 1
   }
 
   static onMouseMove(e) {
@@ -51,17 +56,29 @@ export class D3Event {
     new D3Scene().render()
   }
 
-  static onMouseUp() {
+  static onMouseUp(e) {
     new D3Event().isMouseDown = false
     window.removeEventListener('mouseup', D3Event.onMouseUp, true)
+    let upMouse = new THREE.Vector2()
+    upMouse.x = ( e.clientX / innerWidth ) * 2 - 1
+	  upMouse.y = - ( e.clientY / innerHeight ) * 2 + 1
+    if (upMouse.distanceTo(new D3Event().downMouse) < 0.00001) {
+      new D3Event().isCtrlDown = e.ctrlKey
+      new D3Event().raycaster.setFromCamera(upMouse, new D3Scene().camera)
+      let intersects = new D3Event().raycaster.intersectObjects( D3Config.OBJS, true )
+      let model = new D3Event().getInterModel(intersects)
+      new D3Event().switchSelecte(model)
+    }
   }
+
+
 
   getInterModel(vIntersects) {
     let obj = vIntersects[0]?.object
     if (!obj) {
       return null
     }
-    while(obj?.userData.d3Type !== 'obj') {
+    while(obj && obj.userData.d3Type !== 'obj') {
       obj = obj.parent
     }
     let uuid = obj?.userData.uuid
@@ -104,6 +121,22 @@ export class D3Event {
     }
   }
 
+  switchSelecte(vModel) {
+    let core = new Core()
+    if (vModel) {
+      if (D3Config.SELECTED && vModel.uuid === D3Config.SELECTED.uuid){
+        return
+      }
+      core.execute(new Command(core.cmds.SelecteCmd, {uuid:vModel.uuid, type:vModel.getCompType()})) 
+      if (D3Config.HOVER && D3Config.HOVER.uuid === vModel.uuid) {
+        D3Config.HOVER = null
+      }
+    } else {
+      if (D3Config.SELECTED) {
+        core.execute(new Command(core.cmds.SelecteCmd, {uuid:null}))
+      }
+    }
+  }
 
 
 }

@@ -12,12 +12,12 @@ export const D3Config = {
         /*resolution:new THREE.Vector2(window.innerWidth, window.innerHeight)*/}),
   HOVER_FRAME_MAT: new THREE.LineBasicMaterial({color: 0x2a68c9,
         depthTest: false,
-        /*linewidth: 2,*/
+        linewidth: 2,
         /*resolution: new THREE.Vector2(window.innerWidth, window.innerHeight)*/
       }),
   SELECT_FRAME_MAT: new THREE.LineBasicMaterial({color: 0x033480,
         depthTest: false,
-        /*linewidth: 2,*/
+        linewidth: 2,
         /*resolution: new THREE.Vector2(window.innerWidth, window.innerHeight)*/
       }),
 }

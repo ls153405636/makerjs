@@ -152,10 +152,23 @@ export class Girder extends ChildModel {
 
   setHover(vIsHover) {
     let mat = vIsHover ? D3Config.HOVER_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+  }
+
+  setSelected(vIsSelected) {
+    let mat = vIsSelected ? D3Config.SELECT_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+  }
+
+  setLineMaterial(vMaterila) {
     this.lineFrame.traverse(c => {
       if (c.material) {
-        c.material = mat
+        c.material = vMaterila
       }
     })
+  }
+
+  getCompType() {
+    return COMP_TYPES.GIRDER
   }
 }

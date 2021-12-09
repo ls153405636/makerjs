@@ -52,18 +52,6 @@ export class Tread extends ChildModel {
     this.riser && this.obj.add(this.riser.getObj())
   }
 
-  setHover(vIsHover) {
-    let mat = vIsHover ? D3Config.HOVER_FRAME_MAT : D3Config.FRAME_MAT
-    this.botFace.setLineMaterial(mat)
-    this.topFace.setLineMaterial(mat)
-    this.sideFace.setLineMaterial(mat)
-    this.riser && this.riser.setHover(vIsHover)
-  }
-
-  getCompType() {
-    return COMP_TYPES.TREAD
-  }
-
   /**
    * 
    * @param {Types.TreadBorder} vBorder 
@@ -88,5 +76,27 @@ export class Tread extends ChildModel {
     utilRoute.setZCoord(utilRoute.zCoord - this.stepHeight)
     rOutRoute = utilRoute.offset(this.nossing, !tOutline.isClock)
     this.riser = new Riser(this, rOutRoute, vRiserParas, this.stepHeight - this.depth)
+  }
+
+  setHover(vIsHover) {
+    let mat = vIsHover ? D3Config.HOVER_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+    this.riser && this.riser.setHover(vIsHover)
+  }
+
+  setSelected(vIsSelected) {
+    let mat = vIsSelected ? D3Config.SELECT_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+    this.riser && this.riser.setSelected(vIsSelected)
+  }
+
+  setLineMaterial(vMaterila) {
+    this.botFace.setLineMaterial(vMaterila)
+    this.topFace.setLineMaterial(vMaterila)
+    this.sideFace.setLineMaterial(vMaterila)
+  }
+
+  getCompType() {
+    return COMP_TYPES.TREAD
   }
 }
