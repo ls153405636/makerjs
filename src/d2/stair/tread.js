@@ -315,7 +315,8 @@ export class Tread extends ChildWidget {
         let newLastP1B
         let newLastP2T
         let newLastP2B
-  
+        // 文字中心位置计算
+        let lastPosition
         
         if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
           normal = new Types.Vector3({ x: -1, y: -0 })
@@ -358,6 +359,12 @@ export class Tread extends ChildWidget {
           newLastP1B = newLastP1.clone().addY(arrow)
           newLastP2T = newLastP2.clone().subtractY(arrow)
           newLastP2B = newLastP2.clone().addY(arrow)
+
+          // 文字中心位置计算
+        lastPosition = {
+          x: (newLastP1T.x + newLastP2T.x) / 2 / 10,
+          y: (newLastP1T.y + newLastP2T.y) / 2 / 10
+        }
         }
         if (p1.x === p2.x && p1.y > p2.y && this.isClock === false) {
           normal = new Types.Vector3({ x: 1, y: 0 })
@@ -404,6 +411,12 @@ export class Tread extends ChildWidget {
           newLastP1B = newLastP1.clone().addY(arrow)
           newLastP2T = newLastP2.clone().subtractY(arrow)
           newLastP2B = newLastP2.clone().addY(arrow)
+
+          // 文字中心位置计算
+          lastPosition = {
+            x: (newLastP1T.x + newLastP2T.x) / 2 / 10,
+            y: (newLastP1T.y + newLastP2T.y) / 2 / 10
+          }
         }
         if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
           normal = new Types.Vector3({ x: 0, y: -1 })
@@ -454,6 +467,12 @@ export class Tread extends ChildWidget {
           newLastP1B = newLastP1.clone().addX(arrow)
           newLastP2T = newLastP2.clone().subtractX(arrow)
           newLastP2B = newLastP2.clone().addX(arrow)
+
+          // 文字中心位置计算
+          lastPosition = {
+            x: (newLastP1T.x + newLastP2T.x) / 2 / 10,
+            y: (newLastP1T.y + newLastP2T.y) / 2 / 10
+          }
         }
         if (p1.x < p2.x && p1.y === p2.y && this.isClock === false) {// 无
           normal = new Types.Vector3({ x: -0, y: -1 })
@@ -697,11 +716,11 @@ export class Tread extends ChildWidget {
           x: (newFirstP1T.x + newFirstP2T.x) / 2 / 10,
           y: (newFirstP1T.y + newFirstP2T.y) / 2 / 10
         }
-        // 文字中心位置计算
-        const lastPosition = {
-          x: (newLastP1T.x + newLastP2T.x) / 2 / 10,
-          y: (newLastP1T.y + newLastP2T.y) / 2 / 10
-        }
+        // // 文字中心位置计算
+        // const lastPosition = {
+        //   x: (newLastP1B.x + newLastP2B.x) / 2 / 10,
+        //   y: (newLastP1B.y + newLastP2B.y) / 2 / 10
+        // }
   
         // 长度计算
         const treadLinelength =
