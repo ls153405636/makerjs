@@ -75,7 +75,7 @@ export class CorTread extends Tread {
     return refT.getUpGirVerHeight(vArgs)
   }
 
-  createSideSlabBorder(utilE, vArgs, vLast) {
+  createSideSlabBorder(utilE, vIsFirst, vArgs, vLast) {
     let botPois = [], topPois = []
     topPois[0] = utilE.getP1PB()
     topPois[1] = utilE.getP2PB()

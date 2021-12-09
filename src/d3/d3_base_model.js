@@ -59,9 +59,11 @@ export class BaseModel {
 
   createObj() {}
 
-  setHover(vIsHover) {
-    
-  }
+  setHover() {}
 
   setSelected() {}
+
+  getCompType() {
+    return 0
+  }
 }

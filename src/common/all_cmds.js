@@ -2,6 +2,7 @@ import { D2BootCmd } from '../d2/cmds/d2_boot_cmd'
 import { D2SelectCmd } from '../d2/cmds/d2_select_cmd'
 import { D2SwitchCmd } from '../d2/cmds/d2_switch_cmd'
 import { D3BootCmd } from '../d3/cmds/d3_boot_cmd'
+import { D3SelectCmd } from '../d3/cmds/d3_select_cmd'
 import { D3SwitchCmd } from '../d3/cmds/d3_switch_cmd'
 import { StrucEleAddCmd } from '../structure/cmds/strcu_ele_add_cmd'
 import { StrucSwitchCmd } from '../structure/cmds/strcu_switch_cmd'
@@ -43,6 +44,7 @@ export const allCmds = {
   SelecteCmd: {
     struc: StrucSelecteCmd,
     d2: D2SelectCmd,
+    d3: D3SelectCmd
   },
 
   SwitchCmd: {

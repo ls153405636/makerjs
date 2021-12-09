@@ -1,7 +1,9 @@
+import { COMP_TYPES } from "../../common/common_config";
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { Outline } from "../../utils/outline";
 import { ChildModel } from "../d3_child_model";
+import { D3Config } from "../d3_config";
 import { Face } from "../obj_tool/face";
 import { VerFace } from "../obj_tool/ver_face";
 import { XZOutline } from "../obj_tool/XZOutline";
@@ -16,6 +18,7 @@ export class Riser extends ChildModel {
    */
   constructor (vParent, vFrontRoute, vParas, vHeight) {
     super(vParent, '')
+    this.uuid = 'riser' + this.parent.index
     let outRoute = vFrontRoute
     let inRoute = new Outline(outRoute).offset(vParas.depth, !vFrontRoute.isClock)
     let edges = [...outRoute.edges]
@@ -51,6 +54,22 @@ export class Riser extends ChildModel {
     this.createObj()
   }
 
+  setHover(vIsHover) {
+    let mat = vIsHover ? D3Config.HOVER_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+  }
+
+  setSelected(vIsSelected) {
+    let mat = vIsSelected ? D3Config.SELECT_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+  }
+
+  setLineMaterial(vMaterila) {
+    this.botFace.setLineMaterial(vMaterila)
+    this.topFace.setLineMaterial(vMaterila)
+    this.sideFace.setLineMaterial(vMaterila)
+  }
+
   createObj() {
     this.obj = new THREE.Group()
     this.obj.add(this.botFace.getObj())
@@ -58,5 +77,9 @@ export class Riser extends ChildModel {
     this.obj.add(this.sideFace.getObj())
     this.obj.userData.uuid = this.uuid
     this.obj.userData.d3Type = 'obj'
+  }
+
+  getCompType() {
+    return COMP_TYPES.RISER
   }
 }

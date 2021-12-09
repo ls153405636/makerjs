@@ -1,6 +1,8 @@
+import { COMP_TYPES } from "../../common/common_config";
 import { Types } from "../../types/stair_v2";
 import { Outline } from "../../utils/outline";
 import { ChildModel } from "../d3_child_model";
+import { D3Config } from "../d3_config";
 import { Face } from "../obj_tool/face";
 import { VerFace } from "../obj_tool/ver_face";
 import { XZOutline } from "../obj_tool/XZOutline";
@@ -23,6 +25,7 @@ export class Tread extends ChildModel {
     this.nossing = vParas.nossingType!==Types.NossingType.nno ? vParas.nossing : 0
     this.isLast = vPB.isLast
     this.type = vPB.type
+    this.index = vPB.index
     let border = vPB.border
     let topOutline = new XZOutline(border.treadOutline)
     let botOutline = new XZOutline(border.treadOutline)
@@ -73,5 +76,27 @@ export class Tread extends ChildModel {
     utilRoute.setZCoord(utilRoute.zCoord - this.stepHeight)
     rOutRoute = utilRoute.offset(this.nossing, !tOutline.isClock)
     this.riser = new Riser(this, rOutRoute, vRiserParas, this.stepHeight - this.depth)
+  }
+
+  setHover(vIsHover) {
+    let mat = vIsHover ? D3Config.HOVER_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+    this.riser && this.riser.setHover(vIsHover)
+  }
+
+  setSelected(vIsSelected) {
+    let mat = vIsSelected ? D3Config.SELECT_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+    this.riser && this.riser.setSelected(vIsSelected)
+  }
+
+  setLineMaterial(vMaterila) {
+    this.botFace.setLineMaterial(vMaterila)
+    this.topFace.setLineMaterial(vMaterila)
+    this.sideFace.setLineMaterial(vMaterila)
+  }
+
+  getCompType() {
+    return COMP_TYPES.TREAD
   }
 }

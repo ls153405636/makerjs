@@ -12,6 +12,7 @@ export const COMP_TYPES = {
   CEMENT_COMP: 11,
   HANGING_BOARD: 12,
   LANDING: 13,
+  RISER: 14,
 }
 
 export const CUR_DATA = {
