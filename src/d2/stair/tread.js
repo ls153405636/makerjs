@@ -32,6 +32,7 @@ export class Tread extends ChildWidget {
     this.draw()
     this.addDimension()
     this.addEvent()
+    console.log(vPB)
   }
 
   draw() {
@@ -59,6 +60,7 @@ export class Tread extends ChildWidget {
       changeTread.visible = true
       changeTread.lineStyle(1, 0x4478f4)
       changeTread.beginFill(0xe9efff)
+      changeTread.alpha = 0.5
   
       for (let i = 0; i < this.edges.length; i++) {
         let e = this.edges[i]
@@ -90,6 +92,7 @@ export class Tread extends ChildWidget {
     } else {
       tread.lineStyle(1, 0x2d3037, 1, 0.5, true)
       tread.beginFill(0xffffff)
+      tread.alpha = 0.5
       tread.visible = true
   
       for (let i = 0; i < this.edges.length; i++) {
@@ -148,7 +151,6 @@ export class Tread extends ChildWidget {
 
   // 踏板选中效果
   setSelected() {
-    console.log(this.type)
     if (this.index === 1) {
       this.sprite.zIndex = 0
     }else {
@@ -296,7 +298,6 @@ export class Tread extends ChildWidget {
         // const firstP2 = new Victor(this.edges[this.frontIndex[0]].p2.x, this.edges[this.frontIndex[0]].p2.y)
 
         let lastP = new Victor((this.edges[this.backIndex[0]].p1.x + this.edges[this.backIndex[0]].p2.x) / 2, (this.edges[this.backIndex[0]].p1.y + this.edges[this.backIndex[0]].p2.y) / 2)
-        console.log(lastP)
         // console.log(lastP2)
         
         const newFirstP1 = firstP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2, this.stepLength / 2))
@@ -900,7 +901,6 @@ export class Tread extends ChildWidget {
           x: (startTP2L.x + startTP2R.x) / 2 / 10,
           y: (startTP2L.y + startTP2R.y) / 2 / 10
         }
-        console.log(position1)
   
         // 旋转计算
         let newStartTextRotation = ''

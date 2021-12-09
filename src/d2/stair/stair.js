@@ -126,7 +126,6 @@ export class Stair extends BaseWidget {
     /** 需设置整体精灵图的位置*/
     this.sprite.position.set(this.position.x, this.position.y)
     this.sprite.zIndex = Z_INDEX.STAIR_ZINDEX
-    console.log(this.sprite.zIndex)
   }
 
   /**
