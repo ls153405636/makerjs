@@ -441,6 +441,7 @@ export class Wall extends BaseWidget {
     this.lineContainer.addChild(wallLine)
     
     this.lineSprite = this.lineContainer
+    this.lineSprite.zIndex = 100
     
   }
 }
