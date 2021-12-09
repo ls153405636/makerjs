@@ -25,6 +25,12 @@ export class Flight extends ChildModel {
     }
   }
 
+  setHover(vIsHover) {
+    this.treads.forEach(t => {
+      t.setHover(vIsHover)
+    })
+  }
+
   createObj() {
     this.obj = new THREE.Group()
     for (const t of this.treads) {
