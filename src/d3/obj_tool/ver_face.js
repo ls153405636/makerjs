@@ -36,6 +36,7 @@ export class VerFace {
     geo.setAttribute('position', positionAttr)
     lines.add(this.createLine(pois[i], topPois[i]))
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    this.mesh.userData.d3Type = 'face'
     this.obj.add(this.mesh, lines)
   }
 

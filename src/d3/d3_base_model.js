@@ -58,4 +58,10 @@ export class BaseModel {
   }
 
   createObj() {}
+
+  setHover(vIsHover) {
+    
+  }
+
+  setSelected() {}
 }

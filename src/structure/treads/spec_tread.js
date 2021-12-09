@@ -6,7 +6,7 @@ import { Tread } from "./tread";
 export class SpecTread extends Tread {
   constructor({vParent, vIsLast, vIndex, vBorder, vClock}) {
     super({vParent, vIsLast})
-    this.type === Types.TreadType.tSpec
+    this.type = Types.TreadType.tSpec
     this.clock = vClock
     this.rebuildByParent({vIndex, vBorder})
   }

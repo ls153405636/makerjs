@@ -1,4 +1,3 @@
-import { message } from 'antd'
 import axios from 'axios'
 import { changePath, USER_TOKEN } from '../utils/dom'
 import { DefaultApi } from './typescript-axios'
@@ -13,8 +12,10 @@ const refreshUserToken = async () => {
 }
 
 const getStorageToken = () => JSON.parse(localStorage.getItem(USER_TOKEN))
-const setStorageToken = (data) =>
+const setStorageToken = (data) => {
+  console.error("==》data", data)
   localStorage.setItem(USER_TOKEN, JSON.stringify(data))
+}
 
 let isRefreshing = false
 let requests = []
@@ -84,7 +85,7 @@ defaultAxios.interceptors.response.use(
       const { error, code } = res.data
       if (code != undefined) {
         if (code != 200) {
-          message.warning(res?.data?.message || '出错了~')
+          // message.warning(res?.data?.message || '出错了~')
           return Promise.reject(code);
         }
       } else {
@@ -99,7 +100,7 @@ defaultAxios.interceptors.response.use(
   (err) => {
     if (err?.response?.status === 401) {
       if (err?.response?.data?.code === 401) {
-        message.warning(err?.response?.data?.message || '出错了：401');
+        //message.warning(err?.response?.data?.message || '出错了：401');
       }
       // 提示信息没有汉字，则退回登录页面
       if (!((String(err?.response?.data?.message || '')).match(/[\u4e00-\u9fa5]/))) {
@@ -108,7 +109,7 @@ defaultAxios.interceptors.response.use(
         }, 1000)
       }
     } else {
-      message.warning(err?.response?.data?.message || `出错了：${err?.response?.status || '...'}`);
+      //message.warning(err?.response?.data?.message || `出错了：${err?.response?.status || '...'}`);
     }
     return Promise.reject(err)
   }

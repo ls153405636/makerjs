@@ -36,6 +36,7 @@ export class Face {
     geo.setAttribute('position', positionAttr)
     this.obj = new THREE.Group()
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    this.mesh.userData.d3Type = 'face'
     this.lineFrame = this.createLineFrame(this.route.isClose ? pois.concat([pois[0]]) : pois)
     this.obj.add(this.mesh, this.lineFrame)
   }
