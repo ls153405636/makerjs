@@ -1025,7 +1025,7 @@ export class Tread extends ChildWidget {
         treadLineContainer.addChild(startTreadLine,startTreadLineNum, startTreadLineNum1)
       }
     }
-    if (this.type === 0 && this.edges.length === 4) {
+    if (this.type === Types.TreadType.tStart && this.edges.length === 4) {
       if (this.index === 1) {
         let startTP1L = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
         let startTP2L = new Victor(this.edges[0].p1.x, startTP1L.y + this.stepWidth)
