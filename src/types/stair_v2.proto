@@ -390,10 +390,6 @@ message HandrailParameters {
 message Girder {
   string  uuid        = 1;
   float   length      = 2;  //长度 
-  // Outline inRoute     = 3;  //内侧轮廓路径，贴近楼梯方向的一侧
-  // Outline outRoute    = 4;  //外侧路径
-  // Outline inTopRoute  = 5;  //内侧上方路径   
-  // Outline outTopRoute = 6;  //外侧上方路径
   repeated TreadGirBorder borders = 3;
 }
 

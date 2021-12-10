@@ -37,14 +37,32 @@ export class CorTread extends Tread {
     return new Types.Vector3({x:vec.x, y:vec.y, z:vec.z})
   }
 
-  getGirUtilE (vSide, vArgs) {
+  getSideUtilE(vSide) {
     let edge = this.border.stepOutline.edges[this[this.curOrder+'EdgeIndex']]
     let utilE = new Edge(edge)
-    let sideOffset = vArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
+    let gArgs = this.parent.parent.getGirderParas(vSide)
+    let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
     utilE.offset(sideOffset, false)
     if (!this.clock) {
       utilE.reserve()
     }
+    return utilE
+  }
+
+  getHandEdge(vOrder, vArgs) {
+    this.setCurOrder(vOrder)
+    let utilE = this.getSideUtilE()
+    let edge = utilE.writePB()
+    edge.p1.z = this.position.z + vArgs.height
+    edge.p2.z = this.position.z + vArgs.height
+    return edge
+  }
+
+  getGirUtilE (vSide, vArgs) {
+    if (vSide === 'out') {
+      return null
+    }
+    let utilE = this.getSideUtilE()
     let backOffset = this.parent.parent.getTreadBackOffset()
     if (vArgs.type === Types.GirderType.gsaw) {
       if (this.curOrder === 'last') {

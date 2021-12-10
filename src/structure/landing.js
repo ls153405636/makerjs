@@ -503,7 +503,27 @@ export class Landing extends ChildInfo {
     return borders
   }
 
-  createSideSawEdges () {
-
+  createHandEdges({vSide, vArgs}) {
+    if (vSide === 'out') {
+      return []
+    }
+    let edges = []
+    let lastUtilE = null
+    for (const t of this.treads) {
+      if (t.type === Types.TreadType.tCor) {
+        edges.push(t.getHandEdge('last', vArgs))
+        edges.push(t.getHandEdge('next', vArgs))
+        lastUtilE = null
+      } else {
+        let edge = this.treads[i].getHandEdge(vSide, vArgs)
+        if (lastUtilE && lastUtilE.isParallelTo(edge)) {
+          edges[edges.length - 1] = lastUtilE.combineEdge(edge)
+        } else {
+          edges.push(edge)
+          lastUtilE = new Edge(edge)
+        }
+      }
+    }
+    return edges
   }
 }

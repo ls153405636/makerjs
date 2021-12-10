@@ -183,6 +183,20 @@ export class Edge {
   }
 
   /**
+   * 是否与vEdge平行
+   * @param {Types.Edge} vEdge 
+   */
+  isParallelTo(vEdge) {
+    let vec = this.getVec()
+    let vec2 = new Edge(vEdge).getVec()
+    if (vec.distanceTo(vec2) < 0.001) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  /**
    * 反转线段
    * @returns {Types.Edge}
    */

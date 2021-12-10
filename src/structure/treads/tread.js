@@ -1,6 +1,7 @@
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { ChildInfo } from "../child_info";
+import { Default } from "../config";
 import tool from "../tool";
 
 
@@ -61,6 +62,28 @@ export class Tread extends ChildInfo {
     }
   }
 
+  getSideUtilE (vSide) {
+    let edge = this.border.stepOutline.edges[this.border[vSide+'Index'][0]]
+    let utilE = new Edge(edge)
+    let gArgs = this.parent.parent.getGirderParas(vSide)
+    let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
+    if (this.type === Types.TreadType.tSpec) {
+      utilE.offset(sideOffset, false)
+      if (!this.clock) {
+        utilE.reserve()
+      }
+    } else {
+      if (this.stepLength !== this.parent.stepLength) {
+        utilE.offset(this.stepLength - this.parent.stepLength, !this.clock)
+      }
+      utilE.offset(sideOffset, !this.clock)
+      if (vSide === 'out') {
+        utilE.reserve()
+      }
+    }
+    return utilE
+  }
+
   /**
    * 
    * @param {string} vSide 
@@ -92,21 +115,44 @@ export class Tread extends ChildInfo {
     })
   }
 
-  getGirUtilE(vSide, vArgs) {
-    let edge = this.border.stepOutline.edges[this.border[vSide+'Index'][0]]
-    let utilE = new Edge(edge)
-    let sideOffset = vArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
-    if (this.type === Types.TreadType.tSpec) {
-      utilE.offset(sideOffset, false)
-      if (!this.clock) {
-        utilE.reserve()
+  /**
+   * 
+   * @param {string} vSide 
+   * @param {Types.HandrailParameters} vArgs 
+   */
+  getHandEdge(vSide, vArgs) {
+    let bArgs = this.parent.parent.getBigColParas()
+    let utilE = this.getSideUtilE(vSide)
+    let edge = utilE.writePB()
+    let nextT = this.getNextTread()
+    if (this.index === 1) {
+      if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
+        return null
+      } else if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
+        edge = utilE.extendP1(-this.stepWidth/2)
+        edge.p1.z = this.position.z + vArgs.height + nextT.stepHeight/2
+        edge.p2.z = nextT.position.z + vArgs.height
+      } else {
+        let bigColSize = tool.parseSpecification(bArgs.specification)
+        let offset = Default.BIG_COL_GAP + bigColSize.y / 2 
+        edge = utilE.extendP1(offset)
+        let offset_h = this.stepWidth * offset / nextT.stepHeight
+        edge.p1.z = this.position.z + vArgs.height - offset_h
+        edge.p2.z = nextT.position.z + vArgs.height
       }
+    } else if (this.index === 2 && bArgs.posType === Types.BigColumnPosType.bcp_second) {
+      edge = utilE.extendP1(-this.stepWidth/2)
+      edge.p1.z = this.position.z + vArgs.height + nextT.stepHeight/2
+      edge.p2.z = nextT.position.z + vArgs.height
     } else {
-      utilE.offset(sideOffset, !this.clock)
-      if (vSide === 'out') {
-        utilE.reserve()
-      }
+      edge.p1.z = this.position.z + vArgs.height
+      edge.p2.z = nextT.position.z + vArgs.height
     }
+    return edge
+  }
+
+  getGirUtilE(vSide, vArgs) {
+    let utilE = this.getSideUtilE(vSide)
     let backOffset = this.parent.parent.getTreadBackOffset()
     if (vArgs.type === Types.GirderType.gsaw) {
       utilE.extendP1(-backOffset)
@@ -248,7 +294,7 @@ export class Tread extends ChildInfo {
   }
 
   getNextTread() {
-    let nextT = this.parent.treads[this.index - this.parent.treadIndex - 2]
+    let nextT = this.parent.treads[this.index - this.parent.treadIndex]
     if (!nextT) {
       let nextF = this.parent.parent.segments[this.parent.index + 1]
       nextT = nextF?.treads[nextF.treads.length - 1]

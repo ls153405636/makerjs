@@ -218,6 +218,27 @@ export class Flight extends ChildInfo {
     return borders
   }
 
+  createHandEdges({vSide, vArgs}) {
+    let edges = []
+    let lastUtilE = null
+    for (let i = 0; i < this.treads.length; i++) {
+      if (this.treads[i].isLast) {
+        continue
+      }
+      let edge = this.treads[i].getHandEdge(vSide, vArgs)
+      if (!edge) {
+        continue
+      }
+      if (lastUtilE && lastUtilE.isParallelTo(edge)) {
+        edges[edges.length - 1] = lastUtilE.combineEdge(edge)
+      } else {
+        edges.push(edge)
+        lastUtilE = new Edge(edge)
+      }
+    }
+    return edges
+  }
+
   writePB() {
     return new Types.Flight({
       uuid: this.uuid,

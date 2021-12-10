@@ -46,6 +46,7 @@ export class Stair extends Info {
     this.startFlight = null
     /**@type {import('./toolComp/stair_border').StairBorder} */
     this.border = null
+    /**@type {Array<Flight>} */
     this.segments = []
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
@@ -244,6 +245,11 @@ export class Stair extends Info {
                                         vWVec:f1.wVec,
                                         vStepLength: f1.stepLength,
                                         vClock:f1.clock})
+      if (this.startFlight.treads.length === 1) {
+        this.bigColParameters.posType = Types.BigColumnPosType.bcp_first
+      } else {
+        this.bigColParameters.posType = Types.BigColumnPosType.bcp_second
+      }
     }
   }
 
@@ -257,6 +263,14 @@ export class Stair extends Info {
       tArgs.nossing = 0
     }
     return tArgs.nossing + (rArgs.riserExist ? rArgs.depth : 0)
+  }
+
+  getGirderParas() {
+    return this.girderParameters
+  }
+
+  getBigColParas() {
+    return this.bigColParameters
   }
 
 
@@ -451,89 +465,34 @@ export class Stair extends Info {
     }
   }
 
-
-
-  /**
-   * 根据楼梯边界轮廓更新大梁
-   * @returns 
-   */
-  // updateGirders () {
-  //   let args = this.girderParameters
-  //   this.girders = []
-  //   if (args.type === Types.GirderType.gsaw) {
-  //     return
-  //     /**平面图不需要绘制锯齿梁，故先不做处理*/
-  //   }
-  //   let bor = this.border
-  //   let inBorderEdges = this.getGirderInEdges()
-  //   for (let i = 0; i < inBorderEdges.length; i++) {
-  //     let e = inBorderEdges[i]
-  //     let start = i === 0 ? new Edge(e).extendP1(args.fOffsetStep).p1 : new Edge(e).extendP1(-args.depth).p1
-  //     let end = new Types.Vector3(e.p2)
-  //     let outEdges = [
-  //       new Types.Edge({
-  //         p1: start,
-  //         p2: end,
-  //         type: Types.EdgeType.estraight
-  //       })
-  //     ]
-  //     this.updateSideGirder(outEdges, 'in', args.depth, i, this.getInSideOffsetPlus())
-  //   }
-  //   for (let i = 0; i < bor.out.edges.length; i++) {
-  //     let e = bor.out.edges[i]
-  //     if (!e.flight) {
-  //       continue
-  //     }
-  //     let utilE = new Edge(e)
-  //     if (i === 0) {
-  //       utilE.extendP1(args.fOffsetStep)
-  //     }
-  //     if (e.startCol) {
-  //       let offset = (e.startCol.size.x - args.depth) / 2
-  //       utilE.extendP1(-offset)
-  //     }
-  //     if (e.endCol) {
-  //       let offSet = (e.endCol.size.x - args.depth) / 2
-  //       utilE.extendP2(-offSet)
-  //     }
-  //     let outEdges = [
-  //       utilE.writePB()
-  //     ]
-  //     this.updateSideGirder(outEdges, 'out', args.depth, i, this.getOutSideOffsetPlus())
-  //   }
-  // }
-
-  // /**
-  //  * 每根大梁有内外上下四条路径，本函数为根据外路径边集创建大梁
-  //  * @param {Array<Edge>} vOutEdges 外路径边集 
-  //  * @param {String} vSide 当前大梁属于哪一侧 'in' or 'out'
-  //  * @param {Number} vDepth 大梁厚度
-  //  * @param {Number} vIndex 大梁在当前side中的索引
-  //  * @param {boolean} vPlus 由外路径偏移得到内路径，偏移方向是否为法线方向
-  //  */
-  // updateSideGirder (vOutEdges, vSide, vDepth, vIndex, vPlus) {
-  //   let inEdges = []
-  //   let bor = this.border
-  //   for (const e of vOutEdges) {
-  //     let inE = new Edge(e).offset(vDepth, vPlus)
-  //     inEdges.push(inE)
-  //   } 
-  //   if (bor[vSide].girders[vIndex]) {
-  //     bor[vSide].girders[vIndex].rebuildByParent(inEdges, vOutEdges)
-  //   } else {
-  //     bor[vSide].girders[vIndex] = new Girder(this, inEdges, vOutEdges)
-  //   }
-  //   this.girders.push(bor[vSide].girders[vIndex])
-  // }
-
   /**
    * 根据边界轮廓更新扶手
    */
   updateHandrails () {
     this.handrails = []
     let bor = this.border
-    this.updateSideHandrails(bor.in.edges, 'in', this.getInSideOffsetPlus())
-    this.updateSideHandrails(bor.out.edges, 'out', this.getOutSideOffsetPlus())
+    // this.updateSideHandrails(bor.in.edges, 'in', this.getInSideOffsetPlus())
+    // this.updateSideHandrails(bor.out.edges, 'out', this.getOutSideOffsetPlus())
+    this.updateSideHandrails(bor.in, 'in', this.getInSideOffsetPlus())
+    this.updateSideHandrails(bor.out, 'out', this.getOutSideOffsetPlus())
+  }
+
+  updateSideHandrails (vSide) {
+    let edges = []
+    if (this.startFlight) {
+      edges = this.startFlight.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
+    }
+    for (const f of this.segments) {
+      let fEdges = f.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
+      edges = tool.concatEdges(edges, fEdges)
+    }
+    let route = new Types.Outline({edges:edges, isClose:false})
+    if (vSide.handrails[0]) {
+      vSide.handrails[0].rebuildByParent(route)
+    } else {
+      vSide.handrails[0] = new Handrail(this, route)
+    }
+    this.handrails.push(vSide.handrails[0])
   }
 
   /**
@@ -542,70 +501,70 @@ export class Stair extends Info {
    * @param {String} vSide 当前扶手属于哪一侧 'in' or 'out'
    * @param {boolean} vSideOffsetPlus 边界边需偏移得到扶手路径，偏移方向是否为法线方向
    */
-  updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
-    let routeEdgesArr = [[]]
-    let routeIndex = 0
-    let borSide = this.border[vSide]
-    for (let i = 0; i < vStairEdges.length; i++) {
-      let e = vStairEdges[i]
-      let sCol = vStairEdges[i].startCol
-      let eCol = vStairEdges[i].endCol
-      let gArgs = this.girderParameters
-      let start = new Types.Vector3(e.p1)
-      let end = new Types.Vector3(e.p2)
-      let edge = new Edge({
-        p1:start,
-        p2:end,
-        type:Types.EdgeType.estraight
-      })
-      let utilE = new Edge(edge)
-      /**无起步踏板时，扶手路径第一条边需根据大柱属性向前延伸 */
-      if (i === 0 && !this.startFlight) {
-        let frontOffset = this.computeBigColOffset()
-        utilE.extendP1(frontOffset).p1
-      }
-      if (sCol) {
-        let sOffset = 0
-        //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
-        if (gArgs.type === Types.GirderType.gslab) {
-          sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
-        }
-        utilE.extendP1(-sOffset)
-        if (i !== 0) {
-          routeIndex++
-          routeEdgesArr[routeIndex] = []
-        }
-      }
-      if (eCol) {
-        let eOffset = 0
-        if (gArgs.type === Types.GirderType.gslab) {
-          eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
-        }
-        utilE.extendP2(-eOffset)
-      }
-      routeEdgesArr[routeIndex].push(utilE.writePB())
-    }
-    for (let i = 0; i < routeEdgesArr.length; i++) {
-      let edges = routeEdgesArr[i]
-      let route = new Types.Outline({edges:edges, isClose:false})
-      route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
-      /**当存在起步踏板时， 扶手首边不做延伸，由起步踏板计算得出前面的边集，加入扶手轮廓*/
-      if (i === 0 && this.startFlight) {
-        let {inEdges, outEdges} = this.startFlight.createHandRouteEdges()
-        if (vSide === 'in') {
-          route.edges = inEdges.concat(route.edges)
-        } else if (vSide === 'out') {
-          route.edges = outEdges.concat(route.edges)
-        }
-      }
-      if (borSide.handrails[i]) {
-        borSide.handrails[i].rebuildByParent(route)
-      } else {
-        borSide.handrails[i] = new Handrail(this, route)
-      }
-      this.handrails.push(borSide.handrails[i])
-    }
-  }
+  // updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
+  //   let routeEdgesArr = [[]]
+  //   let routeIndex = 0
+  //   let borSide = this.border[vSide]
+  //   for (let i = 0; i < vStairEdges.length; i++) {
+  //     let e = vStairEdges[i]
+  //     let sCol = vStairEdges[i].startCol
+  //     let eCol = vStairEdges[i].endCol
+  //     let gArgs = this.girderParameters
+  //     let start = new Types.Vector3(e.p1)
+  //     let end = new Types.Vector3(e.p2)
+  //     let edge = new Edge({
+  //       p1:start,
+  //       p2:end,
+  //       type:Types.EdgeType.estraight
+  //     })
+  //     let utilE = new Edge(edge)
+  //     /**无起步踏板时，扶手路径第一条边需根据大柱属性向前延伸 */
+  //     if (i === 0 && !this.startFlight) {
+  //       let frontOffset = this.computeBigColOffset()
+  //       utilE.extendP1(frontOffset).p1
+  //     }
+  //     if (sCol) {
+  //       let sOffset = 0
+  //       //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
+  //       if (gArgs.type === Types.GirderType.gslab) {
+  //         sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
+  //       }
+  //       utilE.extendP1(-sOffset)
+  //       if (i !== 0) {
+  //         routeIndex++
+  //         routeEdgesArr[routeIndex] = []
+  //       }
+  //     }
+  //     if (eCol) {
+  //       let eOffset = 0
+  //       if (gArgs.type === Types.GirderType.gslab) {
+  //         eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
+  //       }
+  //       utilE.extendP2(-eOffset)
+  //     }
+  //     routeEdgesArr[routeIndex].push(utilE.writePB())
+  //   }
+  //   for (let i = 0; i < routeEdgesArr.length; i++) {
+  //     let edges = routeEdgesArr[i]
+  //     let route = new Types.Outline({edges:edges, isClose:false})
+  //     route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
+  //     /**当存在起步踏板时， 扶手首边不做延伸，由起步踏板计算得出前面的边集，加入扶手轮廓*/
+  //     if (i === 0 && this.startFlight) {
+  //       let {inEdges, outEdges} = this.startFlight.createHandRouteEdges()
+  //       if (vSide === 'in') {
+  //         route.edges = inEdges.concat(route.edges)
+  //       } else if (vSide === 'out') {
+  //         route.edges = outEdges.concat(route.edges)
+  //       }
+  //     }
+  //     if (borSide.handrails[i]) {
+  //       borSide.handrails[i].rebuildByParent(route)
+  //     } else {
+  //       borSide.handrails[i] = new Handrail(this, route)
+  //     }
+  //     this.handrails.push(borSide.handrails[i])
+  //   }
+  // }
 
   /**
    * 更新小柱

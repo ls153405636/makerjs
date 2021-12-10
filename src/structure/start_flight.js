@@ -370,114 +370,82 @@ export class StartFlight extends ChildInfo{
    */
   computeBigColPos () {
     /** */
-    //let startTreadoffSet1 = this.parent.flights[this.parent.flights.length - 1].offSet1
     let sideOffset = this.parent.sideOffset
-    // this.sideOffset >50 ? this.sideOffset = this.parent.sideOffset : this.sideOffset = 45
-    // this.positionX = 0
-    // this.positionY = 0
     let inPos = new Types.Vector3()
     if (this.modelType === Types.StartTreadType.st_el || this.modelType === Types.StartTreadType.st_el_2) {
       if (this.shapeType === Types.StartTreadShapeType.sts_no) {
-        // this.positionX = this.positionC.x - this.stepLength / 2 - this.offset1 / 2
-        // this.positionY = this.positionC.y + this.stepWidth / 2
         inPos = new Edge().setByVec(this.positionC, this.lVec, - this.stepLength / 2 - this.offset1 / 2).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        // this.positionX = this.positionIn.x + this.sideOffset
-        // this.positionY = this.positionIn.y + this.stepWidth / 2
         inPos = new Edge().setByVec(this.positionIn, this.lVec, sideOffset).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        // this.positionX = this.positionOut.x - this.stepLength - this.offset1 / 2
-        // this.positionY = this.positionOut.y + this.stepWidth / 2
         inPos = new Edge().setByVec(this.positionOut, this.lVec, - this.stepLength - this.offset1 / 2).p2
       }
     }
     else {
       if (this.shapeType === Types.StartTreadShapeType.sts_no) {
-        // this.positionX = this.positionC.x - this.stepLength / 2 - this.stepWidth / 8
-        // this.positionY = this.positionC.y + this.stepWidth / 2
         inPos = new Edge().setByVec(this.positionC, this.lVec, - this.stepLength / 2 - this.stepWidth / 8).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        // this.positionX = this.positionIn.x + this.sideOffset
-        // this.positionY = this.positionIn.y + this.stepWidth / 2
         inPos = new Edge().setByVec(this.positionIn, this.lVec, sideOffset).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        // this.positionX = this.positionOut.x - this.stepLength - this.stepWidth / 8
-        // this.positionY = this.positionOut.y + this.stepWidth / 2
         inPos = new Edge().setByVec(this.positionOut, this.lVec, - this.stepLength - this.stepWidth / 8).p2
       }
     }
     inPos = new Edge().setByVec(inPos, this.wVec, this.stepWidth / 2).p2
-    // let left = new Types.Vector3({
-    //   x: this.positionX,
-    //   y: this.positionY
-    // })
 
     
-    // this.positionX_R = 0
-    // this.positionY_R = 0
     let outPos = new Types.Vector3()
     if (this.modelType === Types.StartTreadType.st_el || this.modelType === Types.StartTreadType.st_el_2) {
       if (this.shapeType === Types.StartTreadShapeType.sts_no) {
-        // this.positionX_R = this.positionC.x + this.stepLength / 2 + this.offset1 / 2
-        // this.positionY_R = left.y
         outPos = new Edge().setByVec(this.positionC, this.lVec, this.stepLength / 2 + this.offset1 / 2).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        // this.positionX_R = this.positionIn.x + this.stepLength + this.offset1 / 2
-        // this.positionY_R = left.y
         outPos = new Edge().setByVec(this.positionIn, this.lVec, this.stepLength + this.offset1 / 2).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        // this.positionX_R = this.positionOut.x -this.sideOffset
-        // this.positionY_R = left.y
         outPos = new Edge().setByVec(this.positionOut, this.lVec, -sideOffset).p2
       }
     }
     else {
       if (this.shapeType === Types.StartTreadShapeType.sts_no) {
-        // this.positionX_R = this.positionC.x + this.stepLength / 2 + this.stepWidth / 8
-        // this.positionY_R = left.y
         outPos = new Edge().setByVec(this.positionC, this.lVec, this.stepLength / 2 + this.stepWidth / 8).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        // this.positionX_R = this.positionIn.x + this.stepLength + this.stepWidth / 8
-        // this.positionY_R = left.y
         outPos = new Edge().setByVec(this.positionIn, this.lVec, this.stepLength + this.stepWidth / 8).p2
       }
       else if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        // this.positionX_R = this.positionOut.x -this.sideOffset
-        // this.positionY_R = left.y
         outPos = new Edge().setByVec(this.positionOut, this.lVec, -sideOffset).p2
       }
     }
     outPos = new Edge().setByVec(outPos, this.wVec, this.stepWidth / 2).p2
-    // let right = new Types.Vector3({
-    //   x: this.positionX_R,
-    //   y: this.positionY_R
-    // })
     return {
-      // left, 
-      // right
       inPos,
       outPos
+    }
+  }
+
+  createHandEdges ({vSide, vArgs}) {
+    let {inEdges, outEdges} = this.createHandRouteEdges(vArgs)
+    if (vSide === 'in') {
+      return inEdges
+    } else {
+      return outEdges
     }
   }
 
   /**
    * 创建扶手路径边集
    */
-  createHandRouteEdges () {
+  createHandRouteEdges (vArgs) {
     /**补全此函数 */
     if (this.parent.flights[0]) {
       this.width = this.parent.flights[0].stepLength
     } else {
       this.width = Default.STEP_LENGTH
     }
-    let handrailHeight = this.parent.handrailParameters.height
     let stepLength = this.parent.flights[this.parent.flights.length - 1].treads[0].stepLength
     let stepWidth = this.parent.flights[this.parent.flights.length - 1].treads[0].stepWidth
     let sideOffset = this.parent.sideOffset
@@ -497,48 +465,20 @@ export class StartFlight extends ChildInfo{
     // 椭圆踏板扶手路径
     if (this.modelType === Types.StartTreadType.st_el || this.modelType === Types.StartTreadType.st_el_2) {
       if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        // inPois[0] = new Types.Vector3({
-        //   x: this.positionOut.x - this.stepLength - this.offset1 / 2 ,
-        //   y: this.positionOut.y + stepWidth / 2,
-        // })
         inPois[0] = new Edge().setByVec(this.positionOut, this.lVec, - this.stepLength - this.offset1 / 2).p2
       } else {
-        // inPois[0] = new Types.Vector3({
-        //   x: this.positionC.x - this.stepLength / 2 - this.offset1 / 2,
-        //   y: this.positionC.y + this.stepWidth / 2,
-        // })
         inPois[0] = new Edge().setByVec(this.positionC, this.lVec, - this.stepLength / 2 - this.offset1 / 2).p2
       }
     }
     // 圆角矩形踏板扶手路径
     else {
       if (this.shapeType === Types.StartTreadShapeType.sts_right) {
-        // inPois[0] = new Types.Vector3({
-        //   x: this.positionOut.x - this.stepLength - this.stepWidth / 4 ,
-        //   y: this.positionOut.y + this.stepWidth / 2,
-        // })
         inPois[0] = new Edge().setByVec(this.positionOut, this.lVec, - this.stepLength - this.stepWidth / 4).p2
       }else {
-        // inPois[0] = new Types.Vector3({
-        //   x: this.positionC.x - this.stepLength / 2 - this.stepWidth / 4,
-        //   y: this.positionC.y + this.stepWidth / 2,
-        // })
         inPois[0] = new Edge().setByVec(this.positionC, this.lVec, - this.stepLength / 2 - this.stepWidth / 4).p2
       }
     }
     inPois[0] = new Edge().setByVec(inPois[0], this.wVec, this.stepWidth / 2).p2
-    // inPois[1] = new Types.Vector3({
-    //   x: this.positionIn.x + sideOffset - arcRL,
-    //   y: this.positionC.y + this.stepWidth / 2,
-    // })
-    // inPois[2] = new Types.Vector3({
-    //   x: this.positionIn.x + sideOffset,
-    //   y: this.positionC.y + this.stepWidth / 2 - arcRL,
-    // })
-    // inPois[3] = new Types.Vector3({
-    //   x: this.positionIn.x + sideOffset,
-    //   y: this.positionC.y,
-    // })
     inPois[1] = new Edge().setByVec(this.positionIn, this.lVec, sideOffset - arcRL).p2
     inPois[1] = new Edge().setByVec(inPois[1], this.wVec, this.stepWidth / 2).p2
     inPois[2] = new Edge().setByVec(this.positionIn, this.lVec, sideOffset).p2
@@ -548,46 +488,18 @@ export class StartFlight extends ChildInfo{
     // 右边扶手
     if (this.modelType === Types.StartTreadType.st_el || this.modelType === Types.StartTreadType.st_el_2) {
       if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        // outPois[0] = new Types.Vector3({
-        //   x: this.positionIn.x + this.stepLength + this.offset1 / 2,
-        //   y: this.positionIn.y + this.stepWidth / 2,
-        // })
         outPois[0] = new Edge().setByVec(this.positionIn, this.lVec, this.stepLength + this.offset1 / 2).p2
       }else {
-        // outPois[0] = new Types.Vector3({
-        //   x: this.positionC.x + this.stepLength / 2 + this.offset1 / 2,
-        //   y: this.positionC.y + this.stepWidth / 2,
-        // })
         outPois[0] = new Edge().setByVec(this.positionC, this.lVec, this.stepLength / 2 + this.offset1 / 2).p2
       }
     }else {
       if (this.shapeType === Types.StartTreadShapeType.sts_left) {
-        // outPois[0] = new Types.Vector3({
-        //   x: this.positionIn.x + this.stepLength + this.stepWidth / 4,
-        //   y: this.positionIn.y + this.stepWidth / 2,
-        // })
         outPois[0] = new Edge().setByVec(this.positionIn, this.lVec, this.stepLength + this.stepWidth / 4).p2
       }else {
-        // outPois[0] = new Types.Vector3({
-        //   x: this.positionC.x + this.stepLength / 2 + this.stepWidth / 4,
-        //   y: this.positionC.y + this.stepWidth / 2,
-        // })
         outPois[0] = new Edge().setByVec(this.positionC, this.lVec, this.stepLength / 2 + this.stepWidth / 4).p2
       }
     }
     outPois[0] = new Edge().setByVec(outPois[0], this.wVec, this.stepWidth / 2).p2
-    // outPois[1] = new Types.Vector3({
-    //   x: this.positionIn.x + this.width - sideOffset + arcRR,
-    //   y: this.positionC.y + this.stepWidth / 2,
-    // })
-    // outPois[2] = new Types.Vector3({
-    //   x: this.positionIn.x + this.width - sideOffset,
-    //   y: this.positionC.y + this.stepWidth / 2 - arcRR,
-    // })
-    // outPois[3] = new Types.Vector3({
-    //   x: this.positionIn.x + this.width - sideOffset,
-    //   y: this.positionC.y,
-    // })
     outPois[1] = new Edge().setByVec(this.positionIn, this.lVec, this.width - sideOffset + arcRR).p2
     outPois[1] = new Edge().setByVec(outPois[1], this.wVec, this.stepWidth / 2).p2
     outPois[2] = new Edge().setByVec(this.positionIn, this.lVec, this.width - sideOffset).p2
@@ -632,6 +544,26 @@ export class StartFlight extends ChildInfo{
 
     let inEdges = inRoute.edges
     let outEdges = outRoute.edges
+
+    let nextT = this.parent.flights[0].treads[0]
+    let height = nextT.position.z - nextT.stepHeight/2 + vArgs.height
+    let step = nextT.stepHeight/4/inEdges.length
+    inEdges.forEach((e, i) => {
+      if (i === 0) {
+        e.p1.z = height
+        e.p2.z = height + step
+        height += step
+      }
+    })
+    height = nextT.position.z - nextT.stepHeight/2 + vArgs.height
+    outEdges.forEach((e, i) => {
+      if (i === 0) {
+        e.p1.z = height
+        e.p2.z = height + step
+        height += step
+      }
+    })
+
     return {
       inEdges,
       outEdges

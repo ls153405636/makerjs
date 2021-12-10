@@ -223,7 +223,7 @@ export class LTypeStair extends Stair {
 
   updateSegments() {
     this.segments[0] = this.flights[0]
-    this.segments[1] = this.landings[1]
+    this.segments[1] = this.landings[0]
     this.segments[2] = this.flights[1]
   }
 
