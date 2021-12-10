@@ -257,6 +257,7 @@ message Flight {
   string         uuid           = 1;
   float          stepHeight     = 4;  //步高
   StepParameters stepParameters = 5;  //踏步参数
+  float          length         = 6; //总长
   repeated       Tread treads   = 7;  //踏板集合
   repeated       Riser risers   = 8;  //立板集合
 }
