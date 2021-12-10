@@ -255,12 +255,6 @@ export class Tread extends ChildWidget {
       })
   }
   addDimension() {
-    // this.wallNormal = []
-    // this.wallDepth = 0
-// console.log(this.inIndex)
-    
-    
-
     // 踏板标注线绘制
     const treadLineContainer = new PIXI.Container()
     const treadLine = new PIXI.Graphics()
@@ -276,7 +270,6 @@ export class Tread extends ChildWidget {
     let newP2T
     let newP2B
     let normal // 法线
-    // const offSet = new Victor(p1.x + 350,p1.y + 350) //偏移出墙的偏移值
     const offSet = new Victor(100,100) //偏移出墙的偏移值Y
     const fOffSet = new Victor(100,100) //偏移出墙的偏移值Y
     
@@ -314,13 +307,14 @@ export class Tread extends ChildWidget {
         // 文字中心位置计算
         let position 
         let lastPosition
+
+        let wall = null
+        let stairP = null
+
         
         // 顺-左
         if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
           normal = new Types.Vector3({ x: -1, y: -0 })
-
-          let wall = null
-          let stairP = null
           for(let value of D2Config.WIDGETS.values()) {
             if (value.getWidgetType() === COMP_TYPES.WALL) {
               if (tool.isVec2Equal(value.normal, normal)) {
@@ -371,9 +365,6 @@ export class Tread extends ChildWidget {
         // 顺-顶
         if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
           normal = new Types.Vector3({ x: 0, y: -1 })
-
-          let wall = null
-          let stairP = null
           for(let value of D2Config.WIDGETS.values()) {
             if (value.getWidgetType() === COMP_TYPES.WALL) {
               if (tool.isVec2Equal(value.normal, normal)) {
@@ -432,9 +423,6 @@ export class Tread extends ChildWidget {
         // 顺-右
         if (p1.x === p2.x && p1.y < p2.y  && this.isClock === true) {
           normal = new Types.Vector3({ x: 1, y: 0 })
-
-          let wall = null
-          let stairP = null
           for(let value of D2Config.WIDGETS.values()) {
             if (value.getWidgetType() === COMP_TYPES.WALL) {
               if (tool.isVec2Equal(value.normal, normal)) {
@@ -491,9 +479,6 @@ export class Tread extends ChildWidget {
         // 顺-底
         if (p1.x > p2.x && p1.y === p2.y && this.isClock === true) {// 无
           normal = new Types.Vector3({ x: -0, y: -1 })
-
-          // let wall = null
-          // let stairP = null
           // for(let value of D2Config.WIDGETS.values()) {
           //   if (value.getWidgetType() === COMP_TYPES.WALL) {
           //     if (tool.isVec2Equal(value.normal, normal)) {
@@ -539,9 +524,6 @@ export class Tread extends ChildWidget {
         // 逆-右
         if (p1.x === p2.x && p1.y > p2.y && this.isClock === false) {
           normal = new Types.Vector3({ x: 1, y: 0 })
-
-          let wall = null
-          let stairP = null
           for(let value of D2Config.WIDGETS.values()) {
             if (value.getWidgetType() === COMP_TYPES.WALL) {
               if (tool.isVec2Equal(value.normal, normal)) {
@@ -596,9 +578,6 @@ export class Tread extends ChildWidget {
         // 逆-顶
         if (p1.x > p2.x && p1.y === p2.y && this.isClock === false) {
           normal = new Types.Vector3({ x: 0, y: -1 })
-
-          let wall = null
-          let stairP = null
           for(let value of D2Config.WIDGETS.values()) {
             if (value.getWidgetType() === COMP_TYPES.WALL) {
               if (tool.isVec2Equal(value.normal, normal)) {
@@ -654,9 +633,6 @@ export class Tread extends ChildWidget {
         // 逆-左
         if (p1.x === p2.x && p1.y < p2.y  && this.isClock === false) {
           normal = new Types.Vector3({ x: -1, y: -0 })
-
-          let wall = null
-          let stairP = null
           for(let value of D2Config.WIDGETS.values()) {
             if (value.getWidgetType() === COMP_TYPES.WALL) {
               if (tool.isVec2Equal(value.normal, normal)) {
@@ -713,8 +689,6 @@ export class Tread extends ChildWidget {
         // 逆-底
         if (p1.x < p2.x && p1.y === p2.y && this.isClock === false) {// 无
           normal = new Types.Vector3({ x: -0, y: -1 })
-          
-          // let wall = null
           // for(let value of D2Config.WIDGETS.values()) {
           //   if (value.getWidgetType() === COMP_TYPES.WALL) {
           //     if (tool.isVec2Equal(value.normal, normal)) {
@@ -1051,7 +1025,7 @@ export class Tread extends ChildWidget {
         treadLineContainer.addChild(startTreadLine,startTreadLineNum, startTreadLineNum1)
       }
     }
-    if (this.type === 0 && this.edges.length === 4) {
+    if (this.type === Types.TreadType.tStart && this.edges.length === 4) {
       if (this.index === 1) {
         let startTP1L = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
         let startTP2L = new Victor(this.edges[0].p1.x, startTP1L.y + this.stepWidth)

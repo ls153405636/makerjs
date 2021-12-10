@@ -27,4 +27,8 @@ export default {
   methods: {},
 }
 </script>
-<style></style>
+<style>
+.box-card .card-header span {
+  font: normal 700 18px/27px Source Han Sans CN;
+}
+</style>
