@@ -134,15 +134,6 @@ export class Wall extends BaseWidget {
 
     const wallContainer = new PIXI.Container('wall')
 
-    // const wall_line = new PIXI.Graphics()
-    // wall_line.visible = false
-    // wall_line.lineStyle(1, 0xdc143c)
-    // wall_line.moveTo(this.p1.x,this.p1.y)
-    // wall_line.lineTo(this.p2.x,this.p2.y)
-    // wall_line.drawPolygon(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
-
-    // wall_line.endFill()
-
     const holeBlackLine = new PIXI.Graphics()
       holeBlackLine
       .lineStyle(2,0x000000,1,1)
@@ -161,16 +152,6 @@ export class Wall extends BaseWidget {
     wall.addChild(tilingSprite)
     wallContainer.addChild(wall)
     wallContainer.zIndex = Z_INDEX.WALL_ZINDEX
-    // if (this.type === 4) {
-    //   wall.alpha = this.alpha
-    //   holeBlackLine.visible = true
-    //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
-    // }
-    // if(Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) < Math.hypot(this.holeP1.x - this.holeP2.x, this.holeP1.y - this.holeP2.y)) {
-    //   wall.alpha = this.alpha
-    //   holeBlackLine.visible = true
-    //   this.sprite.zIndex = Z_INDEX.WALL_LINE_ZINDEX
-    // }
     this.sprite.addChild(wallContainer)
 
   }
