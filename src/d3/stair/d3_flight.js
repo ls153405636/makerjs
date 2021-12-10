@@ -1,3 +1,4 @@
+import { COMP_TYPES } from "../../common/common_config";
 import { Types } from "../../types/stair_v2";
 import { ChildModel } from "../d3_child_model";
 import { Tread } from "./d3_tread";
@@ -23,6 +24,22 @@ export class Flight extends ChildModel {
     for (const t of this.treads) {
       t.dispose()
     }
+  }
+
+  setHover(vIsHover) {
+    this.treads.forEach(t => {
+      t.setHover(vIsHover)
+    })
+  }
+
+  setSelected(vIsSelected) {
+    this.treads.forEach(t => {
+      t.setSelected(vIsSelected)
+    })
+  }
+
+  getCompType() {
+    return COMP_TYPES.FLIGHT
   }
 
   createObj() {

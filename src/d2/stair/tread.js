@@ -884,7 +884,7 @@ export class Tread extends ChildWidget {
       }
     }
     // 起步踏板标注
-    if (this.type === 0 && this.edges.length === 5) {
+    if (this.type === Types.TreadType.tStart && this.edges.length === 5) {
       if (this.index === 1) {
         let startTP1L = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
         let startTP2L = new Victor(this.edges[0].p1.x, startTP1L.y + this.stepWidth + this.stepWidth / 6)

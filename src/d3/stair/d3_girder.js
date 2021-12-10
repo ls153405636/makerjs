@@ -2,7 +2,7 @@ import tool from "../../structure/tool";
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { ChildModel } from "../d3_child_model";
-import { D3Config, Default } from "../d3_config";
+import { D3Config, Default, RENDER_ORDER } from "../d3_config";
 import d3_tool from "../d3_tool";
 import earCut from 'earcut'
 import { COMP_TYPES } from "../../common/common_config";
@@ -33,6 +33,7 @@ export class Girder extends ChildModel {
 
   createObj() {
     let positionSet = []
+    this.lineFrame = new THREE.Group()
     let inFrame = new THREE.Group(), outFrame = new THREE.Group()
     for (let i = 0; i < this.borders.length; i++) {
       let inEdges = [...this.borders[i].inEdges]
@@ -73,21 +74,18 @@ export class Girder extends ChildModel {
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
     this.mesh.userData.uuid = this.uuid
     this.mesh.userData.d3Type = 'obj'
+    this.lineFrame.add(inFrame, outFrame)
     this.obj = new THREE.Group()
-    this.obj.add(this.mesh)
-    this.obj.add(inFrame, outFrame)
-  }
-
-  createLine(vPois) {
-    let geo = new THREE.BufferGeometry().setFromPoints(vPois)
-    return new THREE.Line(geo, new THREE.MeshBasicMaterial({color:Default.lINE_COLOR}))
+    this.obj.add(this.mesh, this.lineFrame)
   }
 
   createEdgeLine(vEdge) {
     let p1 = d3_tool.translateCoord(vEdge.p1)
     let p2 = d3_tool.translateCoord(vEdge.p2)
     let geo = new THREE.BufferGeometry().setFromPoints([p1, p2])
-    return new THREE.Line(geo, new THREE.MeshBasicMaterial({color:Default.lINE_COLOR}))
+    let line = new THREE.Line(geo, D3Config.FRAME_MAT)
+    line.renderOrder = RENDER_ORDER.FRAME
+    return line
   }
 
   /**
@@ -150,5 +148,27 @@ export class Girder extends ChildModel {
       e1P2.x, e1P2.y, e1P2.z,
       e2P2.x, e2P2.y, e2P2.z
     ]
+  }
+
+  setHover(vIsHover) {
+    let mat = vIsHover ? D3Config.HOVER_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+  }
+
+  setSelected(vIsSelected) {
+    let mat = vIsSelected ? D3Config.SELECT_FRAME_MAT : D3Config.FRAME_MAT
+    this.setLineMaterial(mat)
+  }
+
+  setLineMaterial(vMaterila) {
+    this.lineFrame.traverse(c => {
+      if (c.material) {
+        c.material = vMaterila
+      }
+    })
+  }
+
+  getCompType() {
+    return COMP_TYPES.GIRDER
   }
 }

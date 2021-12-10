@@ -1,6 +1,6 @@
 import earCut from 'earcut'
 import { Outline } from "../../utils/outline";
-import { Default } from '../d3_config';
+import { D3Config, Default, RENDER_ORDER } from '../d3_config';
 
 export class Face {
   /**
@@ -43,8 +43,17 @@ export class Face {
 
   createLineFrame (vPois) {
     let geo = new THREE.BufferGeometry().setFromPoints(vPois)
-    let lineFrame = new THREE.Line(geo, new THREE.MeshBasicMaterial({color:Default.lINE_COLOR}))
+    let lineFrame = new THREE.Line(geo, D3Config.FRAME_MAT)
+    lineFrame.renderOrder = RENDER_ORDER.FRAME
     return lineFrame
+  }
+
+  /**
+   * 
+   * @param {THREE.Material} vMaterila 
+   */
+  setLineMaterial (vMaterila) {
+    this.lineFrame.material = vMaterila
   }
 
   getObj() {
