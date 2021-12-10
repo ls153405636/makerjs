@@ -21,7 +21,7 @@ import { Core } from '../../common/core'
 
 // 引入组件
 import componentTop from './Top.vue'
-import componenLeft from './LEFT.vue'
+import componenLeft from './Left.vue'
 import componenRight from './Right.vue'
 import componentBottom from './Bottom.vue'
 import componentStairInit from './StairInit.vue'

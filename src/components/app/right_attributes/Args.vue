@@ -1,6 +1,8 @@
 <template>
   <div class="right-args">
     <el-form
+      
+      label-width="100px"
       v-for="(arg, index) in cur_args"
       :key="index"
       @submit.native.prevent
@@ -8,6 +10,7 @@
       <!-- 输入 -->
       <el-form-item v-if="arg.type === 'input'" :label="arg.name" :class="arg.class">
         <el-input
+          
           :disabled="arg.disabled"
           v-model.lazy="arg.value"
           @blur="updateArgs(arg.value, index, arg.type)"
