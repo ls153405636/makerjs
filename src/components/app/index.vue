@@ -1,7 +1,7 @@
 <template>
-<div class="components">
   <component-hole-init></component-hole-init>
   <component-stair-init></component-stair-init>
+<div class="components" :class="{mask:this.$store.state.show_img.needMask}">
   <component-top></component-top>
   <componen-left></componen-left>
   <componen-right></componen-right>
@@ -10,7 +10,6 @@
 </div>
   <!-- 截图页面 -->
   <shot-img class="shot-img"></shot-img> 
-  
   <export-plan-img class="export-plan"></export-plan-img>
   <div v-show="cur_mode === '2d' " id="canvas"></div>
   <div v-show="cur_mode === '3d' " id="scene"></div>

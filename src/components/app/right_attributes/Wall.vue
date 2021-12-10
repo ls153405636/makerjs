@@ -64,7 +64,7 @@ export default {
 <style scoped>
 .add-parts {
   display: block;
-  line-height: 50px;
+  margin-bottom: 20px;
 }
 .el-row {
   display: flex;
@@ -74,7 +74,7 @@ export default {
   margin-bottom: 20px;
 }
 .el-row .el-button--default {
-  width: 88px;
+  width: 72px;
   margin-bottom: 10px;
 }
 </style>

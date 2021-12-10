@@ -24,7 +24,7 @@
         </div>
         <div class="type">
           <div class="stair-1">
-            <img src="../../assets/stairs1.png" alt="" />
+            <img src="../../assets/home1.png" alt="" />
           </div>
           <p class="type-text">{{ stair_shape_options.name }}</p>
           <el-select
@@ -43,7 +43,7 @@
         </div>
         <div class="type">
           <div class="stair-1">
-            <img src="../../assets/stairs1.png" alt="" />
+            <img src="../../assets/shelves1.png" alt="" />
           </div>
           <p class="type-text">{{ stair_against_wall_options.name }}</p>
           <el-select
@@ -62,7 +62,7 @@
         </div>
         <div class="type">
           <div class="stair-1">
-            <img src="../../assets/stairs1.png" alt="" />
+            <img src="../../assets/pictures2.png" alt="" />
           </div>
           <p class="type-text">{{ stair_dir_options.name }}</p>
           <el-select
@@ -183,6 +183,10 @@ export default defineComponent({
     //   // }
     // },
     clickCreate() {
+      this.$store.commit({
+        type: 'show_img/needMask',
+        mask: false
+      })
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'none'
       let core = new Core()
@@ -232,7 +236,7 @@ export default defineComponent({
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.8);
   z-index: 99;
 }
 /* 主体区域 */
@@ -242,7 +246,7 @@ export default defineComponent({
   left: 50%;
   margin-left: -555px;
   margin-top: -290px;
-  width: 1110px;
+  width: 1000px;
   height: 580px;
   z-index: 100;
   background-color: #ffffff;

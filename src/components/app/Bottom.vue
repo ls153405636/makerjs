@@ -87,6 +87,10 @@ export default defineComponent({
       stage_scale_context.set_scale(zoom, true)
     },
     addStair() {
+      this.$store.commit({
+        type: 'show_img/needMask',
+        mask: true
+      })
       let stairInit = document.getElementById('component-stair-init')
       stairInit.style.display = 'block'
     },
@@ -123,6 +127,7 @@ export default defineComponent({
   width: 220px;
   height: 34px;
   padding: 0 20px;
+  box-sizing: border-box;
   cursor: pointer;
 }
 .component-bottom .d2-d3 {
@@ -159,28 +164,36 @@ export default defineComponent({
 }
 .component-bottom .zoom {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 220px;
   height: 34px;
   background: #ffffff;
   border-radius: 8px;
   padding: 0 20px;
+  box-sizing: border-box;
   cursor: pointer;
 }
 .component-bottom .zoom .vector-two {
-  width: 180px;
+  width: 140px;
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+.component-bottom .zoom .el-slider__button {
+  width: 16px;
+  height: 16px;
+}
+.component-bottom .zoom .iconfont {
+  color: #C4C4C4;
+}
+.component-bottom .zoom .iconfont:hover {
+  color: #4478F4;
+}
 .component-bottom .zoom .vector-two .slider-demo-block {
   height: 100%;
   line-height: 34px;
-  width: 90px;
-}
-.icon-view-angle {
-  color: #4478f4;
+  width: 80px;
 }
 </style>

@@ -73,6 +73,8 @@ export default {
   width: 280px;
   height: 840px;
   border-radius: 8px;
+  box-shadow: 0px 4px 20px 0px #2D30371A;
+
 }
 .box-card-left .card-header span {
   font: normal 700 18px/27px Source Han Sans CN;

@@ -6,18 +6,23 @@
           <span>楼梯参数</span>
         </div>
       </template>
-      <el-button
-        v-if="cur_args.hangingBoard != undefined"
-        @click="addEle('hangingBoard', cur_args.hangingBoard.state)"
-      >
-        {{ cur_args.hangingBoard.name }}
-      </el-button>
-      <el-button
-        v-if="cur_args.startFlight != undefined"
-        @click="addEle('startFlight', cur_args.startFlight.state)"
-      >
-        {{ cur_args.startFlight.name }}
-      </el-button>
+      <div class="two-button">
+        <el-button
+          size="medium"
+          v-if="cur_args.hangingBoard != undefined"
+          @click="addEle('hangingBoard', cur_args.hangingBoard.state)"
+        >
+          {{ cur_args.hangingBoard.name }}
+        </el-button>
+        <el-button
+          width="80"
+          size="medium"
+          v-if="cur_args.startFlight != undefined"
+          @click="addEle('startFlight', cur_args.startFlight.state)"
+        >
+          {{ cur_args.startFlight.name }}
+        </el-button>
+      </div>
       <right-args></right-args>
     </el-card>
   </div>
@@ -55,7 +60,14 @@ export default {
 }
 </script>
 <style scoped>
+.two-button {
+  display: flex;
+  justify-content: space-between;
+}
 .el-button {
+  display: block;
+  margin: 0;
+  width: 114px;
   margin-bottom: 20px;
 }
 </style>

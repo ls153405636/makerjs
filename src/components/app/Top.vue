@@ -1,6 +1,6 @@
 <template>
   <div class="component-top">
-    <div class="top-name"></div>
+    <div class="top-name">三维工场</div>
     <div class="center-icons">
       <div class="options"> 
         <span class="el-dropdown-link">
@@ -131,8 +131,8 @@ export default {
   width: 154px;
   height: 36px;
   margin-top: 12px;
-  font-size: 15px;
-  background-color: #dbdbdb;
+  font: normal bold 24px/36px Source Han Sans CN;
+  color: #4478F4;
 }
 .component-top .center-icons {
   display: flex;

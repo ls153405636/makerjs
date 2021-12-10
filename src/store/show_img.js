@@ -1,6 +1,7 @@
 const state = {
   showImgUrl: '',
-  isShow: false
+  isShow: false,
+  needMask: true
 }
 
 const getters = {
@@ -14,6 +15,9 @@ const mutations = {
     state.showImgUrl = payload.url
     state.isShow = payload.value
   },
+  needMask(state, payload) {
+    state.needMask = payload.mask
+  }
 }
 
 const actions = {}

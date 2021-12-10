@@ -3,12 +3,12 @@
     <el-card class="box-card" shadow="never">
       <template #header>
         <div class="card-header">
-          <span>梁柱参数</span>
+          <span>梁、柱参数</span>
         </div>
       </template>
       <right-args></right-args>
       <el-row>
-        <el-button @click="removeComponent()">移除</el-button>
+        <el-button size="medium" @click="removeComponent()">移除</el-button>
       </el-row>
     </el-card>
   </div>

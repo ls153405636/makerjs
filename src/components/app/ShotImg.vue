@@ -98,7 +98,7 @@ export default {
   
 }
 .shot-img .export {
-  width: 100px;
+  width: 120px;
   height: 40px;
 }
 .shot-img .back-index {
