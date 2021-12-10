@@ -203,13 +203,13 @@ export class Stair extends BaseWidget {
         // console.log(p)
         // console.log(nextP)
       }
-      if (stairtType === 0 && stairtE.edges.length === 5) {
+      if (stairtType === Types.TreadType.tStart && stairtE.edges.length === 5) {
         p = new Victor((stairtE.edges[0].p1.x + stairtE.edges[0].p2.x) / 2, stairtE.edges[3].p1.y)
         nextP = p.clone().subtractY(firstDepth).subtractY(new Victor(0, stairtE.edges[3].p1.y - stairtE.edges[0].p1.y))
         // console.log(p)
         // console.log(nextP)
       }
-      if (stairtType === 0 && stairtE.edges.length === 4) {
+      if (stairtType === Types.TreadType.tStart && stairtE.edges.length === 4) {
         p = new Victor((stairtE.edges[2].p1.x + stairtE.edges[2].p2.x) / 2, (stairtE.edges[2].p1.y + stairtE.edges[2].p2.y) / 2)
         nextP = p.clone().subtractY(firstDepth).subtractY(new Victor(0, stairtE.edges[2].p1.y - stairtE.edges[0].p1.y))
         // console.log(p)
