@@ -10,6 +10,11 @@ export class StraightStair extends Stair  {
   constructor(vParent, vAgainstWall) {
     super(vParent, vAgainstWall)
     this.type = Types.StairType.sstright
+    if (this.againstWallType === Types.AgainstWallType.aw_left) {
+      this.floadSide = Types.Side.si_right
+    } else {
+      this.floadSide = Types.Side.si_left
+    }
     this.rebuild()
   }    
   

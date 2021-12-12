@@ -5,7 +5,7 @@ import { ChildModel } from "../d3_child_model";
 import { D3Config } from "../d3_config";
 import { Face } from "../obj_tool/face";
 import { VerFace } from "../obj_tool/ver_face";
-import { XZOutline } from "../obj_tool/XZOutline";
+import { XZOutline } from "../obj_tool/xz_outline";
 import { Riser } from "./d3_riser";
 
 
@@ -24,6 +24,7 @@ export class Tread extends ChildModel {
     this.sideNossing = vParas.sideNossing
     this.nossing = vParas.nossingType!==Types.NossingType.nno ? vParas.nossing : 0
     this.isLast = vPB.isLast
+    this.isSelected = false
     this.type = vPB.type
     this.index = vPB.index
     let border = vPB.border
@@ -79,6 +80,9 @@ export class Tread extends ChildModel {
   }
 
   setHover(vIsHover) {
+    if (this.isSelected) {
+      return 
+    }
     let mat = vIsHover ? D3Config.HOVER_FRAME_MAT : D3Config.FRAME_MAT
     this.setLineMaterial(mat)
     this.riser && this.riser.setHover(vIsHover)
@@ -88,6 +92,7 @@ export class Tread extends ChildModel {
     let mat = vIsSelected ? D3Config.SELECT_FRAME_MAT : D3Config.FRAME_MAT
     this.setLineMaterial(mat)
     this.riser && this.riser.setSelected(vIsSelected)
+    this.isSelected = vIsSelected
   }
 
   setLineMaterial(vMaterila) {

@@ -1,5 +1,6 @@
 import { D3Config, Default, RENDER_ORDER } from "../d3_config";
-import { XZOutline } from "./XZOutline";
+import d3_tool from "../d3_tool";
+import { XZOutline } from "./xz_outline";
 
 export class VerFace {
   /**

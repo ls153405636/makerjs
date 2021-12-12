@@ -1,6 +1,7 @@
 import { COMP_TYPES } from "../common/common_config";
 import { Types } from "../types/stair_v2";
 import { Edge } from "../utils/edge";
+import { Edge3 } from "../utils/edge3";
 import { Outline } from "../utils/outline";
 import { BigColumn } from "./big_column";
 import { ChildInfo } from "./child_info";
@@ -511,16 +512,17 @@ export class Landing extends ChildInfo {
     let lastUtilE = null
     for (const t of this.treads) {
       if (t.type === Types.TreadType.tCor) {
-        edges.push(t.getHandEdge('last', vArgs))
-        edges.push(t.getHandEdge('next', vArgs))
+        edges.push(t.getHandEdge(vSide, vArgs, 'last'))
+        edges.push(t.getHandEdge(vSide, vArgs, 'next'))
         lastUtilE = null
       } else {
-        let edge = this.treads[i].getHandEdge(vSide, vArgs)
-        if (lastUtilE && lastUtilE.isParallelTo(edge)) {
+        let edge = this.treads[i].getHandEdge(vSide, vArgs, false, false)
+        //edges.push(edge)
+        if (lastUtilE && lastUtilE.isD3ParallelTo(edge)) {
           edges[edges.length - 1] = lastUtilE.combineEdge(edge)
         } else {
           edges.push(edge)
-          lastUtilE = new Edge(edge)
+          lastUtilE = new Edge3(edge)
         }
       }
     }

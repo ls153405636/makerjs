@@ -49,9 +49,23 @@ export class CorTread extends Tread {
     return utilE
   }
 
-  getHandEdge(vOrder, vArgs) {
+  getHandEdge(vSide, vArgs, vOrder) {
     this.setCurOrder(vOrder)
     let utilE = this.getSideUtilE()
+    let gArgs = this.parent.parent.getGirderParas(vSide)
+    if (gArgs.type === Types.GirderType.gslab) {
+      if (vOrder === 'last') {
+        utilE.extendP2(gArgs.depth/2)
+      } else {
+        utilE.extendP1(gArgs.depth/2)
+      }
+    } else {
+      if (vOrder === 'last') {
+        utilE.extendP2(-this.parent.parent.sideOffset)
+      } else {
+        utilE.extendP1(-this.parent.parent.sideOffset)
+      }
+    }
     let edge = utilE.writePB()
     edge.p1.z = this.position.z + vArgs.height
     edge.p2.z = this.position.z + vArgs.height

@@ -6,7 +6,7 @@ import { ChildModel } from "../d3_child_model";
 import { D3Config } from "../d3_config";
 import { Face } from "../obj_tool/face";
 import { VerFace } from "../obj_tool/ver_face";
-import { XZOutline } from "../obj_tool/XZOutline";
+import { XZOutline } from "../obj_tool/xz_outline";
 
 
 export class Riser extends ChildModel {

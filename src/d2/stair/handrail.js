@@ -6,6 +6,7 @@ import { D2Config } from '../config'
 import { Core } from '../../common/core'
 import { COMP_TYPES } from '../../common/common_config'
 import { Command } from '../../common/command'
+import { Edge } from '../../utils/edge'
 
 /**需继承自childWidget */
 export class Handrail extends ChildWidget {
@@ -46,29 +47,35 @@ export class Handrail extends ChildWidget {
         changeHandrail1.moveTo(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
       }
     }
+    changeHandrail1.moveTo(this.outEdges[0].p1.x / D2Config.SCREEN_RATE, this.outEdges[0].p1.y / D2Config.SCREEN_RATE)
     for (let i = 0; i < this.inEdges.length; i++) {
       let e = this.inEdges[i]
       if (i === 0) {
         changeHandrail1.lineTo(e.p1.x / D2Config.SCREEN_RATE, e.p1.y / D2Config.SCREEN_RATE)
-        changeHandrail1.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
       }
-      if (i > 0 && e.type === 3) {
+      if (e.type === Types.EdgeType.ebeszer) {
         changeHandrail1.quadraticCurveTo(e.controlPos.x / D2Config.SCREEN_RATE,e.controlPos.y / D2Config.SCREEN_RATE,e.p2.x / D2Config.SCREEN_RATE,e.p2.y /D2Config.SCREEN_RATE)
-      }
-      else if (i > 0 && e.type === 1) {
+      } else if (e.type === Types.EdgeType.estraight) {
         changeHandrail1.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
+      } else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        changeHandrail1.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
       }
     }
     for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let e = this.outEdges[i]
+      let e = new Edge(this.outEdges[i]).reserve()
       if (i === this.outEdges.length - 1) {
-        changeHandrail1.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
-      }
-      if (e.type === 1) {
         changeHandrail1.lineTo(e.p1.x / D2Config.SCREEN_RATE,e.p1.y / D2Config.SCREEN_RATE)
       }
-      else if(e.type === 3) {
-        changeHandrail1.quadraticCurveTo(e.controlPos.x / D2Config.SCREEN_RATE,e.controlPos.y / D2Config.SCREEN_RATE,e.p1.x / D2Config.SCREEN_RATE,e.p1.y /D2Config.SCREEN_RATE)
+      if (e.type === Types.EdgeType.estraight) {
+        changeHandrail1.lineTo(e.p2.x / D2Config.SCREEN_RATE,e.p2.y / D2Config.SCREEN_RATE)
+      } else if(e.type === Types.EdgeType.ebeszer) {
+        changeHandrail1.quadraticCurveTo(e.controlPos.x / D2Config.SCREEN_RATE,e.controlPos.y / D2Config.SCREEN_RATE,e.p2.x / D2Config.SCREEN_RATE,e.p2.y /D2Config.SCREEN_RATE)
+      } else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        changeHandrail1.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
       }
     }
 
@@ -124,21 +131,27 @@ export class Handrail extends ChildWidget {
       }
       if (i > 0 && e.type === 3) {
         handrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
-      }
-      else if (i > 0 && e.type === 1) {
+      } else if (i > 0 && e.type === 1) {
         handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+      } else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        handrail.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
       }
     }
     for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let e = this.outEdges[i]
+      let e = new Edge(this.outEdges[i]).reserve()
       if (i === this.outEdges.length - 1) {
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-      if (e.type === 1) {
         handrail.lineTo(e.p1.x / 10,e.p1.y / 10)
       }
-      else if(e.type === 3) {
-        handrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p1.x / 10,e.p1.y /10)
+      if (e.type === 1) {
+        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
+      }else if(e.type === 3) {
+        handrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
+      }else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        handrail.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
       }
     }
 

@@ -120,7 +120,7 @@ export class Tread extends ChildInfo {
    * @param {string} vSide 
    * @param {Types.HandrailParameters} vArgs 
    */
-  getHandEdge(vSide, vArgs) {
+  getHandEdge(vSide, vArgs, vIsFirst, vIsLast) {
     let bArgs = this.parent.parent.getBigColParas()
     let utilE = this.getSideUtilE(vSide)
     let edge = utilE.writePB()

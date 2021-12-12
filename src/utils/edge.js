@@ -33,6 +33,36 @@ export class Edge {
     this.normal = null
   }
 
+  getPois() {
+    let pois = []
+    if (this.type === Types.EdgeType.estraight) {
+      return [this.getP1PB(), this.getP2PB()]
+    } else {
+      let path = new THREE.Path()
+      if (this.type === Types.EdgeType.ebeszer) {
+        path.moveTo(this.p1.x, this.p1.y)
+        path.quadraticCurveTo(this.controlPos.x, this.controlPos.y, this.p2.x, this.p2.y)
+      } else if (this.type === Types.EdgeType.earc){
+        path.moveTo(0, 0)
+        path.arc(this.position.x, this.position.y, this.radius, this.startAngle, this.endAngle, !this.isClockwise)
+      }
+      let points_2d = path.getPoints()
+      let gap = 4
+      let i = 0
+      for (; i < points_2d.length; i = i + gap) {
+        let p = points_2d[i]
+        pois.push(new Types.Vector3({x:p.x, y:p.y, z: this.zCoord}))
+      }
+      if ( i < points_2d.length - 1 + gap) {
+        pois.push(new Types.Vector3({x:points_2d[points_2d.length - 1].x, y:points_2d[points_2d.length - 1].y, z: this.zCoord}))
+      }
+      // for(const p of points_2d) {
+      //   pois.push(new Types.Vector3({x:p.x, y:p.y, z: this.zCoord}))
+      // }
+    }
+    return pois
+  }
+
   /**
    * 通过起点和方向来初始化边
    * @param {Types.Vector3} vP1 
@@ -62,7 +92,14 @@ export class Edge {
    */
   getVec() {
     if (!this.vec) {
-      this.vec = new THREE.Vector2().subVectors(this.p2, this.p1).normalize()
+      if (this.getLength() < 0.01) {
+        this.vec = new THREE.Vector2()
+      } else {
+        this.vec = new THREE.Vector2().subVectors(this.p2, this.p1)
+        // this.vec.x = this.fixed(this.vec.x)
+        // this.vec.y = this.fixed(this.vec.y)
+        this.vec.normalize()
+      }
     }
     return this.vec.clone()
   }
@@ -111,11 +148,15 @@ export class Edge {
       //轮廓方向永远为2d平面（即y轴竖直向下的平面）的顺时针
       //转换到threejs的2d平面后，则变为逆时针
       //因此法线方向需顺时针旋转
-      this.normal = this.getVec()
+      if (this.getLength() < 0.01) {
+        this.normal = new THREE.Vector2
+      } else {
+        this.normal = this.getVec()
         .rotateAround(Edge.center, -Math.PI / 2)
         .normalize()
-      this.normal.x = Number(this.normal.x.toFixed(2))
-      this.normal.y = Number(this.normal.y.toFixed(2))
+        this.normal.x = Number(this.normal.x.toFixed(2))
+        this.normal.y = Number(this.normal.y.toFixed(2))
+      }
     }
     return this.normal.clone()
   }
@@ -177,9 +218,8 @@ export class Edge {
    * @returns {Types.Edge}
    */
   combineEdge(vEdge) {
-    let pb = this.writePB()
-    pb.p2 = vEdge.p2
-    return pb
+    this.p2 = new THREE.Vector2(vEdge.p2.x, vEdge.p2.y)
+    return this.writePB()
   }
 
   /**
@@ -269,5 +309,18 @@ export class Edge {
 
   clone() {
     return new Edge(this.writePB())
+  }
+
+  /**
+   * 是否垂直于threejs中的二维向量
+   * @param {THREE.Vec2} vec2 
+   */
+  isVerticalToVec2(vec2) {
+    let vec = this.getVec()
+    if (Math.abs(vec.dot(vec2)) < 1 ) {
+      return true
+    } else {
+      return false
+    }
   }
 }

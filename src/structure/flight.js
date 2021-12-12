@@ -1,6 +1,7 @@
 import { COMP_TYPES } from '../common/common_config'
 import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
+import { Edge3 } from '../utils/edge3'
 import { ChildInfo } from './child_info'
 import { Default } from './config'
 import tool from './tool'
@@ -225,15 +226,16 @@ export class Flight extends ChildInfo {
       if (this.treads[i].isLast) {
         continue
       }
-      let edge = this.treads[i].getHandEdge(vSide, vArgs)
+      let edge = this.treads[i].getHandEdge(vSide, vArgs, i===0, i===this.treads.length-1)
       if (!edge) {
         continue
       }
-      if (lastUtilE && lastUtilE.isParallelTo(edge)) {
+      //edges.push(edge)
+      if (lastUtilE && lastUtilE.isD3ParallelTo(edge)) {
         edges[edges.length - 1] = lastUtilE.combineEdge(edge)
       } else {
         edges.push(edge)
-        lastUtilE = new Edge(edge)
+        lastUtilE = new Edge3(edge)
       }
     }
     return edges

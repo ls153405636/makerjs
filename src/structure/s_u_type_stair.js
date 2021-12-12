@@ -14,6 +14,7 @@ export class SmallUTypeStair extends UTypeStair {
     super(vParnet, vAgainstWall, vFloadSide)
     this.gap = Default.U_TYPE_GAP
     this.landingWidth = Default.STEP_LENGTH
+    this.type = Types.StairType.s_small_u_type
     this.rebuild()
   }
 

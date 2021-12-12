@@ -100,10 +100,10 @@ export function isVec2Equal(vP1, vP2) {
    * @param {Array<Types.Edge>} vAddEdges 
    */
 export function  concatEdges (vPriEdges, vAddEdges) {
-  let lastE = vPriEdges[vPriEdges.lastIndex]
+  let lastE = vPriEdges[vPriEdges.length - 1]
   let firstE = vAddEdges[0]
   if (lastE && firstE) {
-    if (!tool.isVec3Equal(lastE.p2, firstE.p1)) {
+    if (!isVec3Equal(lastE.p2, firstE.p1)) {
       vPriEdges.push(new Types.Edge({p1:lastE.p2, p2:firstE.p1,type:Types.EdgeType.estraight}))
     }
   }

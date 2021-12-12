@@ -547,14 +547,18 @@ export class StartFlight extends ChildInfo{
 
     let nextT = this.parent.flights[0].treads[0]
     let height = nextT.position.z - nextT.stepHeight/2 + vArgs.height
-    let step = nextT.stepHeight/4/inEdges.length
-    inEdges.forEach((e, i) => {
-      if (i === 0) {
-        e.p1.z = height
-        e.p2.z = height + step
-        height += step
-      }
-    })
+    let step = nextT.stepHeight/2/inEdges.length
+    if (inEdges.length === 3) {
+      inEdges[0].p1.z = height
+      inEdges[0].p2.z = height
+      inEdges[1].p1.z = height
+      inEdges[1].p2.z = height + step
+      inEdges[2].p1.z = height + step
+      inEdges[2].p2.z = nextT.position.z + vArgs.height
+    } else {
+      inEdges[0].p1.z = height
+      inEdges[0].p2.z = nextT.position.z + vArgs.height
+    }
     height = nextT.position.z - nextT.stepHeight/2 + vArgs.height
     outEdges.forEach((e, i) => {
       if (i === 0) {
@@ -563,6 +567,17 @@ export class StartFlight extends ChildInfo{
         height += step
       }
     })
+    if (outEdges.length === 3) {
+      outEdges[0].p1.z = height
+      outEdges[0].p2.z = height
+      outEdges[1].p1.z = height
+      outEdges[1].p2.z = height + step
+      outEdges[2].p1.z = height + step
+      outEdges[2].p2.z = nextT.position.z + vArgs.height
+    } else {
+      outEdges[0].p1.z = height
+      outEdges[0].p2.z = nextT.position.z + vArgs.height
+    }
 
     return {
       inEdges,

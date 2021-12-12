@@ -88,22 +88,22 @@ export class Outline {
       } else {
         lEdge = this.edges[i-1]
       }
-      if (lEdge) {
+      if (lEdge && lEdge.type !== Types.EdgeType.earc) {
         p1OffsetDir = new THREE.Vector2().addVectors(nor, lEdge.getNormal()).normalize()
         if (p1OffsetDir.length() < 0.01) {
           p1OffsetDir = e.getNormal()
-        } else {
+        } else if (e.getLength() > 0.01) {
           let angle = p1OffsetDir.angle() - nor.angle()
           dis1 = dis1 / Math.abs(Math.cos(angle)) 
         }
       } else {
         p1OffsetDir = e.getNormal()
       }
-      if (nEdge) {
+      if (nEdge && nEdge.type !== Types.EdgeType.earc) {
         p2OffsetDir = new THREE.Vector2().addVectors(nor, nEdge.getNormal()).normalize()
         if (p2OffsetDir.length() < 0.01) {
           p2OffsetDir = e.getNormal()
-        } else {
+        } else if (e.getLength() > 0.01) {
           let angle = p2OffsetDir.angle() - nor.angle()
           dis2 = dis2 / Math.abs(Math.cos(angle)) 
         }
@@ -126,11 +126,17 @@ export class Outline {
         }
         newE.controlPos = new Edge().setByVec(e.controlPos, conOffsetDir, vDis).p2
       } else if (e.type === Types.EdgeType.earc) {
+        // let posOffsetDir = e.getNormal()
+        // if (!vPlus) {
+        //   posOffsetDir.negate()
+        // }
+        // newE.position = new Edge().setByVec(e.position, posOffsetDir, vDis).p2
         if (e.isClockwise) {
           newE.radius = vPlus ? e.radius + vDis : e.radius - vDis
         } else {
           newE.radius = vPlus ? e.radius - vDis : e.radius + vDis
         }
+
       } 
       newEdges.push(newE)
     }

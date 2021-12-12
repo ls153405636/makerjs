@@ -1,4 +1,5 @@
 import { Types } from "../types/stair_v2"
+import { D3Config, RENDER_ORDER } from "./d3_config"
 
 /**
  * 
@@ -10,6 +11,20 @@ function translateCoord (vPBCoord) {
   return new THREE.Vector3(vPBCoord.x, y, z)
 }
 
+/**
+ *
+ *
+ * @param {Array<THREE.Vector3>} vPois
+ * @returns
+ */
+function createFrameByPois(vPois, vMat = D3Config.FRAME_MAT) {
+  let geo = new THREE.BufferGeometry().setFromPoints(vPois)
+  let line = new THREE.Line(geo, vMat)
+  line.renderOrder = RENDER_ORDER.FRAME
+  return line
+}
+
 export default {
-  translateCoord
+  translateCoord,
+  createFrameByPois
 }

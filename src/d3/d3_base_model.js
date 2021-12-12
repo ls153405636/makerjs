@@ -4,9 +4,12 @@ import { D3Scene } from "./d3_scene"
 
 export class BaseModel {
   constructor(vUuid) {
+    /**@type {THREE.Object3D} */
     this.obj = null
     this.uuid = vUuid
-    D3Config.MODELS.set(this.uuid, this)
+    if (this.uuid) {
+      D3Config.MODELS.set(this.uuid, this)
+    }
   }
 
   dispose() {
