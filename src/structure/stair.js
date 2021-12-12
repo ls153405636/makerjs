@@ -380,9 +380,9 @@ export class Stair extends Info {
         args.hangingBoard.state = 'delete'
       }
     }
-    args.startFlight = {name:'添加起步踏造型', state:'add'}
+    args.startFlight = {name:'添加起步踏', state:'add'}
     if (this.startFlight) {
-      args.startFlight.name = '移除起步踏造型'
+      args.startFlight.name = '移除起步踏'
       args.startFlight.state = 'delete'
     }
     let stepHeightArr = []

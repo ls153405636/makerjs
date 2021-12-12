@@ -1,75 +1,95 @@
 <template>
   <div class="component-top">
-    <div class="top-name">楼梯设计工具</div>
+    <div class="top-name">三维工场</div>
     <div class="center-icons">
-      <div class="options">
-        <i class="iconfont icon-tool-revocation"></i>
-        <span>撤销</span>
-      </div>
-      <div class="options">
-        <i class="iconfont icon-tool-recover"></i>
-        <span>恢复</span>
+      <div class="options"> 
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-new"></i>
+          <span class="text-name">新建</span>
+        </span>
       </div>
       <div class="options"> 
-        <i class="iconfont icon-tool-new"></i>
-        <span>新建</span>
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-save"></i>
+          <span class="text-name">保存</span>
+        </span>
       </div>
-      <div class="options">
-        <i class="iconfont icon-tool-save"></i>
-        <span>保存</span>
+      <i class="line"></i>
+      <div class="options"> 
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-revocation"></i>
+          <span class="text-name">撤销</span>
+        </span>
       </div>
-      <div class="options">
-        <i class="iconfont icon-tool-clear"></i>
-        <span>清空</span>
+      <div class="options"> 
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-recover"></i>
+          <span class="text-name">恢复</span>
+        </span>
       </div>
-      <div class="options">
-        <span class="line"></span>
+      <el-dropdown class="options"> 
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-clear"></i>
+          <span class="text-name">清空</span>
+        </span>
+      </el-dropdown>
+      <i class="line"></i>
+      <el-dropdown class="options"> 
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-download"></i>
+          <span class="export-img text-name">导出</span>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="exportImg()">导出平面图</el-dropdown-item>
+            <el-dropdown-item disabled>导出报价清单</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <div class="options"> 
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-picture"></i>
+          <span class="text-name">上传</span>
+        </span>
       </div>
-        <el-dropdown class="options"> 
-          <span class="el-dropdown-link">
-            <i class="iconfont icon-tool-download"></i>
-            <span class="export-img">导出</span>
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="exportImg()">导出平面图</el-dropdown-item>
-              <el-dropdown-item disabled>导出报价清单</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      <div class="options">
-        <i class="iconfont icon-tool-picture"></i>
-        <span>上传</span>
-      </div>
-      <div class="options">
-        <i class="iconfont icon-tool-apply"></i>
-        <span>去装修</span>
+      <div class="options"> 
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-tool-picture"></i>
+          <span class="text-name">去装修</span>
+        </span>
       </div>
     </div>
     <div class="right-icons">
-      <div class="options">
-        <i class="iconfont icon-tool-revocation"></i>
-        <span>方案</span>
-      </div>
-      <div class="options">
-        <i class="iconfont icon-tool-revocation"></i>
-        <span>帮助</span>
-      </div>
-      <div class="options">
-        <i class="iconfont icon-tool-revocation"></i>
-        <span>帮助</span>
-      </div>
+      <el-dropdown class="options">
+        <span class="el-dropdown-link">
+          <span class="right-user-name">SEEm</span>
+          <i class="iconfont icon-extend-copy"></i>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item disabled>个人中心</el-dropdown-item>
+            <el-dropdown-item disabled>退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <el-dropdown class="options">
+        <span class="el-dropdown-link">
+        <i class="iconfont icon-a-fi-br-interrogation1"></i>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item disabled>快捷键</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
-  <!-- <div class="screen"></div> -->
 </template>
 
 <script>
-import html2canvas from 'html2canvas';
-import { stage_scale_context } from '../../d2/fsm/stage_scale';
 import { Core } from '../../common/core';
 import { Command } from '../../common/command';
-import { D2Config } from '../../d2/config';
 export default {
   name: 'componentTop',
   data() {
@@ -96,45 +116,34 @@ export default {
 </script>
 
 <style>
-.screen {
-  position: fixed;
-  width: 950px;
-  height: 710px;
-  left: 500px;
-  top: 120px;
-  
-  border: 1px solid #4478f4;
-}
-.iconfont {
-  color: #c4c4c4;
-  font-size: 24px;
-  line-height: 30px;
-}
-.iconfont:hover {
-  color: #4478f4;
-}
 .component-top {
   position: fixed;
   display: flex;
-  top: 0;
-  left: 0;
   justify-content: space-between;
-  align-items: flex-end;
   -webkit-box-align: center;
   width: 100%;
-  height: 62px;
-  background-color: #fff;
-  line-height: 62px;
-  box-shadow: 5px 0 5px #d3d3d3;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 20px 0 20px;
+  box-sizing: border-box;
 }
 .component-top .top-name {
-  width: 150px;
-  font-size: 20px;
-  padding-left: 10px;
+  width: 154px;
+  height: 36px;
+  margin-top: 12px;
+  font: normal bold 24px/36px Source Han Sans CN;
+  color: #4478F4;
 }
-.component-top .right-icons {
-  width: 150px;
-  padding-right: 10px;
+.component-top .center-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 512px;
+  height: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  background-color: #2D3037;
+  border-radius: 0 0 10px 10px;
 }
 .component-top .center-icons .options {
   display: flex;
@@ -144,43 +153,68 @@ export default {
   box-sizing: border-box;
   padding: 6px 3px 6px;
   width: 50px;
-  height: 62px;
-  margin-right: 0 2px;
-  float: left;
+  height: 60px;
   cursor: pointer;
 }
-.component-top .right-icons .options {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  padding: 6px;
-  width: 50px;
-  height: 62px;
-  margin-right: 0 2px;
-  float: left;
-  cursor: pointer;
-}
-.component-top .center-icons div span {
-  font: normal 500 14px/21px Source Han Sans CN;
-}
-.component-top .right-icons div span {
-  font: normal 500 14px/21px Source Han Sans CN;
-}
-.component-top .center-icons div:nth-child(6) {
-  padding: 0;
-  margin-top: 15px;
+.component-top .center-icons .line {
+  display: block;
   width: 1px;
-  height: 22px;
-  border-right: 1px solid #dbdbdb;
+  height: 20px;
+  background-color: #8D8F94;
 }
-.export-img {
-  margin: 0;
-}
-.el-dropdown-link {
+.component-top .center-icons .options .el-dropdown-link {
   display: flex;
   align-items: center;
   flex-direction: column;
 }
+.component-top .center-icons .options .iconfont {
+  color: #fff;
+  font-size: 20px;
+  line-height: 30px;
+}
+.component-top .center-icons .options:hover .iconfont {
+  color: #4478F4;
+}
+.component-top .center-icons .options .text-name {
+  font: normal 500 12px Source Han Sans CN;
+  margin-bottom: 4px;
+  color: #fff;
+}
+.component-top .center-icons .options:hover .text-name {
+  color: #4478F4;
+}
+
+.component-top .right-icons{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-top: 12px;
+  width: 154px;
+  height: 36px;
+  cursor: pointer;
+}
+.component-top .right-icons .options .icon-a-fi-br-interrogation1{
+  color: #2D3037;
+  font-size: 20px;
+  padding-left: 20px;
+}
+.component-top .right-icons .options .icon-extend-copy{
+  color: #2D3037;
+  font-size: 8px;
+}
+.component-top .right-icons .options .right-user-name{
+  color: #2D3037;
+  font: normal 500 14px/21px Source Han Sans CN;
+}
+.component-top .right-icons .options:hover .iconfont {
+  color: #2D3037;
+
+}
+.component-top .right-icons .options:hover .iconfont{
+  color: #4478F4;
+}
+.component-top .right-icons .options:hover .right-user-name{
+  color: #4478F4;
+}
+
 </style>

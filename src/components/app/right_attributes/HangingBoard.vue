@@ -7,7 +7,7 @@
         </div>
       </template>
       <right-args></right-args>
-      <el-button @click="delHangingBoard()">移除挂板</el-button>
+      <el-button size="medium" @click="delHangingBoard()">移除挂板</el-button>
     </el-card>
   </div>
 </template>
@@ -46,3 +46,5 @@ export default {
   },
 }
 </script>
+<style>
+</style>

@@ -87,15 +87,15 @@ export default {
 </script>
 <style>
 .component-right {
-  display: block;
-  position: absolute;
-  right: 10px;
-  top: 80px;
-  width: 330px;
-  height: 800px;
+  position: fixed;
+  right: 20px;
+  top: 60px;
+  width: 280px;
+  height: 840px;
   background-color: #fff;
-  box-shadow: 0px 4px 20px rgba(45, 48, 55, 0.1);
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0px 4px 20px 0px #2D30371A;
+
 }
 </style>

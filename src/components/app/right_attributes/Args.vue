@@ -8,16 +8,20 @@
       <!-- 输入 -->
       <el-form-item v-if="arg.type === 'input'" :label="arg.name" :class="arg.class">
         <el-input
+          size="medium"
           :disabled="arg.disabled"
           v-model.lazy="arg.value"
           @blur="updateArgs(arg.value, index, arg.type)"
           @keydown.enter.prevent="enterBlur($event)"
-        ></el-input>
+        >
+          <template #append>mm</template>
+        </el-input>
       </el-form-item>
 
       <!-- 选择 -->
       <el-form-item v-if="arg.type === 'select'" :label="arg.name">
         <el-select
+          size="medium"
           v-model="arg.value.value"
           :label="arg.value.label"
           @change="updateArgs(arg.value.value, index, arg.type)"
@@ -34,6 +38,7 @@
       <!-- 开关 -->
       <el-form-item v-if="arg.type === 'switch'" :label="arg.name">
         <el-switch
+          size="medium"
           v-model="arg.value"
           @change="updateArgs(arg.value, index, arg.type, key)"
         ></el-switch>
@@ -55,16 +60,20 @@
               <!-- 展开-输入 -->
               <el-form-item v-if="item1.type === 'input'" :label="item1.name">
                 <el-input
+                  size="medium"
                   :disabled="item1.disabled"
                   v-model="item1.value"
                   @blur="updateArgs(item1.value, index, item1.type, key)"
                   @keydown.enter.prevent="enterBlur($event)"
-                ></el-input>
+                >
+                  <template #append>mm</template>
+                </el-input>
               </el-form-item>
 
               <!-- 展开-选择 -->
               <el-form-item v-if="item1.type === 'select'" :label="item1.name">
                 <el-select
+                  size="medium"
                   v-model="item1.value.value"
                   :label="item1.value.label"
                   @change="
