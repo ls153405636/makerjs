@@ -10,10 +10,10 @@ export class StraightStair extends Stair  {
   constructor(vParent, vAgainstWall) {
     super(vParent, vAgainstWall)
     this.type = Types.StairType.sstright
-    if (this.againstWallType === Types.AgainstWallType.aw_left) {
-      this.floadSide = Types.Side.si_right
-    } else {
+    if (this.againstWallType === Types.AgainstWallType.aw_right) {
       this.floadSide = Types.Side.si_left
+    } else {
+      this.floadSide = Types.Side.si_right
     }
     this.rebuild()
   }    
@@ -23,7 +23,7 @@ export class StraightStair extends Stair  {
     this.stepHeight = Number(this.stepHeight.toFixed(2))
     let width = Default.STEP_LENGTH
     let pos, lVec
-    if (this.againstWallType === Types.AgainstWallType.aw_left) {
+    if (this.floadSide === Types.Side.si_right) {
       pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
       lVec = new Types.Vector3({x:1})
     } else {
@@ -48,7 +48,7 @@ export class StraightStair extends Stair  {
   updateFlights() {
     let pos, lVec
     let width = this.flights[0].stepLength
-    if (this.againstWallType === Types.AgainstWallType.aw_left) {
+    if (this.floadSide === Types.Side.si_right) {
       pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
       lVec = new Types.Vector3({x:1})
     } else {
