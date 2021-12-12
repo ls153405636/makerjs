@@ -64,16 +64,12 @@ export class Loft {
 
   createObj() {
     for (let i = 0; i < this.brokenEdges.length; i++) {
-      let e = this.brokenEdges[i], n_e = this.brokenEdges[i+1], l_e = this.brokenEdges[i - 1]
-      let axis
-      if (i === this.brokenEdges.length - 1 && i !== 0) {
-        axis = this.createAxis(l_e, e)
-      } else {
-        axis = this.createAxis(e, n_e)
-      } 
+      let e = this.brokenEdges[i], n_e = this.brokenEdges[i+1]
       if (i === 0) {
-        this.cutFacePoisSet.push(this.createFacePois(e.p1d3, axis))
+        let axis0 = this.createAxis(e, null)
+        this.cutFacePoisSet.push(this.createFacePois(e.p1d3, axis0))
       }
+      let axis = this.createAxis(e, n_e)
       this.cutFacePoisSet.push(this.createFacePois(e.p2d3, axis))
     }
     let positionAttr = this.createPosAttr()
@@ -96,6 +92,8 @@ export class Loft {
     let nor2D = vUtilE.getNormal()
     if (!vNextUtilE) {
       y_axis = new THREE.Vector3(0, 1, 0)
+      let ref = new THREE.Vector3(0, z_axis.y, z_axis.z)
+      height_rate = Math.cos(y_axis.angleTo(ref) / 2)
     } else {
       let axis = new THREE.Vector3().crossVectors(z_axis, z_axis2).normalize()
       let vec2 = new THREE.Vector2(axis.x, axis.z)
@@ -103,7 +101,7 @@ export class Loft {
         x_axis = axis
         if (this.isClock && (nor2D.distanceTo(vec2) < 0.001 || vUtilE.getLength() < 0.01)) {
           x_axis.negate()
-        } else if((!this.isClock) && nor2D.distanceTo(vec2) > 0.001){
+        } else if((!this.isClock) && (nor2D.distanceTo(vec2) > 0.001 && vUtilE.getLength() > 0.01)){
           x_axis.negate()
         }
       } else {

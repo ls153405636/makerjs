@@ -18,7 +18,7 @@ export class D3Scene {
     this.renderer.setSize(innerWidth, innerHeight)
 
     this.camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 10, 200000)
-    this.camera.position.set(1000, 1000, 1000)
+    this.camera.position.set(5000, 5000, 5000)
     this.camera.lookAt(new THREE.Vector3(0, 0, 0))
     this.scene.add(this.camera)
 

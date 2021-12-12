@@ -26,7 +26,7 @@ export class Edge3 extends Edge {
 
   getPois() {
     let pois = super.getPois()
-    let zStep = (this.zCoord2 - this.zCoord1) / pois.length
+    let zStep = (this.zCoord2 - this.zCoord1) / (pois.length-1)
     for (let i = 0; i < pois.length; i++) {
       pois[i].z = this.zCoord1 + zStep * i
     }

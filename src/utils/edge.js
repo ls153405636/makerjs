@@ -317,7 +317,7 @@ export class Edge {
    */
   isVerticalToVec2(vec2) {
     let vec = this.getVec()
-    if (Math.abs(vec.dot(vec2)) < 1 ) {
+    if (Math.abs(vec.dot(vec2)) < 0.001 ) {
       return true
     } else {
       return false
