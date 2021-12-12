@@ -1,6 +1,6 @@
 <template>
   <div class="component-top">
-    <div class="top-name">三维工场</div>
+    <div class="top-name"></div>
     <div class="center-icons">
       <div class="options"> 
         <span class="el-dropdown-link">
