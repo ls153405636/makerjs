@@ -2,7 +2,7 @@ import { Types } from '../../types/stair_v2'
 import { Edge3 } from '../../utils/edge3'
 import d3_tool from '../d3_tool'
 import earCut from 'earcut'
-import { D3Config, Default } from '../d3_config'
+import { Default } from '../d3_config'
 
 export class Loft {
   /**
@@ -32,45 +32,43 @@ export class Loft {
    * @param {Types.Outline} vRoute 
    */
   createRoute(vRoute) {
-    let pois = []
+    //let pois = []
     for (let i = 0; i < vRoute.edges.length; i++) { 
       let utilE = new Edge3(vRoute.edges[i])
-      let e_pois = utilE.getPois()
-      //this.wholeUtilEs.push(utilE)
-      if (this.isClose || i !== vRoute.edges.length - 1) {
-        e_pois.pop()
-      }
-      pois = pois.concat(e_pois)
-    }
-    for (let i = 0; i < pois.length; i++) {
-      let nextIndex = i+1
-      if (i === pois.length - 1) {
-        if (this.isClose) {
-          nextIndex = 0
-        } else {
-          break
-        }
-      }
-      let p1 = pois[i]
-      let p2 = pois[nextIndex] 
-      let edge = new Types.Edge({
-        p1: p1, 
-        p2: p2,
-        type: Types.EdgeType.estraight
-      })
-      this.brokenEdges.push(new Edge3(edge))
+      utilE.split()
+      this.wholeUtilEs.push(utilE)
     }
   }
 
   createObj() {
-    for (let i = 0; i < this.brokenEdges.length; i++) {
-      let e = this.brokenEdges[i], n_e = this.brokenEdges[i+1]
-      if (i === 0) {
-        let axis0 = this.createAxis(e, null)
-        this.cutFacePoisSet.push(this.createFacePois(e.p1d3, axis0))
+    for (let i = 0; i < this.wholeUtilEs.length; i++) {
+      let utilE = this.wholeUtilEs[i], nUtilE = this.wholeUtilEs[i+1], lUtilE = this.wholeUtilEs[i-1]
+      for (let k = 0; k < utilE.children.length; k++) {
+        let e = utilE.children[k], n_e = null, vIsYFixed = true
+        if (k === utilE.children.length - 1 && nUtilE) {
+          n_e = nUtilE.children[0]
+        } else {
+          n_e = utilE.children[k+1]
+        }
+        if (utilE.type === Types.EdgeType.estraight && nUtilE && nUtilE.type === Types.EdgeType.estraight) {
+          vIsYFixed = false
+        }
+        if (lUtilE && lUtilE.type !== Types.EdgeType.estraight) {
+          vIsYFixed = true
+        }
+        if (i === 0) {
+          let axis0 = this.createAxis(e, null)
+          let sCutFacePois = this.createFacePois(e.p1d3, axis0)
+          this.cutFacePoisSet.push(sCutFacePois)
+          this.lineFrame.add(d3_tool.createFrameByPois(sCutFacePois.concat([sCutFacePois[0]])))
+        }
+        let axis = this.createAxis(e, n_e, vIsYFixed)
+        let cutFacePois = this.createFacePois(e.p2d3, axis)
+        this.cutFacePoisSet.push(cutFacePois)
+        if (k === utilE.children.length - 1) {
+          this.lineFrame.add(d3_tool.createFrameByPois(cutFacePois.concat([cutFacePois[0]])))
+        }
       }
-      let axis = this.createAxis(e, n_e)
-      this.cutFacePoisSet.push(this.createFacePois(e.p2d3, axis))
     }
     let positionAttr = this.createPosAttr()
     let geo = new THREE.BufferGeometry()
@@ -85,15 +83,14 @@ export class Loft {
    * @param {Edge3} vUtilE 
    * @param {Edge3} vNextUtilE 
    */
-  createAxis(vUtilE, vNextUtilE) {
+  createAxis(vUtilE, vNextUtilE, vIsYFixed) {
     let x_axis, y_axis, width_rate = 1, height_rate = 1
     let z_axis = vUtilE.getD3Vec()
     let z_axis2 = vNextUtilE ? vNextUtilE.getD3Vec() : null
     let nor2D = vUtilE.getNormal()
-    if (!vNextUtilE) {
+    if ((!vNextUtilE) || vIsYFixed) {
       y_axis = new THREE.Vector3(0, 1, 0)
-      let ref = new THREE.Vector3(0, z_axis.y, z_axis.z)
-      height_rate = Math.cos(y_axis.angleTo(ref) / 2)
+      vIsYFixed = true
     } else {
       let axis = new THREE.Vector3().crossVectors(z_axis, z_axis2).normalize()
       let vec2 = new THREE.Vector2(axis.x, axis.z)
@@ -121,9 +118,13 @@ export class Loft {
       }
     } else if (y_axis) {
       x_axis = this.isClock ? new THREE.Vector3().crossVectors(z_axis, y_axis).normalize() : new THREE.Vector3().crossVectors(y_axis, z_axis).normalize()
+      // if (vIsYFixed) {
+      //   let y_axis2 = this.isClock ? new THREE.Vector3().crossVectors(x_axis, z_axis).normalize() : new THREE.Vector3().crossVectors(z_axis, x_axis).normalize()
+      //   height_rate = Math.cos(y_axis.angleTo(y_axis2))
+      // }
       if (z_axis2) {
         let x_axis2 = this.isClock ? new THREE.Vector3().crossVectors(z_axis2, y_axis).normalize() : new THREE.Vector3().crossVectors(y_axis, z_axis2).normalize()
-        width_rate = Math.cos(x_axis.angleTo(x_axis2) / 2)
+        width_rate = Math.abs(Math.cos(x_axis.angleTo(x_axis2) / 2))
         x_axis = new THREE.Vector3().addVectors(x_axis, x_axis2).normalize()
       }
     }
@@ -213,8 +214,8 @@ export class Loft {
           e_p3.x, e_p3.y, e_p3.z
         )
       }
-      this.lineFrame.add(d3_tool.createFrameByPois(s_pois.concat([s_pois[0]])))
-      this.lineFrame.add(d3_tool.createFrameByPois(e_pois.concat([e_pois[0]])))
+      // this.lineFrame.add(d3_tool.createFrameByPois(s_pois.concat([s_pois[0]])))
+      // this.lineFrame.add(d3_tool.createFrameByPois(e_pois.concat([e_pois[0]])))
     }
 
     return new THREE.Float32BufferAttribute(positionArr, 3)

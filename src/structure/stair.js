@@ -471,75 +471,95 @@ export class Stair extends Info {
   updateHandrails () {
     this.handrails = []
     let bor = this.border
-    this.updateSideHandrails(bor.in.edges, 'in', this.getInSideOffsetPlus())
-    this.updateSideHandrails(bor.out.edges, 'out', this.getOutSideOffsetPlus())
-    //this.updateSideHandrails(bor.in, 'in', this.getInSideOffsetPlus())
-    // this.updateSideHandrails(bor.out, 'out', this.getOutSideOffsetPlus())
+    // this.updateSideHandrails(bor.in.edges, 'in', this.getInSideOffsetPlus())
+    // this.updateSideHandrails(bor.out.edges, 'out', this.getOutSideOffsetPlus())
+    this.updateSideHandrails(bor.in, 'in', this.getInSideOffsetPlus())
+    this.updateSideHandrails(bor.out, 'out', this.getOutSideOffsetPlus())
   }
 
-  // updateSideHandrails (vSide) {
-  //   let edges = []
-  //   if (this.startFlight) {
-  //     edges = this.startFlight.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
-  //   }
-  //   for (const f of this.segments) {
-  //     let fEdges = f.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
-  //     if (vSide.sideName === 'in' || f.index === 0) {
-  //       edges = tool.concatEdges(edges, fEdges)
-  //     } else if (fEdges.length) {
-  //       let p1 = edges[edges.length - 1].p2
-  //       let p2 = fEdges[0].p1
-  //       if (this.type === Types.StairType.s_small_u_type) {
-  //         let radius = this.sideOffset + this.gap/2
-  //         let position = new Edge().setByVec(p2, f.lVec, radius).p2
-  //         let startAngle, endAngle, isClockwise
-  //         if (this.floadSide === Types.Side.si_right) {
-  //           startAngle = Math.PI, endAngle = 0, isClockwise = true
-  //         } else {
-  //           startAngle = 0, endAngle = Math.PI, isClockwise = false
-  //         }
-  //         edges.push(new Types.Edge({
-  //           p1:p1, 
-  //           p2:p2,
-  //           startAngle:startAngle,
-  //           endAngle:endAngle,
-  //           position:position,
-  //           isClockwise: isClockwise,
-  //           radius:radius,
-  //           type: Types.EdgeType.earc
-  //         }))
-  //       } else {
-  //         // let controlPos = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
-  //         // edges.push(new Types.Edge({
-  //         //   p1:p1,
-  //         //   p2:p2,
-  //         //   type:Types.EdgeType.ebeszer,
-  //         //   controlPos:controlPos
-  //         // }))
-  //         let center = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
-  //         center.z = (p1.z + p2.z) / 2
-  //         edges.push(new Types.Edge({
-  //           p1:p1, 
-  //           p2:center,
-  //           type:Types.EdgeType.estraight
-  //         }))
-  //         edges.push(new Types.Edge({
-  //           p1:center,
-  //           p2:p2,
-  //           type:Types.EdgeType.estraight
-  //         }))
-  //       }
-  //       edges = edges.concat(fEdges)
-  //     }
-  //   }
-  //   let route = new Types.Outline({edges:edges, isClose:false, isClock:this.floadSide === Types.Side.si_right})
-  //   if (vSide.handrails[0]) {
-  //     vSide.handrails[0].rebuildByParent(route)
-  //   } else {
-  //     vSide.handrails[0] = new Handrail(this, route)
-  //   }
-  //   this.handrails.push(vSide.handrails[0])
-  // }
+  updateSideHandrails (vSide) {
+    let edges = []
+    if (this.startFlight) {
+      edges = this.startFlight.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
+    }
+    for (const f of this.segments) {
+      let fEdges = f.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
+      if (vSide.sideName === 'in' || f.index === 0) {
+        edges = tool.concatEdges(edges, fEdges)
+      } else if (fEdges.length) {
+        let p1 = edges[edges.length - 1].p2
+        let p2 = fEdges[0].p1
+        if (this.type === Types.StairType.s_small_u_type) {
+          let radius = this.sideOffset + this.gap/2
+          let position = new Edge().setByVec(p2, f.lVec, radius).p2
+          let startAngle, endAngle, isClockwise
+          if (this.floadSide === Types.Side.si_right) {
+            startAngle = Math.PI, endAngle = 0, isClockwise = true
+          } else {
+            startAngle = 0, endAngle = Math.PI, isClockwise = false
+          }
+          edges.push(new Types.Edge({
+            p1:p1, 
+            p2:p2,
+            startAngle:startAngle,
+            endAngle:endAngle,
+            position:position,
+            isClockwise: isClockwise,
+            radius:radius,
+            type: Types.EdgeType.earc
+          }))
+          // let center2 = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
+          // let center1 = new Edge().setByVec(p1, this.flights[0].wVec, -this.sideOffset).p2
+          // let heightDiff = (p2.z - p1.z) / 3
+          // center1.z = p1.z + heightDiff
+          // center2.z = p2.z - heightDiff
+          // edges.push(new Types.Edge({
+          //   p1:p1, 
+          //   p2:center1,
+          //   type:Types.EdgeType.estraight
+          // }))
+          // edges.push(new Types.Edge({
+          //   p1:center1,
+          //   p2:center2,
+          //   type:Types.EdgeType.estraight
+          // }))
+          // edges.push(new Types.Edge({
+          //   p1:center2, 
+          //   p2:p2,
+          //   type:Types.EdgeType.estraight
+          // }))
+        } else {
+          let controlPos = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
+          edges.push(new Types.Edge({
+            p1:p1,
+            p2:p2,
+            type:Types.EdgeType.ebeszer,
+            controlPos:controlPos
+          }))
+          // let center = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
+          // center.z = (p1.z + p2.z) / 2
+          // edges.push(new Types.Edge({
+          //   p1:p1, 
+          //   p2:center,
+          //   type:Types.EdgeType.estraight
+          // }))
+          // edges.push(new Types.Edge({
+          //   p1:center,
+          //   p2:p2,
+          //   type:Types.EdgeType.estraight
+          // }))
+        }
+        edges = edges.concat(fEdges)
+      }
+    }
+    let route = new Types.Outline({edges:edges, isClose:false, isClock:this.floadSide === Types.Side.si_right})
+    if (vSide.handrails[0]) {
+      vSide.handrails[0].rebuildByParent(route)
+    } else {
+      vSide.handrails[0] = new Handrail(this, route)
+    }
+    this.handrails.push(vSide.handrails[0])
+  }
 
   /**
    * 更新边界中某一侧的扶手
@@ -547,70 +567,70 @@ export class Stair extends Info {
    * @param {String} vSide 当前扶手属于哪一侧 'in' or 'out'
    * @param {boolean} vSideOffsetPlus 边界边需偏移得到扶手路径，偏移方向是否为法线方向
    */
-  updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
-    let routeEdgesArr = [[]]
-    let routeIndex = 0
-    let borSide = this.border[vSide]
-    for (let i = 0; i < vStairEdges.length; i++) {
-      let e = vStairEdges[i]
-      let sCol = vStairEdges[i].startCol
-      let eCol = vStairEdges[i].endCol
-      let gArgs = this.girderParameters
-      let start = new Types.Vector3(e.p1)
-      let end = new Types.Vector3(e.p2)
-      let edge = new Edge({
-        p1:start,
-        p2:end,
-        type:Types.EdgeType.estraight
-      })
-      let utilE = new Edge(edge)
-      /**无起步踏板时，扶手路径第一条边需根据大柱属性向前延伸 */
-      if (i === 0 && !this.startFlight) {
-        let frontOffset = this.computeBigColOffset()
-        utilE.extendP1(frontOffset).p1
-      }
-      if (sCol) {
-        let sOffset = 0
-        //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
-        if (gArgs.type === Types.GirderType.gslab) {
-          sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
-        }
-        utilE.extendP1(-sOffset)
-        if (i !== 0) {
-          routeIndex++
-          routeEdgesArr[routeIndex] = []
-        }
-      }
-      if (eCol) {
-        let eOffset = 0
-        if (gArgs.type === Types.GirderType.gslab) {
-          eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
-        }
-        utilE.extendP2(-eOffset)
-      }
-      routeEdgesArr[routeIndex].push(utilE.writePB())
-    }
-    for (let i = 0; i < routeEdgesArr.length; i++) {
-      let edges = routeEdgesArr[i]
-      let route = new Types.Outline({edges:edges, isClose:false})
-      route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
-      /**当存在起步踏板时， 扶手首边不做延伸，由起步踏板计算得出前面的边集，加入扶手轮廓*/
-      if (i === 0 && this.startFlight) {
-        let {inEdges, outEdges} = this.startFlight.createHandRouteEdges(this.handrailParameters)
-        if (vSide === 'in') {
-          route.edges = inEdges.concat(route.edges)
-        } else if (vSide === 'out') {
-          route.edges = outEdges.concat(route.edges)
-        }
-      }
-      if (borSide.handrails[i]) {
-        borSide.handrails[i].rebuildByParent(route)
-      } else {
-        borSide.handrails[i] = new Handrail(this, route)
-      }
-      this.handrails.push(borSide.handrails[i])
-    }
-  }
+  // updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
+  //   let routeEdgesArr = [[]]
+  //   let routeIndex = 0
+  //   let borSide = this.border[vSide]
+  //   for (let i = 0; i < vStairEdges.length; i++) {
+  //     let e = vStairEdges[i]
+  //     let sCol = vStairEdges[i].startCol
+  //     let eCol = vStairEdges[i].endCol
+  //     let gArgs = this.girderParameters
+  //     let start = new Types.Vector3(e.p1)
+  //     let end = new Types.Vector3(e.p2)
+  //     let edge = new Edge({
+  //       p1:start,
+  //       p2:end,
+  //       type:Types.EdgeType.estraight
+  //     })
+  //     let utilE = new Edge(edge)
+  //     /**无起步踏板时，扶手路径第一条边需根据大柱属性向前延伸 */
+  //     if (i === 0 && !this.startFlight) {
+  //       let frontOffset = this.computeBigColOffset()
+  //       utilE.extendP1(frontOffset).p1
+  //     }
+  //     if (sCol) {
+  //       let sOffset = 0
+  //       //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
+  //       if (gArgs.type === Types.GirderType.gslab) {
+  //         sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
+  //       }
+  //       utilE.extendP1(-sOffset)
+  //       if (i !== 0) {
+  //         routeIndex++
+  //         routeEdgesArr[routeIndex] = []
+  //       }
+  //     }
+  //     if (eCol) {
+  //       let eOffset = 0
+  //       if (gArgs.type === Types.GirderType.gslab) {
+  //         eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
+  //       }
+  //       utilE.extendP2(-eOffset)
+  //     }
+  //     routeEdgesArr[routeIndex].push(utilE.writePB())
+  //   }
+  //   for (let i = 0; i < routeEdgesArr.length; i++) {
+  //     let edges = routeEdgesArr[i]
+  //     let route = new Types.Outline({edges:edges, isClose:false})
+  //     route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
+  //     /**当存在起步踏板时， 扶手首边不做延伸，由起步踏板计算得出前面的边集，加入扶手轮廓*/
+  //     if (i === 0 && this.startFlight) {
+  //       let {inEdges, outEdges} = this.startFlight.createHandRouteEdges(this.handrailParameters)
+  //       if (vSide === 'in') {
+  //         route.edges = inEdges.concat(route.edges)
+  //       } else if (vSide === 'out') {
+  //         route.edges = outEdges.concat(route.edges)
+  //       }
+  //     }
+  //     if (borSide.handrails[i]) {
+  //       borSide.handrails[i].rebuildByParent(route)
+  //     } else {
+  //       borSide.handrails[i] = new Handrail(this, route)
+  //     }
+  //     this.handrails.push(borSide.handrails[i])
+  //   }
+  // }
 
   /**
    * 更新小柱
