@@ -27,12 +27,12 @@
           <span class="text-name">恢复</span>
         </span>
       </div>
-      <el-dropdown class="options"> 
+      <div class="options"> 
         <span class="el-dropdown-link">
           <i class="iconfont icon-tool-clear"></i>
           <span class="text-name">清空</span>
         </span>
-      </el-dropdown>
+      </div>
       <i class="line"></i>
       <el-dropdown class="options"> 
         <span class="el-dropdown-link">

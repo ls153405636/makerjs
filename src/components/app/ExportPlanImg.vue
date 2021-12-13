@@ -65,6 +65,7 @@ export default {
   name: 'exportPlanImg',
   data() {
     return {
+      name: '编号',
       tableData: [
         {
           date: '2016-05-03',
@@ -169,7 +170,7 @@ export default {
       var a=document.createElement('a')
       document.body.appendChild(a)
       a.href=save_url
-      a.download="我的canvas作品"
+      a.download="平面图纸" + this.name
       a.click()
     },
   },

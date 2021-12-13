@@ -48,6 +48,7 @@ export class CementComp extends BaseWidget {
 
     let changeComp = new PIXI.Graphics()
     changeComp.visible = false
+    changeComp.alpha = 0.5
     changeComp.lineStyle(1, 0x4478f4,1,0)
     changeComp.beginFill(0xffffff, 1)
     changeComp.drawRect(
@@ -63,6 +64,7 @@ export class CementComp extends BaseWidget {
     let comp = new PIXI.Graphics()
     comp.lineStyle(1, 0x000000,1,0)
     comp.beginFill(0xffffff, 1)
+    comp.alpha = 0.5
     comp.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
     comp.endFill()
     comp.position.set(this.positionX, this.positionY)

@@ -8,6 +8,8 @@
       <!-- 输入 -->
       <el-form-item v-if="arg.type === 'input'" :label="arg.name" :class="arg.class">
         <el-input
+          :class="arg.class"
+          :autofocus="arg.autofocus"
           size="medium"
           :disabled="arg.disabled"
           v-model.lazy="arg.value"
@@ -143,6 +145,18 @@ export default defineComponent({
     },
 
     updateArgs(value, key, type, secondKey) {
+      if (value === 0 || value === '') {
+        this.$store.commit({
+        type: 'getArgs/getFocus',
+        focus: true
+        })
+      }else {
+        this.$store.commit({
+        type: 'getArgs/getFocus',
+        focus: false
+        })
+
+      }
       if (type === 'input') {
         value = Number(value)
       }
@@ -173,14 +187,6 @@ export default defineComponent({
     //     console.log(value)
     //   }
     // }
-  },
-  directives: {
-    focus: {
-      // 指令的定义
-      mounted(el) {
-        el.focus()
-      },
-    },
   },
 })
 </script>

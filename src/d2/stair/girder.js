@@ -6,6 +6,7 @@ import { Types } from '../../types/stair_v2'
 import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
+import { DashLine } from '../../../public/js/pixi'
 
 export class Girder extends ChildWidget {
   /**
@@ -38,27 +39,56 @@ export class Girder extends ChildWidget {
         path.push(f.outTopEdges[0].p2.x / D2Config.SCREEN_RATE, f.outTopEdges[0].p2.y / D2Config.SCREEN_RATE)
       }
       path.push(f.outTopEdges[0].p1.x / D2Config.SCREEN_RATE, f.outTopEdges[0].p1.y / D2Config.SCREEN_RATE)
+      if (i === 0) {
+        path.push(f.inTopEdges[0].p1.x / D2Config.SCREEN_RATE, f.inTopEdges[0].p1.y / D2Config.SCREEN_RATE)
+      }
     }
+    console.log(path)
     const changeGirder1 = new PIXI.Graphics()
     changeGirder1.lineStyle(1, 0x4478f4)
     changeGirder1.beginFill(0xffffff)
     changeGirder1.drawPolygon(path)
+    changeGirder1.alpha = 0
+
+    // const changeGirder = new PIXI.Graphics()
+    // changeGirder.visible = false
+    // changeGirder.lineStyle(1, 0x4478f4)
+    // changeGirder1.beginFill(0xffffff)
+    // changeGirder.drawPolygon(path)
+
+    // const girder = new PIXI.Graphics()
+    // girder.lineStyle(1, 0x2d3037)
+    // girder.beginFill(0xffffff)
+    // girder.drawPolygon(path)
 
     const changeGirder = new PIXI.Graphics()
     changeGirder.visible = false
-    changeGirder.lineStyle(1, 0x4478f4)
-    changeGirder1.beginFill(0xffffff)
-    changeGirder.drawPolygon(path)
+    changeGirder.beginFill(0xffffff)
+    const changeGirderDash = new DashLine(changeGirder, {
+      dash: [3, 1],
+      width: 1,
+      color: 0x4478f4,
+    })
+    changeGirderDash.drawPolygon(path)
 
     const girder = new PIXI.Graphics()
-    girder.lineStyle(1, 0x2d3037)
     girder.beginFill(0xffffff)
-    girder.drawPolygon(path)
+    const girderDash = new DashLine(girder, {
+      dash: [3, 1],
+      width: 1,
+      color: 0xff00ff,
+    })
+    girderDash.drawPolygon(path)
 
     girderContainer.addChild(changeGirder1, changeGirder, girder)
     girderContainer.zIndex = Z_INDEX.GIRDER_ZINDEX
 
     this.sprite = girderContainer
+  }
+
+  /**获取当前组件的类型 */
+  getWidgetType() {
+    return COMP_TYPES.GIRDER
   }
 
   // 取消 girder 选中效果
