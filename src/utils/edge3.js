@@ -14,6 +14,7 @@ export class Edge3 extends Edge {
     this.zCoord2 = vPB.p2.z
     this.p1d3 = new THREE.Vector3(vPB.p1.x, vPB.p1.z, vPB.p1.y)
     this.p2d3 = new THREE.Vector3(vPB.p2.x, vPB.p2.z, vPB.p2.y)
+    this.children = []
   }
 
   getD3Vec() {
@@ -31,6 +32,20 @@ export class Edge3 extends Edge {
       pois[i].z = this.zCoord1 + zStep * i
     }
     return pois
+  }
+
+  split() {
+    let pois = this.getPois()
+    for (let i = 0; i < pois.length - 1; i++) {
+      let p1 = pois[i]
+      let p2 = pois[i+1] 
+      let edge = new Types.Edge({
+        p1: p1, 
+        p2: p2,
+        type: Types.EdgeType.estraight
+      })
+      this.children.push(new Edge3(edge))
+    }
   }
 
   /**

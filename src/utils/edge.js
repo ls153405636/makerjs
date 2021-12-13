@@ -47,7 +47,7 @@ export class Edge {
         path.arc(this.position.x, this.position.y, this.radius, this.startAngle, this.endAngle, !this.isClockwise)
       }
       let points_2d = path.getPoints()
-      let gap = 4
+      let gap = 1
       let i = 0
       for (; i < points_2d.length; i = i + gap) {
         let p = points_2d[i]
