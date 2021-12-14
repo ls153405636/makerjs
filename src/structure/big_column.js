@@ -10,15 +10,15 @@ export class BigColumn extends ChildInfo {
     { value: Types.BigColumnPosType.bcp_second, label: '在第二级踏板上' },
   ]
   static SPEC_OPTIONS = [
-    { value: '90*90*1200', label: '90*90*1200' },
-    { value: '100*100*1200', label: '100*100*1200' },
-    { value: '110*110*1200', label: '110*110*1200' },
-    { value: '120*120*1200', label: '120*120*1200' },
-    { value: '130*130*1200', label: '130*130*1200' },
-    { value: '140*140*1200', label: '140*140*1200' },
-    { value: '150*150*1200', label: '150*150*1200' },
+    { value: '90*90', label: '90*90' },
+    { value: '100*100', label: '100*100' },
+    { value: '110*110', label: '110*110' },
+    { value: '120*120', label: '120*120' },
+    { value: '130*130', label: '130*130' },
+    { value: '140*140', label: '140*140' },
+    { value: '150*150', label: '150*150' },
   ]
-  constructor({vParent, vPosition, vType, vPosName=''}) {
+  constructor({vParent, vPosition, vType, vPosName='', vHeight}) {
     super(vParent)
     this.type = vType
     if (this.type !== Types.BigColumnType.bc_start) {
@@ -29,8 +29,7 @@ export class BigColumn extends ChildInfo {
       this.paras = this.parent.bigColParameters
     }
     this.posName = vPosName
-    this.size = tool.parseSpecification(this.paras.specification)
-    this.rebuildByParent(vPosition)
+    this.rebuildByParent(vPosition, vHeight)
   }
 
   addInfo () {
@@ -41,9 +40,10 @@ export class BigColumn extends ChildInfo {
     this.parent.addBigCol(null, this.posName)
   }
 
-  rebuildByParent (vPosition) {
+  rebuildByParent (vPosition, vHeight = 1200) {
     this.position = vPosition
     this.size = tool.parseSpecification(this.paras.specification)
+    this.size.z = vHeight
   }
 
   rebuild () {

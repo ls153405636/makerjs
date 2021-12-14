@@ -663,10 +663,11 @@ export class Stair extends Info {
         position = outPos
       }
     }
+    let height = this.handrailParameters.height + this.stepHeight + Default.BIG_COL_UP_HEIGHT
     if (this.border[vSide].bigCol) {
-      this.border[vSide].bigCol.rebuildByParent(position)
+      this.border[vSide].bigCol.rebuildByParent(position, height)
     } else {
-      this.border[vSide].bigCol = new BigColumn({vParent:this, vPosition:position, vType:Types.BigColumnType.bc_start})
+      this.border[vSide].bigCol = new BigColumn({vParent:this, vPosition:position, vType:Types.BigColumnType.bc_start, vHeight:height})
     }
     this.bigColumns.push(this.border[vSide].bigCol)
   }
