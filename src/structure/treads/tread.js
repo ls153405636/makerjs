@@ -2,6 +2,7 @@ import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { ChildInfo } from "../child_info";
 import { Default } from "../config";
+import { SmallColumn } from "../small_column";
 import tool from "../tool";
 
 
@@ -50,7 +51,7 @@ export class Tread extends ChildInfo {
   getColPos() {}
 
   getDirection() {
-    return new Types.Vector3({x:this.wVec.x, y:this.wVec.y})
+    return new Types.Vector3({x:-this.wVec.x, y:-this.wVec.y})
   }
 
   updateItem (vValue, vKey, vSecondKey) {
@@ -62,12 +63,19 @@ export class Tread extends ChildInfo {
     }
   }
 
+  /**
+   *获取生成大梁扶手大小柱时的对应工具边
+   * @param {string} vSide
+   * @returns {Edge}
+   * @memberof Tread
+   */
   getSideUtilE (vSide) {
     let edge = this.border.stepOutline.edges[this.border[vSide+'Index'][0]]
     let utilE = new Edge(edge)
     let gArgs = this.parent.parent.getGirderParas(vSide)
     let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
     if (this.type === Types.TreadType.tSpec) {
+      /**休台踏板轮廓一定是顺时针，clock不代表轮廓方向，单独处理 */
       utilE.offset(sideOffset, false)
       if (!this.clock) {
         utilE.reserve()
@@ -85,9 +93,10 @@ export class Tread extends ChildInfo {
   }
 
   /**
-   * 
+   * 得到踏板单位的大梁轮廓
    * @param {string} vSide 
    * @param {Types.GirderParameters} vArgs 
+   * @param {boolean} vIsFirst 此踏板是否为当前大梁所包含的第一个踏板
    */
    getGirBorder (vSide, vArgs, vIsFirst, vInLast, vOutLast) {
     let utilE = this.getGirUtilE(vSide, vArgs)
@@ -116,15 +125,15 @@ export class Tread extends ChildInfo {
   }
 
   /**
-   * 
+   * 得到踏板上方对应的扶手路径
    * @param {string} vSide 
    * @param {Types.HandrailParameters} vArgs 
    */
-  getHandEdge(vSide, vArgs, vIsFirst, vIsLast) {
+  getHandEdge(vSide, vArgs) {
     let bArgs = this.parent.parent.getBigColParas()
     let utilE = this.getSideUtilE(vSide)
     let edge = utilE.writePB()
-    let nextT = this.getNextTread()
+    let nextT = this.getNextTread() || this
     if (this.index === 1) {
       if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
         return null
@@ -151,6 +160,102 @@ export class Tread extends ChildInfo {
     return edge
   }
 
+  /**
+   * 获取当前踏板上的小柱
+   * @param {*} vSide
+   * @param {Types.SmallColParameters} vArgs
+   * @param {*} vLastNum
+   * @memberof Tread
+   */
+  getSmallCols(vSide, vArgs, vIsFirst, vLastNum) {
+    let num = this.getSmallColNum(vArgs, vIsFirst, vLastNum)
+    if (num === 0) {
+      return []
+    }
+    let rateArr = this.getSmallColRateArr(num, vArgs)
+    let sCols = [], utilE = this.getSideUtilE(vSide), dir = this.getDirection()
+    let length = utilE.getLength()
+    let stepHeight = this.getNextTread().stepHeight || this.stepHeight
+    /**@type {Types.HandrailParameters} */
+    let hArgs = this.parent.parent.getHandParas(vSide)
+    /**@type {Types.GirderParameters} */
+    let gArgs = this.parent.parent.getGirderParas(vSide)
+    for (const rate of rateArr) {
+      let pos = new Edge().setByVec(utilE.getP1PB(), dir, length * rate).p2
+      let size = tool.parseSpecification(vArgs.specification)
+      if (gArgs.type === Types.GirderType.gslab) {
+        size.z = hArgs.height - this.getUpGirVerHeight(gArgs)
+        pos.z = this.position.z + this.getUpGirVerHeight(gArgs) + stepHeight * rate
+      } else {
+        size.z = stepHeight * rate + hArgs.height
+        pos.z = this.position.z
+      }
+      let smallCol = new SmallColumn(this.parent.parent, pos, size)
+      sCols.push(smallCol) 
+    }
+    return sCols
+  }
+
+  /**
+   *计算当前踏步上的小柱数量
+   * @param {Types.SmallColParameters} vArgs
+   * @param {boolean} vIsFirst 本踏板是否为所属楼梯段的第一级踏板
+   * @param {*} vLastNum
+   * @memberof Tread
+   */
+  getSmallColNum(vArgs, vIsFirst, vLastNum) {
+    /**@type {Types.BigColParameters} */
+    let bArgs = this.parent.parent.getBigColParas()
+    if (bArgs.posType === Types.BigColumnPosType.bcp_first && this.index === 1) {
+      return 0
+    }
+    if (bArgs.posType === Types.BigColumnPosType.bcp_second && this.index <= 2) {
+      return 0
+    }
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrTwo) {
+      return 1
+    }
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrFour) {
+      return 2
+    }
+    if (vIsFirst) {
+      if (this.parent.index === 0 && this.parent.parent.startFlight) {
+        return 2
+      } else {
+        return 1
+      }
+    } else {
+      if (vLastNum === 2) {
+        return 1
+      } else {
+        return 2
+      }
+    }
+  }
+
+  /**
+   * 根据当前踏步小步数量和参数得出小柱在步宽方向上的位置比例数组
+   * @param {Number} vNum 
+   * @param {Types.SmallColParameters} vArgs 
+   */  
+  getSmallColRateArr (vNum, vArgs) {
+    if (vNum === 1) {
+      return [1/2]
+    } 
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
+      return [1/6, 5/6]
+    } else {
+      return [1/4, 1/4]
+    }
+  }
+
+  /**
+   *获取生成大梁的工具边
+   * @param {string} vSide
+   * @param {Types.GirderParameters} vArgs
+   * @returns
+   * @memberof Tread
+   */
   getGirUtilE(vSide, vArgs) {
     let utilE = this.getSideUtilE(vSide)
     let backOffset = this.parent.parent.getTreadBackOffset()
@@ -161,6 +266,15 @@ export class Tread extends ChildInfo {
     return utilE
   }
 
+  /**
+   * 生成锯齿型大梁轮廓
+   * @param {*} utilE
+   * @param {*} vIsFirst
+   * @param {*} vArgs
+   * @param {*} vLast
+   * @returns
+   * @memberof Tread
+   */
   createSideSawBorder (utilE, vIsFirst, vArgs, vLast) {
     let botPois = [], topPois = []
     topPois[0] = utilE.getP1PB()
@@ -209,7 +323,7 @@ export class Tread extends ChildInfo {
   }
 
   /**
-   * 
+   * 生成平板型大梁轮廓
    * @param {Edge} utilE 
    * @param {*} vIsFirst 
    * @param {Types.GirderParameters} vArgs 
@@ -268,6 +382,12 @@ export class Tread extends ChildInfo {
     return {edges, topEdges}
   }
 
+  /**
+   *获取大梁上方距上顶点的垂直高度
+   * @param {*} vArgs
+   * @returns
+   * @memberof Tread
+   */
   getUpGirVerHeight (vArgs) {
     let stepHeight = this.getNextTread()?.stepHeight || this.stepHeight
     let angle = Math.atan(stepHeight / this.stepWidth)
@@ -275,6 +395,13 @@ export class Tread extends ChildInfo {
     return upVerHeight
   }
 
+  /**
+   *获取大梁下方距顶点的垂直高度
+   *锯齿型为距下顶点，平板型为距上顶点
+   * @param {*} vArgs
+   * @returns
+   * @memberof Tread
+   */
   getGirVerHeight (vArgs) {
     let stepHeight = this.stepHeight
     if (vArgs.type === Types.GirderType.gslab) {

@@ -205,18 +205,38 @@ export const Types = $root.Types = (() => {
     })();
 
     /**
+     * BigColumnType enum.
+     * @name Types.BigColumnType
+     * @enum {number}
+     * @property {number} bc_ph=0 bc_ph value
+     * @property {number} bc_common=1 bc_common value
+     * @property {number} bc_support=2 bc_support value
+     * @property {number} bc_start=3 bc_start value
+     */
+    Types.BigColumnType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "bc_ph"] = 0;
+        values[valuesById[1] = "bc_common"] = 1;
+        values[valuesById[2] = "bc_support"] = 2;
+        values[valuesById[3] = "bc_start"] = 3;
+        return values;
+    })();
+
+    /**
      * ArrangeRule enum.
      * @name Types.ArrangeRule
      * @enum {number}
      * @property {number} arph=0 arph value
      * @property {number} arrFour=1 arrFour value
      * @property {number} arrThree=2 arrThree value
+     * @property {number} arrTwo=3 arrTwo value
      */
     Types.ArrangeRule = (function() {
         const valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "arph"] = 0;
         values[valuesById[1] = "arrFour"] = 1;
         values[valuesById[2] = "arrThree"] = 2;
+        values[valuesById[3] = "arrTwo"] = 3;
         return values;
     })();
 
@@ -4567,6 +4587,7 @@ export const Types = $root.Types = (() => {
          * @property {string|null} [uuid] Flight uuid
          * @property {number|null} [stepHeight] Flight stepHeight
          * @property {Types.IStepParameters|null} [stepParameters] Flight stepParameters
+         * @property {number|null} [length] Flight length
          * @property {Array.<Types.ITread>|null} [treads] Flight treads
          * @property {Array.<Types.IRiser>|null} [risers] Flight risers
          */
@@ -4611,6 +4632,14 @@ export const Types = $root.Types = (() => {
          * @instance
          */
         Flight.prototype.stepParameters = null;
+
+        /**
+         * Flight length.
+         * @member {number} length
+         * @memberof Types.Flight
+         * @instance
+         */
+        Flight.prototype.length = 0;
 
         /**
          * Flight treads.
@@ -4658,6 +4687,8 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 4, wireType 5 =*/37).float(message.stepHeight);
             if (message.stepParameters != null && Object.hasOwnProperty.call(message, "stepParameters"))
                 $root.Types.StepParameters.encode(message.stepParameters, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.length != null && Object.hasOwnProperty.call(message, "length"))
+                writer.uint32(/* id 6, wireType 5 =*/53).float(message.length);
             if (message.treads != null && message.treads.length)
                 for (let i = 0; i < message.treads.length; ++i)
                     $root.Types.Tread.encode(message.treads[i], writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
@@ -4706,6 +4737,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 5:
                     message.stepParameters = $root.Types.StepParameters.decode(reader, reader.uint32());
+                    break;
+                case 6:
+                    message.length = reader.float();
                     break;
                 case 7:
                     if (!(message.treads && message.treads.length))
@@ -4763,6 +4797,9 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "stepParameters." + error;
             }
+            if (message.length != null && message.hasOwnProperty("length"))
+                if (typeof message.length !== "number")
+                    return "length: number expected";
             if (message.treads != null && message.hasOwnProperty("treads")) {
                 if (!Array.isArray(message.treads))
                     return "treads: array expected";
@@ -4805,6 +4842,8 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.Flight.stepParameters: object expected");
                 message.stepParameters = $root.Types.StepParameters.fromObject(object.stepParameters);
             }
+            if (object.length != null)
+                message.length = Number(object.length);
             if (object.treads) {
                 if (!Array.isArray(object.treads))
                     throw TypeError(".Types.Flight.treads: array expected");
@@ -4849,6 +4888,7 @@ export const Types = $root.Types = (() => {
                 object.uuid = "";
                 object.stepHeight = 0;
                 object.stepParameters = null;
+                object.length = 0;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -4856,6 +4896,8 @@ export const Types = $root.Types = (() => {
                 object.stepHeight = options.json && !isFinite(message.stepHeight) ? String(message.stepHeight) : message.stepHeight;
             if (message.stepParameters != null && message.hasOwnProperty("stepParameters"))
                 object.stepParameters = $root.Types.StepParameters.toObject(message.stepParameters, options);
+            if (message.length != null && message.hasOwnProperty("length"))
+                object.length = options.json && !isFinite(message.length) ? String(message.length) : message.length;
             if (message.treads && message.treads.length) {
                 object.treads = [];
                 for (let j = 0; j < message.treads.length; ++j)
@@ -7844,6 +7886,7 @@ export const Types = $root.Types = (() => {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     break;
                 }
             if (message.material != null && message.hasOwnProperty("material")) {
@@ -7886,6 +7929,10 @@ export const Types = $root.Types = (() => {
             case "arrThree":
             case 2:
                 message.arrangeRule = 2;
+                break;
+            case "arrTwo":
+            case 3:
+                message.arrangeRule = 3;
                 break;
             }
             if (object.material != null) {
@@ -7953,7 +8000,7 @@ export const Types = $root.Types = (() => {
          * @property {Types.IVector3|null} [size] BigColumn size
          * @property {Types.IVector3|null} [rotation] BigColumn rotation
          * @property {Types.IBigColParameters|null} [paras] BigColumn paras
-         * @property {boolean|null} [isProp] BigColumn isProp
+         * @property {Types.BigColumnType|null} [type] BigColumn type
          */
 
         /**
@@ -8012,12 +8059,12 @@ export const Types = $root.Types = (() => {
         BigColumn.prototype.paras = null;
 
         /**
-         * BigColumn isProp.
-         * @member {boolean} isProp
+         * BigColumn type.
+         * @member {Types.BigColumnType} type
          * @memberof Types.BigColumn
          * @instance
          */
-        BigColumn.prototype.isProp = false;
+        BigColumn.prototype.type = 0;
 
         /**
          * Creates a new BigColumn instance using the specified properties.
@@ -8053,8 +8100,8 @@ export const Types = $root.Types = (() => {
                 $root.Types.Vector3.encode(message.rotation, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             if (message.paras != null && Object.hasOwnProperty.call(message, "paras"))
                 $root.Types.BigColParameters.encode(message.paras, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-            if (message.isProp != null && Object.hasOwnProperty.call(message, "isProp"))
-                writer.uint32(/* id 6, wireType 0 =*/48).bool(message.isProp);
+            if (message.type != null && Object.hasOwnProperty.call(message, "type"))
+                writer.uint32(/* id 6, wireType 0 =*/48).int32(message.type);
             return writer;
         };
 
@@ -8105,7 +8152,7 @@ export const Types = $root.Types = (() => {
                     message.paras = $root.Types.BigColParameters.decode(reader, reader.uint32());
                     break;
                 case 6:
-                    message.isProp = reader.bool();
+                    message.type = reader.int32();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -8165,9 +8212,16 @@ export const Types = $root.Types = (() => {
                 if (error)
                     return "paras." + error;
             }
-            if (message.isProp != null && message.hasOwnProperty("isProp"))
-                if (typeof message.isProp !== "boolean")
-                    return "isProp: boolean expected";
+            if (message.type != null && message.hasOwnProperty("type"))
+                switch (message.type) {
+                default:
+                    return "type: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    break;
+                }
             return null;
         };
 
@@ -8205,8 +8259,24 @@ export const Types = $root.Types = (() => {
                     throw TypeError(".Types.BigColumn.paras: object expected");
                 message.paras = $root.Types.BigColParameters.fromObject(object.paras);
             }
-            if (object.isProp != null)
-                message.isProp = Boolean(object.isProp);
+            switch (object.type) {
+            case "bc_ph":
+            case 0:
+                message.type = 0;
+                break;
+            case "bc_common":
+            case 1:
+                message.type = 1;
+                break;
+            case "bc_support":
+            case 2:
+                message.type = 2;
+                break;
+            case "bc_start":
+            case 3:
+                message.type = 3;
+                break;
+            }
             return message;
         };
 
@@ -8229,7 +8299,7 @@ export const Types = $root.Types = (() => {
                 object.size = null;
                 object.rotation = null;
                 object.paras = null;
-                object.isProp = false;
+                object.type = options.enums === String ? "bc_ph" : 0;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -8241,8 +8311,8 @@ export const Types = $root.Types = (() => {
                 object.rotation = $root.Types.Vector3.toObject(message.rotation, options);
             if (message.paras != null && message.hasOwnProperty("paras"))
                 object.paras = $root.Types.BigColParameters.toObject(message.paras, options);
-            if (message.isProp != null && message.hasOwnProperty("isProp"))
-                object.isProp = message.isProp;
+            if (message.type != null && message.hasOwnProperty("type"))
+                object.type = options.enums === String ? $root.Types.BigColumnType[message.type] : message.type;
             return object;
         };
 

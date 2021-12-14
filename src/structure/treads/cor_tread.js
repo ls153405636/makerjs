@@ -1,5 +1,6 @@
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
+import { SmallColumn } from "../small_column";
 import tool from "../tool";
 import { Tread } from "./tread";
 
@@ -10,6 +11,8 @@ export class CorTread extends Tread {
     this.lastEdgeIndex = vLastEdgeIndex
     this.nextEdgeIndex = vNextEdgeIndex
     this.type = Types.TreadType.tCor
+    /**休台踏步所有轮廓一律为顺时针，clock用于判断转角对角点和前后楼梯边的关系 */
+    /**此处设计不够科学合理，为临时方法，后续有时间需重新设计调整 */
     this.clock = vClock
     this.curOrder = 'last'
     this.rebuildByParent({vIndex, vBorder})
@@ -70,6 +73,67 @@ export class CorTread extends Tread {
     edge.p1.z = this.position.z + vArgs.height
     edge.p2.z = this.position.z + vArgs.height
     return edge
+  }
+
+  getSmallCols(vSide, vArgs, vLastNum, vOrder) {
+    this.setCurOrder(vOrder)
+    let utilE = this.getSideUtilE()
+    let gArgs = this.parent.parent.getGirderParas(vSide)
+    let hArgs = this.parent.parent.getHandParas(vSide)
+    let extendDis = gArgs.type === Types.GirderType.gslab ? this.parent.parent.sideOffset : -this.parent.parent.sideOffset
+    let height = gArgs.type === Types.GirderType.gslab ? hArgs.height - this.getUpGirVerHeight(gArgs) : hArgs.height
+    let size = tool.parseSpecification(vArgs.specification)
+    size.z = height
+    let {lastDis,interval} = this.getSmallColInterval(vArgs, vLastNum)
+    let sCols = []
+    if (vOrder === 'last') {
+      utilE.extendP2(extendDis)
+      utilE.extendP1(-lastDis)
+      //sCols.push(new SmallColumn(this.parent.parent, utilE.getP1PB(), size))
+    } else {
+      utilE.extendP1(extendDis)
+      utilE.extendP2(-lastDis)
+    }
+    let seg = Math.ceil(utilE.getLength()/interval)
+    interval = utilE.getLength()/ seg
+    let pos = utilE.getP1PB()
+    for (let i = 0; i <= seg; i++) {
+      if (vOrder === 'last' && this.parent.oppoBigCol && i === seg) {
+        continue
+      }
+      pos.z =  gArgs.type === Types.GirderType.gslab ? this.position.z + this.getUpGirVerHeight(gArgs) : this.position.z
+      if (i !== 0 || vOrder !== 'next') {
+        sCols.push(new SmallColumn(this.parent.parent, pos, size))
+      }
+      pos = new Edge().setByVec(pos, utilE.getVec(), interval).p2
+    }
+    return sCols
+  }
+
+  /**
+   *
+   * @param {Types.SmallColParameters} vArgs
+   * @param {Number} vLastNum
+   * @returns
+   * @memberof CorTread
+   */
+  getSmallColInterval(vArgs, vLastNum) {
+    let lastT = this.getLastTread()
+    if (lastT.type === Types.TreadType.tCor) {
+      lastT = lastT.getLastTread()
+    }
+    let lastDis, interval
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
+      interval = lastT.stepWidth * 2 / 3
+      lastDis = vLastNum === 1 ? lastT.stepWidth / 2 : lastT.stepWidth / 6
+    } else if (vArgs.arrangeRule === Types.ArrangeRule.arrFour) {
+      interval = lastT.stepWidth / 2
+      lastDis = lastT.stepWidth / 4
+    } else {
+      interval = lastT.stepWidth / 2
+      lastDis = lastT.stepWidth / 2
+    }
+    return {lastDis, interval}
   }
 
   getGirUtilE (vSide, vArgs) {

@@ -1,12 +1,12 @@
-import { COMP_TYPES } from '../common/common_config'
-import { Types } from '../types/stair_v2'
-import { Edge } from '../utils/edge'
-import { Edge3 } from '../utils/edge3'
-import { ChildInfo } from './child_info'
-import { Default } from './config'
-import tool from './tool'
+import { COMP_TYPES } from '../../common/common_config'
+import { Types } from '../../types/stair_v2'
+import { Edge } from '../../utils/edge'
+import { Edge3 } from '../../utils/edge3'
+import { ChildInfo } from '../child_info'
+import { Default } from '../config'
+import tool from '../tool'
 //import { Tread } from './tread'
-import { RectTread } from './treads/rect_tread'
+import { RectTread } from '../treads/rect_tread'
 
 export class Flight extends ChildInfo {
   static NUM_RULE_OPTIONS = [
@@ -192,7 +192,7 @@ export class Flight extends ChildInfo {
   }
 
   /**
-   * 
+   * 根据某一侧创建出大梁的踏板单位轮廓集合
    * @param {string} vSide 
    * @param {Types.GirderParameters} vArgs 
    */
@@ -219,6 +219,13 @@ export class Flight extends ChildInfo {
     return borders
   }
 
+  /**
+   *
+   *创建某一侧的扶手路径边集
+   * @param {Object} arguments[0]
+   * @returns
+   * @memberof Flight
+   */
   createHandEdges({vSide, vArgs}) {
     let edges = []
     let lastUtilE = null
@@ -226,7 +233,7 @@ export class Flight extends ChildInfo {
       if (this.treads[i].isLast) {
         continue
       }
-      let edge = this.treads[i].getHandEdge(vSide, vArgs, i===0, i===this.treads.length-1)
+      let edge = this.treads[i].getHandEdge(vSide, vArgs)
       if (!edge) {
         continue
       }
@@ -239,6 +246,20 @@ export class Flight extends ChildInfo {
       }
     }
     return edges
+  }
+
+  createSmallCols({vSide, vArgs, vLastNum}) {
+    let sCols = []
+    let lastNum = vLastNum
+    for (let i = 0; i < this.treads.length; i++) {
+      if (this.treads[i].isLast) {
+        continue
+      }
+      let tSCols = this.treads[i].getSmallCols(vSide, vArgs, i === 0, lastNum)
+      lastNum = tSCols.length
+      sCols = sCols.concat(tSCols)
+    }
+    return {sCols, lastNum}
   }
 
   writePB() {

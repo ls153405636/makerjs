@@ -1,4 +1,4 @@
-import { Flight } from './flight'
+import { Flight } from './flights/flight'
 import { Types } from '../types/stair_v2'
 import { Default } from './config'
 import { Stair } from './stair'
