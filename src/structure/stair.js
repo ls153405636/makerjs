@@ -1,5 +1,5 @@
 import { Info } from './info'
-import { Default } from './config'
+import { Default, StructConfig } from './config'
 import { Types } from '../types/stair_v2'
 import { Flight } from './flights/flight'
 import tool from './tool'
@@ -14,6 +14,8 @@ import { StartFlight } from './flights/start_flight'
 import { StairSide } from './toolComp/stair_side'
 import { COMP_TYPES } from '../common/common_config'
 import { reqTemp } from './resource/temp'
+import { D2Config } from '../d2/config'
+import { D3Config } from '../d3/d3_config'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -146,6 +148,14 @@ export class Stair extends Info {
 
   /**更新楼梯分段 */
   updateSegments() {}
+
+  delInfo() {
+    let widget = D2Config.WIDGETS.get(this.uuid)
+    let model = D3Config.MODELS.get(this.uuid)
+    widget && widget.destroy()
+    model && model.dispose()
+    StructConfig.INFOS.delete(this.uuid)
+  }
 
 
   /**计算步高 */
