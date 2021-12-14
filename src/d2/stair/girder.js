@@ -6,7 +6,7 @@ import { Types } from '../../types/stair_v2'
 import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
-import { DashLine } from '../../../public/js/pixi'
+import { DashLine } from '../../assets/js/index'
 
 export class Girder extends ChildWidget {
   /**
@@ -43,7 +43,6 @@ export class Girder extends ChildWidget {
         path.push(f.inTopEdges[0].p1.x / D2Config.SCREEN_RATE, f.inTopEdges[0].p1.y / D2Config.SCREEN_RATE)
       }
     }
-    console.log(path)
     const changeGirder1 = new PIXI.Graphics()
     changeGirder1.lineStyle(1, 0x4478f4)
     changeGirder1.beginFill(0xffffff)
