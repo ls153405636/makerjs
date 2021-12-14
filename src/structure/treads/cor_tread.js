@@ -130,7 +130,7 @@ export class CorTread extends Tread {
       interval = lastT.stepWidth / 2
       lastDis = lastT.stepWidth / 4
     } else {
-      interval = lastT.stepWidth / 2
+      interval = lastT.stepWidth
       lastDis = lastT.stepWidth / 2
     }
     return {lastDis, interval}

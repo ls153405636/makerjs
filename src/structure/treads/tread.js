@@ -249,9 +249,8 @@ export class Tread extends ChildInfo {
       } else {
         return [size.x/2/this.stepWidth, 1 - size.x/2/this.stepWidth]
       }
-      
     } else {
-      return [1/4, 1/4]
+      return [1/4, 3/4]
     }
   }
 
@@ -335,12 +334,6 @@ export class Tread extends ChildInfo {
     } else {
       topPois[0].z -= this.stepHeight
     }
-    // if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
-    //   botPois.splice(0, 0, vLast.poi)
-    // } 
-    // if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
-    //   topPois.splice(0, 0, vLast.topPoi)
-    // }
     this.adaptGirLastPois(topPois, botPois, vLast)
     let edges = tool.createOutlineByPois(botPois, false).edges
     let topEdges = tool.createOutlineByPois(topPois, false).edges
@@ -396,12 +389,6 @@ export class Tread extends ChildInfo {
         botPois[0] = bP
       }
     }
-    // if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
-    //   botPois.splice(0, 0, vLast.poi)
-    // } 
-    // if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
-    //   topPois.splice(0, 0, vLast.topPoi)
-    // }
     this.adaptGirLastPois(topPois, botPois, vLast)
     let edges = tool.createOutlineByPois(botPois, false).edges
     let topEdges = tool.createOutlineByPois(topPois, false).edges
@@ -450,7 +437,7 @@ export class Tread extends ChildInfo {
     let nextT = this.parent.treads[this.index - this.parent.treadIndex]
     if (!nextT) {
       let nextF = this.parent.parent.segments[this.parent.index + 1]
-      nextT = nextF?.treads[nextF.treads.length - 1]
+      nextT = nextF?.treads[0]
     }
     return nextT
   }

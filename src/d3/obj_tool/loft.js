@@ -53,9 +53,9 @@ export class Loft {
         if (utilE.type === Types.EdgeType.estraight && nUtilE && nUtilE.type === Types.EdgeType.estraight) {
           vIsYFixed = false
         }
-        if (lUtilE && lUtilE.type !== Types.EdgeType.estraight) {
-          vIsYFixed = true
-        }
+        // if (lUtilE && lUtilE.type !== Types.EdgeType.estraight) {
+        //   vIsYFixed = true
+        // }
         if (i === 0) {
           let axis0 = this.createAxis(e, null)
           let sCutFacePois = this.createFacePois(e.p1d3, axis0)

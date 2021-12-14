@@ -16,6 +16,7 @@ import { COMP_TYPES } from '../common/common_config'
 import { reqTemp } from './resource/temp'
 import { D2Config } from '../d2/config'
 import { D3Config } from '../d3/d3_config'
+import { Edge3 } from '../utils/edge3'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -495,9 +496,10 @@ export class Stair extends Info {
   }
 
   updateSideHandrails (vSide) {
-    let edges = []
+    let edges = [], lastUtilE = null
     if (this.startFlight) {
       edges = this.startFlight.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
+      lastUtilE = new Edge3(edges[edges.length - 1])
     }
     for (const f of this.segments) {
       let fEdges = f.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})

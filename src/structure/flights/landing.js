@@ -514,21 +514,13 @@ export class Landing extends ChildInfo {
       return []
     }
     let edges = []
-    let lastUtilE = null
     for (const t of this.treads) {
       if (t.type === Types.TreadType.tCor) {
         edges.push(t.getHandEdge(vSide, vArgs, 'last'))
         edges.push(t.getHandEdge(vSide, vArgs, 'next'))
-        lastUtilE = null
       } else {
         let edge = t.getHandEdge(vSide, vArgs, false, false)
-        //edges.push(edge)
-        if (lastUtilE && lastUtilE.isD3ParallelTo(edge)) {
-          edges[edges.length - 1] = lastUtilE.combineEdge(edge)
-        } else {
-          edges.push(edge)
-          lastUtilE = new Edge3(edge)
-        }
+        edges = tool.concatEdges(edges, [edge])
       }
     }
     return edges

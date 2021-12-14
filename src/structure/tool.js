@@ -1,5 +1,6 @@
 import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
+import { Edge3 } from '../utils/edge3'
 
 export function parseSpecification(vSpecStr, order = 'xyz') {
   let size = new Types.Vector3()
