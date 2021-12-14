@@ -37,6 +37,7 @@ module.exports = {
         "react-hooks/exhaustive-deps": "off",
         "no-unused-vars": "off",
         "no-undef": "off",
+        "no-dupe-class-members": "off",
         "no-debugger": "off",
         "no-unsafe-negation": "off",
         "unused-imports/no-unused-imports": "off",
