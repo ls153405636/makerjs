@@ -1,15 +1,15 @@
-import { COMP_TYPES } from "../common/common_config";
-import { Types } from "../types/stair_v2";
-import { Edge } from "../utils/edge";
-import { Edge3 } from "../utils/edge3";
-import { Outline } from "../utils/outline";
-import { BigColumn } from "./big_column";
-import { ChildInfo } from "./child_info";
-import { Default } from "./config";
-import { SmallColumn } from "./small_column";
-import tool from "./tool";
-import { CorTread } from "./treads/cor_tread";
-import { SpecTread } from "./treads/spec_tread";
+import { COMP_TYPES } from "../../common/common_config";
+import { Types } from "../../types/stair_v2";
+import { Edge } from "../../utils/edge";
+import { Edge3 } from "../../utils/edge3";
+import { Outline } from "../../utils/outline";
+import { BigColumn } from "../big_column";
+import { ChildInfo } from "../child_info";
+import { Default } from "../config";
+import { SmallColumn } from "../small_column";
+import tool from "../tool";
+import { CorTread } from "../treads/cor_tread";
+import { SpecTread } from "../treads/spec_tread";
 
 
 export class Landing extends ChildInfo {
@@ -76,6 +76,8 @@ export class Landing extends ChildInfo {
     this.stepHeight = this.parent.stepHeight
     this.endHeight = this.stepHeight + this.stepHeight * this.stepNum
     this.compType = COMP_TYPES.LANDING
+    this.corBigCol = null //转角大柱
+    this.oppoBigCol = null //对角大柱
     this.updateTreads()
     //this.updateCorBigCol()
   }
@@ -516,7 +518,7 @@ export class Landing extends ChildInfo {
         edges.push(t.getHandEdge(vSide, vArgs, 'next'))
         lastUtilE = null
       } else {
-        let edge = this.treads[i].getHandEdge(vSide, vArgs, false, false)
+        let edge = t.getHandEdge(vSide, vArgs, false, false)
         //edges.push(edge)
         if (lastUtilE && lastUtilE.isD3ParallelTo(edge)) {
           edges[edges.length - 1] = lastUtilE.combineEdge(edge)
@@ -527,5 +529,24 @@ export class Landing extends ChildInfo {
       }
     }
     return edges
+  }
+
+  createSmallCols({vSide, vArgs, vLastNum}) {
+    if (vSide === 'out') {
+      return {sCols:[], lastNum:vLastNum}
+    }
+    let sCols = []
+    let lastNum = vLastNum
+    for (const t of this.treads) {
+      if (t.type === Types.TreadType.tCor) {
+        sCols = sCols.concat(t.getSmallCols(vSide, vArgs, vLastNum, 'last'))
+        sCols = sCols.concat(t.getSmallCols(vSide, vArgs, vLastNum, 'next'))
+      } else {
+        let tSCols = t.getSmallCols(vSide, vArgs, false, lastNum)
+        lastNum = tSCols.length
+        sCols = sCols.concat(tSCols)
+      }
+    }
+    return {sCols, lastNum}
   }
 }

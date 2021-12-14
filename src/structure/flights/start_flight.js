@@ -1,10 +1,10 @@
-import { Types } from "../types/stair_v2";
-import { Edge } from "../utils/edge";
-import { Outline } from "../utils/outline";
-import { ChildInfo } from "./child_info";
-import { Default } from "./config";
-import tool from "./tool";
-import { StartTread } from "./treads/start_tread";
+import { Types } from "../../types/stair_v2";
+import { Edge } from "../../utils/edge";
+import { Outline } from "../../utils/outline";
+import { ChildInfo } from "../child_info";
+import { Default } from "../config";
+import tool from "../tool";
+import { StartTread } from "../treads/start_tread";
 
 export class StartFlight extends ChildInfo{
   static START_TYPE_OPTION = [

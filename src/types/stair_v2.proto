@@ -88,11 +88,19 @@ enum BigColumnPosType {
   bcp_second = 3;  //第二级踏步
 }
 
+enum BigColumnType {
+  bc_ph = 0;
+  bc_common = 1; //普通端柱
+  bc_support = 2; //支撑柱
+  bc_start = 3; //起步大柱
+}
+
 //小柱排列规则
 enum ArrangeRule {
   arph     = 0;  //占位
   arrFour  = 1;  //两级四根
   arrThree = 2;  //两级三根
+  arrTwo   = 3;  //一级一根
 }
 
 //大梁类型
@@ -357,7 +365,7 @@ message BigColumn {
   Vector3          size     = 3;
   Vector3          rotation = 4;
   BigColParameters paras    = 5;
-  bool             isProp   = 6;
+  BigColumnType    type     = 6; 
 }
 
 //大柱参数

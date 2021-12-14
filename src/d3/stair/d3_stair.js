@@ -4,6 +4,7 @@ import { D3Config } from "../d3_config";
 import { Flight } from "./d3_flight";
 import { Girder } from "./d3_girder";
 import { Handrail } from "./d3_handrail";
+import { SmallColumn } from "./d3_small_col";
 
 
 export class Stair extends BaseModel {
@@ -26,6 +27,9 @@ export class Stair extends BaseModel {
     for (const h of this.handrails) {
       h.dispose()
     }
+    for (const sCol of this.smallColumns) {
+      sCol.dispose
+    }
     super.dispose()
   }
 
@@ -38,6 +42,7 @@ export class Stair extends BaseModel {
     this.flights = []
     this.girders = []
     this.handrails = []
+    this.smallColumns = []
     for (let i = 0; i < vPB.flights.length; i++) {
       let f = vPB.flights[i]
       this.flights.push(new Flight(this, f, vPB.treadParameters, vPB.riserParameters))
@@ -53,6 +58,9 @@ export class Stair extends BaseModel {
       let g = vPB.handrails[i]
       this.handrails.push(new Handrail(this, g, vPB.handrailParameters))
     }
+    for (const sCol of vPB.smallColumns) {
+      this.smallColumns.push(new SmallColumn(this, sCol, vPB.smallColParameters))
+    }
     this.createObj()
   }
 
@@ -66,6 +74,9 @@ export class Stair extends BaseModel {
     }
     for (const h of this.handrails) {
       h.getObj() && this.obj.add(h.getObj())
+    }
+    for (const sCol of this.smallColumns) {
+      sCol.getObj() && this.obj.add(sCol.getObj())
     }
     D3Config.OBJS.push(this.obj)
   }

@@ -86,11 +86,20 @@ export namespace Types {
         bcp_second = 3
     }
 
+    /** BigColumnType enum. */
+    enum BigColumnType {
+        bc_ph = 0,
+        bc_common = 1,
+        bc_support = 2,
+        bc_start = 3
+    }
+
     /** ArrangeRule enum. */
     enum ArrangeRule {
         arph = 0,
         arrFour = 1,
-        arrThree = 2
+        arrThree = 2,
+        arrTwo = 3
     }
 
     /** GirderType enum. */
@@ -1602,6 +1611,9 @@ export namespace Types {
         /** Flight stepParameters */
         stepParameters?: (Types.IStepParameters|null);
 
+        /** Flight length */
+        length?: (number|null);
+
         /** Flight treads */
         treads?: (Types.ITread[]|null);
 
@@ -1626,6 +1638,9 @@ export namespace Types {
 
         /** Flight stepParameters. */
         public stepParameters?: (Types.IStepParameters|null);
+
+        /** Flight length. */
+        public length: number;
 
         /** Flight treads. */
         public treads: Types.ITread[];
@@ -2856,8 +2871,8 @@ export namespace Types {
         /** BigColumn paras */
         paras?: (Types.IBigColParameters|null);
 
-        /** BigColumn isProp */
-        isProp?: (boolean|null);
+        /** BigColumn type */
+        type?: (Types.BigColumnType|null);
     }
 
     /** Represents a BigColumn. */
@@ -2884,8 +2899,8 @@ export namespace Types {
         /** BigColumn paras. */
         public paras?: (Types.IBigColParameters|null);
 
-        /** BigColumn isProp. */
-        public isProp: boolean;
+        /** BigColumn type. */
+        public type: Types.BigColumnType;
 
         /**
          * Creates a new BigColumn instance using the specified properties.

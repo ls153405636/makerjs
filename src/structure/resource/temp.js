@@ -22,7 +22,7 @@ export async function reqTemp() {
       ...reqData.params
     });
   } catch (err) {
-    console.log('catch err：', err)
+    console.log('catch err:', err)
   };
   console.log('res.data:', res.data)
 }

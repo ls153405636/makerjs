@@ -1,16 +1,16 @@
 import { Info } from './info'
 import { Default } from './config'
 import { Types } from '../types/stair_v2'
-import { Flight } from './flight'
+import { Flight } from './flights/flight'
 import tool from './tool'
 import { Girder } from './girder'
-import { Landing } from './landing'
+import { Landing } from './flights/landing'
 import { Edge } from '../utils/edge'
 import { Outline } from "../utils/outline"
 import { BigColumn } from "./big_column"
 import { Handrail } from "./handrail"
 import { SmallColumn } from "./small_column"
-import { StartFlight } from './start_flight'
+import { StartFlight } from './flights/start_flight'
 import { StairSide } from './toolComp/stair_side'
 import { COMP_TYPES } from '../common/common_config'
 import { reqTemp } from './resource/temp'
@@ -61,10 +61,12 @@ export class Stair extends Info {
     this.smallColParameters = new Types.SmallColParameters({
       arrangeRule: Default.SMALL_COL_ARR_RULE,
       specification: Default.SMALL_COL_SPEC,
+      source: Default.SMALL_COL_SRC
     })
     this.bigColParameters = new Types.BigColParameters({
       posType: Default.BIG_COL_POS_TYPE,
       specification: Default.BIG_COL_SPEC,
+      source: Default.BIG_COL_SRC
     })
     this.girderParameters = new Types.GirderParameters({
       height: Default.GIRDER_HEIGHT,
@@ -273,6 +275,10 @@ export class Stair extends Info {
     return this.bigColParameters
   }
 
+  getHandParas() {
+    return this.handrailParameters
+  }
+
 
   getArgs() {
     //reqTemp()
@@ -471,10 +477,8 @@ export class Stair extends Info {
   updateHandrails () {
     this.handrails = []
     let bor = this.border
-    // this.updateSideHandrails(bor.in.edges, 'in', this.getInSideOffsetPlus())
-    // this.updateSideHandrails(bor.out.edges, 'out', this.getOutSideOffsetPlus())
-    this.updateSideHandrails(bor.in, 'in', this.getInSideOffsetPlus())
-    this.updateSideHandrails(bor.out, 'out', this.getOutSideOffsetPlus())
+    this.updateSideHandrails(bor.in)
+    this.updateSideHandrails(bor.out)
   }
 
   updateSideHandrails (vSide) {
@@ -508,26 +512,6 @@ export class Stair extends Info {
             radius:radius,
             type: Types.EdgeType.earc
           }))
-          // let center2 = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
-          // let center1 = new Edge().setByVec(p1, this.flights[0].wVec, -this.sideOffset).p2
-          // let heightDiff = (p2.z - p1.z) / 3
-          // center1.z = p1.z + heightDiff
-          // center2.z = p2.z - heightDiff
-          // edges.push(new Types.Edge({
-          //   p1:p1, 
-          //   p2:center1,
-          //   type:Types.EdgeType.estraight
-          // }))
-          // edges.push(new Types.Edge({
-          //   p1:center1,
-          //   p2:center2,
-          //   type:Types.EdgeType.estraight
-          // }))
-          // edges.push(new Types.Edge({
-          //   p1:center2, 
-          //   p2:p2,
-          //   type:Types.EdgeType.estraight
-          // }))
         } else {
           let controlPos = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
           edges.push(new Types.Edge({
@@ -536,18 +520,6 @@ export class Stair extends Info {
             type:Types.EdgeType.ebeszer,
             controlPos:controlPos
           }))
-          // let center = new Edge().setByVec(p2, f.wVec, this.sideOffset).p2
-          // center.z = (p1.z + p2.z) / 2
-          // edges.push(new Types.Edge({
-          //   p1:p1, 
-          //   p2:center,
-          //   type:Types.EdgeType.estraight
-          // }))
-          // edges.push(new Types.Edge({
-          //   p1:center,
-          //   p2:p2,
-          //   type:Types.EdgeType.estraight
-          // }))
         }
         edges = edges.concat(fEdges)
       }
@@ -561,148 +533,97 @@ export class Stair extends Info {
     this.handrails.push(vSide.handrails[0])
   }
 
+  updateSmallColumns() {
+    this.smallColumns = []
+    let bor = this.border
+    this.updateSideSmallColumns(bor.in)
+    this.updateSideSmallColumns(bor.out)
+  }
+
   /**
-   * 更新边界中某一侧的扶手
-   * @param {Array<import('./toolComp/stair_edge').StairEdge>} vStairEdges 本侧边集
-   * @param {String} vSide 当前扶手属于哪一侧 'in' or 'out'
-   * @param {boolean} vSideOffsetPlus 边界边需偏移得到扶手路径，偏移方向是否为法线方向
+   * @param {StairSide} vSide
+   * @memberof Stair
    */
-  // updateSideHandrails (vStairEdges, vSide, vSideOffsetPlus) {
-  //   let routeEdgesArr = [[]]
-  //   let routeIndex = 0
-  //   let borSide = this.border[vSide]
-  //   for (let i = 0; i < vStairEdges.length; i++) {
-  //     let e = vStairEdges[i]
-  //     let sCol = vStairEdges[i].startCol
-  //     let eCol = vStairEdges[i].endCol
-  //     let gArgs = this.girderParameters
-  //     let start = new Types.Vector3(e.p1)
-  //     let end = new Types.Vector3(e.p2)
-  //     let edge = new Edge({
-  //       p1:start,
-  //       p2:end,
-  //       type:Types.EdgeType.estraight
-  //     })
-  //     let utilE = new Edge(edge)
-  //     /**无起步踏板时，扶手路径第一条边需根据大柱属性向前延伸 */
-  //     if (i === 0 && !this.startFlight) {
-  //       let frontOffset = this.computeBigColOffset()
-  //       utilE.extendP1(frontOffset).p1
-  //     }
-  //     if (sCol) {
-  //       let sOffset = 0
-  //       //这里取支撑柱的长还是宽需根据方向确定，但因为目前长宽都一样，所以全部取长
-  //       if (gArgs.type === Types.GirderType.gslab) {
-  //         sOffset = sCol.size.x / 2 - Math.abs(e.p1.x - sCol.position.x)
-  //       }
-  //       utilE.extendP1(-sOffset)
-  //       if (i !== 0) {
-  //         routeIndex++
-  //         routeEdgesArr[routeIndex] = []
-  //       }
-  //     }
-  //     if (eCol) {
-  //       let eOffset = 0
-  //       if (gArgs.type === Types.GirderType.gslab) {
-  //         eOffset = eCol.size.x / 2 - Math.abs(e.p2.x - eCol.position.x)
-  //       }
-  //       utilE.extendP2(-eOffset)
-  //     }
-  //     routeEdgesArr[routeIndex].push(utilE.writePB())
-  //   }
-  //   for (let i = 0; i < routeEdgesArr.length; i++) {
-  //     let edges = routeEdgesArr[i]
-  //     let route = new Types.Outline({edges:edges, isClose:false})
-  //     route = new Outline(route).offset(this.sideOffset, vSideOffsetPlus)
-  //     /**当存在起步踏板时， 扶手首边不做延伸，由起步踏板计算得出前面的边集，加入扶手轮廓*/
-  //     if (i === 0 && this.startFlight) {
-  //       let {inEdges, outEdges} = this.startFlight.createHandRouteEdges(this.handrailParameters)
-  //       if (vSide === 'in') {
-  //         route.edges = inEdges.concat(route.edges)
-  //       } else if (vSide === 'out') {
-  //         route.edges = outEdges.concat(route.edges)
-  //       }
-  //     }
-  //     if (borSide.handrails[i]) {
-  //       borSide.handrails[i].rebuildByParent(route)
-  //     } else {
-  //       borSide.handrails[i] = new Handrail(this, route)
-  //     }
-  //     this.handrails.push(borSide.handrails[i])
-  //   }
-  // }
+  updateSideSmallColumns(vSide) {
+    let fLastNum = 0
+    for (const f of this.segments) {
+      let {sCols, lastNum} = f.createSmallCols({vSide:vSide.sideName,vArgs:this.smallColParameters,vLastNum:fLastNum})
+      this.smallColumns = this.smallColumns.concat(sCols)
+      fLastNum = lastNum
+    }
+  }
 
   /**
    * 更新小柱
    */
-  updateSmallColumns() {
-    let args = this.smallColParameters
-    let size = tool.parseSpecification(args.specification)
-    this.smallColumns = []
-    let bor = this.border
-    this.updateSideSmallCols(bor.in.edges, 'in')
-    this.updateSideSmallCols(bor.out.edges, 'out')
-    if (this.landings.length > 0) {
-      let dis
-      if (args.arrangeRule === Types.ArrangeRule.arrThree) {
-        dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) * 2 / 3
-      } else {
-        dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) / 2
-      }
-      for (const l of this.landings) {
-        this.smallColumns = this.smallColumns.concat(l.createSmallCols(dis, dis, size))
-      }
-    }
-  }
+  // updateSmallColumns() {
+  //   let args = this.smallColParameters
+  //   let size = tool.parseSpecification(args.specification)
+  //   this.smallColumns = []
+  //   let bor = this.border
+  //   this.updateSideSmallCols(bor.in.edges, 'in')
+  //   this.updateSideSmallCols(bor.out.edges, 'out')
+  //   if (this.landings.length > 0) {
+  //     let dis
+  //     if (args.arrangeRule === Types.ArrangeRule.arrThree) {
+  //       dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) * 2 / 3
+  //     } else {
+  //       dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) / 2
+  //     }
+  //     for (const l of this.landings) {
+  //       this.smallColumns = this.smallColumns.concat(l.createSmallCols(dis, dis, size))
+  //     }
+  //   }
+  // }
 
   /**
    * 更新边界中的一侧小柱
    * @param {Array<import('./toolComp/stair_edge').StairEdge>} vStairEdges 本侧边集
    * @param {string} vSide 当前小柱属于哪一侧 'in' or 'out'
    */
-  updateSideSmallCols(vStairEdges, vSide) {
-    let args = this.smallColParameters
-    let size = tool.parseSpecification(args.specification)
-    let gArgs = this.girderParameters
-    let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.sideOffset : this.sideOffset
-    for (let i = 0; i < vStairEdges.length; i++) {
-      let sideE = vStairEdges[i]
-      let flight = sideE.flight
-      if (flight?.compType !== COMP_TYPES.FLIGHT) {
-        continue
-      }
-      let k = 0
-      /**无起步踏时，小柱起始位置由大柱位置类型决定 */
-      if (i === 0 && !this.startFlight) {
-        k = Math.abs(1 - this.bigColParameters.posType)
-      }
-      for (; k < flight.treads.length; k++) {
-        let t = flight.treads[k]
-        if (t.isLast) {
-          continue
-        }
-        let posArr = []
-        let sideOffsetK = sideOffset
-        if (vSide === 'out') {
-          sideOffsetK = sideOffset + t.stepLength - flight.stepLength
-        }
-        if (args.arrangeRule === Types.ArrangeRule.arrThree) {
-          let index = k % 2
-          if (index === 0) {
-            let rate = Math.max(1/6, size.x/2/t.stepWidth)
-            posArr = t.getColPos([rate, 1-rate], vSide, sideOffsetK)
-          } else {
-            posArr = t.getColPos([1/2], vSide, sideOffsetK)
-          }
-        } else {
-          posArr = t.getColPos([1/4, 3/4], vSide, sideOffsetK)
-        }
-        for (const p of posArr) {
-          this.smallColumns.push(new SmallColumn(this, p, size))
-        }
-      }
-    }
-  }
+  // updateSideSmallCols(vStairEdges, vSide) {
+  //   let args = this.smallColParameters
+  //   let size = tool.parseSpecification(args.specification)
+  //   let gArgs = this.girderParameters
+  //   let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.sideOffset : this.sideOffset
+  //   for (let i = 0; i < vStairEdges.length; i++) {
+  //     let sideE = vStairEdges[i]
+  //     let flight = sideE.flight
+  //     if (flight?.compType !== COMP_TYPES.FLIGHT) {
+  //       continue
+  //     }
+  //     let k = 0
+  //     /**无起步踏时，小柱起始位置由大柱位置类型决定 */
+  //     if (i === 0 && !this.startFlight) {
+  //       k = Math.abs(1 - this.bigColParameters.posType)
+  //     }
+  //     for (; k < flight.treads.length; k++) {
+  //       let t = flight.treads[k]
+  //       if (t.isLast) {
+  //         continue
+  //       }
+  //       let posArr = []
+  //       let sideOffsetK = sideOffset
+  //       if (vSide === 'out') {
+  //         sideOffsetK = sideOffset + t.stepLength - flight.stepLength
+  //       }
+  //       if (args.arrangeRule === Types.ArrangeRule.arrThree) {
+  //         let index = k % 2
+  //         if (index === 0) {
+  //           let rate = Math.max(1/6, size.x/2/t.stepWidth)
+  //           posArr = t.getColPos([rate, 1-rate], vSide, sideOffsetK)
+  //         } else {
+  //           posArr = t.getColPos([1/2], vSide, sideOffsetK)
+  //         }
+  //       } else {
+  //         posArr = t.getColPos([1/4, 3/4], vSide, sideOffsetK)
+  //       }
+  //       for (const p of posArr) {
+  //         this.smallColumns.push(new SmallColumn(this, p, size))
+  //       }
+  //     }
+  //   }
+  // }
 
   /**
    * 更新大柱
