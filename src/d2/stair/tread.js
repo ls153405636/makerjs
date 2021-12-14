@@ -286,7 +286,7 @@ export class Tread extends ChildWidget {
     let girderWidth
 
     // 普通踏板标注
-    if (this.type === Types.TreadType.trect || this.type === Types.TreadType.tSpec) {
+    if (this.type === Types.TreadType.trect || this.type === Types.TreadType.tSpec || this.type === Types.TreadType.tCor) {
       for (let i = 0; i < this.inIndex.length; i++) {
         p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
         p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
@@ -869,191 +869,191 @@ export class Tread extends ChildWidget {
       }
     }
     // 休息平台
-    if (this.type === Types.TreadType.tCor) {
-      // console.log(this.edges)
+    // if (this.type === Types.TreadType.tCor) {
+    //   // console.log(this.edges)
 
       
       
       
-      setTimeout(() => {
-        if (girder[0].borders) {
-          girderWidth = girder[0].borders[0].inEdges[0].p1.x - girder[0].borders[0].outEdges[0].p1.x
-        } else {
-          return
-        }
+    //   setTimeout(() => {
+    //     if (girder[0].borders) {
+    //       girderWidth = girder[0].borders[0].inEdges[0].p1.x - girder[0].borders[0].outEdges[0].p1.x
+    //     } else {
+    //       return
+    //     }
 
-        let newEdges = []
-        let Np1
-        let Np2
-        let wall
-        let stairP
-        for (let i = 0; i < this.inIndex.length; i++) {
-          p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
-          p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
-          // console.log(p1)
-          // console.log(p2)
+    //     let newEdges = []
+    //     let Np1
+    //     let Np2
+    //     let wall
+    //     let stairP
+    //     for (let i = 0; i < this.inIndex.length; i++) {
+    //       p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
+    //       p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
+    //       // console.log(p1)
+    //       // console.log(p2)
           
-          if (this.inIndex[this.inIndex.length - 1] === 3 || this.inIndex[this.inIndex.length - 1] === 4) {
-            if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
-              Np1 = p1.clone().subtractX(new Victor(50,50))
-              Np2 = p2.clone()
+    //       if (this.inIndex[this.inIndex.length - 1] === 3 || this.inIndex[this.inIndex.length - 1] === 4) {
+    //         if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
+    //           Np1 = p1.clone().subtractX(new Victor(50,50))
+    //           Np2 = p2.clone()
   
-              normal = new Types.Vector3({ x: 0, y: -1 })
-              for(let value of D2Config.WIDGETS.values()) {
-                if (value.getWidgetType() === COMP_TYPES.WALL) {
-                  if (tool.isVec2Equal(value.normal, normal)) {
-                    wall = value
-                  }
-                }
-                if (value.getWidgetType() === COMP_TYPES.STAIR) {
-                  stairP = d2_tool.translateCoord(value.position)
-                }
-              }
-              // console.log(stairP)
-              // console.log(wall.outP1)
-              // console.log(wall.p1)
-              let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10 )
-              // console.log(wallOutP1)
+    //           normal = new Types.Vector3({ x: 0, y: -1 })
+    //           for(let value of D2Config.WIDGETS.values()) {
+    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
+    //               if (tool.isVec2Equal(value.normal, normal)) {
+    //                 wall = value
+    //               }
+    //             }
+    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
+    //               stairP = d2_tool.translateCoord(value.position)
+    //             }
+    //           }
+    //           // console.log(stairP)
+    //           // console.log(wall.outP1)
+    //           // console.log(wall.p1)
+    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10 )
+    //           // console.log(wallOutP1)
   
-              // 左侧
-              newP1 = new Victor(Np1.x, wallOutP1.y * 10)
-              newP2 = new Victor(Np2.x, wallOutP1.y * 10)
-              newP1 = newP1.subtractY(offSet)
-              newP2 = newP2.subtractY(offSet)
+    //           // 左侧
+    //           newP1 = new Victor(Np1.x, wallOutP1.y * 10)
+    //           newP2 = new Victor(Np2.x, wallOutP1.y * 10)
+    //           newP1 = newP1.subtractY(offSet)
+    //           newP2 = newP2.subtractY(offSet)
 
-              newP1T = newP1.clone().subtractY(arrow)
-              newP1B = newP1.clone().addY(arrow)
-              newP2T = newP2.clone().subtractY(arrow)
-              newP2B = newP2.clone().addY(arrow)
-            }
-            if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
-              Np1 = p1.clone()
-              Np2 = p2.clone().subtractY(new Victor(50,50)) 
+    //           newP1T = newP1.clone().subtractY(arrow)
+    //           newP1B = newP1.clone().addY(arrow)
+    //           newP2T = newP2.clone().subtractY(arrow)
+    //           newP2B = newP2.clone().addY(arrow)
+    //         }
+    //         if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
+    //           Np1 = p1.clone()
+    //           Np2 = p2.clone().subtractY(new Victor(50,50)) 
   
-              normal = new Types.Vector3({ x: -1, y: -0 })
-              for(let value of D2Config.WIDGETS.values()) {
-                if (value.getWidgetType() === COMP_TYPES.WALL) {
-                  if (tool.isVec2Equal(value.normal, normal)) {
-                    wall = value
-                  }
-                }
-                if (value.getWidgetType() === COMP_TYPES.STAIR) {
-                  stairP = d2_tool.translateCoord(value.position)
-                }
-              }
-              // console.log(stairP)
-              // console.log(wall.outP1)
-              // console.log(wall.p1)
-              let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10)
-              // console.log(wallOutP1)
+    //           normal = new Types.Vector3({ x: -1, y: -0 })
+    //           for(let value of D2Config.WIDGETS.values()) {
+    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
+    //               if (tool.isVec2Equal(value.normal, normal)) {
+    //                 wall = value
+    //               }
+    //             }
+    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
+    //               stairP = d2_tool.translateCoord(value.position)
+    //             }
+    //           }
+    //           // console.log(stairP)
+    //           // console.log(wall.outP1)
+    //           // console.log(wall.p1)
+    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10)
+    //           // console.log(wallOutP1)
   
-              // 左侧
-              newP1 = new Victor(wallOutP1.x * 10, Np1.y)
-              newP2 = new Victor(wallOutP1.x * 10, Np2.y)
-              newP1 = newP1.subtractX(offSet)
-              newP2 = newP2.subtractX(offSet)
+    //           // 左侧
+    //           newP1 = new Victor(wallOutP1.x * 10, Np1.y)
+    //           newP2 = new Victor(wallOutP1.x * 10, Np2.y)
+    //           newP1 = newP1.subtractX(offSet)
+    //           newP2 = newP2.subtractX(offSet)
 
-              newP1T = newP1.clone().subtractX(arrow)
-              newP1B = newP1.clone().addX(arrow)
-              newP2T = newP2.clone().subtractX(arrow)
-              newP2B = newP2.clone().addX(arrow)
-            }
-          }
-          if (this.inIndex[this.inIndex.length - 1] === 1 || this.inIndex[this.inIndex.length - 1] === 2 || (this.inIndex[0] === 2 && this.inIndex[this.inIndex.length - 1] === 3)) {
-            if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
-              Np1 = p1.clone() 
-              Np2 = p2.clone().addX(new Victor(50,50)) 
+    //           newP1T = newP1.clone().subtractX(arrow)
+    //           newP1B = newP1.clone().addX(arrow)
+    //           newP2T = newP2.clone().subtractX(arrow)
+    //           newP2B = newP2.clone().addX(arrow)
+    //         }
+    //       }
+    //       if (this.inIndex[this.inIndex.length - 1] === 1 || this.inIndex[this.inIndex.length - 1] === 2 || (this.inIndex[0] === 2 && this.inIndex[this.inIndex.length - 1] === 3)) {
+    //         if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
+    //           Np1 = p1.clone() 
+    //           Np2 = p2.clone().addX(new Victor(50,50)) 
   
-              normal = new Types.Vector3({ x: 0, y: -1 })
-              for(let value of D2Config.WIDGETS.values()) {
-                if (value.getWidgetType() === COMP_TYPES.WALL) {
-                  if (tool.isVec2Equal(value.normal, normal)) {
-                    wall = value
-                  }
-                }
-                if (value.getWidgetType() === COMP_TYPES.STAIR) {
-                  stairP = d2_tool.translateCoord(value.position)
-                }
-              }
-              // console.log(stairP)
-              // console.log(wall.outP1)
-              // console.log(wall.p1)
-              let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10 )
-              console.log(wallOutP1)
+    //           normal = new Types.Vector3({ x: 0, y: -1 })
+    //           for(let value of D2Config.WIDGETS.values()) {
+    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
+    //               if (tool.isVec2Equal(value.normal, normal)) {
+    //                 wall = value
+    //               }
+    //             }
+    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
+    //               stairP = d2_tool.translateCoord(value.position)
+    //             }
+    //           }
+    //           // console.log(stairP)
+    //           // console.log(wall.outP1)
+    //           // console.log(wall.p1)
+    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10 )
+    //           console.log(wallOutP1)
   
-              // 左侧
-              newP1 = new Victor(Np1.x, wallOutP1.y * 10)
-              newP2 = new Victor(Np2.x, wallOutP1.y * 10)
-              newP1 = newP1.subtractY(offSet)
-              newP2 = newP2.subtractY(offSet)
+    //           // 左侧
+    //           newP1 = new Victor(Np1.x, wallOutP1.y * 10)
+    //           newP2 = new Victor(Np2.x, wallOutP1.y * 10)
+    //           newP1 = newP1.subtractY(offSet)
+    //           newP2 = newP2.subtractY(offSet)
 
-              newP1T = newP1.clone().subtractY(arrow)
-              newP1B = newP1.clone().addY(arrow)
-              newP2T = newP2.clone().subtractY(arrow)
-              newP2B = newP2.clone().addY(arrow)
-            }
-            if (p1.x === p2.x && p1.y < p2.y && this.isClock === true) {
-              Np1 = p1.clone().subtractY(new Victor(50,50))
-              Np2 = p2.clone()
+    //           newP1T = newP1.clone().subtractY(arrow)
+    //           newP1B = newP1.clone().addY(arrow)
+    //           newP2T = newP2.clone().subtractY(arrow)
+    //           newP2B = newP2.clone().addY(arrow)
+    //         }
+    //         if (p1.x === p2.x && p1.y < p2.y && this.isClock === true) {
+    //           Np1 = p1.clone().subtractY(new Victor(50,50))
+    //           Np2 = p2.clone()
   
-              normal = new Types.Vector3({ x: 1, y: 0 })
-              for(let value of D2Config.WIDGETS.values()) {
-                if (value.getWidgetType() === COMP_TYPES.WALL) {
-                  if (tool.isVec2Equal(value.normal, normal)) {
-                    wall = value
-                  }
-                }
-                if (value.getWidgetType() === COMP_TYPES.STAIR) {
-                  stairP = d2_tool.translateCoord(value.position)
-                }
-              }
-              // console.log(stairP)
-              // console.log(wall.outP1)
-              // console.log(wall.p1)
-              let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10)
-              // console.log(wallOutP1)
+    //           normal = new Types.Vector3({ x: 1, y: 0 })
+    //           for(let value of D2Config.WIDGETS.values()) {
+    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
+    //               if (tool.isVec2Equal(value.normal, normal)) {
+    //                 wall = value
+    //               }
+    //             }
+    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
+    //               stairP = d2_tool.translateCoord(value.position)
+    //             }
+    //           }
+    //           // console.log(stairP)
+    //           // console.log(wall.outP1)
+    //           // console.log(wall.p1)
+    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10)
+    //           // console.log(wallOutP1)
   
-              // 左侧
-              newP1 = new Victor(wallOutP1.x * 10, Np1.y)
-              newP2 = new Victor(wallOutP1.x * 10, Np2.y)
-              newP1 = newP1.addX(offSet)
-              newP2 = newP2.addX(offSet)
+    //           // 左侧
+    //           newP1 = new Victor(wallOutP1.x * 10, Np1.y)
+    //           newP2 = new Victor(wallOutP1.x * 10, Np2.y)
+    //           newP1 = newP1.addX(offSet)
+    //           newP2 = newP2.addX(offSet)
 
-              newP1T = newP1.clone().subtractX(arrow)
-              newP1B = newP1.clone().addX(arrow)
-              newP2T = newP2.clone().subtractX(arrow)
-              newP2B = newP2.clone().addX(arrow)
-            }
-          }
+    //           newP1T = newP1.clone().subtractX(arrow)
+    //           newP1B = newP1.clone().addX(arrow)
+    //           newP2T = newP2.clone().subtractX(arrow)
+    //           newP2B = newP2.clone().addX(arrow)
+    //         }
+    //       }
 
 
 
 
           
-          // treadLineNum.scale.set(0.25)
-          // treadLineNum.position.set(position.x, position.y)
-          // treadLineNum.anchor.set(0.5, 0.5)
-          // treadLineNum.rotation = newTextRotation
+    //       // treadLineNum.scale.set(0.25)
+    //       // treadLineNum.position.set(position.x, position.y)
+    //       // treadLineNum.anchor.set(0.5, 0.5)
+    //       // treadLineNum.rotation = newTextRotation
           
-            treadLine
-            .lineStyle(1,0x000000)
-            .moveTo(newP1.x / 10,newP1.y / 10)
-            .lineTo(newP2.x / 10,newP2.y / 10)
-            .moveTo(newP1T.x / 10,newP1T.y / 10)
-            .lineTo(newP1B.x / 10,newP1B.y / 10)
-            .moveTo(newP2T.x / 10,newP2T.y / 10)
-            .lineTo(newP2B.x / 10,newP2B.y / 10)
+    //         treadLine
+    //         .lineStyle(1,0x000000)
+    //         .moveTo(newP1.x / 10,newP1.y / 10)
+    //         .lineTo(newP2.x / 10,newP2.y / 10)
+    //         .moveTo(newP1T.x / 10,newP1T.y / 10)
+    //         .lineTo(newP1B.x / 10,newP1B.y / 10)
+    //         .moveTo(newP2T.x / 10,newP2T.y / 10)
+    //         .lineTo(newP2B.x / 10,newP2B.y / 10)
     
           
             
             
       
     
-          treadLineContainer.addChild(treadLine)
-        }
-      }, 10);
+    //       treadLineContainer.addChild(treadLine)
+    //     }
+    //   }, 10);
 
-    }
+    // }
     // 起步踏板标注
     if (this.type === Types.TreadType.tStart && this.edges.length === 5) {
       if (this.index === 1) {
