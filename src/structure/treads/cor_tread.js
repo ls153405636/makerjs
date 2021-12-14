@@ -209,12 +209,13 @@ export class CorTread extends Tread {
       p.z = topPois[1].z + heightDiff
       topPois.push(p)
     }
-    if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
-      botPois.splice(0, 0, vLast.poi)
-    } 
-    if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
-      topPois.splice(0, 0, vLast.topPoi)
-    }
+    // if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
+    //   botPois.splice(0, 0, vLast.poi)
+    // } 
+    // if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
+    //   topPois.splice(0, 0, vLast.topPoi)
+    // }
+    this.adaptGirLastPois(topPois, botPois, vLast)
     let edges = tool.createOutlineByPois(botPois, false).edges
     let topEdges = tool.createOutlineByPois(topPois, false).edges
     return {edges, topEdges}

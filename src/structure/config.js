@@ -39,7 +39,7 @@ export const Default = {
   BIG_COL_GAP: 20,
   BIG_COL_UP_HEIGHT: 150,
   GIRDER_TYPE: Types.GirderType.gsaw,
-  GIRDER_HEIGHT: 290,
+  GIRDER_HEIGHT: 180,
   GIRDER_DEPTH: 50,
   GIRDER_F_OFFSET: 20,
   GIRDER_B_HEIGHT: 55,
