@@ -148,8 +148,8 @@ export class Edge {
       //轮廓方向永远为2d平面（即y轴竖直向下的平面）的顺时针
       //转换到threejs的2d平面后，则变为逆时针
       //因此法线方向需顺时针旋转
-      if (this.getLength() < 0.01) {
-        this.normal = new THREE.Vector2
+      if (this.getLength() < 0.1) {
+        this.normal = new THREE.Vector2()
       } else {
         this.normal = this.getVec()
         .rotateAround(Edge.center, -Math.PI / 2)

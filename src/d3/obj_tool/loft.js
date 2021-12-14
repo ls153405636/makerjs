@@ -96,7 +96,7 @@ export class Loft {
       let vec2 = new THREE.Vector2(axis.x, axis.z)
       if (vec2.length() > 0.001 && vUtilE.isVerticalToVec2(vec2)) {
         x_axis = axis
-        if (this.isClock && (nor2D.distanceTo(vec2) < 0.001 || vUtilE.getLength() < 0.01)) {
+        if (this.isClock && (nor2D.distanceTo(vec2) < 0.001 || vUtilE.getLength() < 0.1)) {
           x_axis.negate()
         } else if((!this.isClock) && (nor2D.distanceTo(vec2) > 0.001 && vUtilE.getLength() > 0.01)){
           x_axis.negate()

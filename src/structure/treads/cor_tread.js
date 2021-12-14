@@ -125,7 +125,7 @@ export class CorTread extends Tread {
     let lastDis, interval
     if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
       interval = lastT.stepWidth * 2 / 3
-      lastDis = vLastNum === 1 ? lastT.stepWidth / 2 : lastT.stepWidth / 6
+      lastDis = vLastNum === 1 ? lastT.stepWidth / 6 : lastT.stepWidth / 2
     } else if (vArgs.arrangeRule === Types.ArrangeRule.arrFour) {
       interval = lastT.stepWidth / 2
       lastDis = lastT.stepWidth / 4

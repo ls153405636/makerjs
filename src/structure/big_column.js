@@ -18,10 +18,10 @@ export class BigColumn extends ChildInfo {
     { value: '140*140*1200', label: '140*140*1200' },
     { value: '150*150*1200', label: '150*150*1200' },
   ]
-  constructor({vParent, vPosition, vIsProp=false, vPosName=''}) {
+  constructor({vParent, vPosition, vType, vPosName=''}) {
     super(vParent)
-    this.isProp = vIsProp
-    if (this.isProp) {
+    this.type = vType
+    if (this.type !== Types.BigColumnType.bc_start) {
       this.paras = new Types.BigColParameters({
         specification: Default.BIG_COL_SPEC
       })
@@ -30,7 +30,7 @@ export class BigColumn extends ChildInfo {
     }
     this.posName = vPosName
     this.size = tool.parseSpecification(this.paras.specification)
-    this.rebuildByParent(vPosition, vIsProp)
+    this.rebuildByParent(vPosition)
   }
 
   addInfo () {
@@ -64,7 +64,7 @@ export class BigColumn extends ChildInfo {
       source: { name: '型号', value: '', type: 'replace' },
       material: { name: '材质', value: '', type: 'replace' },
     }
-    if (!this.isProp && this.parent?.startFlight == null) {
+    if (this.type === Types.BigColumnType.bc_start && this.parent?.startFlight == null) {
       args.posType = {
         name: '位置类型',
         value: f(this.paras.posType, BigColumn.POS_TYPE_OPTIONS),
@@ -72,12 +72,18 @@ export class BigColumn extends ChildInfo {
         options: BigColumn.POS_TYPE_OPTIONS,
       }
     }
+    args.name = '大柱参数'
+    if (this.type === Types.BigColumnType.bc_start) {
+      args.name = '起步大柱参数'
+    } else if (this.type === Types.BigColumnType.bc_support) {
+      args.name = '支撑柱参数'
+    }
     return args
   }
 
 
   update (vArgItems) {
-    if (!this.isProp) {
+    if (this.type === Types.BigColumnType.bc_start) {
       super.updateParent(vArgItems, 'bigColParameters')
     } else {
       super.update(vArgItems)

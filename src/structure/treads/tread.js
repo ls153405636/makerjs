@@ -243,7 +243,13 @@ export class Tread extends ChildInfo {
       return [1/2]
     } 
     if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
-      return [1/6, 5/6]
+      let size = tool.parseSpecification(vArgs.specification)
+      if (size.x / this.stepWidth > 1/12) {
+        return [1/6, 5/6]
+      } else {
+        return [size.x/2/this.stepWidth, 1 - size.x/2/this.stepWidth]
+      }
+      
     } else {
       return [1/4, 1/4]
     }

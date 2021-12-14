@@ -12,6 +12,7 @@ export class StartTread extends Tread {
   rebuildByParent({vIndex, vBorder, vStepWidth}) {
     super.rebuildByParent({vIndex})
     this.border = vBorder
+    this.position = this.border.stepOutline.edges[0].p1
     this.stepLength = this.parent.stepLength
     this.stepWidth = vStepWidth
     this.lVec = this.parent.lVec
