@@ -175,7 +175,6 @@ export class Stair extends BaseWidget {
 
   addDimension() {
     let stairInfo = StructConfig.INFOS.get(this.uuid)
-    // console.log(stairInfo.flights.length)
     const flightContainer = new PIXI.Container()
     let depth = stairInfo.depth ? stairInfo.depth : stairInfo.depth1
     let width = stairInfo.width

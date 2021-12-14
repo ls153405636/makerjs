@@ -197,6 +197,7 @@ export default defineComponent({
           floadSide: this.stair_dir_options.value.value,
         })
       )
+      this.$message.success('楼梯创建成功！')
     },
   },
   computed: {

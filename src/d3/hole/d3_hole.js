@@ -22,7 +22,7 @@ export class Hole extends BaseModel {
     for (let i = 0; i < holeInfo.walls.length; i++) {
       let w = holeInfo.walls[i]
       if ([Types.WallType.wnone, Types.WallType.wfirst].includes(w.type)) {
-        
+        console.log('d3_hole.js')
       }
     }
   }

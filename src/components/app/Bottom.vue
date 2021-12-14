@@ -61,6 +61,7 @@ export default defineComponent({
   },
   computed: {
     ...mapState('canvas', ['cur_mode']),
+    ...mapState('right_attribute', ['cur_args']),
 
   },
   methods: {
@@ -87,12 +88,16 @@ export default defineComponent({
       stage_scale_context.set_scale(zoom, true)
     },
     addStair() {
-      this.$store.commit({
-        type: 'show_img/needMask',
-        mask: true
-      })
-      let stairInit = document.getElementById('component-stair-init')
-      stairInit.style.display = 'block'
+      if (this.$store.state.getArgs.isFocus) {
+        this.$message.warning('请完善洞口数据！')
+      } else {
+        this.$store.commit({
+          type: 'show_img/needMask',
+          mask: true
+        })
+        let stairInit = document.getElementById('component-stair-init')
+        stairInit.style.display = 'block'
+      }
     },
     changleMode(vMode) {
       console.log(this.$store.state.canvas.cur_mode)

@@ -250,6 +250,9 @@ export class SmallUTypeStair extends UTypeStair {
    */
    updateSideGirder (vSide) {
     for (let i = 0; i < 3; i++) {
+      if (i === 1 && vSide.sideName === 'out') {
+        continue
+      }
       let borders = [], inLast = null, outLast = null, flights = []
       if (i === 0) {
         flights = [null, this.flights[0], this.landings[0]]
@@ -258,12 +261,12 @@ export class SmallUTypeStair extends UTypeStair {
       } else if (i === 2) {
         flights = [this.landings[1], this.flights[1], null]
       }
-      for (let i = 0; i < 3; i++) {
-        let f = flights[i]
+      for (let k = 0; k < 3; k++) {
+        let f = flights[k]
         if (f) {
           let rst = f.createGirderRoute({vSide:vSide.sideName, 
                                         vArgs:this.girderParameters, 
-                                        vOrder:i === 0 ? 'next':'last',
+                                        vOrder:k === 0 ? 'next':'last',
                                         vInLast:inLast,
                                         vOutLast:outLast})
           let border = rst[rst.length - 1]

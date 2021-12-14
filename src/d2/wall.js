@@ -12,6 +12,7 @@ import { CementComp } from './component/cement_comp'
 import { Core } from '../common/core'
 import { Command } from '../common/command'
 import { COMP_TYPES } from '../common/common_config'
+import { Edge } from '../utils/edge'
 
 export class Wall extends BaseWidget {
   /**
@@ -87,6 +88,7 @@ export class Wall extends BaseWidget {
     this.normal = vPB.normal
     this.type = vPB.type
     this.alpha = 0
+    this.holeEdge = vPB.holeEdge
     this.components = []
     this.createComponents(vPB.components)
     this.draw()
@@ -132,13 +134,17 @@ export class Wall extends BaseWidget {
       this.outP1.y,
     ]
 
+    let newHoleEdge = new Edge(this.holeEdge).offset(10,true)
+    let newHoleEdge1 = new Edge(newHoleEdge).extendP2(20)
+
     const wallContainer = new PIXI.Container('wall')
 
     const holeBlackLine = new PIXI.Graphics()
       holeBlackLine
-      .lineStyle(2,0x000000,1,1)
-      .moveTo(this.holeP1.x, this.holeP1.y)
-      .lineTo(this.holeP2.x, this.holeP2.y)
+      .lineStyle(2,0x000000,1)
+      // .moveTo(this.holeP1.x, this.holeP1.y)
+      // .lineTo(this.holeP2.x, this.holeP2.y)
+      .drawPolygon(newHoleEdge1.p1.x / D2Config.SCREEN_RATE, newHoleEdge1.p1.y / D2Config.SCREEN_RATE, newHoleEdge1.p2.x / D2Config.SCREEN_RATE, newHoleEdge1.p2.y / D2Config.SCREEN_RATE)
       // this.lineContainer.addChild(holeBlackLine)
       this.holeLineSprite = holeBlackLine
       this.holeLineSprite.zIndex = Z_INDEX.HOLE_LINE_ZINDEX

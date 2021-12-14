@@ -1,5 +1,6 @@
 const state = {
   getArgs: '',
+  isFocus: true,
 }
 
 const getters = {
@@ -11,6 +12,10 @@ const getters = {
 const mutations = {
   getArgs(state, payload) {
     state.getArgs = payload.url
+    // state.isShow = payload.value
+  },
+  getFocus(state, payload) {
+    state.isFocus = payload.focus
     // state.isShow = payload.value
   },
 }
