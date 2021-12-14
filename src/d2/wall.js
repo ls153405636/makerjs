@@ -103,16 +103,16 @@ export class Wall extends BaseWidget {
     //创建墙体纹理
     var texture = null
     switch (this.type) {
-      case 1:
+      case Types.WallType.wfirst:
         texture = PIXI.Texture.from(wFirst)
         break
-      case 2:
+      case Types.WallType.wsecond:
         texture = PIXI.Texture.from(wSecond)
         break
-      case 3:
+      case Types.WallType.wboth:
         texture = PIXI.Texture.from(wBoth)
         break
-      case 4:
+      case Types.WallType.wnone:
         texture = PIXI.Texture.from(wNone)
         break
     }
@@ -151,7 +151,12 @@ export class Wall extends BaseWidget {
 
     const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x929292,1,0)
-    wall.beginFill(0xe5e5e5, 1)
+
+    if (this.type === Types.WallType.wfirst) {
+      wall.beginFill(0xffffff, 1)
+    } else {
+      wall.beginFill(0xe5e5e5, 1)
+    }
     wall.drawPolygon(path)
     wall.endFill()
 
@@ -166,7 +171,7 @@ export class Wall extends BaseWidget {
   cancelSelected() {
     this.sprite.children[0].children[0].tint = 0xffffff
     this.isSelected = false
-    if (this.type === 4) {
+    if (this.type === Types.WallType.wnone) {
       this.sprite.children[0].children[0].alpha = this.alpha
     } else {
       this.sprite.children[0].children[0].alpha = 1
@@ -190,7 +195,7 @@ export class Wall extends BaseWidget {
   cancelHover() {
     if (!this.isSelected) {
       this.sprite.children[0].children[0].tint = 0xffffff
-      if (this.type === 4) {
+      if (this.type === Types.WallType.wnone) {
         this.sprite.children[0].children[0].alpha = this.alpha
       } else {
         this.sprite.children[0].children[0].alpha = 1
@@ -350,7 +355,7 @@ export class Wall extends BaseWidget {
     
 
     // 判断洞口边长是否等于墙体边长（不相等或墙消失，让洞口标线显示）
-    if (this.type ===4 || Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) !== Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
+    if (this.type === Types.WallType.wnone || Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) !== Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
       // 洞口标注文字
       const holeLineText = new PIXI.Text('洞口' + holeLinelength, {
         fontSize: 60,
@@ -382,7 +387,7 @@ export class Wall extends BaseWidget {
       this.lineContainer.addChild(holeLineText)
     }
     // 当墙体两层皆无时，无标注
-    if (this.type === 4) {
+    if (this.type === Types.WallType.wnone) {
       // 墙体标注线消失
       OutP1.multiply(new Victor(0,0))
       OutP2.multiply(new Victor(0,0))

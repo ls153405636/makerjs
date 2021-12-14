@@ -16,7 +16,7 @@ export class Flight extends ChildInfo {
   constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vPos, vLVec, vWVec, vLength, vClock = true, vStartHeight}) {
     super(vParent)
     this.stepLength = Default.STEP_LENGTH
-    this.length = vLength
+    this.length = Math.round(vLength)
     this.isLast = isLast
     this.index = vIndex
     /**@type {Array<RectTread>} */

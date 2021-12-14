@@ -48,7 +48,7 @@ export class CementComp extends BaseWidget {
 
     let changeComp = new PIXI.Graphics()
     changeComp.visible = false
-    changeComp.alpha = 0.5
+    // changeComp.alpha = 0.5
     changeComp.lineStyle(1, 0x4478f4,1,0)
     changeComp.beginFill(0xffffff, 1)
     changeComp.drawRect(

@@ -245,12 +245,12 @@ export class StartFlight extends ChildInfo{
       rFE = this.createBeszerEdge(rE.p2, this.wVec, offset2, this.lVec, -this.stepLength / 2)
       //rE_d = this.createBeszerEdge(rE.p2, this.wVec, stepWidth, this.lVec, 0)
       rE_d = new Edge(rectOutline.edges[1]).extendP2(stepWidth)
-      rFE_d = this.createBeszerEdge(rE_d.p2, this.wVec, offset2, this.lVec, -this.stepLength / 2)
+      rFE_d = this.createBeszerEdge(rE_d.p2, this.wVec, offset2 * 2, this.lVec, -this.stepLength / 2)
     } else {
       rE = this.createBeszerEdge(bE.p2, this.lVec, offset1, this.wVec, stepWidth / 2)
       rFE = this.createBeszerEdge(rE.p2, this.wVec, offset2+stepWidth/2, this.lVec, -offset1-this.stepLength/2)
       rE_d = this.createBeszerEdge(bE.p2, this.lVec, offset1 * 2, this.wVec, stepWidth)
-      rFE_d = this.createBeszerEdge(rE_d.p2, this.wVec, offset2+stepWidth, this.lVec, -offset1 * 2 - this.stepLength/2)
+      rFE_d = this.createBeszerEdge(rE_d.p2, this.wVec, offset2 * 2+stepWidth, this.lVec, -offset1 * 2 - this.stepLength/2)
     }
 
     if (this.shapeType === Types.StartTreadShapeType.sts_left) {
@@ -262,7 +262,7 @@ export class StartFlight extends ChildInfo{
     } else {
       lFE = this.createBeszerEdge(rFE.p2, this.lVec, -this.stepLength/2-offset1, this.wVec, -stepWidth/2-offset2)
       lE = this.createBeszerEdge(lFE.p2, this.wVec, -stepWidth/2, this.lVec, offset1)
-      lFE_d = this.createBeszerEdge(rFE_d.p2, this.lVec, -this.stepLength / 2-offset1 * 2, this.wVec, -stepWidth - offset2)
+      lFE_d = this.createBeszerEdge(rFE_d.p2, this.lVec, -this.stepLength / 2-offset1 * 2, this.wVec, -stepWidth - offset2 * 2)
       lE_d = this.createBeszerEdge(lFE_d.p2, this.wVec, -stepWidth, this.lVec, offset1 * 2)
     }
     outline.edges.push(bE,rE,rFE,lFE,lE)
