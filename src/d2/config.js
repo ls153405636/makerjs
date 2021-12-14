@@ -6,6 +6,7 @@ export const D2Config = {
   CUR_STAIR: null,
   IS_SINGLE_SELECTED: false,
   IS_SHOW: false,
+  /**@type {Map<string, import('./base_widget').BaseWidget>}  */
   WIDGETS: new Map(),
 }
 

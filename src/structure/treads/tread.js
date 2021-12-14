@@ -243,7 +243,13 @@ export class Tread extends ChildInfo {
       return [1/2]
     } 
     if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
-      return [1/6, 5/6]
+      let size = tool.parseSpecification(vArgs.specification)
+      if (size.x / this.stepWidth > 1/12) {
+        return [1/6, 5/6]
+      } else {
+        return [size.x/2/this.stepWidth, 1 - size.x/2/this.stepWidth]
+      }
+      
     } else {
       return [1/4, 1/4]
     }
@@ -264,6 +270,17 @@ export class Tread extends ChildInfo {
       utilE.extendP2(backOffset)
     }
     return utilE
+  }
+
+  adaptGirLastPois(topPois, botPois, vLast) {
+    if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
+      //botPois.splice(0, 0, vLast.poi)
+      botPois[0] = vLast.poi
+    } 
+    if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
+      //topPois.splice(0, 0, vLast.topPoi)
+      topPois[0] = vLast.topPoi
+    }
   }
 
   /**
@@ -302,21 +319,29 @@ export class Tread extends ChildInfo {
       if (this.curOrder === 'last') {
         let lastT = this.getLastTread()
         let heightDiff = lastT.getGirVerHeight(vArgs) + this.stepHeight - verHeight
-        botPois[0] = utilE.clone().extendP1(- heightDiff / (Math.atan(lastT.stepHeight / lastT.stepWidth))).p1
+        let widthDiff = heightDiff / (Math.atan(lastT.stepHeight / lastT.stepWidth))
+        if (widthDiff > utilE.getLength()) {
+          widthDiff = utilE.getLength() / 2
+        }
+        botPois[0] = utilE.clone().extendP1(- widthDiff).p1
       }
       botPois[0].z = botPois[1].z
+      if (this.curOrder === 'last') {
+        botPois.splice(0, 0, vLast.poi)
+      }
     }
     if (vIsFirst) {
       topPois[0].z = botPois[0].z
     } else {
       topPois[0].z -= this.stepHeight
     }
-    if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
-      botPois.splice(0, 0, vLast.poi)
-    } 
-    if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
-      topPois.splice(0, 0, vLast.topPoi)
-    }
+    // if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
+    //   botPois.splice(0, 0, vLast.poi)
+    // } 
+    // if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
+    //   topPois.splice(0, 0, vLast.topPoi)
+    // }
+    this.adaptGirLastPois(topPois, botPois, vLast)
     let edges = tool.createOutlineByPois(botPois, false).edges
     let topEdges = tool.createOutlineByPois(topPois, false).edges
     return {edges, topEdges}
@@ -371,12 +396,13 @@ export class Tread extends ChildInfo {
         botPois[0] = bP
       }
     }
-    if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
-      botPois.splice(0, 0, vLast.poi)
-    } 
-    if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
-      topPois.splice(0, 0, vLast.topPoi)
-    }
+    // if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
+    //   botPois.splice(0, 0, vLast.poi)
+    // } 
+    // if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
+    //   topPois.splice(0, 0, vLast.topPoi)
+    // }
+    this.adaptGirLastPois(topPois, botPois, vLast)
     let edges = tool.createOutlineByPois(botPois, false).edges
     let topEdges = tool.createOutlineByPois(topPois, false).edges
     return {edges, topEdges}

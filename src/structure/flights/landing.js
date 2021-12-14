@@ -46,6 +46,8 @@ export class Landing extends ChildInfo {
     this.nextVec = new Edge(vBorder.edges[this.nextEdgeIndex]).getNormal()
     this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
     this.index = vIndex
+    this.corBigCol = null //转角大柱
+    this.oppoBigCol = null //对角大柱
     this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth, vStartHeight})
   }
 
@@ -76,8 +78,6 @@ export class Landing extends ChildInfo {
     this.stepHeight = this.parent.stepHeight
     this.endHeight = this.stepHeight + this.stepHeight * this.stepNum
     this.compType = COMP_TYPES.LANDING
-    this.corBigCol = null //转角大柱
-    this.oppoBigCol = null //对角大柱
     this.updateTreads()
     //this.updateCorBigCol()
   }
@@ -133,14 +133,17 @@ export class Landing extends ChildInfo {
     }
     let xCor = utilOutline.offset(xOffset, false).edges[this.corIndex].p1
     let yCor = utilOutline.offset(yOffset, false).edges[this.corIndex].p1
-    let pos = new Types.Vector3({x:xCor.x, y:yCor.y})
+    let pos = new Types.Vector3({x:xCor.x, y:yCor.y, z:this.treads[0].position.z})
+    let hArgs = this.parent.getHandParas('out')
+    let height = hArgs.height + this.parent.stepHeight * this.treads.length + Default.BIG_COL_UP_HEIGHT
     if (this.corBigCol) {
-      this.corBigCol.rebuildByParent(pos)
+      this.corBigCol.rebuildByParent(pos, height)
     } else {
       this.corBigCol = new BigColumn({vParent:this,
                                       vPosition:pos,
-                                      vIsProp:true,
-                                      vPosName:'corBigCol'})
+                                      vType:Types.BigColumnType.bc_support,
+                                      vPosName:'corBigCol',
+                                      vHeight: height})
       return this.corBigCol
     }
   }

@@ -1,5 +1,5 @@
 import { Info } from './info'
-import { Default } from './config'
+import { Default, StructConfig } from './config'
 import { Types } from '../types/stair_v2'
 import { Flight } from './flights/flight'
 import tool from './tool'
@@ -14,6 +14,8 @@ import { StartFlight } from './flights/start_flight'
 import { StairSide } from './toolComp/stair_side'
 import { COMP_TYPES } from '../common/common_config'
 import { reqTemp } from './resource/temp'
+import { D2Config } from '../d2/config'
+import { D3Config } from '../d3/d3_config'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -146,6 +148,14 @@ export class Stair extends Info {
 
   /**更新楼梯分段 */
   updateSegments() {}
+
+  delInfo() {
+    let widget = D2Config.WIDGETS.get(this.uuid)
+    let model = D3Config.MODELS.get(this.uuid)
+    widget && widget.destroy()
+    model && model.dispose()
+    StructConfig.INFOS.delete(this.uuid)
+  }
 
 
   /**计算步高 */
@@ -407,19 +417,22 @@ export class Stair extends Info {
    * 无起步踏板的情况下，根据大柱的位置类型计算出其在楼梯深度方向上的偏移
    * @returns 
    */
-  computeBigColOffset () {
+  computeBigColPosAttr () {
     let bArgs = this.bigColParameters
     let bigColSize = tool.parseSpecification(bArgs.specification)
     let offset = Default.BIG_COL_GAP
+    let zCoord = 0
     let step1 = this.flights[0].treads[0]
     let step2 = this.flights[0].treads[1]
     if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
       offset = - step1.stepWidth / 2 - bigColSize.y / 2
+      zCoord = step1.position.z
     }
     if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
       offset = -step1.stepWidth - step2.stepWidth / 2 - bigColSize.y / 2
+      zCoord = step2.position.z
     }
-    return offset
+    return {offset, zCoord}
   }
 
   updateGirders () {
@@ -646,10 +659,11 @@ export class Stair extends Info {
     /**无起步踏时，根据大柱位置类型计算大柱位置 */
     if (!this.startFlight) {
       let size = tool.parseSpecification(args.specification)
-      let offset = this.computeBigColOffset()
+      let {offset, zCoord} = this.computeBigColPosAttr()
       offset = offset + size.x / 2
       let edge = new Edge(vStairEdge).offset(this.sideOffset, vSideOffsetPlus)
       position = new Edge(edge).extendP1(offset).p1
+      position.z = zCoord
     } else {
       /**有起步踏时，由起步踏计算出大柱位置 */
       let {inPos, outPos} = this.startFlight.computeBigColPos()
@@ -659,10 +673,11 @@ export class Stair extends Info {
         position = outPos
       }
     }
+    let height = this.handrailParameters.height + this.stepHeight + Default.BIG_COL_UP_HEIGHT
     if (this.border[vSide].bigCol) {
-      this.border[vSide].bigCol.rebuildByParent(position)
+      this.border[vSide].bigCol.rebuildByParent(position, height)
     } else {
-      this.border[vSide].bigCol = new BigColumn({vParent:this,vPosition:position})
+      this.border[vSide].bigCol = new BigColumn({vParent:this, vPosition:position, vType:Types.BigColumnType.bc_start, vHeight:height})
     }
     this.bigColumns.push(this.border[vSide].bigCol)
   }

@@ -11,6 +11,10 @@ export class StrucStairInitCmd extends Action {
   }
 
   execute() {
+    if (new Structure().stair) {
+      new Structure().stair.delInfo()
+      new Structure().stair = null
+    }
     new Structure().initStair(this.args)
     StructConfig.SELECTED = new Structure().stair
     store.commit('right_attribute/setCurType', COMP_TYPES.STAIR)

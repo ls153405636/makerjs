@@ -125,7 +125,7 @@ export class CorTread extends Tread {
     let lastDis, interval
     if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
       interval = lastT.stepWidth * 2 / 3
-      lastDis = vLastNum === 1 ? lastT.stepWidth / 2 : lastT.stepWidth / 6
+      lastDis = vLastNum === 1 ? lastT.stepWidth / 6 : lastT.stepWidth / 2
     } else if (vArgs.arrangeRule === Types.ArrangeRule.arrFour) {
       interval = lastT.stepWidth / 2
       lastDis = lastT.stepWidth / 4
@@ -209,12 +209,13 @@ export class CorTread extends Tread {
       p.z = topPois[1].z + heightDiff
       topPois.push(p)
     }
-    if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
-      botPois.splice(0, 0, vLast.poi)
-    } 
-    if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
-      topPois.splice(0, 0, vLast.topPoi)
-    }
+    // if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
+    //   botPois.splice(0, 0, vLast.poi)
+    // } 
+    // if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
+    //   topPois.splice(0, 0, vLast.topPoi)
+    // }
+    this.adaptGirLastPois(topPois, botPois, vLast)
     let edges = tool.createOutlineByPois(botPois, false).edges
     let topEdges = tool.createOutlineByPois(topPois, false).edges
     return {edges, topEdges}

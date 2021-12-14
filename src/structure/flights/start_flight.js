@@ -421,6 +421,9 @@ export class StartFlight extends ChildInfo{
       }
     }
     outPos = new Edge().setByVec(outPos, this.wVec, this.stepWidth / 2).p2
+
+    inPos.z = this.treads[this.treads.length - 1].position.z
+    outPos.z = this.treads[this.treads.length - 1].position.z
     return {
       inPos,
       outPos
