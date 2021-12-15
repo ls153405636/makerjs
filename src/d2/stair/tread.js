@@ -257,6 +257,12 @@ export class Tread extends ChildWidget {
       })
   }
   addDimension() {
+    let stairInfo = StructConfig.INFOS.get(this.uuid)
+    const againstWallType = stairInfo.parent.parent.againstWallType
+    const lastEdgeIndex = stairInfo.lastEdgeIndex
+    const nextEdgeIndex = stairInfo.nextEdgeIndex
+    const girderType = stairInfo.parent.parent.girderParameters.type
+    const girderDepth = stairInfo.parent.parent.girderParameters.depth
     // 踏板标注线绘制
     const treadLineContainer = new PIXI.Container()
     const treadLine = new PIXI.Graphics()
@@ -272,33 +278,645 @@ export class Tread extends ChildWidget {
     let newP2T
     let newP2B
     let normal // 法线
-    const offSet = new Victor(100,100) //偏移出墙的偏移值Y
-    const fOffSet = new Victor(100,100) //偏移出墙的偏移值Y
-    
 
-    let girder = null
+
+    // 两侧边休息平台
+    let lNewP1
+    let lNewP2
+    let lNewP1T
+    let lNewP1B
+    let lNewP2T
+    let lNewP2B
+    
+    let nNewP1
+    let nNewP2
+    let nNewP1T
+    let nNewP1B
+    let nNewP2T
+    let nNewP2B
+    let lPosition
+    let nPosition
+    let lNewTextRotation = ''
+    let nNewTextRotation = ''
+    const offSet = new Victor(200,200) //偏移出墙的偏移值Y
+    const fOffSet = new Victor(200,200) //偏移出墙的偏移值Y
+    
+    let wall
+    let stairP
+    let lastEdge
+    let nextEdge
+    // 文字中心位置
+    let position 
 
     for(let value of D2Config.WIDGETS.values()) {
       if (value.getWidgetType() === COMP_TYPES.STAIR) {
-        girder = value.girders
+        stairP = d2_tool.translateCoord(value.position)
       }
     }
-    let girderWidth
+    
+    // 休息平台
+    if (this.type === Types.TreadType.tCor) {
+      if (girderType === Types.GirderType.gsaw) {
+        for (let i = 0; i < this.inIndex.length; i++) {
+          p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
+          p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
+          // 顺-左
+          if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
+            normal = new Types.Vector3({ x: -1, y: -0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+    
+            // 左侧
+            newP1 = new Victor(wallOutP1.x * 10, p1.y)
+            newP2 = new Victor(wallOutP1.x * 10, p2.y)
+            
+            newP1 = newP1.subtractX(offSet)
+            newP2 = newP2.subtractX(offSet)
+            newP1T = newP1.clone().subtractX(arrow)
+            newP1B = newP1.clone().addX(arrow)
+            newP2T = newP2.clone().subtractX(arrow)
+            newP2B = newP2.clone().addX(arrow)
+    
+            // 文字中心位置计算
+            position = {
+              x: (newP1T.x + newP2T.x) / 2 / 10,
+              y: (newP1T.y + newP2T.y) / 2 / 10
+            }
+          }
+          // 顺-顶
+          if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
+            normal = new Types.Vector3({ x: 0, y: -1 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+    
+            newP1 = new Victor(p1.x, wallOutP1.y * 10)
+            newP2 = new Victor(p2.x, wallOutP1.y * 10)
+    
+            newP1 = newP1.subtractY(offSet)
+            newP2 = newP2.subtractY(offSet)
+            newP1T = newP1.clone().subtractY(arrow)
+            newP1B = newP1.clone().addY(arrow)
+            newP2T = newP2.clone().subtractY(arrow)
+            newP2B = newP2.clone().addY(arrow)
+    
+            // 文字中心位置计算
+            position = {
+              x: (newP1T.x + newP2T.x) / 2 / 10,
+              y: (newP1T.y + newP2T.y) / 2 / 10
+            }
+          }
+          // 顺-右
+          if (p1.x === p2.x && p1.y < p2.y  && this.isClock === true) {
+            normal = new Types.Vector3({ x: 1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,stairP.y - wall.p1.y)
+            
+            // 顶侧
+            newP1 = new Victor(wallOutP1.x * 10, p1.y)
+            newP2 = new Victor(wallOutP1.x * 10, p2.y)
+    
+            // 右侧
+            newP1 = newP1.addX(offSet)
+            newP2 = newP2.addX(offSet)
+            newP1T = newP1.clone().subtractX(arrow)
+            newP1B = newP1.clone().addX(arrow)
+            newP2T = newP2.clone().subtractX(arrow)
+            newP2B = newP2.clone().addX(arrow)
+    
+            // 文字中心位置计算
+            position = {
+              x: (newP1B.x + newP2B.x) / 2 / 10,
+              y: (newP1B.y + newP2B.y) / 2 / 10
+            }
+          }
+          // 顺-底
+          if (p1.x > p2.x && p1.y === p2.y && this.isClock === true) {// 无
+            normal = new Types.Vector3({ x: -0, y: -1 })
+            // for(let value of D2Config.WIDGETS.values()) {
+            //   if (value.getWidgetType() === COMP_TYPES.WALL) {
+            //     if (tool.isVec2Equal(value.normal, normal)) {
+            //       wall = value
+            //     }
+            //   }
+            // }
+            // let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            // newP1 = new Victor(p1.x, wallOutP1.y * 10)
+            // newP2 = new Victor(p2.x, wallOutP1.y * 10)
+    
+            // 顶侧
+            newP1 = p1.clone().addY(offSet)
+            newP2 = p2.clone().addY(offSet)
+            newP1T = p1.clone().addY(offSet).subtractY(arrow)
+            newP1B = p1.clone().addY(offSet).addY(arrow)
+            newP2T = p2.clone().addY(offSet).subtractY(arrow)
+            newP2B = p2.clone().addY(offSet).addY(arrow)
+    
+          }
+          // 逆-右
+          if (p1.x === p2.x && p1.y > p2.y && this.isClock === false) {
+            normal = new Types.Vector3({ x: 1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            
+            // 顶侧
+            newP1 = new Victor(wallOutP1.x * 10, p1.y)
+            newP2 = new Victor(wallOutP1.x * 10, p2.y)
+            
+            newP1 = newP1.addX(offSet)
+            newP2 = newP2.addX(offSet)
+            newP1T = newP1.clone().subtractX(arrow)
+            newP1B = newP1.clone().addX(arrow)
+            newP2T = newP2.clone().subtractX(arrow)
+            newP2B = newP2.clone().addX(arrow)
+    
+            // 文字中心位置计算
+            position = {
+              x: (newP1B.x + newP2B.x) / 2 / 10,
+              y: (newP1B.y + newP2B.y) / 2 / 10
+            }
+          }
+          // 逆-顶
+          if (p1.x > p2.x && p1.y === p2.y && this.isClock === false) {
+            normal = new Types.Vector3({ x: 0, y: -1 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            
+            // 顶侧
+            newP1 = new Victor(p1.x, wallOutP1.y * 10)
+            newP2 = new Victor(p2.x, wallOutP1.y * 10)
+            
+            // 顶侧
+            newP1 = newP1.subtractY(offSet)
+            newP2 = newP2.subtractY(offSet)
+            newP1T = newP1.clone().subtractY(arrow)
+            newP1B = newP1.clone().addY(arrow)
+            newP2T = newP2.clone().subtractY(arrow)
+            newP2B = newP2.clone().addY(arrow)
+    
+    
+            // 文字中心位置计算
+            position = {
+              x: (newP1T.x + newP2T.x) / 2 / 10,
+              y: (newP1T.y + newP2T.y) / 2 / 10
+            }
+          }
+          // 逆-左
+          if (p1.x === p2.x && p1.y < p2.y  && this.isClock === false) {
+            normal = new Types.Vector3({ x: -1, y: -0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor( wall.outP1.x - stairP.x,0)
+            
+            // 顶侧
+            newP1 = new Victor(wallOutP1.x * 10, p1.y)
+            newP2 = new Victor(wallOutP1.x * 10, p2.y)
+    
+            // 左侧
+            newP1 = newP1.subtractX(offSet)
+            newP2 = newP2.subtractX(offSet)
+            newP1T = newP1.clone().subtractX(arrow)
+            newP1B = newP1.clone().addX(arrow)
+            newP2T = newP2.clone().subtractX(arrow)
+            newP2B = newP2.clone().addX(arrow)
+    
+    
+            // 文字中心位置计算
+            position = {
+              x: (newP1T.x + newP2T.x) / 2 / 10,
+              y: (newP1T.y + newP2T.y) / 2 / 10
+            }
+          }
+          // 逆-底
+          if (p1.x < p2.x && p1.y === p2.y && this.isClock === false) {// 无
+            normal = new Types.Vector3({ x: -0, y: -1 })
+            // for(let value of D2Config.WIDGETS.values()) {
+            //   if (value.getWidgetType() === COMP_TYPES.WALL) {
+            //     if (tool.isVec2Equal(value.normal, normal)) {
+            //       wall = value
+            //     }
+            //   }
+            // }
+            // let wallOutP1 = new Victor(wall.outP1.x - wall.p1.x, wall.outP1.y - wall.p1.y)
+            
+            // newP1 = new Victor(p1.x, wallOutP1.y * 10)
+            // newP2 = new Victor(p2.x, wallOutP1.y * 10)
+    
+            newP1 = p1.clone().addY(offSet)
+            newP2 = p2.clone().addY(offSet)
+            newP1T = p1.clone().addY(offSet).subtractY(arrow)
+            newP1B = p1.clone().addY(offSet).addY(arrow)
+            newP2T = p2.clone().addY(offSet).subtractY(arrow)
+            newP2B = p2.clone().addY(offSet).addY(arrow)
+          }
+    
+          // 长度计算
+          const treadLinelength =
+          Math.round(Math.hypot(p1.x - p2.x, p1.y - p2.y) )
+    
+          const treadLineNum = new PIXI.Text(treadLinelength, {
+            fontSize: 32,
+            fill: 0x000000,
+          })
+          if (this.isLast) {
+            treadLineNum.visible = false
+          }
+          // 旋转计算
+          let newTextRotation = ''
+          const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
+          const textAngle = textRotation.angle()
+          let firstR = ''
+          if (this.isClock === true) {
+            if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+              newTextRotation = 0
+            } else if (0 < textAngle < Math.PI) {
+              newTextRotation = textRotation.invert().angle()
+            } else if (0 > textAngle > -Math.PI) {
+              newTextRotation = textRotation.angle()
+            }
+            if (newTextRotation === Math.PI / 2) {
+              firstR = 0
+            } else {
+              firstR = newTextRotation + Math.PI / 2
+            }
+          } else {
+            if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+              newTextRotation = 0
+            } else if (0 < textAngle < Math.PI) {
+              newTextRotation = textRotation.angle()
+            } else if (0 > textAngle > -Math.PI) {
+              newTextRotation = textRotation.invert().angle()
+            }
+            if (newTextRotation === -Math.PI / 2) {
+              firstR = 0
+            } else {
+              firstR = newTextRotation - Math.PI / 2
+            }
+          }
+          
+          
+          treadLineNum.scale.set(0.25)
+          treadLineNum.position.set(position.x, position.y)
+          treadLineNum.anchor.set(0.5, 0.5)
+          treadLineNum.rotation = newTextRotation
+          if (this.isLast === false) {
+            treadLine
+            .lineStyle(1,0x000000)
+            .moveTo(newP1.x / 10,newP1.y / 10)
+            .lineTo(newP2.x / 10,newP2.y / 10)
+            .moveTo(newP1T.x / 10,newP1T.y / 10)
+            .lineTo(newP1B.x / 10,newP1B.y / 10)
+            .moveTo(newP2T.x / 10,newP2T.y / 10)
+            .lineTo(newP2B.x / 10,newP2B.y / 10)
+          }
+          treadLineContainer.addChild(treadLine, treadLineNum)
+        }
+      }
+      else {
+        lastEdge = new Edge(this.edges[lastEdgeIndex]).offset(girderDepth,true)
+        nextEdge = new Edge(this.edges[nextEdgeIndex]).offset(girderDepth,true)
+        if (againstWallType === Types.AgainstWallType.aw_no || againstWallType === Types.AgainstWallType.aw_left) {
+          lastEdge = new Edge(lastEdge).extendP2(girderDepth)
+          nextEdge = new Edge(nextEdge).extendP1(girderDepth)
+
+          if (lastEdge.p1.x === lastEdge.p2.x && lastEdge.p1.y > lastEdge.p2.y) {
+            normal = new Types.Vector3({ x: -1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            lNewP1 = new Victor(wallOutP1.x * 10, lastEdge.p1.y)
+            lNewP2 = new Victor(wallOutP1.x * 10, lastEdge.p2.y)
+  
+            lNewP1 = lNewP1.subtractX(offSet)
+            lNewP2 = lNewP2.subtractX(offSet)
+  
+            lNewP1T = lNewP1.clone().addX(arrow)
+            lNewP1B = lNewP1.clone().subtractX(arrow)
+            lNewP2T = lNewP2.clone().addX(arrow)
+            lNewP2B = lNewP2.clone().subtractX(arrow)
+
+            // 文字中心位置计算
+            lPosition = {
+              x: (lNewP1B.x + lNewP2B.x) / 2 / 10,
+              y: (lNewP1B.y + lNewP2B.y) / 2 / 10
+            }
+  
+          }
+          if (nextEdge.p1.x === nextEdge.p2.x && nextEdge.p1.y < nextEdge.p2.y) {
+            normal = new Types.Vector3({ x: 1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            nNewP1 = new Victor(wallOutP1.x * 10, nextEdge.p1.y)
+            nNewP2 = new Victor(wallOutP1.x * 10, nextEdge.p2.y)
+  
+            nNewP1 = nNewP1.addX(offSet)
+            nNewP2 = nNewP2.addX(offSet)
+  
+            nNewP1T = nNewP1.clone().addX(arrow)
+            nNewP1B = nNewP1.clone().subtractX(arrow)
+            nNewP2T = nNewP2.clone().addX(arrow)
+            nNewP2B = nNewP2.clone().subtractX(arrow)
+
+            // 文字中心位置计算
+            nPosition = {
+              x: (nNewP1T.x + nNewP2T.x) / 2 / 10,
+              y: (nNewP1T.y + nNewP2T.y) / 2 / 10
+            }
+          }
+          if (lastEdge.p1.x < lastEdge.p2.x && lastEdge.p1.y === lastEdge.p2.y) {
+            normal = new Types.Vector3({ x: 0, y: -1 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            lNewP1 = new Victor(lastEdge.p1.x, wallOutP1.y * 10)
+            lNewP2 = new Victor(lastEdge.p2.x, wallOutP1.y * 10)
+  
+            lNewP1 = lNewP1.subtractY(offSet)
+            lNewP2 = lNewP2.subtractY(offSet)
+  
+            lNewP1T = lNewP1.clone().addY(arrow)
+            lNewP1B = lNewP1.clone().subtractY(arrow)
+            lNewP2T = lNewP2.clone().addY(arrow)
+            lNewP2B = lNewP2.clone().subtractY(arrow)
+
+            // 文字中心位置计算
+            lPosition = {
+              x: (lNewP1B.x + lNewP2B.x) / 2 / 10,
+              y: (lNewP1B.y + lNewP2B.y) / 2 / 10
+            }
+  
+          }
+          if (nextEdge.p1.x < nextEdge.p2.x && nextEdge.p1.y === nextEdge.p2.y) {
+            normal = new Types.Vector3({ x: 0, y: -1 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            nNewP1 = new Victor(nextEdge.p1.x, wallOutP1.y * 10)
+            nNewP2 = new Victor(nextEdge.p2.x, wallOutP1.y * 10)
+  
+            nNewP1 = nNewP1.subtractY(offSet)
+            nNewP2 = nNewP2.subtractY(offSet)
+  
+            nNewP1T = nNewP1.clone().addY(arrow)
+            nNewP1B = nNewP1.clone().subtractY(arrow)
+            nNewP2T = nNewP2.clone().addY(arrow)
+            nNewP2B = nNewP2.clone().subtractY(arrow)
+
+            // 文字中心位置计算
+            nPosition = {
+              x: (nNewP1B.x + nNewP2B.x) / 2 / 10,
+              y: (nNewP1B.y + nNewP2B.y) / 2 / 10
+            }
+  
+          }
+          
+        }
+        else if (againstWallType === 3) {
+          lastEdge = new Edge(lastEdge).extendP1(girderDepth)
+          nextEdge = new Edge(nextEdge).extendP2(girderDepth)
+
+          if (lastEdge.p1.x === lastEdge.p2.x && lastEdge.p1.y < lastEdge.p2.y) {
+            normal = new Types.Vector3({ x: 1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            lNewP1 = new Victor(wallOutP1.x * 10, lastEdge.p1.y)
+            lNewP2 = new Victor(wallOutP1.x * 10, lastEdge.p2.y)
+  
+            lNewP1 = lNewP1.addX(offSet)
+            lNewP2 = lNewP2.addX(offSet)
+  
+            lNewP1T = lNewP1.clone().addX(arrow)
+            lNewP1B = lNewP1.clone().subtractX(arrow)
+            lNewP2T = lNewP2.clone().addX(arrow)
+            lNewP2B = lNewP2.clone().subtractX(arrow)
+
+            // 文字中心位置计算
+            lPosition = {
+              x: (lNewP1T.x + lNewP2T.x) / 2 / 10,
+              y: (lNewP1T.y + lNewP2T.y) / 2 / 10
+            }
+  
+          }
+          if (nextEdge.p1.x === nextEdge.p2.x && nextEdge.p1.y > nextEdge.p2.y) {
+            normal = new Types.Vector3({ x: -1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            nNewP1 = new Victor(wallOutP1.x * 10, nextEdge.p1.y)
+            nNewP2 = new Victor(wallOutP1.x * 10, nextEdge.p2.y)
+  
+            nNewP1 = nNewP1.subtractX(offSet)
+            nNewP2 = nNewP2.subtractX(offSet)
+  
+            nNewP1T = nNewP1.clone().addX(arrow)
+            nNewP1B = nNewP1.clone().subtractX(arrow)
+            nNewP2T = nNewP2.clone().addX(arrow)
+            nNewP2B = nNewP2.clone().subtractX(arrow)
+
+            // 文字中心位置计算
+            nPosition = {
+              x: (nNewP1B.x + nNewP2B.x) / 2 / 10,
+              y: (nNewP1B.y + nNewP2B.y) / 2 / 10
+            }
+          }
+          if (lastEdge.p1.x < lastEdge.p2.x && lastEdge.p1.y === lastEdge.p2.y) {
+            normal = new Types.Vector3({ x: 0, y: -1 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            lNewP1 = new Victor(lastEdge.p1.x, wallOutP1.y * 10)
+            lNewP2 = new Victor(lastEdge.p2.x, wallOutP1.y * 10)
+  
+            lNewP1 = lNewP1.subtractY(offSet)
+            lNewP2 = lNewP2.subtractY(offSet)
+  
+            lNewP1T = lNewP1.clone().addY(arrow)
+            lNewP1B = lNewP1.clone().subtractY(arrow)
+            lNewP2T = lNewP2.clone().addY(arrow)
+            lNewP2B = lNewP2.clone().subtractY(arrow)
+
+            // 文字中心位置计算
+            lPosition = {
+              x: (lNewP1B.x + lNewP2B.x) / 2 / 10,
+              y: (lNewP1B.y + lNewP2B.y) / 2 / 10
+            }
+  
+          }
+          if (nextEdge.p1.x < nextEdge.p2.x && nextEdge.p1.y === nextEdge.p2.y) {
+            normal = new Types.Vector3({ x: 0, y: -1 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
+            nNewP1 = new Victor(nextEdge.p1.x, wallOutP1.y * 10)
+            nNewP2 = new Victor(nextEdge.p2.x, wallOutP1.y * 10)
+  
+            nNewP1 = nNewP1.subtractY(offSet)
+            nNewP2 = nNewP2.subtractY(offSet)
+  
+            nNewP1T = nNewP1.clone().addY(arrow)
+            nNewP1B = nNewP1.clone().subtractY(arrow)
+            nNewP2T = nNewP2.clone().addY(arrow)
+            nNewP2B = nNewP2.clone().subtractY(arrow)
+
+            // 文字中心位置计算
+            nPosition = {
+              x: (nNewP1B.x + nNewP2B.x) / 2 / 10,
+              y: (nNewP1B.y + nNewP2B.y) / 2 / 10
+            }
+  
+          }
+        }
+
+        // 旋转计算
+        const lTextRotation = new Victor(lNewP1.x - lNewP2.x, lNewP1.y - lNewP2.y)
+        const lTextAngle = lTextRotation.angle()
+        if (lTextAngle == Math.PI || lTextAngle == 0 || lTextAngle == -Math.PI) {
+          lNewTextRotation = 0
+        } else if (0 < lTextAngle < Math.PI) {
+          lNewTextRotation = lTextRotation.invert().angle()
+        } else if (0 > lTextAngle > -Math.PI) {
+          lNewTextRotation = lTextRotation.angle()
+        }
+        const nTextRotation = new Victor(nNewP1.x - nNewP2.x, nNewP1.y - nNewP2.y)
+        const nTextAngle = nTextRotation.angle()
+        if (nTextAngle == Math.PI || nTextAngle == 0 || nTextAngle == -Math.PI) {
+          nNewTextRotation = 0
+        } else if (0 < nTextAngle < Math.PI) {
+          nNewTextRotation = nTextRotation.invert().angle()
+        } else if (0 > nTextAngle > -Math.PI) {
+          nNewTextRotation = nTextRotation.angle()
+        }
+
+        const lTreadLineLength = Math.round(Math.hypot(lNewP1.x - lNewP2.x, lNewP1.y - lNewP2.y) )
+        const nTreadLineLength = Math.round(Math.hypot(nNewP1.x - nNewP2.x, nNewP1.y - nNewP2.y) )
+        const lTreadLineNum = new PIXI.Text(lTreadLineLength, {
+          fontSize: 32,
+          fill: 0x000000,
+        })
+
+        lTreadLineNum.scale.set(0.25)
+        lTreadLineNum.position.set(lPosition.x, lPosition.y)
+        lTreadLineNum.anchor.set(0.5, 0.5)
+        lTreadLineNum.rotation = lNewTextRotation
+
+        const nTreadLineNum = new PIXI.Text(nTreadLineLength, {
+          fontSize: 32,
+          fill: 0x000000,
+        })
+
+        nTreadLineNum.scale.set(0.25)
+        nTreadLineNum.position.set(nPosition.x, nPosition.y)
+        nTreadLineNum.anchor.set(0.5, 0.5)
+        nTreadLineNum.rotation = nNewTextRotation
+        
+        treadLine
+        .lineStyle(1,0x000000)
+        .moveTo(lNewP1.x / 10, lNewP1.y / 10)
+        .lineTo(lNewP2.x / 10, lNewP2.y / 10)
+        .moveTo(nNewP1.x / 10, nNewP1.y / 10)
+        .lineTo(nNewP2.x / 10, nNewP2.y / 10)
+
+        // 端头短线
+        .moveTo(lNewP1T.x / 10, lNewP1T.y / 10)
+        .lineTo(lNewP1B.x / 10, lNewP1B.y / 10)
+        .moveTo(lNewP2T.x / 10, lNewP2T.y / 10)
+        .lineTo(lNewP2B.x / 10, lNewP2B.y / 10)
+        // 端头短线
+        .moveTo(nNewP1T.x / 10, nNewP1T.y / 10)
+        .lineTo(nNewP1B.x / 10, nNewP1B.y / 10)
+        .moveTo(nNewP2T.x / 10, nNewP2T.y / 10)
+        .lineTo(nNewP2B.x / 10, nNewP2B.y / 10)
+
+        treadLineContainer.addChild(treadLine, lTreadLineNum, nTreadLineNum)
+      }
+    }
 
     // 普通踏板标注
-    if (this.type === Types.TreadType.trect || this.type === Types.TreadType.tSpec || this.type === Types.TreadType.tCor) {
+    if (this.type === Types.TreadType.trect || this.type === Types.TreadType.tSpec) {
       for (let i = 0; i < this.inIndex.length; i++) {
         p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
         p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
   
-  
         // 踏板长度点计算
         const firstP = new Victor((this.edges[this.frontIndex[0]].p1.x + this.edges[this.frontIndex[0]].p2.x) / 2, (this.edges[this.frontIndex[0]].p1.y + this.edges[this.frontIndex[0]].p2.y) / 2)
-        // const firstP1 = new Victor(this.edges[this.frontIndex[0]].p1.x, this.edges[this.frontIndex[0]].p1.y)
-        // const firstP2 = new Victor(this.edges[this.frontIndex[0]].p2.x, this.edges[this.frontIndex[0]].p2.y)
 
         let lastP = new Victor((this.edges[this.backIndex[0]].p1.x + this.edges[this.backIndex[0]].p2.x) / 2, (this.edges[this.backIndex[0]].p1.y + this.edges[this.backIndex[0]].p2.y) / 2)
-        // console.log(lastP2)
         
         const newFirstP1 = firstP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2, this.stepLength / 2))
         const newFirstP2 = firstP.clone().addY(fOffSet).addX(new Victor(this.stepLength / 2, this.stepLength / 2))
@@ -319,10 +937,8 @@ export class Tread extends ChildWidget {
         let position 
         let lastPosition
 
-        let wall = null
-        let stairP = null
-
         
+
         // 顺-左
         if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
           normal = new Types.Vector3({ x: -1, y: -0 })
@@ -332,17 +948,8 @@ export class Tread extends ChildWidget {
                 wall = value
               }
             }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
           }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          // console.log(p1)
-          // console.log(p2)
           let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-          // console.log(wallOutP1)
 
           // 左侧
           newP1 = new Victor(wallOutP1.x * 10, p1.y)
@@ -382,27 +989,12 @@ export class Tread extends ChildWidget {
                 wall = value
               }
             }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
           }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          // console.log(p1)
-          // console.log(p2)
           let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-          // console.log(wallOutP1)
 
           // 左侧
           newP1 = new Victor(p1.x, wallOutP1.y * 10)
           newP2 = new Victor(p2.x, wallOutP1.y * 10)
-
-          // 顶侧
-          newP1 = new Victor(p1.x, wallOutP1.y * 10)
-          newP2 = new Victor(p2.x, wallOutP1.y * 10)
-          // console.log(newP1)
-          // console.log(newP2)
 
           newP1 = newP1.subtractY(offSet)
           newP2 = newP2.subtractY(offSet)
@@ -411,8 +1003,6 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractY(arrow)
           newP2B = newP2.clone().addY(arrow)
   
-          // newLastP1 = lastP1.clone().addX(fOffSet)
-          // newLastP2 = lastP2.clone().addX(fOffSet)
           newLastP1 = lastP.clone().addX(fOffSet).subtractY(new Victor(this.stepLength / 2,this.stepLength / 2))
           newLastP2 = lastP.clone().addX(fOffSet).addY(new Victor(this.stepLength / 2,this.stepLength / 2))
 
@@ -440,24 +1030,12 @@ export class Tread extends ChildWidget {
                 wall = value
               }
             }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
           }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          // console.log(p1)
-          // console.log(p2)
           let wallOutP1 = new Victor(wall.outP1.x - stairP.x,stairP.y - wall.p1.y)
-          // console.log(wallOutP1)
           
           // 顶侧
           newP1 = new Victor(wallOutP1.x * 10, p1.y)
           newP2 = new Victor(wallOutP1.x * 10, p2.y)
-          // console.log(newP1)
-          // console.log(newP2)
-
 
           // 右侧
           newP1 = newP1.addX(offSet)
@@ -467,8 +1045,6 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractX(arrow)
           newP2B = newP2.clone().addX(arrow)
   
-          // newLastP1 = lastP1.clone().addY(fOffSet)
-          // newLastP2 = lastP2.clone().addY(fOffSet)
           newLastP1 = lastP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
           newLastP2 = lastP.clone().addY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
 
@@ -496,23 +1072,12 @@ export class Tread extends ChildWidget {
           //       wall = value
           //     }
           //   }
-          //   if (value.getWidgetType() === COMP_TYPES.STAIR) {
-          //     stairP = d2_tool.translateCoord(value.position)
-          //   }
           // }
-          // // console.log(stairP)
-          // // console.log(wall.outP1)
-          // // console.log(wall.p1)
-          // // console.log(p1)
-          // // console.log(p2)
           // let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-          // // console.log(wallOutP1)
           
           // // 顶侧
           // newP1 = new Victor(p1.x, wallOutP1.y * 10)
           // newP2 = new Victor(p2.x, wallOutP1.y * 10)
-          // // console.log(newP1)
-          // // console.log(newP2)
 
           // 顶侧
           newP1 = p1.clone().addY(offSet)
@@ -522,8 +1087,6 @@ export class Tread extends ChildWidget {
           newP2T = p2.clone().addY(offSet).subtractY(arrow)
           newP2B = p2.clone().addY(offSet).addY(arrow)
   
-          // newLastP1 = lastP1.clone().addY(fOffSet)
-          // newLastP2 = lastP2.clone().addY(fOffSet)
           newLastP1 = lastP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
           newLastP2 = lastP.clone().addY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
 
@@ -531,6 +1094,7 @@ export class Tread extends ChildWidget {
           newLastP1B = newLastP1.clone().addX(arrow)
           newLastP2T = newLastP2.clone().subtractX(arrow)
           newLastP2B = newLastP2.clone().addX(arrow)
+
         }
         // 逆-右
         if (p1.x === p2.x && p1.y > p2.y && this.isClock === false) {
@@ -541,23 +1105,12 @@ export class Tread extends ChildWidget {
                 wall = value
               }
             }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
           }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          // console.log(p1)
-          // console.log(p2)
           let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-          // console.log(wallOutP1)
           
           // 顶侧
           newP1 = new Victor(wallOutP1.x * 10, p1.y)
           newP2 = new Victor(wallOutP1.x * 10, p2.y)
-          // console.log(newP1)
-          // console.log(newP2)
           
           newP1 = newP1.addX(offSet)
           newP2 = newP2.addX(offSet)
@@ -568,8 +1121,6 @@ export class Tread extends ChildWidget {
   
           newLastP1 = lastP.clone().subtractY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
           newLastP2 = lastP.clone().subtractY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
-          // newLastP1 = lastP1.clone().subtractY(fOffSet)
-          // newLastP2 = lastP2.clone().subtractY(fOffSet)
 
           newLastP1T = newLastP1.clone().subtractY(arrow)
           newLastP1B = newLastP1.clone().addY(arrow)
@@ -595,24 +1146,12 @@ export class Tread extends ChildWidget {
                 wall = value
               }
             }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
           }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          // console.log(p1)
-          // console.log(p2)
           let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-          // console.log(wallOutP1)
           
           // 顶侧
           newP1 = new Victor(p1.x, wallOutP1.y * 10)
           newP2 = new Victor(p2.x, wallOutP1.y * 10)
-          // console.log(newP1)
-          // console.log(newP2)
-          
           // 顶侧
           newP1 = newP1.subtractY(offSet)
           newP2 = newP2.subtractY(offSet)
@@ -621,8 +1160,6 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractY(arrow)
           newP2B = newP2.clone().addY(arrow)
   
-          // newLastP1 = lastP1.clone().subtractX(fOffSet)
-          // newLastP2 = lastP2.clone().subtractX(fOffSet)
           newLastP1 = lastP.clone().subtractX(fOffSet).subtractY(new Victor(this.stepLength / 2,this.stepLength / 2))
           newLastP2 = lastP.clone().subtractX(fOffSet).addY(new Victor(this.stepLength / 2,this.stepLength / 2))
 
@@ -650,24 +1187,12 @@ export class Tread extends ChildWidget {
                 wall = value
               }
             }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
           }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          // console.log(p1)
-          // console.log(p2)
           let wallOutP1 = new Victor( wall.outP1.x - stairP.x,0)
-          // console.log(wallOutP1)
           
           // 顶侧
           newP1 = new Victor(wallOutP1.x * 10, p1.y)
           newP2 = new Victor(wallOutP1.x * 10, p2.y)
-          // console.log(newP1)
-          // console.log(newP2)
-
 
           // 左侧
           newP1 = newP1.subtractX(offSet)
@@ -677,8 +1202,6 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractX(arrow)
           newP2B = newP2.clone().addX(arrow)
   
-          // newLastP1 = lastP1.clone().addY(fOffSet)
-          // newLastP2 = lastP2.clone().addY(fOffSet)
           newLastP1 = lastP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
           newLastP2 = lastP.clone().addY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
 
@@ -707,18 +1230,11 @@ export class Tread extends ChildWidget {
           //     }
           //   }
           // }
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          // console.log(p1)
-          // console.log(p2)
           // let wallOutP1 = new Victor(wall.outP1.x - wall.p1.x, wall.outP1.y - wall.p1.y)
-          // console.log(wallOutP1)
           
           // // 顶侧
           // newP1 = new Victor(p1.x, wallOutP1.y * 10)
           // newP2 = new Victor(p2.x, wallOutP1.y * 10)
-          // // console.log(newP1)
-          // // console.log(newP2)
 
           newP1 = p1.clone().addY(offSet)
           newP2 = p2.clone().addY(offSet)
@@ -727,8 +1243,6 @@ export class Tread extends ChildWidget {
           newP2T = p2.clone().addY(offSet).subtractY(arrow)
           newP2B = p2.clone().addY(offSet).addY(arrow)
   
-          // newLastP1 = lastP1.clone().addY(fOffSet)
-          // newLastP2 = lastP2.clone().addY(fOffSet)
           newLastP1 = lastP.clone().addY(fOffSet).subtractY(new Victor(this.stepLength / 2,this.stepLength / 2))
           newLastP2 = lastP.clone().addY(fOffSet).addY(new Victor(this.stepLength / 2,this.stepLength / 2))
 
@@ -737,11 +1251,6 @@ export class Tread extends ChildWidget {
           newLastP2T = newLastP2.clone().subtractX(arrow)
           newLastP2B = newLastP2.clone().addX(arrow)
 
-          // // 文字中心位置计算
-          // lastPosition = {
-          //   x: (newLastP1B.x + newLastP2B.x) / 2 / 10,
-          //   y: (newLastP1B.y + newLastP2B.y) / 2 / 10
-          // }
         }
   
         // 文字中心位置计算
@@ -752,12 +1261,12 @@ export class Tread extends ChildWidget {
   
         // 长度计算
         const treadLinelength =
-        Math.floor(Math.hypot(p1.x - p2.x, p1.y - p2.y) )
+        Math.round(Math.hypot(p1.x - p2.x, p1.y - p2.y))
 
         const firstTextLength =
-        Math.floor(Math.hypot(newFirstP1.x - newFirstP2.x, newFirstP1.y - newFirstP2.y) )
+        Math.round(Math.hypot(newFirstP1.x - newFirstP2.x, newFirstP1.y - newFirstP2.y) )
         const lastTextLength =
-        Math.floor(Math.hypot(newLastP1.x - newLastP2.x, newLastP1.y - newLastP2.y) )
+        Math.round(Math.hypot(newLastP1.x - newLastP2.x, newLastP1.y - newLastP2.y) )
         
         const treadLineNum = new PIXI.Text(treadLinelength, {
           fontSize: 32,
@@ -800,13 +1309,11 @@ export class Tread extends ChildWidget {
           }
         }
         
-        
         treadLineNum.scale.set(0.25)
         treadLineNum.position.set(position.x, position.y)
         treadLineNum.anchor.set(0.5, 0.5)
         treadLineNum.rotation = newTextRotation
         if (this.isLast === false) {
-
           treadLine
           .lineStyle(1,0x000000)
           .moveTo(newP1.x / 10,newP1.y / 10)
@@ -816,7 +1323,6 @@ export class Tread extends ChildWidget {
           .moveTo(newP2T.x / 10,newP2T.y / 10)
           .lineTo(newP2B.x / 10,newP2B.y / 10)
         }
-  
         if (this.index === 1) {
           treadLine
            .moveTo(newFirstP1.x / 10, newFirstP1.y / 10)
@@ -853,307 +1359,154 @@ export class Tread extends ChildWidget {
           lastLine.lineStyle(1, 0x000000)
           lastLine
           .moveTo(newLastP1.x / 10, newLastP1.y / 10)
-           .lineTo(newLastP2.x / 10, newLastP2.y / 10)
+          .lineTo(newLastP2.x / 10, newLastP2.y / 10)
 
-           .moveTo(newLastP1T.x / 10, newLastP1T.y / 10, )
-           .lineTo(newLastP1B.x / 10, newLastP1B.y / 10, )
-           .moveTo(newLastP2T.x / 10, newLastP2T.y / 10, )
-           .lineTo(newLastP2B.x / 10, newLastP2B.y / 10, )
+          .moveTo(newLastP1T.x / 10, newLastP1T.y / 10, )
+          .lineTo(newLastP1B.x / 10, newLastP1B.y / 10, )
+          .moveTo(newLastP2T.x / 10, newLastP2T.y / 10, )
+          .lineTo(newLastP2B.x / 10, newLastP2B.y / 10, )
           treadLineContainer.addChild(lastText, lastLine)
-          
-          
-    
         }
-  
         treadLineContainer.addChild(treadLine, treadLineNum)
       }
     }
-    // 休息平台
-    // if (this.type === Types.TreadType.tCor) {
-    //   // console.log(this.edges)
 
-      
-      
-      
-    //   setTimeout(() => {
-    //     if (girder[0].borders) {
-    //       girderWidth = girder[0].borders[0].inEdges[0].p1.x - girder[0].borders[0].outEdges[0].p1.x
-    //     } else {
-    //       return
-    //     }
-
-    //     let newEdges = []
-    //     let Np1
-    //     let Np2
-    //     let wall
-    //     let stairP
-    //     for (let i = 0; i < this.inIndex.length; i++) {
-    //       p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
-    //       p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
-    //       // console.log(p1)
-    //       // console.log(p2)
-          
-    //       if (this.inIndex[this.inIndex.length - 1] === 3 || this.inIndex[this.inIndex.length - 1] === 4) {
-    //         if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
-    //           Np1 = p1.clone().subtractX(new Victor(50,50))
-    //           Np2 = p2.clone()
-  
-    //           normal = new Types.Vector3({ x: 0, y: -1 })
-    //           for(let value of D2Config.WIDGETS.values()) {
-    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
-    //               if (tool.isVec2Equal(value.normal, normal)) {
-    //                 wall = value
-    //               }
-    //             }
-    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
-    //               stairP = d2_tool.translateCoord(value.position)
-    //             }
-    //           }
-    //           // console.log(stairP)
-    //           // console.log(wall.outP1)
-    //           // console.log(wall.p1)
-    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10 )
-    //           // console.log(wallOutP1)
-  
-    //           // 左侧
-    //           newP1 = new Victor(Np1.x, wallOutP1.y * 10)
-    //           newP2 = new Victor(Np2.x, wallOutP1.y * 10)
-    //           newP1 = newP1.subtractY(offSet)
-    //           newP2 = newP2.subtractY(offSet)
-
-    //           newP1T = newP1.clone().subtractY(arrow)
-    //           newP1B = newP1.clone().addY(arrow)
-    //           newP2T = newP2.clone().subtractY(arrow)
-    //           newP2B = newP2.clone().addY(arrow)
-    //         }
-    //         if (p1.x === p2.x && p1.y > p2.y && this.isClock === true) {
-    //           Np1 = p1.clone()
-    //           Np2 = p2.clone().subtractY(new Victor(50,50)) 
-  
-    //           normal = new Types.Vector3({ x: -1, y: -0 })
-    //           for(let value of D2Config.WIDGETS.values()) {
-    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
-    //               if (tool.isVec2Equal(value.normal, normal)) {
-    //                 wall = value
-    //               }
-    //             }
-    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
-    //               stairP = d2_tool.translateCoord(value.position)
-    //             }
-    //           }
-    //           // console.log(stairP)
-    //           // console.log(wall.outP1)
-    //           // console.log(wall.p1)
-    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10)
-    //           // console.log(wallOutP1)
-  
-    //           // 左侧
-    //           newP1 = new Victor(wallOutP1.x * 10, Np1.y)
-    //           newP2 = new Victor(wallOutP1.x * 10, Np2.y)
-    //           newP1 = newP1.subtractX(offSet)
-    //           newP2 = newP2.subtractX(offSet)
-
-    //           newP1T = newP1.clone().subtractX(arrow)
-    //           newP1B = newP1.clone().addX(arrow)
-    //           newP2T = newP2.clone().subtractX(arrow)
-    //           newP2B = newP2.clone().addX(arrow)
-    //         }
-    //       }
-    //       if (this.inIndex[this.inIndex.length - 1] === 1 || this.inIndex[this.inIndex.length - 1] === 2 || (this.inIndex[0] === 2 && this.inIndex[this.inIndex.length - 1] === 3)) {
-    //         if (p1.x < p2.x && p1.y === p2.y && this.isClock === true) {
-    //           Np1 = p1.clone() 
-    //           Np2 = p2.clone().addX(new Victor(50,50)) 
-  
-    //           normal = new Types.Vector3({ x: 0, y: -1 })
-    //           for(let value of D2Config.WIDGETS.values()) {
-    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
-    //               if (tool.isVec2Equal(value.normal, normal)) {
-    //                 wall = value
-    //               }
-    //             }
-    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
-    //               stairP = d2_tool.translateCoord(value.position)
-    //             }
-    //           }
-    //           // console.log(stairP)
-    //           // console.log(wall.outP1)
-    //           // console.log(wall.p1)
-    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10 )
-    //           console.log(wallOutP1)
-  
-    //           // 左侧
-    //           newP1 = new Victor(Np1.x, wallOutP1.y * 10)
-    //           newP2 = new Victor(Np2.x, wallOutP1.y * 10)
-    //           newP1 = newP1.subtractY(offSet)
-    //           newP2 = newP2.subtractY(offSet)
-
-    //           newP1T = newP1.clone().subtractY(arrow)
-    //           newP1B = newP1.clone().addY(arrow)
-    //           newP2T = newP2.clone().subtractY(arrow)
-    //           newP2B = newP2.clone().addY(arrow)
-    //         }
-    //         if (p1.x === p2.x && p1.y < p2.y && this.isClock === true) {
-    //           Np1 = p1.clone().subtractY(new Victor(50,50))
-    //           Np2 = p2.clone()
-  
-    //           normal = new Types.Vector3({ x: 1, y: 0 })
-    //           for(let value of D2Config.WIDGETS.values()) {
-    //             if (value.getWidgetType() === COMP_TYPES.WALL) {
-    //               if (tool.isVec2Equal(value.normal, normal)) {
-    //                 wall = value
-    //               }
-    //             }
-    //             if (value.getWidgetType() === COMP_TYPES.STAIR) {
-    //               stairP = d2_tool.translateCoord(value.position)
-    //             }
-    //           }
-    //           // console.log(stairP)
-    //           // console.log(wall.outP1)
-    //           // console.log(wall.p1)
-    //           let wallOutP1 = new Victor(wall.outP1.x - stairP.x * 10 ,wall.outP1.y - stairP.y * 10)
-    //           // console.log(wallOutP1)
-  
-    //           // 左侧
-    //           newP1 = new Victor(wallOutP1.x * 10, Np1.y)
-    //           newP2 = new Victor(wallOutP1.x * 10, Np2.y)
-    //           newP1 = newP1.addX(offSet)
-    //           newP2 = newP2.addX(offSet)
-
-    //           newP1T = newP1.clone().subtractX(arrow)
-    //           newP1B = newP1.clone().addX(arrow)
-    //           newP2T = newP2.clone().subtractX(arrow)
-    //           newP2B = newP2.clone().addX(arrow)
-    //         }
-    //       }
-
-
-
-
-          
-    //       // treadLineNum.scale.set(0.25)
-    //       // treadLineNum.position.set(position.x, position.y)
-    //       // treadLineNum.anchor.set(0.5, 0.5)
-    //       // treadLineNum.rotation = newTextRotation
-          
-    //         treadLine
-    //         .lineStyle(1,0x000000)
-    //         .moveTo(newP1.x / 10,newP1.y / 10)
-    //         .lineTo(newP2.x / 10,newP2.y / 10)
-    //         .moveTo(newP1T.x / 10,newP1T.y / 10)
-    //         .lineTo(newP1B.x / 10,newP1B.y / 10)
-    //         .moveTo(newP2T.x / 10,newP2T.y / 10)
-    //         .lineTo(newP2B.x / 10,newP2B.y / 10)
-    
-          
-            
-            
-      
-    
-    //       treadLineContainer.addChild(treadLine)
-    //     }
-    //   }, 10);
-
-    // }
     // 起步踏板标注
-    if (this.type === Types.TreadType.tStart && this.edges.length === 5) {
+    let newStartP1, newStartP2, newStartP1T, newStartP1B, newStartP2T, newStartP2B, startTP2L_T, startTP2L_B, startTP2R_T, startTP2R_B
+    let startTP1L
+    let startTP2L
+    let startTP1R
+    let startTP2R
+    if (this.type === Types.TreadType.tStart) {
+      if (this.edges.length === 5) {
+        if (this.index === 1) {
+          startTP1L = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
+          startTP2L = new Victor(this.edges[0].p1.x, startTP1L.y + this.stepWidth + this.stepWidth / 6)
+          startTP1R = new Victor(this.edges[1].p1.x, this.edges[1].p1.y)
+          startTP2R = new Victor(this.edges[1].p1.x, startTP1R.y + this.stepWidth + this.stepWidth / 6)
+          
+          if (startTP1L.x === startTP2L.x && startTP1L.y < startTP2L.y && this.isClock === true) {
+            normal = new Types.Vector3({ x: -1, y: -0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
+    
+            newStartP1 = new Victor(wallOutP1.x * 10, startTP1L.y)
+            newStartP2 = new Victor(wallOutP1.x * 10, startTP2L.y)
+            newStartP1 = newStartP1.subtractX(offSet)
+            newStartP2 = newStartP2.subtractX(offSet)
+    
+            newStartP1T = newStartP1.clone().subtractX(arrow)
+            newStartP1B = newStartP1.clone().addX(arrow)
+            newStartP2T = newStartP2.clone().subtractX(arrow)
+            newStartP2B = newStartP2.clone().addX(arrow)
+    
+            startTP2L_T = startTP2L.clone().addY(arrow)
+            startTP2L_B = startTP2L.clone().subtractY(arrow)
+            startTP2R_T = startTP2R.clone().addY(arrow)
+            startTP2R_B = startTP2R.clone().subtractY(arrow)
+          }
+          if (startTP1R.x === startTP2R.x && startTP1R.y < startTP2R.y && this.isClock === false) {
+            normal = new Types.Vector3({ x: 1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
+    
+            newStartP1 = new Victor(wallOutP1.x * 10, startTP1R.y)
+            newStartP2 = new Victor(wallOutP1.x * 10, startTP2R.y)
+            newStartP1 = newStartP1.addX(offSet)
+            newStartP2 = newStartP2.addX(offSet)
+    
+            newStartP1T = newStartP1.clone().subtractX(arrow)
+            newStartP1B = newStartP1.clone().addX(arrow)
+            newStartP2T = newStartP2.clone().subtractX(arrow)
+            newStartP2B = newStartP2.clone().addX(arrow)
+    
+            startTP2L_T = startTP2L.clone().addY(arrow)
+            startTP2L_B = startTP2L.clone().subtractY(arrow)
+            startTP2R_T = startTP2R.clone().addY(arrow)
+            startTP2R_B = startTP2R.clone().subtractY(arrow)
+          }
+        }
+      }
+      else {
+        if (this.index === 1) {
+          startTP1L = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
+          startTP2L = new Victor(this.edges[0].p1.x, startTP1L.y + this.stepWidth)
+          startTP1R = new Victor(this.edges[1].p1.x, this.edges[1].p1.y)
+          startTP2R = new Victor(this.edges[1].p1.x, startTP1R.y + this.stepWidth)
+    
+          if (startTP1L.x === startTP2L.x && startTP1L.y < startTP2L.y && this.isClock === true) {
+            normal = new Types.Vector3({ x: -1, y: -0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
+    
+            newStartP1 = new Victor(wallOutP1.x * 10, startTP1L.y)
+            newStartP2 = new Victor(wallOutP1.x * 10, startTP2L.y)
+            newStartP1 = newStartP1.subtractX(offSet)
+            newStartP2 = newStartP2.subtractX(offSet)
+    
+            newStartP1T = newStartP1.clone().subtractX(arrow)
+            newStartP1B = newStartP1.clone().addX(arrow)
+            newStartP2T = newStartP2.clone().subtractX(arrow)
+            newStartP2B = newStartP2.clone().addX(arrow)
+    
+            startTP2L_T = startTP2L.clone().addY(arrow)
+            startTP2L_B = startTP2L.clone().subtractY(arrow)
+            startTP2R_T = startTP2R.clone().addY(arrow)
+            startTP2R_B = startTP2R.clone().subtractY(arrow)
+          }
+          if (startTP1R.x === startTP2R.x && startTP1R.y < startTP2R.y && this.isClock === false) {
+            normal = new Types.Vector3({ x: 1, y: 0 })
+            for(let value of D2Config.WIDGETS.values()) {
+              if (value.getWidgetType() === COMP_TYPES.WALL) {
+                if (tool.isVec2Equal(value.normal, normal)) {
+                  wall = value
+                }
+              }
+            }
+            let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
+    
+            newStartP1 = new Victor(wallOutP1.x * 10, startTP1R.y)
+            newStartP2 = new Victor(wallOutP1.x * 10, startTP2R.y)
+            newStartP1 = newStartP1.addX(offSet)
+            newStartP2 = newStartP2.addX(offSet)
+    
+            newStartP1T = newStartP1.clone().subtractX(arrow)
+            newStartP1B = newStartP1.clone().addX(arrow)
+            newStartP2T = newStartP2.clone().subtractX(arrow)
+            newStartP2B = newStartP2.clone().addX(arrow)
+    
+            startTP2L_T = startTP2L.clone().addY(arrow)
+            startTP2L_B = startTP2L.clone().subtractY(arrow)
+            startTP2R_T = startTP2R.clone().addY(arrow)
+            startTP2R_B = startTP2R.clone().subtractY(arrow)
+          }
+        }
+      }
       if (this.index === 1) {
-        let startTP1L = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
-        let startTP2L = new Victor(this.edges[0].p1.x, startTP1L.y + this.stepWidth + this.stepWidth / 6)
-        let startTP1R = new Victor(this.edges[1].p1.x, this.edges[1].p1.y)
-        let startTP2R = new Victor(this.edges[1].p1.x, startTP1R.y + this.stepWidth + this.stepWidth / 6)
-        
         // 起步踏板宽度计算
         const startTreadLinelength =
-        Math.floor(Math.hypot(startTP1L.x - startTP2L.x, startTP1L.y - startTP2L.y) )
+        Math.round(Math.hypot(startTP1L.x - startTP2L.x, startTP1L.y - startTP2L.y) )
   
         const startTreadLinelength1 =
-        Math.floor(Math.hypot(startTP1L.x - startTP1R.x, startTP1L.y - startTP1R.y) )
-  
-        let newStartP1
-        let newStartP2
-        
-        let newStartP1T
-        let newStartP1B
-        let newStartP2T
-        let newStartP2B
-
-        let startTP2L_T
-        let startTP2L_B
-        let startTP2R_T
-        let startTP2R_B
-        if (startTP1L.x === startTP2L.x && startTP1L.y < startTP2L.y && this.isClock === true) {
-          normal = new Types.Vector3({ x: -1, y: -0 })
-  
-          let wall = null
-          let stairP = null
-          for(let value of D2Config.WIDGETS.values()) {
-            if (value.getWidgetType() === COMP_TYPES.WALL) {
-              if (tool.isVec2Equal(value.normal, normal)) {
-                wall = value
-              }
-            }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
-          }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
-          // console.log(wallOutP1)
-  
-          newStartP1 = new Victor(wallOutP1.x * 10, startTP1L.y)
-          newStartP2 = new Victor(wallOutP1.x * 10, startTP2L.y)
-          newStartP1 = newStartP1.subtractX(offSet)
-          newStartP2 = newStartP2.subtractX(offSet)
-  
-          newStartP1T = newStartP1.clone().subtractX(arrow)
-          newStartP1B = newStartP1.clone().addX(arrow)
-          newStartP2T = newStartP2.clone().subtractX(arrow)
-          newStartP2B = newStartP2.clone().addX(arrow)
-
-          startTP2L_T = startTP2L.clone().addY(arrow)
-          startTP2L_B = startTP2L.clone().subtractY(arrow)
-          startTP2R_T = startTP2R.clone().addY(arrow)
-          startTP2R_B = startTP2R.clone().subtractY(arrow)
-        }
-        if (startTP1R.x === startTP2R.x && startTP1R.y < startTP2R.y && this.isClock === false) {
-          normal = new Types.Vector3({ x: 1, y: 0 })
-  
-          let wall = null
-          let stairP = null
-          for(let value of D2Config.WIDGETS.values()) {
-            if (value.getWidgetType() === COMP_TYPES.WALL) {
-              if (tool.isVec2Equal(value.normal, normal)) {
-                wall = value
-              }
-            }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
-          }
-          console.log(stairP)
-          console.log(wall.outP1)
-          console.log(wall.p1)
-          let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
-          // console.log(wallOutP1)
-  
-          newStartP1 = new Victor(wallOutP1.x * 10, startTP1R.y)
-          newStartP2 = new Victor(wallOutP1.x * 10, startTP2R.y)
-          newStartP1 = newStartP1.addX(offSet)
-          newStartP2 = newStartP2.addX(offSet)
-  
-          newStartP1T = newStartP1.clone().subtractX(arrow)
-          newStartP1B = newStartP1.clone().addX(arrow)
-          newStartP2T = newStartP2.clone().subtractX(arrow)
-          newStartP2B = newStartP2.clone().addX(arrow)
-
-          startTP2L_T = startTP2L.clone().addY(arrow)
-          startTP2L_B = startTP2L.clone().subtractY(arrow)
-          startTP2R_T = startTP2R.clone().addY(arrow)
-          startTP2R_B = startTP2R.clone().subtractY(arrow)
-        }
-
+        Math.round(Math.hypot(startTP1L.x - startTP1R.x, startTP1L.y - startTP1R.y) )
   
         // 文字中心位置计算
         const position = {
@@ -1178,180 +1531,12 @@ export class Tread extends ChildWidget {
         }
   
         const startTreadLine = new PIXI.Graphics()
-
+  
         startTreadLine
         .lineStyle(1,0x000000)
         .moveTo(newStartP1.x / 10, newStartP1.y / 10)
         .lineTo(newStartP2.x / 10, newStartP2.y / 10)
-
-        .moveTo(startTP2L.x / 10, startTP2L.y / 10 + 10)
-        .lineTo(startTP2R.x / 10, startTP2R.y / 10 + 10)
-        
   
-        .moveTo(startTP2L_T.x / 10, startTP2L_T.y / 10 + 10)
-        .lineTo(startTP2L_B.x / 10, startTP2L_B.y / 10 + 10)
-        .moveTo(startTP2R_T.x / 10, startTP2R_T.y / 10 + 10)
-        .lineTo(startTP2R_B.x / 10, startTP2R_B.y / 10 + 10)
-
-        .moveTo(newStartP1T.x / 10, newStartP1T.y / 10)
-        .lineTo(newStartP1B.x / 10, newStartP1B.y / 10)
-        .moveTo(newStartP2T.x / 10, newStartP2T.y / 10)
-        .lineTo(newStartP2B.x / 10, newStartP2B.y / 10)
-  
-        const startTreadLineNum = new PIXI.Text(startTreadLinelength, {
-          fontSize: 32,
-          fill: 0x000000,
-        })
-  
-        startTreadLineNum.scale.set(0.25)
-        startTreadLineNum.position.set(position.x, position.y)
-        startTreadLineNum.anchor.set(0.5, 0.5)
-        startTreadLineNum.rotation = newStartTextRotation
-
-        const startTreadLineNum1 = new PIXI.Text(startTreadLinelength1, {
-          fontSize: 32,
-          fill: 0x000000,
-        })
-  
-        startTreadLineNum1.scale.set(0.25)
-        startTreadLineNum1.position.set(position1.x, position1.y + 5)
-        startTreadLineNum1.anchor.set(0.5, 0.5)
-        startTreadLineNum1.rotation = 0
-  
-  
-        treadLineContainer.addChild(startTreadLine,startTreadLineNum, startTreadLineNum1)
-      }
-    }
-    if (this.type === Types.TreadType.tStart && this.edges.length === 4) {
-      if (this.index === 1) {
-        let startTP1L = new Victor(this.edges[0].p1.x, this.edges[0].p1.y)
-        let startTP2L = new Victor(this.edges[0].p1.x, startTP1L.y + this.stepWidth)
-        let startTP1R = new Victor(this.edges[1].p1.x, this.edges[1].p1.y)
-        let startTP2R = new Victor(this.edges[1].p1.x, startTP1R.y + this.stepWidth)
-        
-        // 起步踏板宽度计算
-        const startTreadLinelength =
-        Math.floor(Math.hypot(startTP1L.x - startTP2L.x, startTP1L.y - startTP2L.y) )
-
-        const startTreadLinelength1 =
-        Math.floor(Math.hypot(startTP1L.x - startTP1R.x, startTP1L.y - startTP1R.y) )
-  
-        let newStartP1
-        let newStartP2
-        
-        let newStartP1T
-        let newStartP1B
-        let newStartP2T
-        let newStartP2B
-
-        let startTP2L_T
-        let startTP2L_B
-        let startTP2R_T
-        let startTP2R_B
-
-        if (startTP1L.x === startTP2L.x && startTP1L.y < startTP2L.y && this.isClock === true) {
-          normal = new Types.Vector3({ x: -1, y: -0 })
-  
-          let wall = null
-          let stairP = null
-          for(let value of D2Config.WIDGETS.values()) {
-            if (value.getWidgetType() === COMP_TYPES.WALL) {
-              if (tool.isVec2Equal(value.normal, normal)) {
-                wall = value
-              }
-            }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
-          }
-          // console.log(stairP)
-          // console.log(wall.outP1)
-          // console.log(wall.p1)
-          let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
-          // console.log(wallOutP1)
-  
-          newStartP1 = new Victor(wallOutP1.x * 10, startTP1L.y)
-          newStartP2 = new Victor(wallOutP1.x * 10, startTP2L.y)
-          newStartP1 = newStartP1.subtractX(offSet)
-          newStartP2 = newStartP2.subtractX(offSet)
-  
-          newStartP1T = newStartP1.clone().subtractX(arrow)
-          newStartP1B = newStartP1.clone().addX(arrow)
-          newStartP2T = newStartP2.clone().subtractX(arrow)
-          newStartP2B = newStartP2.clone().addX(arrow)
-
-          startTP2L_T = startTP2L.clone().addY(arrow)
-          startTP2L_B = startTP2L.clone().subtractY(arrow)
-          startTP2R_T = startTP2R.clone().addY(arrow)
-          startTP2R_B = startTP2R.clone().subtractY(arrow)
-        }
-        if (startTP1R.x === startTP2R.x && startTP1R.y < startTP2R.y && this.isClock === false) {
-          normal = new Types.Vector3({ x: 1, y: 0 })
-  
-          let wall = null
-          let stairP = null
-          for(let value of D2Config.WIDGETS.values()) {
-            if (value.getWidgetType() === COMP_TYPES.WALL) {
-              if (tool.isVec2Equal(value.normal, normal)) {
-                wall = value
-              }
-            }
-            if (value.getWidgetType() === COMP_TYPES.STAIR) {
-              stairP = d2_tool.translateCoord(value.position)
-            }
-          }
-          console.log(stairP)
-          console.log(wall.outP1)
-          console.log(wall.p1)
-          let wallOutP1 = new Victor(wall.outP1.x - stairP.x, 0)
-          // console.log(wallOutP1)
-  
-          newStartP1 = new Victor(wallOutP1.x * 10, startTP1R.y)
-          newStartP2 = new Victor(wallOutP1.x * 10, startTP2R.y)
-          newStartP1 = newStartP1.addX(offSet)
-          newStartP2 = newStartP2.addX(offSet)
-  
-          newStartP1T = newStartP1.clone().subtractX(arrow)
-          newStartP1B = newStartP1.clone().addX(arrow)
-          newStartP2T = newStartP2.clone().subtractX(arrow)
-          newStartP2B = newStartP2.clone().addX(arrow)
-
-          startTP2L_T = startTP2L.clone().addY(arrow)
-          startTP2L_B = startTP2L.clone().subtractY(arrow)
-          startTP2R_T = startTP2R.clone().addY(arrow)
-          startTP2R_B = startTP2R.clone().subtractY(arrow)
-        }
-
-  
-        // 文字中心位置计算
-        const position = {
-          x: (newStartP1T.x + newStartP2T.x) / 2 / 10,
-          y: (newStartP1T.y + newStartP2T.y) / 2 / 10
-        }
-        const position1 = {
-          x: (startTP2L.x + startTP2R.x) / 2 / 10,
-          y: (startTP2L.y + startTP2R.y) / 2 / 10
-        }
-  
-        // 旋转计算
-        let newStartTextRotation = ''
-        const startTextRotation = new Victor(newStartP1.x - newStartP2.x, newStartP1.y - newStartP2.y)
-        const startTextAngle = startTextRotation.angle()
-        if (startTextAngle == Math.PI || startTextAngle == 0) {
-          newStartTextRotation = 0
-        } else if (startTextAngle > Math.PI) {
-          newStartTextRotation = startTextRotation.invert().angle()
-        } else if (startTextAngle < Math.PI) {
-          newStartTextRotation = startTextRotation.angle()
-        }
-  
-        const startTreadLine = new PIXI.Graphics()
-
-        startTreadLine
-        .lineStyle(1,0x000000)
-        .moveTo(newStartP1.x / 10, newStartP1.y / 10)
-        .lineTo(newStartP2.x / 10, newStartP2.y / 10)
-
         .moveTo(startTP2L.x / 10, startTP2L.y / 10 + 10)
         .lineTo(startTP2R.x / 10, startTP2R.y / 10 + 10)
         
@@ -1376,7 +1561,6 @@ export class Tread extends ChildWidget {
         startTreadLineNum.anchor.set(0.5, 0.5)
         startTreadLineNum.rotation = newStartTextRotation
   
-
         const startTreadLineNum1 = new PIXI.Text(startTreadLinelength1, {
           fontSize: 32,
           fill: 0x000000,
@@ -1389,6 +1573,7 @@ export class Tread extends ChildWidget {
   
         treadLineContainer.addChild(startTreadLine,startTreadLineNum, startTreadLineNum1)
       }
+      
     }
 
     this.sprite.addChild(treadLineContainer)

@@ -158,7 +158,7 @@ export class Inlay extends BaseWidget {
 
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart } = this
-    const offSet = new Victor(10, 10) // 偏移距离
+    const offSet = new Victor(7, 7) // 偏移距离
 
     const p1 = new Victor(-this.width / 2, -this.depth / 2)
     const p2 = new Victor(this.width / 2, -this.depth / 2)
@@ -248,7 +248,7 @@ export class Inlay extends BaseWidget {
     // 标注文字
     // 宽度标注文字
     const compLineText1 = new PIXI.Text(this.width * D2Config.SCREEN_RATE, {
-      fontSize: 40,
+      fontSize: 32,
       fill: 0x000000,
     })
     compLineText1.scale.set(0.25)
@@ -258,7 +258,7 @@ export class Inlay extends BaseWidget {
 
     // 深度标注文字
     const compLineText2 = new PIXI.Text(this.depth * D2Config.SCREEN_RATE, {
-      fontSize: 40,
+      fontSize: 32,
       fill: 0x000000,
     })
     compLineText2.scale.set(0.25)
@@ -274,7 +274,7 @@ export class Inlay extends BaseWidget {
       disText = disToStart
     }
     const compLineText3 = new PIXI.Text(disText, {
-      fontSize: 40,
+      fontSize: 32,
       fill: 0x000000,
     })
     compLineText3.scale.set(0.25)

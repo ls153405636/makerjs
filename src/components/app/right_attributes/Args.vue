@@ -155,7 +155,6 @@ export default defineComponent({
         type: 'getArgs/getFocus',
         focus: false
         })
-
       }
       if (type === 'input') {
         value = Number(value)

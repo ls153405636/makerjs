@@ -175,17 +175,18 @@ export class Stair extends BaseWidget {
 
   addDimension() {
     let stairInfo = StructConfig.INFOS.get(this.uuid)
+    console.log(stairInfo)
     const flightContainer = new PIXI.Container()
     let depth = stairInfo.depth ? stairInfo.depth : stairInfo.depth1
     let width = stairInfo.width
     let landingWidth = new Victor(width,width)
     let firstDepth = new Victor(depth,depth)
-    const offSet = new Victor(250,250)
+    const offSet = new Victor(350,350)
     const arrow = new Victor(50,50)
     // console.log(stairInfo)
     
     // 获取第一级踏步
-    
+    let wallLength
     for (let i = 0; i < stairInfo.flights.length; i++) {
       let tread = stairInfo.flights[0].treads
       let e = stairInfo.flights[0].treads[0].border.stepOutline
@@ -243,7 +244,8 @@ export class Stair extends BaseWidget {
         }
         // console.log(stairP)
         // console.log(wall.outP1)
-        // console.log(wall.p1)
+        // console.log(wall.outP2)
+        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
 
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
         // console.log(wallOutP1)
@@ -276,6 +278,7 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
+        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
         // console.log(stairP)
         // console.log(wall.outP1)
         // console.log(wall.p1)
@@ -303,7 +306,7 @@ export class Stair extends BaseWidget {
 
       // 标注长度计算
       const flightTextLength =
-      Math.floor(Math.hypot(p.x - nextP.x, p.y - nextP.y) )
+      Math.round(Math.hypot(p.x - nextP.x, p.y - nextP.y) )
 
       // 旋转计算
       let newTextRotation = ''
@@ -350,8 +353,12 @@ export class Stair extends BaseWidget {
       .moveTo(newP2T.x / 10, newP2T.y / 10)
       .lineTo(newP2B.x / 10, newP2B.y / 10)
 
+      if (wallLength === flightTextLength / 10) {
+        continue
+      }else {
+        flightContainer.addChild(flightLine,flightText)
+      }
 
-      flightContainer.addChild(flightLine,flightText)
       flightContainer.zIndex = 100
     }
 
@@ -389,6 +396,7 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
+        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
 
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
         // console.log(wallOutP1)
@@ -420,13 +428,12 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
+        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
       }
-
-
 
       // 标注长度计算
       const landingTextLength =
-      Math.floor(Math.hypot(lP.x - lNextP.x, lP.y - lNextP.y) )
+      Math.round(Math.hypot(lP.x - lNextP.x, lP.y - lNextP.y) )
 
       // 旋转计算
       let newTextRotation = ''
@@ -479,7 +486,12 @@ export class Stair extends BaseWidget {
       .lineTo(newLP1B.x / 10, newLP1B.y / 10)
       .moveTo(newLP2T.x / 10, newLP2T.y / 10)
       .lineTo(newLP2B.x / 10, newLP2B.y / 10)
-      flightContainer.addChild(landingLine,flightText)
+
+      if (wallLength === landingTextLength / 10) {
+        continue
+      }else {
+        flightContainer.addChild(landingLine,flightText)
+      }
       flightContainer.zIndex = 100
     }
 

@@ -269,8 +269,8 @@ export class Wall extends BaseWidget {
     // 标注线偏移计算
     const { p1, p2, outP1, outP2, depth, normal, holeP1, holeP2 } = this
     const newNormal = new Victor(normal.x, normal.y)
-    const offSet = new Victor(40, 40) // 墙体标线偏移距离
-    const holeLineOffSet = new Victor(60 + this.depth, 60 + this.depth) // 洞口标线偏移距离
+    const offSet = new Victor(50, 50) // 墙体标线偏移距离
+    const holeLineOffSet = new Victor(70 + this.depth, 70 + this.depth) // 洞口标线偏移距离
     const LineTextoffSet = new Victor(8, 8) // 文字标线偏移距离
     
     newNormal.multiply(offSet)
@@ -342,10 +342,10 @@ export class Wall extends BaseWidget {
     
     // 获取标注线长度
     const linelength =
-      Math.floor(Math.hypot(P1.x - P2.x, P1.y - P2.y) * 10 * 100) / 100
+      Math.round(Math.hypot(P1.x - P2.x, P1.y - P2.y) * 10 * 100) / 100
 
     const holeLinelength =
-      Math.floor(Math.hypot(holeP1.x - holeP2.x, holeP1.y - holeP2.y) * 10 * 100) / 100
+      Math.round(Math.hypot(holeP1.x - holeP2.x, holeP1.y - holeP2.y) * 10 * 100) / 100
     
     // 计算标注线中心位置
     const linePos = new Victor((lineCP1.x + lineCP2.x) / 2,(lineCP1.y + lineCP2.y) / 2)
