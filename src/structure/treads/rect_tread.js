@@ -39,7 +39,12 @@ export class RectTread extends Tread {
     let backOffset = this.parent.parent.getTreadBackOffset()
     let outline = tool.createRectOutline(this.position,this.stepLength-2*sideOffset,this.stepWidth,this.lVec,this.wVec)
     let t_ori = new Edge().setByVec(this.position, this.wVec, -backOffset).p2
-    let treadOutline = tool.createRectOutline(t_ori, this.stepLength-2*sideOffset, this.stepWidth+backOffset, this.lVec, this.wVec)
+    let treadOutline
+    if (this.index === this.parent.parent.realStepNum) {
+      treadOutline = outline
+    } else {
+      treadOutline = tool.createRectOutline(t_ori, this.stepLength-2*sideOffset, this.stepWidth+backOffset, this.lVec, this.wVec)
+    }
     outline = new Outline(outline).setZCoord(this.position.z)
     treadOutline = new Outline(treadOutline).setZCoord(this.position.z)
     outline.isClock = this.clock

@@ -135,6 +135,14 @@ export namespace Types {
         sts_right = 3
     }
 
+    /** StairExitType enum. */
+    enum StairExitType {
+        seph = 0,
+        se_riser = 1,
+        se_hangingBoard = 2,
+        se_none = 3
+    }
+
     /** Properties of a Vector3. */
     interface IVector3 {
 
@@ -1343,6 +1351,9 @@ export namespace Types {
 
         /** Stair floadSide */
         floadSide?: (Types.Side|null);
+
+        /** Stair exitType */
+        exitType?: (Types.StairExitType|null);
     }
 
     /** Represents a Stair. */
@@ -1419,6 +1430,9 @@ export namespace Types {
 
         /** Stair floadSide. */
         public floadSide: Types.Side;
+
+        /** Stair exitType. */
+        public exitType: Types.StairExitType;
 
         /**
          * Creates a new Stair instance using the specified properties.
@@ -1505,6 +1519,15 @@ export namespace Types {
 
         /** HangingBoard height */
         height?: (number|null);
+
+        /** HangingBoard position */
+        position?: (Types.IVector3|null);
+
+        /** HangingBoard widthVec */
+        widthVec?: (Types.IVector3|null);
+
+        /** HangingBoard depthVec */
+        depthVec?: (Types.IVector3|null);
     }
 
     /** Represents a HangingBoard. */
@@ -1527,6 +1550,15 @@ export namespace Types {
 
         /** HangingBoard height. */
         public height: number;
+
+        /** HangingBoard position. */
+        public position?: (Types.IVector3|null);
+
+        /** HangingBoard widthVec. */
+        public widthVec?: (Types.IVector3|null);
+
+        /** HangingBoard depthVec. */
+        public depthVec?: (Types.IVector3|null);
 
         /**
          * Creates a new HangingBoard instance using the specified properties.

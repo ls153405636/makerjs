@@ -35,7 +35,7 @@ export class Hole extends BaseModel {
     let holeInfo = StructConfig.INFOS.get(vPB.uuid)
     let holeEdges = [...vPB.edges]
     let floorEdgesSet = [], lastEdgeNum = -2, firstEdgeNum = -2
-    let offsetDis = Math.max(holeInfo.length, holeInfo.width)
+    let offsetDis = Math.max(holeInfo.length, holeInfo.width) / 2
     this.obj = new THREE.Group()
     this.lineFrame = new THREE.Group()
     for (let i = 0; i < holeInfo.walls.length; i++) {

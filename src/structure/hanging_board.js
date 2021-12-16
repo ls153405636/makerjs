@@ -3,32 +3,36 @@ import { ChildInfo } from './child_info'
 import { Default, StructConfig } from './config'
 
 export class HangingBoard extends ChildInfo {
-  constructor(vParent) {
+  constructor({vParent, vWidth, vPosition, vHeight, vWidthVec, vDepthVec}) {
     super(vParent)
     this.depth = Default.HANG_BOARD_DEPTH
-    this.width = this.parent.width
-    this.height = this.parent.stepHeight + 30
-  }
-
-  addInfo() {
-    StructConfig.INFOS.set(this.uuid, this)
-    this.parent.addHangingBoard(this)
-  }
-
-  delInfo() {
-    StructConfig.INFOS.delete(this.uuid)
-    this.parent.addHangingBoard(null)
+    this.height = vHeight
+    this.position = vPosition
+    this.widthVec = vWidthVec
+    this.depthVec = vDepthVec
+    this.rebuildByParent({vWidth, vPosition})
   }
 
   getArgs() {
     return {
-      depth: { name: '深度', value: this.depth, type: 'input' },
+      depth: { name: '厚度', value: this.depth, type: 'input' },
       height: { name: '高度', value: this.height, type: 'input' },
     }
   }
 
-  rebuildByParent() {
-    this.width = this.parent.width
+  updateItem(vValue, vKey, vSecondKey) {
+    if (vKey === 'depth') {
+      let lastF = this.parent.segments[this.segments.length - 1]
+      let lengthDiff = vValue - this.depth
+      lastF.updateItem(lastF.length - lengthDiff, 'length')
+    } else {
+      super.updateItem(vValue, vKey, vSecondKey)
+    }
+  }
+
+  rebuildByParent({vWidth, vPosition}) {
+    this.width = vWidth
+    this.position = vPosition
   }
 
   writePB() {
@@ -36,6 +40,9 @@ export class HangingBoard extends ChildInfo {
       uuid: this.uuid,
       depth: this.depth,
       width: this.width,
+      widthVec: this.widthVec,
+      depthVec: this.depthVec,
+      position: this.position
     })
   }
 }

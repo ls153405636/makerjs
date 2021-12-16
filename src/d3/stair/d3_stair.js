@@ -1,11 +1,13 @@
 import { Types } from "../../types/stair_v2";
 import { BaseModel } from "../d3_base_model";
-import { D3Config } from "../d3_config";
+import { D3Config, D3Default } from "../d3_config";
+import { D3Scene } from "../d3_scene";
 import d3_tool from "../d3_tool";
 import { BigColumn } from "./d3_big_col";
 import { Flight } from "./d3_flight";
 import { Girder } from "./d3_girder";
 import { Handrail } from "./d3_handrail";
+import { HangingBoard } from "./d3_hanging_board";
 import { SmallColumn } from "./d3_small_col";
 
 
@@ -35,6 +37,10 @@ export class Stair extends BaseModel {
     for (const bCol of this.bigColumns) {
       bCol.dispose()
     }
+    if (this.hangingBoard) {
+      this.hangingBoard.dispose()
+    }
+    new D3Scene().render()
     super.dispose()
   }
 
@@ -49,7 +55,12 @@ export class Stair extends BaseModel {
     this.handrails = []
     this.smallColumns = []
     this.bigColumns = []
+    this.hangingBoard = null
+    this.exitType = vPB.exitType
     this.position = d3_tool.translateCoord(vPB.position)
+    if (vPB.hangingBoard) {
+      this.hangingBoard = new HangingBoard(this, vPB.hangingBoard)
+    }
     for (let i = 0; i < vPB.flights.length; i++) {
       let f = vPB.flights[i]
       this.flights.push(new Flight(this, f, vPB.treadParameters, vPB.riserParameters))
@@ -90,6 +101,9 @@ export class Stair extends BaseModel {
     }
     for (const bCol of this.bigColumns) {
       bCol.getObj() && this.obj.add(bCol.getObj())
+    }
+    if (this.hangingBoard) {
+      this.hangingBoard.getObj() && this.obj.add(this.hangingBoard.getObj())
     }
     this.obj.position.copy(this.position)
     D3Config.OBJS.push(this.obj)

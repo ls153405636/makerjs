@@ -136,6 +136,13 @@ enum StartTreadShapeType {
   sts_right = 3;  // 去掉右边造型
 }
 
+enum StairExitType {
+  seph  = 0;
+  se_riser = 1; //出口立板
+  se_hangingBoard = 2; //挂板
+  se_none = 3; //无
+}
+
 //三维向量
 message Vector3{
 	float x = 1;
@@ -250,6 +257,7 @@ message Stair {
   float              stepHeight               = 25;  //步高
   Vector3            position                 = 26;  //为包围框左上角顶点的坐标
   Side               floadSide                = 27;  //折梯的转折方向
+  StairExitType      exitType                 = 28;  //楼梯的出口类型
 }
 
 //挂板
@@ -258,6 +266,9 @@ message HangingBoard {
   float  depth  = 2;  //厚度
   float  width  = 3;
   float  height = 4;
+  Vector3 position = 5; //起始顶点位置
+  Vector3 widthVec = 6; //宽度方向
+  Vector3 depthVec = 7; //深度方向
 }
 
 //一段楼梯
