@@ -7,13 +7,13 @@
         </div>
       </template>
       <right-args></right-args>
-      <el-button
+      <!-- <el-button
         width="80"
         size="medium"
         @click="addEle()"
       >
       移除起步踏
-      </el-button>
+      </el-button> -->
     </el-card>
   </div>
 </template>

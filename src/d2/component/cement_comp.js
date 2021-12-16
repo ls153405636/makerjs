@@ -48,9 +48,8 @@ export class CementComp extends BaseWidget {
 
     let changeComp = new PIXI.Graphics()
     changeComp.visible = false
-    // changeComp.alpha = 0.5
     changeComp.lineStyle(1, 0x4478f4,1,0)
-    changeComp.beginFill(0xffffff, 1)
+    changeComp.beginFill(0xffffff, 0.5)
     changeComp.drawRect(
       -this.width / 2,
       -this.depth / 2,
@@ -63,8 +62,7 @@ export class CementComp extends BaseWidget {
 
     let comp = new PIXI.Graphics()
     comp.lineStyle(1, 0x000000,1,0)
-    comp.beginFill(0xffffff, 1)
-    comp.alpha = 0.5
+    comp.beginFill(0xffffff, 0.5)
     comp.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
     comp.endFill()
     comp.position.set(this.positionX, this.positionY)
@@ -148,7 +146,7 @@ export class CementComp extends BaseWidget {
 
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart } = this
-    const offSet = new Victor(10, 10) // 偏移距离
+    const offSet = new Victor(7, 7) // 偏移距离
     const arrow = new Victor(2, 2)
     const p1 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
     const p2 = new Victor(this.width / 2, -this.depth / 2 -this.wallDepth / D2Config.SCREEN_RATE)
@@ -246,7 +244,7 @@ export class CementComp extends BaseWidget {
     // 标注文字
     // 宽度标注文字
     const compLineText1 = new PIXI.Text(this.width * D2Config.SCREEN_RATE, {
-      fontSize: 40,
+      fontSize: 32,
       fill: 0x000000,
     })
     compLineText1.scale.set(0.25)
@@ -256,7 +254,7 @@ export class CementComp extends BaseWidget {
 
     // 深度标注文字
     const compLineText2 = new PIXI.Text(this.depth * D2Config.SCREEN_RATE, {
-      fontSize: 40,
+      fontSize: 32,
       fill: 0x000000,
     })
     compLineText2.scale.set(0.25)
@@ -272,7 +270,7 @@ export class CementComp extends BaseWidget {
       disText = disToStart
     }
     const compLineText3 = new PIXI.Text(disText, {
-      fontSize: 40,
+      fontSize: 32,
       fill: 0x000000,
     })
     compLineText3.scale.set(0.25)
