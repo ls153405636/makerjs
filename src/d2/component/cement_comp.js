@@ -43,38 +43,41 @@ export class CementComp extends BaseWidget {
   /**
    * 建议方法，根据宽深属性绘制矩形，然后设置位置和角度
    */
+
+
+   creatComp(vName) {
+    vName.beginFill(0xffffff, 0.5)
+    vName.drawRect(
+      -this.width / 2,
+      -this.depth / 2,
+      this.width,
+      this.depth
+    )
+    vName.endFill()
+    vName.position.set(this.positionX, this.positionY)
+    vName.rotation = this.rotationY
+    return vName
+  }
+
   draw() {
     const compContainer = new PIXI.Container()
 
     let changeComp = new PIXI.Graphics()
     changeComp.visible = false
     changeComp.lineStyle(1, 0x4478f4,1,0)
-    changeComp.beginFill(0xffffff, 0.5)
-    changeComp.drawRect(
-      -this.width / 2,
-      -this.depth / 2,
-      this.width,
-      this.depth
-    )
-    changeComp.endFill()
-    changeComp.position.set(this.positionX, this.positionY)
-    changeComp.rotation = this.rotationY
+    this.creatComp(changeComp)
 
     let comp = new PIXI.Graphics()
     comp.lineStyle(1, 0x000000,1,0)
-    comp.beginFill(0xffffff, 0.5)
-    comp.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
-    comp.endFill()
-    comp.position.set(this.positionX, this.positionY)
-    comp.rotation = this.rotationY
+    this.creatComp(comp)
 
     // 根据 type 获取名称
     var textWord = ''
     switch (this.type) {
-      case 4:
+      case Types.ComponentType.cbeam:
         textWord = '梁'
         break
-      case 5:
+      case Types.ComponentType.cpillar:
         textWord = '柱'
         break
     }
@@ -249,7 +252,7 @@ export class CementComp extends BaseWidget {
     })
     compLineText1.scale.set(0.25)
     compLineText1.anchor.set(0.5, 0.5)
-    compLineText1.position.set(0, newP1.y - 5)
+    compLineText1.position.set(0, newP1.y - 4)
     compLineText1.rotation = newRoationY
 
     // 深度标注文字
@@ -259,7 +262,7 @@ export class CementComp extends BaseWidget {
     })
     compLineText2.scale.set(0.25)
     compLineText2.anchor.set(0.5, 0.5)
-    compLineText2.position.set(newP3.x - 5, 0)
+    compLineText2.position.set(newP3.x - 4, 0)
     compLineText2.rotation = newRoationY - Math.PI / 2
 
     // 距离标注文字
@@ -277,7 +280,7 @@ export class CementComp extends BaseWidget {
     compLineText3.anchor.set(0.5, 0.5)
     compLineText3.position.set(
       -this.width / 2 - disToStart / 2 / D2Config.SCREEN_RATE,
-      newP5.y - 5
+      newP5.y - 4
     )
     compLineText3.rotation = newRoationY
 

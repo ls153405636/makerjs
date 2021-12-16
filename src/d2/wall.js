@@ -135,17 +135,15 @@ export class Wall extends BaseWidget {
     ]
 
     let newHoleEdge = new Edge(this.holeEdge).offset(10,true)
-    let newHoleEdge1 = new Edge(newHoleEdge).extendP2(20)
+    newHoleEdge = new Edge(newHoleEdge).extendP2(20)
+    let newHoleEdge1 = d2_tool.translateEdges(newHoleEdge)
 
-    const wallContainer = new PIXI.Container('wall')
+    const wallContainer = new PIXI.Container()
 
     const holeBlackLine = new PIXI.Graphics()
       holeBlackLine
       .lineStyle(2,0x000000,1)
-      // .moveTo(this.holeP1.x, this.holeP1.y)
-      // .lineTo(this.holeP2.x, this.holeP2.y)
-      .drawPolygon(newHoleEdge1.p1.x / D2Config.SCREEN_RATE, newHoleEdge1.p1.y / D2Config.SCREEN_RATE, newHoleEdge1.p2.x / D2Config.SCREEN_RATE, newHoleEdge1.p2.y / D2Config.SCREEN_RATE)
-      // this.lineContainer.addChild(holeBlackLine)
+      .drawPolygon(newHoleEdge1.p1.x, newHoleEdge1.p1.y, newHoleEdge1.p2.x, newHoleEdge1.p2.y)
       this.holeLineSprite = holeBlackLine
       this.holeLineSprite.zIndex = Z_INDEX.HOLE_LINE_ZINDEX
 

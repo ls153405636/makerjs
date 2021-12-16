@@ -43,43 +43,43 @@ export class Inlay extends BaseWidget {
    * 建议方法，根据宽深属性绘制矩形，然后设置位置和角度
    */
 
-  draw() {
-    const inlayContainer = new PIXI.Container()
-
-    let changeInlayOut = new PIXI.Graphics()
-    changeInlayOut.visible = false
-    changeInlayOut.lineStyle(1, 0x4478f4,1,0,false)
-    changeInlayOut.beginFill(0xffffff, 1)
-    changeInlayOut.drawRect(
+  creatInlay(vName) {
+    vName.beginFill(0xffffff, 1)
+    vName.drawRect(
       -this.width / 2,
       -this.depth / 2,
       this.width,
       this.depth
     )
-    changeInlayOut.endFill()
-    changeInlayOut.position.set(this.positionX, this.positionY)
-    changeInlayOut.pivot.set(0, 0)
-    changeInlayOut.rotation = this.rotationY
+    vName.endFill()
+    vName.position.set(this.positionX, this.positionY)
+    vName.pivot.set(0, 0)
+    vName.rotation = this.rotationY
+    return vName
+  }
+
+  draw() {
+    const inlayContainer = new PIXI.Container()
+    
+    let changeInlayOut = new PIXI.Graphics()
+    changeInlayOut.visible = false
+    changeInlayOut.lineStyle(1, 0x4478f4,1,0,false)
+    this.creatInlay(changeInlayOut)
 
     let inlayOut = new PIXI.Graphics()
     inlayOut.lineStyle(1, 0x000000,1,0,true)
-    inlayOut.beginFill(0xffffff, 1)
-    inlayOut.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
-    inlayOut.endFill()
-    inlayOut.position.set(this.positionX, this.positionY)
-    inlayOut.pivot.set(0, 0)
-    inlayOut.rotation = this.rotationY
+    this.creatInlay(inlayOut)
 
     // 根据 type 获取名称
     var textWord = ''
     switch (this.type) {
-      case 1: // 门
+      case Types.ComponentType.cdoor: // 门
         textWord = '门'
         break
-      case 2: // 窗
+      case Types.ComponentType.cwindow: // 窗
         textWord = '窗'
         break
-      case 3: // 洞
+      case Types.ComponentType.cdoor_hole: // 洞
         textWord = '洞'
         break
     }
@@ -159,6 +159,7 @@ export class Inlay extends BaseWidget {
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart } = this
     const offSet = new Victor(7, 7) // 偏移距离
+    const smallOffset = new Victor(2, 2) // 偏移距离
 
     const p1 = new Victor(-this.width / 2, -this.depth / 2)
     const p2 = new Victor(this.width / 2, -this.depth / 2)
@@ -179,29 +180,29 @@ export class Inlay extends BaseWidget {
     const newP5 = p5.addY(offSet)
     const newP6 = p6.addY(offSet)
 
-    const newP1T = new Victor(newP1.x, newP1.y).subtractY(new Victor(2, 2))
-    const newP1B = new Victor(newP1.x, newP1.y).addY(new Victor(2, 2))
-    const newP2T = new Victor(newP2.x, newP2.y).subtractY(new Victor(2, 2))
-    const newP2B = new Victor(newP2.x, newP2.y).addY(new Victor(2, 2))
+    const newP1T = new Victor(newP1.x, newP1.y).subtractY(smallOffset)
+    const newP1B = new Victor(newP1.x, newP1.y).addY(smallOffset)
+    const newP2T = new Victor(newP2.x, newP2.y).subtractY(smallOffset)
+    const newP2B = new Victor(newP2.x, newP2.y).addY(smallOffset)
 
-    const newP3T = new Victor(newP3.x, newP3.y).subtractX(new Victor(2, 2))
-    const newP3B = new Victor(newP3.x, newP3.y).addX(new Victor(2, 2))
-    const newP4T = new Victor(newP4.x, newP4.y).subtractX(new Victor(2, 2))
-    const newP4B = new Victor(newP4.x, newP4.y).addX(new Victor(2, 2))
+    const newP3T = new Victor(newP3.x, newP3.y).subtractX(smallOffset)
+    const newP3B = new Victor(newP3.x, newP3.y).addX(smallOffset)
+    const newP4T = new Victor(newP4.x, newP4.y).subtractX(smallOffset)
+    const newP4B = new Victor(newP4.x, newP4.y).addX(smallOffset)
 
     let newP5T = 0
     let newP5B = 0
     let newP6T = 0
     let newP6B = 0
     if (disToStart !== 0) {
-      newP5T = new Victor(newP5.x, newP5.y).subtract(new Victor(2, 2))
+      newP5T = new Victor(newP5.x, newP5.y).subtract(smallOffset)
       newP5B = new Victor(newP5.x, newP5.y)
-        .subtractX(new Victor(2, 2))
-        .addY(new Victor(2, 2))
+        .subtractX(smallOffset)
+        .addY(smallOffset)
       newP6T = new Victor(newP6.x, newP6.y)
-        .subtractY(new Victor(2, 2))
-        .addX(new Victor(2, 2))
-      newP6B = new Victor(newP6.x, newP6.y).add(new Victor(2, 2))
+        .subtractY(smallOffset)
+        .addX(smallOffset)
+      newP6B = new Victor(newP6.x, newP6.y).add(smallOffset)
     }
 
     // 文字旋转角度
@@ -253,7 +254,7 @@ export class Inlay extends BaseWidget {
     })
     compLineText1.scale.set(0.25)
     compLineText1.anchor.set(0.5, 0.5)
-    compLineText1.position.set(0, newP1.y - 5)
+    compLineText1.position.set(0, newP1.y - 4)
     compLineText1.rotation = newRoationY
 
     // 深度标注文字
@@ -263,7 +264,7 @@ export class Inlay extends BaseWidget {
     })
     compLineText2.scale.set(0.25)
     compLineText2.anchor.set(0.5, 0.5)
-    compLineText2.position.set(newP3.x - 5, 0)
+    compLineText2.position.set(newP3.x - 4, 0)
     compLineText2.rotation = newRoationY - Math.PI / 2
 
     // 距离标注文字
@@ -281,7 +282,7 @@ export class Inlay extends BaseWidget {
     compLineText3.anchor.set(0.5, 0.5)
     compLineText3.position.set(
       -this.width / 2 - disToStart / 2 / D2Config.SCREEN_RATE,
-      newP5.y - 5
+      newP5.y - 4
     )
     compLineText3.rotation = newRoationY
 
