@@ -208,51 +208,18 @@ export class Tread extends ChildWidget {
       .on('mouseout', () => {
         if (D2Config.IS_SINGLE_SELECTED) {
           _this.cancelHover()
+          _this.parent.cancelHover()
         } else {
           _this.parent.cancelHover()
-          // document.addEventListener('keydown', (e) => {
-          //   if (e.keyCode == 17) {
-
-          //   }
-          // })
-          // document.addEventListener('keyup', (e) => {
-          //   if (e.keyCode == 17) {
-          //   }
-          // })
         }
-
       })
       .on('mouseover', () => {
         if (D2Config.IS_SINGLE_SELECTED) {
+          _this.cancelHover()
+          _this.parent.cancelHover()
           _this.setHover()
         } else {
-          let eventC = null
-          if (eventC === null) {
-            _this.parent.setHover()
-          }
-          while(D2Config.IS_SINGLE_SELECTED) {
-
-            eventC = document.addEventListener('keydown', (e) => {
-              // if (e.keyCode == 17) {
-                console.log(eventC)
-                // _this.parent.setHover()
-                // _this.cancelHover()
-              // }
-            })
-          }
-          // if (D2Config.IS_SINGLE_SELECTED) {
-          // }
-          // console.log(eventC)
-          // if (eventC !== null) {
-          //   _this.parent.cancelHover()
-          //   _this.setHover()
-          // }
-          // document.addEventListener('keyup', (e) => {
-          //   if (e.keyCode == 17) {
-          //     _this.parent.setHover()
-          //     // _this.cancelHover()
-          //   }
-          // })
+          _this.parent.setHover()
         }
       })
   }

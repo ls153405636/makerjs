@@ -36,7 +36,6 @@ export class Hole extends BaseWidget {
   }
 
   draw() {
-    console.log(screen)
     let path = []
     for (let i = 0; i < this.edges.length; i++) {
       let e = this.edges[i]

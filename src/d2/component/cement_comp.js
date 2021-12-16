@@ -6,6 +6,9 @@ import { Core } from '../../common/core'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import Victor from 'victor'
+import wBeam from '../../assets/wbeam.png'
+import wPillar from '../../assets/wpillar.png'
+import { StructConfig } from '../../structure/config'
 
 /**
  * 梁、柱，房间中的水泥结构部件
@@ -46,7 +49,7 @@ export class CementComp extends BaseWidget {
 
 
    creatComp(vName) {
-    vName.beginFill(0xffffff, 0.5)
+    vName.beginFill(0xffffff, 0.3)
     vName.drawRect(
       -this.width / 2,
       -this.depth / 2,
@@ -62,25 +65,40 @@ export class CementComp extends BaseWidget {
   draw() {
     const compContainer = new PIXI.Container()
 
-    let changeComp = new PIXI.Graphics()
-    changeComp.visible = false
-    changeComp.lineStyle(1, 0x4478f4,1,0)
-    this.creatComp(changeComp)
-
-    let comp = new PIXI.Graphics()
-    comp.lineStyle(1, 0x000000,1,0)
-    this.creatComp(comp)
-
     // 根据 type 获取名称
+    var texture = ''
     var textWord = ''
     switch (this.type) {
       case Types.ComponentType.cbeam:
         textWord = '梁'
+        texture = PIXI.Texture.from(wBeam)
         break
       case Types.ComponentType.cpillar:
         textWord = '柱'
+        texture = PIXI.Texture.from(wPillar)
         break
     }
+
+    var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
+    tilingSprite.anchor.set(0.5, 0.5)
+    tilingSprite.tileScale.set(0.1) // 纹理缩放
+
+    var tilingSprite1 = new PIXI.TilingSprite(texture, this.width, this.depth)
+    tilingSprite1.anchor.set(0.5, 0.5)
+    tilingSprite1.tileScale.set(0.1) // 纹理缩放
+
+    let changeComp = new PIXI.Graphics()
+    changeComp.visible = false
+    changeComp.lineStyle(1, 0x4478f4,1)
+    this.creatComp(changeComp)
+    changeComp.addChild(tilingSprite1)
+
+    let comp = new PIXI.Graphics()
+    comp.lineStyle(1, 0x000000,1)
+    this.creatComp(comp)
+    comp.addChild(tilingSprite)
+
+
     let text = new PIXI.Text(textWord, { fontSize: 48, fill: 0x000000 })
     text.scale.set(0.25)
     text.position.set(this.positionX, this.positionY)
@@ -161,22 +179,22 @@ export class CementComp extends BaseWidget {
       new Victor(disToStart / D2Config.SCREEN_RATE, 0)
     )
 
-    const newP1 = p1.subtractY(offSet)
-    const newP2 = p2.subtractY(offSet)
+    const newP1 = p1.clone().subtractY(offSet)
+    const newP2 = p2.clone().subtractY(offSet)
 
     let newP3
     let newP4
     // 如果是梁，深度标注在梁内部
     if (this.type === 4) {
-      newP3 = p3.subtractX(offSet)
-      newP4 = p4.subtractX(offSet)
+      newP3 = p3.clone().subtractX(offSet)
+      newP4 = p4.clone().subtractX(offSet)
     }else {
-      newP3 = p3.addX(offSet)
-      newP4 = p4.addX(offSet)
+      newP3 = p3.clone().addX(offSet)
+      newP4 = p4.clone().addX(offSet)
     }
 
-    const newP5 = p5.addY(offSet)
-    const newP6 = p6.addY(offSet)
+    const newP5 = p5.clone().addY(offSet)
+    const newP6 = p6.clone().addY(offSet)
 
     const newP1T = new Victor(newP1.x, newP1.y).subtractY(arrow)
     const newP1B = new Victor(newP1.x, newP1.y).addY(arrow)
@@ -284,7 +302,43 @@ export class CementComp extends BaseWidget {
     )
     compLineText3.rotation = newRoationY
 
+
+    // 离地高度标线
+    let comp = StructConfig.INFOS.get(this.uuid)
+    const compOffGround = comp.offGround
+    const offGroundContainer = new PIXI.Container()
+    const offGround = new PIXI.Graphics()
+    const offGroundText = new PIXI.Text('离地' + compOffGround,{
+      fontSize: 32,
+      fill: 0x000000,
+    })
+    if (compOffGround === 0) {
+      offGroundContainer.visible = 0
+    }
+    offGroundText.scale.set(0.25)
+    offGroundText.anchor.set(0.5, 0.5)
+    
+    offGroundText.rotation = newRoationY
+    offGround.lineStyle(1,0x000000)
+    offGround.moveTo(newP3.x, newP3.y)
+    if (this.type === 5) {
+      offGroundText.position.set(newP3.x + 30 , newP3.y - 12 - this.wallDepth / D2Config.SCREEN_RATE)
+      offGround.lineTo(newP3.x + 7, newP3.y - 7 - this.wallDepth / D2Config.SCREEN_RATE)
+      offGround.lineTo(newP3.x + 47, newP3.y - 7 - this.wallDepth / D2Config.SCREEN_RATE)
+    }else {
+      offGroundText.position.set(newP3.x + 30 , newP3.y - 12)
+      offGround.lineTo(newP3.x + 7, newP3.y - 7)
+      offGround.lineTo(newP3.x + 47, newP3.y - 7)
+    }
+
+
+    offGroundContainer.addChild(
+      offGround,
+      offGroundText,
+    )
+
     compLineContainer.addChild(
+      offGroundContainer,
       compLine,
       compLineText1,
       compLineText2,

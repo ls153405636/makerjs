@@ -98,8 +98,6 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
-
-
     //创建墙体纹理
     var texture = null
     switch (this.type) {
