@@ -164,7 +164,8 @@ export class CementComp extends BaseWidget {
 
   addDimension() {
     // 标注线绘制
-
+    let comp = StructConfig.INFOS.get(this.uuid)
+    let wallWidth = comp.width
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart } = this
     const offSet = new Victor(7, 7) // 偏移距离
@@ -234,13 +235,15 @@ export class CementComp extends BaseWidget {
     // 标注线
     let compLine = new PIXI.Graphics()
     compLine.lineStyle(1, 0x000000, 1, 0.5, true)
-    // 宽度标注线
-    compLine.moveTo(newP1.x, newP1.y)
-    compLine.lineTo(newP2.x, newP2.y)
-    compLine.moveTo(newP1T.x, newP1T.y)
-    compLine.lineTo(newP1B.x, newP1B.y)
-    compLine.moveTo(newP2T.x, newP2T.y)
-    compLine.lineTo(newP2B.x, newP2B.y)
+    if (wallWidth / D2Config.SCREEN_RATE !== this.width) {
+      // 宽度标注线
+      compLine.moveTo(newP1.x, newP1.y)
+      compLine.lineTo(newP2.x, newP2.y)
+      compLine.moveTo(newP1T.x, newP1T.y)
+      compLine.lineTo(newP1B.x, newP1B.y)
+      compLine.moveTo(newP2T.x, newP2T.y)
+      compLine.lineTo(newP2B.x, newP2B.y)
+    }
 
     // 深度标注线
     compLine.moveTo(newP3.x, newP3.y)
@@ -268,6 +271,10 @@ export class CementComp extends BaseWidget {
       fontSize: 32,
       fill: 0x000000,
     })
+    if (wallWidth / D2Config.SCREEN_RATE === this.width) {
+      compLineText1.visible = false
+    }
+    
     compLineText1.scale.set(0.25)
     compLineText1.anchor.set(0.5, 0.5)
     compLineText1.position.set(0, newP1.y - 4)
@@ -304,7 +311,7 @@ export class CementComp extends BaseWidget {
 
 
     // 离地高度标线
-    let comp = StructConfig.INFOS.get(this.uuid)
+    
     const compOffGround = comp.offGround
     const offGroundContainer = new PIXI.Container()
     const offGround = new PIXI.Graphics()
