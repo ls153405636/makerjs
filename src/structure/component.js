@@ -42,6 +42,7 @@ export class Component extends Info {
       pos.addScaledVector(utilEdge.getNormal(), this.depth / 2)
     }
     this.position = new Types.Vector3({ x: pos.x, y: pos.y })
+    this.position.z = this.offGround + this.height / 2
   }
 
   rebuild() {

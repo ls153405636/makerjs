@@ -1,6 +1,7 @@
 import { Types } from "../../types/stair_v2";
 import { BaseModel } from "../d3_base_model";
 import { D3Config } from "../d3_config";
+import d3_tool from "../d3_tool";
 import { BigColumn } from "./d3_big_col";
 import { Flight } from "./d3_flight";
 import { Girder } from "./d3_girder";
@@ -48,6 +49,7 @@ export class Stair extends BaseModel {
     this.handrails = []
     this.smallColumns = []
     this.bigColumns = []
+    this.position = d3_tool.translateCoord(vPB.position)
     for (let i = 0; i < vPB.flights.length; i++) {
       let f = vPB.flights[i]
       this.flights.push(new Flight(this, f, vPB.treadParameters, vPB.riserParameters))
@@ -89,6 +91,7 @@ export class Stair extends BaseModel {
     for (const bCol of this.bigColumns) {
       bCol.getObj() && this.obj.add(bCol.getObj())
     }
+    this.obj.position.copy(this.position)
     D3Config.OBJS.push(this.obj)
   }
 }

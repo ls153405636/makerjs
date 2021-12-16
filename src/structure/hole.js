@@ -50,6 +50,7 @@ export class RectHole extends Hole {
     return new Types.Hole({
       uuid: this.uuid,
       edges: this.outline.edges,
+      floorHeight: this.floorHeight
     })
   }
 

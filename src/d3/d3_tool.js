@@ -24,7 +24,15 @@ function createFrameByPois(vPois, vMat = D3Config.FRAME_MAT) {
   return line
 }
 
+function createFrameByGeo(vGeo, vMat = D3Config.FRAME_MAT) {
+  let lineGeo = new THREE.EdgesGeometry(vGeo)
+  let lineFrame = new THREE.LineSegments(lineGeo, vMat)
+  lineFrame.renderOrder = RENDER_ORDER.FRAME
+  return lineFrame
+}
+
 export default {
   translateCoord,
-  createFrameByPois
+  createFrameByPois,
+  createFrameByGeo
 }

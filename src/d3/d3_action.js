@@ -1,10 +1,14 @@
 import { Types } from "../types/stair_v2"
 import { D3Config } from "./d3_config"
+import { Hole } from "./hole/d3_hole"
+import { Wall } from "./hole/d3_wall"
 import { Stair } from "./stair/d3_stair"
 
 
 const MODEL_TYPES = {
   Stair: Stair,
+  RectHole: Hole,
+  Wall: Wall
 }
 
 
@@ -27,9 +31,11 @@ export function clear() {
  * @param {Types.Project} vPB 
  */
 export function importProject(vPB) {
-  /**添加洞口 */
+  vPB.hole && new Hole(vPB.hole).addToScene()
 
-  /**添加墙体 */
+  for (const w of vPB.walls) {
+    new Wall(w).addToScene()
+  }
 
   vPB.stair && new Stair(vPB.stair).addToScene()
 }

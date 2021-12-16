@@ -2,7 +2,7 @@ import tool from "../../structure/tool";
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { ChildModel } from "../d3_child_model";
-import { D3Config, Default, RENDER_ORDER } from "../d3_config";
+import { D3Config, D3Default, RENDER_ORDER } from "../d3_config";
 import d3_tool from "../d3_tool";
 import earCut from 'earcut'
 import { COMP_TYPES } from "../../common/common_config";
@@ -71,7 +71,7 @@ export class Girder extends ChildModel {
     let positionAttr = new THREE.Float32BufferAttribute(positionSet, 3)
     let geo = new THREE.BufferGeometry()
     geo.setAttribute('position', positionAttr)
-    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:D3Default.PANEL_COLOR, side:THREE.DoubleSide}))
     this.mesh.userData.uuid = this.uuid
     this.mesh.userData.d3Type = 'obj'
     this.lineFrame.add(inFrame, outFrame)

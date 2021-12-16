@@ -74,7 +74,7 @@ export class Outline {
       let e = this.edges[i]
       let lEdge = null, nEdge = null, p1OffsetDir, p2OffsetDir
       let nor = e.getNormal(), vec = e.getVec()
-      if (i === this.edges - 1) {
+      if (i === this.edges.length - 1) {
         if (this.isClose) {
           nEdge = this.edges[0]
         }

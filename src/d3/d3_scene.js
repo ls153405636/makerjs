@@ -1,4 +1,5 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { Default, StructConfig } from '../structure/config'
 
 export class D3Scene {
   constructor() {
@@ -18,14 +19,17 @@ export class D3Scene {
     this.renderer.setSize(innerWidth, innerHeight)
 
     this.camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 10, 200000)
-    this.camera.position.set(5000, 5000, 5000)
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0))
+    this.camera.position.set(20000, 20000, 6000)
+    this.camera.lookAt(new THREE.Vector3(10000, 10000, 0))
     this.scene.add(this.camera)
 
     this.control = new OrbitControls(this.camera, this.renderer.domElement)
 
-    this.grider = new THREE.GridHelper(20000, 200, 0xc1c2c3, 0xc1c2c3)
-    this.scene.add(this.grider)
+    // this.grider = new THREE.GridHelper(20000, 20, 0xc1c2c3, 0xc1c2c3)
+    // this.scene.add(this.grider)
+
+    this.axes = new THREE.AxesHelper(20000)
+    this.scene.add(this.axes)
   }
 
   addToPage() {
