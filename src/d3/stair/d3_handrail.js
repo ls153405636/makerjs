@@ -24,7 +24,7 @@ export class Handrail extends ChildModel {
   createObj() {
     this.obj = this.loft.getObj()
     this.obj.userData.uuid = this.uuid
-    this.obj.userData.d3Type = 'obj'
+    //this.obj.userData.d3Type = 'obj'
   }
 
   setHover(vIsHover) {

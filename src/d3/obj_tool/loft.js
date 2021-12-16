@@ -2,7 +2,7 @@ import { Types } from '../../types/stair_v2'
 import { Edge3 } from '../../utils/edge3'
 import d3_tool from '../d3_tool'
 import earCut from 'earcut'
-import { Default } from '../d3_config'
+import { D3Default } from '../d3_config'
 
 export class Loft {
   /**
@@ -73,7 +73,7 @@ export class Loft {
     let positionAttr = this.createPosAttr()
     let geo = new THREE.BufferGeometry()
     geo.setAttribute('position', positionAttr)
-    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:D3Default.PANEL_COLOR, side:THREE.DoubleSide}))
     this.obj.add(this.mesh)
     this.obj.add(this.lineFrame)
   }

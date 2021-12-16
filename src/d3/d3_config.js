@@ -26,7 +26,9 @@ export const RENDER_ORDER = {
   FRAME: 10
 }
 
-export const Default = {
+export const D3Default = {
   PANEL_COLOR: 0xce4e25,
-  lINE_COLOR: 0x000000
+  lINE_COLOR: 0x000000,
+  FLOOR_COLOR: 0xbcac96,
+  WALL_COLOR: 0xe5e5e5
 }

@@ -1,4 +1,4 @@
-import { D3Config, Default, RENDER_ORDER } from "../d3_config";
+import { D3Config, D3Default, RENDER_ORDER } from "../d3_config";
 import d3_tool from "../d3_tool";
 import { XZOutline } from "./xz_outline";
 
@@ -36,7 +36,7 @@ export class VerFace {
     let geo = new THREE.BufferGeometry()
     geo.setAttribute('position', positionAttr)
     this.lineFrame.add(this.createLine(pois[i], topPois[i]))
-    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:D3Default.PANEL_COLOR, side:THREE.DoubleSide}))
     this.mesh.userData.d3Type = 'face'
     this.obj.add(this.mesh, this.lineFrame)
   }

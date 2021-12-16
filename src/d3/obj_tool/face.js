@@ -1,14 +1,14 @@
 import earCut from 'earcut'
-import { Outline } from "../../utils/outline";
-import { D3Config, Default, RENDER_ORDER } from '../d3_config';
+import { D3Config, D3Default, RENDER_ORDER } from '../d3_config';
 
 export class Face {
   /**
-   * 
-   * @param {Outline} vRoute 
+   * @param {import('../obj_tool/xz_outline').XZOutline} vRoute 
+   * @param {Array<import('../obj_tool/xz_outline').XZOutline>} vHoles
    */
-  constructor(vRoute) {
+  constructor(vRoute, vHoles = []) {
     this.route = vRoute
+    this.holeRoutes = vHoles
     this.createObj()
   }
 
@@ -18,7 +18,7 @@ export class Face {
     for (const p of pois) {
       cutFacePois.push(p.x, p.z)
     }
-    
+
     let poiIndexs = earCut(cutFacePois)
     let positionSet = []
     for (let i = 0; i < poiIndexs.length; i = i+3) {
@@ -35,7 +35,7 @@ export class Face {
     let geo = new THREE.BufferGeometry()
     geo.setAttribute('position', positionAttr)
     this.obj = new THREE.Group()
-    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:D3Default.PANEL_COLOR, side:THREE.DoubleSide}))
     this.mesh.userData.d3Type = 'face'
     this.lineFrame = this.createLineFrame(this.route.isClose ? pois.concat([pois[0]]) : pois)
     this.obj.add(this.mesh, this.lineFrame)
