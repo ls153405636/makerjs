@@ -145,16 +145,19 @@ export default defineComponent({
     },
 
     updateArgs(value, key, type, secondKey) {
-      if (value === 0 || value === '') {
-        this.$store.commit({
-        type: 'getArgs/getFocus',
-        focus: true
-        })
+      if (this.$store.state.right_attribute.cur_args.floorHeight) {
+        let holeArgs = this.$store.state.right_attribute.cur_args.floorHeight
+        if (holeArgs.value === 0 || holeArgs.value === '') {
+          this.$store.commit({
+          type: 'getArgs/getFocus',
+          focus: true
+          })
       }else {
         this.$store.commit({
         type: 'getArgs/getFocus',
         focus: false
         })
+      }
       }
       if (type === 'input') {
         value = Number(value)

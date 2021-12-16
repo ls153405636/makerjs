@@ -6,6 +6,7 @@ import { Core } from '../../common/core'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import Victor from 'victor'
+import { StructConfig } from '../../structure/config'
 // import Victor from 'victor'
 
 /**
@@ -93,7 +94,6 @@ export class Inlay extends BaseWidget {
 
     inlayContainer.addChild(changeInlayOut, inlayOut, text)
     inlayContainer.zIndex = Z_INDEX.COMPONENT_ZINDEX
-    // this.sprite = inlayContainer
     this.sprite.addChild(inlayContainer)
     this.sprite.zIndex = 100
   }
@@ -171,14 +171,14 @@ export class Inlay extends BaseWidget {
       new Victor(disToStart / D2Config.SCREEN_RATE, 0)
     )
 
-    const newP1 = p1.subtractY(offSet)
-    const newP2 = p2.subtractY(offSet)
+    const newP1 = p1.clone().subtractY(offSet)
+    const newP2 = p2.clone().subtractY(offSet)
 
-    const newP3 = p3.addX(offSet)
-    const newP4 = p4.addX(offSet)
+    const newP3 = p3.clone().addX(offSet)
+    const newP4 = p4.clone().addX(offSet)
 
-    const newP5 = p5.addY(offSet)
-    const newP6 = p6.addY(offSet)
+    const newP5 = p5.clone().addY(offSet)
+    const newP6 = p6.clone().addY(offSet)
 
     const newP1T = new Victor(newP1.x, newP1.y).subtractY(smallOffset)
     const newP1B = new Victor(newP1.x, newP1.y).addY(smallOffset)
@@ -286,7 +286,34 @@ export class Inlay extends BaseWidget {
     )
     compLineText3.rotation = newRoationY
 
+    // 离地高度标线
+    const offGroundContainer = new PIXI.Container()
+    const offGround = new PIXI.Graphics()
+    offGround.lineStyle(1,0x000000)
+    offGround.moveTo(p2.x, p2.y)
+    offGround.lineTo(p2.x + 7, p2.y - 7)
+    offGround.lineTo(p2.x + 47, p2.y - 7)
+
+    let inlay = StructConfig.INFOS.get(this.uuid)
+    const inlayOffGround = inlay.offGround
+    const offGroundText = new PIXI.Text('离地' + inlayOffGround,{
+      fontSize: 32,
+      fill: 0x000000,
+    })
+    if (inlayOffGround === 0) {
+      offGroundContainer.visible = 0
+    }
+    offGroundText.scale.set(0.25)
+    offGroundText.anchor.set(0.5, 0.5)
+    offGroundText.position.set(p2.x + 30 , p2.y - 12)
+    offGroundText.rotation = newRoationY
+
+    offGroundContainer.addChild(
+      offGround,
+      offGroundText,
+    )
     compLineContainer.addChild(
+      offGroundContainer,
       compLine,
       compLineText1,
       compLineText2,
@@ -294,6 +321,7 @@ export class Inlay extends BaseWidget {
     )
     compLineContainer.position.set(positionX, positionY)
     compLineContainer.rotation = this.rotationY
+    
 
     this.sprite.addChild(compLineContainer)
   }

@@ -35,7 +35,7 @@ export class RectHole extends Hole {
     return {
       length: { name: '长', value: this.length, type: 'input' },
       width: { name: '宽', value: this.width, type: 'input' },
-      floorHeight: { name: '层高', value: this.floorHeight, type: 'input', autofocus: this.floorHeight === '' || this.floorHeight === '' ? true : false, class: "is-required"  },
+      floorHeight: { name: '层高', value: this.floorHeight, type: 'input', autofocus: this.floorHeight === 0 || this.floorHeight === '' ? true : false, class: "is-required"  },
     }
   }
 
