@@ -53,9 +53,9 @@ export class Loft {
         if (utilE.type === Types.EdgeType.estraight && nUtilE && nUtilE.type === Types.EdgeType.estraight) {
           vIsYFixed = false
         }
-        // if (lUtilE && lUtilE.type !== Types.EdgeType.estraight) {
-        //   vIsYFixed = true
-        // }
+        if (lUtilE && lUtilE.type !== Types.EdgeType.estraight) {
+          vIsYFixed = true
+        }
         if (i === 0) {
           let axis0 = this.createAxis(e, null)
           let sCutFacePois = this.createFacePois(e.p1d3, axis0)
@@ -98,7 +98,7 @@ export class Loft {
         x_axis = axis
         if (this.isClock && (nor2D.distanceTo(vec2) < 0.001 || vUtilE.getLength() < 0.1)) {
           x_axis.negate()
-        } else if((!this.isClock) && (nor2D.distanceTo(vec2) > 0.001 && vUtilE.getLength() > 0.01)){
+        } else if((!this.isClock) && (nor2D.distanceTo(vec2) > 0.001 && vUtilE.getLength() > 0.1)){
           x_axis.negate()
         }
       } else {
