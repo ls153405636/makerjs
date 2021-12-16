@@ -43,43 +43,43 @@ export class Inlay extends BaseWidget {
    * 建议方法，根据宽深属性绘制矩形，然后设置位置和角度
    */
 
-  draw() {
-    const inlayContainer = new PIXI.Container()
-
-    let changeInlayOut = new PIXI.Graphics()
-    changeInlayOut.visible = false
-    changeInlayOut.lineStyle(1, 0x4478f4,1,0,false)
-    changeInlayOut.beginFill(0xffffff, 1)
-    changeInlayOut.drawRect(
+  creatInlay(vName) {
+    vName.beginFill(0xffffff, 1)
+    vName.drawRect(
       -this.width / 2,
       -this.depth / 2,
       this.width,
       this.depth
     )
-    changeInlayOut.endFill()
-    changeInlayOut.position.set(this.positionX, this.positionY)
-    changeInlayOut.pivot.set(0, 0)
-    changeInlayOut.rotation = this.rotationY
+    vName.endFill()
+    vName.position.set(this.positionX, this.positionY)
+    vName.pivot.set(0, 0)
+    vName.rotation = this.rotationY
+    return vName
+  }
+
+  draw() {
+    const inlayContainer = new PIXI.Container()
+    
+    let changeInlayOut = new PIXI.Graphics()
+    changeInlayOut.visible = false
+    changeInlayOut.lineStyle(1, 0x4478f4,1,0,false)
+    this.creatInlay(changeInlayOut)
 
     let inlayOut = new PIXI.Graphics()
     inlayOut.lineStyle(1, 0x000000,1,0,true)
-    inlayOut.beginFill(0xffffff, 1)
-    inlayOut.drawRect(-this.width / 2, -this.depth / 2, this.width, this.depth)
-    inlayOut.endFill()
-    inlayOut.position.set(this.positionX, this.positionY)
-    inlayOut.pivot.set(0, 0)
-    inlayOut.rotation = this.rotationY
+    this.creatInlay(inlayOut)
 
     // 根据 type 获取名称
     var textWord = ''
     switch (this.type) {
-      case 1: // 门
+      case Types.ComponentType.cdoor: // 门
         textWord = '门'
         break
-      case 2: // 窗
+      case Types.ComponentType.cwindow: // 窗
         textWord = '窗'
         break
-      case 3: // 洞
+      case Types.ComponentType.cdoor_hole: // 洞
         textWord = '洞'
         break
     }
@@ -254,7 +254,7 @@ export class Inlay extends BaseWidget {
     })
     compLineText1.scale.set(0.25)
     compLineText1.anchor.set(0.5, 0.5)
-    compLineText1.position.set(0, newP1.y - 5)
+    compLineText1.position.set(0, newP1.y - 4)
     compLineText1.rotation = newRoationY
 
     // 深度标注文字
@@ -264,7 +264,7 @@ export class Inlay extends BaseWidget {
     })
     compLineText2.scale.set(0.25)
     compLineText2.anchor.set(0.5, 0.5)
-    compLineText2.position.set(newP3.x - 5, 0)
+    compLineText2.position.set(newP3.x - 4, 0)
     compLineText2.rotation = newRoationY - Math.PI / 2
 
     // 距离标注文字
@@ -282,7 +282,7 @@ export class Inlay extends BaseWidget {
     compLineText3.anchor.set(0.5, 0.5)
     compLineText3.position.set(
       -this.width / 2 - disToStart / 2 / D2Config.SCREEN_RATE,
-      newP5.y - 5
+      newP5.y - 4
     )
     compLineText3.rotation = newRoationY
 

@@ -33,6 +33,49 @@ export class Handrail extends ChildWidget {
   }
 
 
+  creatHandrail(vName) {
+    for (let i = 0; i < this.outEdges.length; i++) {
+      let e = this.outEdges[i]
+      if (i === 0) {
+        vName.moveTo(e.p1.x / 10, e.p1.y / 10)
+      }
+    }
+    for (let i = 0; i < this.inEdges.length; i++) {
+      let e = this.inEdges[i]
+      if (i === 0) {
+        vName.lineTo(e.p1.x / 10, e.p1.y / 10)
+        vName.lineTo(e.p2.x / 10,e.p2.y / 10)
+      }
+      if (i > 0 && e.type === 3) {
+        vName.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
+      } else if (i > 0 && e.type === 1) {
+        vName.lineTo(e.p1.x / 10,e.p1.y / 10)
+        vName.lineTo(e.p2.x / 10,e.p2.y / 10)
+      } else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        vName.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
+      }
+    }
+    for (let i = this.outEdges.length - 1; i >= 0; i--) {
+      let e = new Edge(this.outEdges[i]).reserve()
+      if (i === this.outEdges.length - 1) {
+        vName.lineTo(e.p1.x / 10,e.p1.y / 10)
+      }
+      if (e.type === 1) {
+        vName.lineTo(e.p1.x / 10,e.p1.y / 10)
+        vName.lineTo(e.p2.x / 10,e.p2.y / 10)
+      }else if(e.type === 3) {
+        vName.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
+      }else if (e.type === Types.EdgeType.earc) {
+        let pos = d2_tool.translateCoord(e.position)
+        let radius = d2_tool.translateValue(e.radius)
+        vName.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
+      }
+    }
+    return vName
+  }
+
   draw() {
     const handrailContainer = new PIXI.Container()
 
@@ -41,131 +84,21 @@ export class Handrail extends ChildWidget {
     changeHandrail1.alpha = 0.01
     changeHandrail1.lineStyle(1, 0x4478f4)
     changeHandrail1.beginFill(0xffffff)
-    for (let i = 0; i < this.outEdges.length; i++) {
-      let e = this.outEdges[i]
-      if (i === 0) {
-        changeHandrail1.moveTo(e.p1.x / 10, e.p1.y / 10)
-      }
-    }
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      if (i === 0) {
-        changeHandrail1.lineTo(e.p1.x / 10, e.p1.y / 10)
-        changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-      if (i > 0 && e.type === 3) {
-        changeHandrail1.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
-      } else if (i > 0 && e.type === 1) {
-        changeHandrail1.lineTo(e.p1.x / 10,e.p1.y / 10)
-        changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
-      } else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        changeHandrail1.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
-      }
-    }
-    for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let e = new Edge(this.outEdges[i]).reserve()
-      if (i === this.outEdges.length - 1) {
-        changeHandrail1.lineTo(e.p1.x / 10,e.p1.y / 10)
-      }
-      if (e.type === 1) {
-        changeHandrail1.lineTo(e.p1.x / 10,e.p1.y / 10)
-        changeHandrail1.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }else if(e.type === 3) {
-        changeHandrail1.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
-      }else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        changeHandrail1.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
-      }
-    }
+
+    this.creatHandrail(changeHandrail1)
 
     const changeHandrail = new PIXI.Graphics()
     changeHandrail.visible = false
     changeHandrail.lineStyle(1, 0x4478f4)
-    for (let i = 0; i < this.outEdges.length; i++) {
-      let e = this.outEdges[i]
-      if (i === 0) {
-        changeHandrail.moveTo(e.p1.x / 10, e.p1.y / 10)
-      }
-    }
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      if (i === 0) {
-        changeHandrail.lineTo(e.p1.x / 10, e.p1.y / 10)
-        changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-      if (i > 0 && e.type === 3) {
-        changeHandrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
-      } else if (i > 0 && e.type === 1) {
-        changeHandrail.lineTo(e.p1.x / 10,e.p1.y / 10)
-        changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      } else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        changeHandrail.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
-      }
-    }
-    for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let e = new Edge(this.outEdges[i]).reserve()
-      if (i === this.outEdges.length - 1) {
-        changeHandrail.lineTo(e.p1.x / 10,e.p1.y / 10)
-      }
-      if (e.type === 1) {
-        changeHandrail.lineTo(e.p1.x / 10,e.p1.y / 10)
-        changeHandrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }else if(e.type === 3) {
-        changeHandrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
-      }else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        changeHandrail.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
-      }
-    }
 
+    this.creatHandrail(changeHandrail)
 
     const handrail = new PIXI.Graphics()
     handrail.lineStyle(1, 0x2d3037)
-    for (let i = 0; i < this.outEdges.length; i++) {
-      let e = this.outEdges[i]
-      if (i === 0) {
-        handrail.moveTo(e.p1.x / 10, e.p1.y / 10)
-      }
-    }
-    for (let i = 0; i < this.inEdges.length; i++) {
-      let e = this.inEdges[i]
-      if (i === 0) {
-        handrail.lineTo(e.p1.x / 10, e.p1.y / 10)
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }
-      if (i > 0 && e.type === 3) {
-        handrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
-      } else if (i > 0 && e.type === 1) {
-        handrail.lineTo(e.p1.x / 10,e.p1.y / 10)
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      } else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        handrail.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
-      }
-    }
-    for (let i = this.outEdges.length - 1; i >= 0; i--) {
-      let e = new Edge(this.outEdges[i]).reserve()
-      if (i === this.outEdges.length - 1) {
-        handrail.lineTo(e.p1.x / 10,e.p1.y / 10)
-      }
-      if (e.type === 1) {
-        handrail.lineTo(e.p1.x / 10,e.p1.y / 10)
-        handrail.lineTo(e.p2.x / 10,e.p2.y / 10)
-      }else if(e.type === 3) {
-        handrail.quadraticCurveTo(e.controlPos.x / 10,e.controlPos.y / 10,e.p2.x / 10,e.p2.y /10)
-      }else if (e.type === Types.EdgeType.earc) {
-        let pos = d2_tool.translateCoord(e.position)
-        let radius = d2_tool.translateValue(e.radius)
-        handrail.arc(pos.x, pos.y, radius, e.startAngle, e.endAngle, !e.isClockwise)
-      }
-    }
+
+    this.creatHandrail(handrail)
+    
+    
 
 
 
