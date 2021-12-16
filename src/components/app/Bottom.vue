@@ -100,8 +100,10 @@ export default defineComponent({
       }
     },
     changleMode(vMode) {
-      console.log(this.$store.state.canvas.cur_mode)
-      if(CUR_DATA.MODE !== vMode) {
+      console.log(this.$store.state.getArgs.isFocus)
+      if(CUR_DATA.MODE !== vMode && this.$store.state.getArgs.isFocus === true) {
+        this.$message.warning('请完善洞口数据！')
+      }else {
         let core = new Core()
         core.execute(new Command(core.cmds.SwitchCmd, vMode))
       }
