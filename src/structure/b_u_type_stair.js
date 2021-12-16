@@ -21,7 +21,7 @@ export class BigUTypeStair extends UTypeStair {
     let f3 = this.flights[2]
     this.width = f1.stepLength + f2.length + f3.stepLength
     this.depth1 = f1.length + f2.stepLength
-    this.depth2 = f3.length + f2.stepLength
+    this.depth2 = f3.length + f2.stepLength + this.hangOffset
     let hole = this.parent.hole
     this.height = hole.floorHeight
   }
@@ -112,7 +112,7 @@ export class BigUTypeStair extends UTypeStair {
     let f3 = this.flights[2]
     let pos1, pos2, pos3, wVec2, lVec1, lVec3
     let width = f1.stepLength+f3.stepLength+f2.length
-    let depth2 = f2.stepLength+f3.length
+    let depth2 = f2.stepLength+f3.length+this.hangOffset
     if (this.floadSide === Types.Side.si_right) {
       pos1 = new Types.Vector3({x:this.girOffset, y:f2.stepLength})
       pos2 = new Types.Vector3({x:width - f3.stepLength, y:this.girOffset})

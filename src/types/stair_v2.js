@@ -314,6 +314,24 @@ export const Types = $root.Types = (() => {
         return values;
     })();
 
+    /**
+     * StairExitType enum.
+     * @name Types.StairExitType
+     * @enum {number}
+     * @property {number} seph=0 seph value
+     * @property {number} se_riser=1 se_riser value
+     * @property {number} se_hangingBoard=2 se_hangingBoard value
+     * @property {number} se_none=3 se_none value
+     */
+    Types.StairExitType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "seph"] = 0;
+        values[valuesById[1] = "se_riser"] = 1;
+        values[valuesById[2] = "se_hangingBoard"] = 2;
+        values[valuesById[3] = "se_none"] = 3;
+        return values;
+    })();
+
     Types.Vector3 = (function() {
 
         /**
@@ -3460,6 +3478,7 @@ export const Types = $root.Types = (() => {
          * @property {number|null} [stepHeight] Stair stepHeight
          * @property {Types.IVector3|null} [position] Stair position
          * @property {Types.Side|null} [floadSide] Stair floadSide
+         * @property {Types.StairExitType|null} [exitType] Stair exitType
          */
 
         /**
@@ -3660,6 +3679,14 @@ export const Types = $root.Types = (() => {
         Stair.prototype.floadSide = 0;
 
         /**
+         * Stair exitType.
+         * @member {Types.StairExitType} exitType
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.exitType = 0;
+
+        /**
          * Creates a new Stair instance using the specified properties.
          * @function create
          * @memberof Types.Stair
@@ -3733,6 +3760,8 @@ export const Types = $root.Types = (() => {
                 $root.Types.Vector3.encode(message.position, writer.uint32(/* id 26, wireType 2 =*/210).fork()).ldelim();
             if (message.floadSide != null && Object.hasOwnProperty.call(message, "floadSide"))
                 writer.uint32(/* id 27, wireType 0 =*/216).int32(message.floadSide);
+            if (message.exitType != null && Object.hasOwnProperty.call(message, "exitType"))
+                writer.uint32(/* id 28, wireType 0 =*/224).int32(message.exitType);
             return writer;
         };
 
@@ -3844,6 +3873,9 @@ export const Types = $root.Types = (() => {
                     break;
                 case 27:
                     message.floadSide = reader.int32();
+                    break;
+                case 28:
+                    message.exitType = reader.int32();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4019,6 +4051,16 @@ export const Types = $root.Types = (() => {
                 case 0:
                 case 1:
                 case 2:
+                    break;
+                }
+            if (message.exitType != null && message.hasOwnProperty("exitType"))
+                switch (message.exitType) {
+                default:
+                    return "exitType: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                case 3:
                     break;
                 }
             return null;
@@ -4203,6 +4245,24 @@ export const Types = $root.Types = (() => {
                 message.floadSide = 2;
                 break;
             }
+            switch (object.exitType) {
+            case "seph":
+            case 0:
+                message.exitType = 0;
+                break;
+            case "se_riser":
+            case 1:
+                message.exitType = 1;
+                break;
+            case "se_hangingBoard":
+            case 2:
+                message.exitType = 2;
+                break;
+            case "se_none":
+            case 3:
+                message.exitType = 3;
+                break;
+            }
             return message;
         };
 
@@ -4244,6 +4304,7 @@ export const Types = $root.Types = (() => {
                 object.stepHeight = 0;
                 object.position = null;
                 object.floadSide = options.enums === String ? "si_ph" : 0;
+                object.exitType = options.enums === String ? "seph" : 0;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -4307,6 +4368,8 @@ export const Types = $root.Types = (() => {
                 object.position = $root.Types.Vector3.toObject(message.position, options);
             if (message.floadSide != null && message.hasOwnProperty("floadSide"))
                 object.floadSide = options.enums === String ? $root.Types.Side[message.floadSide] : message.floadSide;
+            if (message.exitType != null && message.hasOwnProperty("exitType"))
+                object.exitType = options.enums === String ? $root.Types.StairExitType[message.exitType] : message.exitType;
             return object;
         };
 
@@ -4334,6 +4397,9 @@ export const Types = $root.Types = (() => {
          * @property {number|null} [depth] HangingBoard depth
          * @property {number|null} [width] HangingBoard width
          * @property {number|null} [height] HangingBoard height
+         * @property {Types.IVector3|null} [position] HangingBoard position
+         * @property {Types.IVector3|null} [widthVec] HangingBoard widthVec
+         * @property {Types.IVector3|null} [depthVec] HangingBoard depthVec
          */
 
         /**
@@ -4384,6 +4450,30 @@ export const Types = $root.Types = (() => {
         HangingBoard.prototype.height = 0;
 
         /**
+         * HangingBoard position.
+         * @member {Types.IVector3|null|undefined} position
+         * @memberof Types.HangingBoard
+         * @instance
+         */
+        HangingBoard.prototype.position = null;
+
+        /**
+         * HangingBoard widthVec.
+         * @member {Types.IVector3|null|undefined} widthVec
+         * @memberof Types.HangingBoard
+         * @instance
+         */
+        HangingBoard.prototype.widthVec = null;
+
+        /**
+         * HangingBoard depthVec.
+         * @member {Types.IVector3|null|undefined} depthVec
+         * @memberof Types.HangingBoard
+         * @instance
+         */
+        HangingBoard.prototype.depthVec = null;
+
+        /**
          * Creates a new HangingBoard instance using the specified properties.
          * @function create
          * @memberof Types.HangingBoard
@@ -4415,6 +4505,12 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 3, wireType 5 =*/29).float(message.width);
             if (message.height != null && Object.hasOwnProperty.call(message, "height"))
                 writer.uint32(/* id 4, wireType 5 =*/37).float(message.height);
+            if (message.position != null && Object.hasOwnProperty.call(message, "position"))
+                $root.Types.Vector3.encode(message.position, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+            if (message.widthVec != null && Object.hasOwnProperty.call(message, "widthVec"))
+                $root.Types.Vector3.encode(message.widthVec, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+            if (message.depthVec != null && Object.hasOwnProperty.call(message, "depthVec"))
+                $root.Types.Vector3.encode(message.depthVec, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
             return writer;
         };
 
@@ -4460,6 +4556,15 @@ export const Types = $root.Types = (() => {
                     break;
                 case 4:
                     message.height = reader.float();
+                    break;
+                case 5:
+                    message.position = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 6:
+                    message.widthVec = $root.Types.Vector3.decode(reader, reader.uint32());
+                    break;
+                case 7:
+                    message.depthVec = $root.Types.Vector3.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4508,6 +4613,21 @@ export const Types = $root.Types = (() => {
             if (message.height != null && message.hasOwnProperty("height"))
                 if (typeof message.height !== "number")
                     return "height: number expected";
+            if (message.position != null && message.hasOwnProperty("position")) {
+                let error = $root.Types.Vector3.verify(message.position);
+                if (error)
+                    return "position." + error;
+            }
+            if (message.widthVec != null && message.hasOwnProperty("widthVec")) {
+                let error = $root.Types.Vector3.verify(message.widthVec);
+                if (error)
+                    return "widthVec." + error;
+            }
+            if (message.depthVec != null && message.hasOwnProperty("depthVec")) {
+                let error = $root.Types.Vector3.verify(message.depthVec);
+                if (error)
+                    return "depthVec." + error;
+            }
             return null;
         };
 
@@ -4531,6 +4651,21 @@ export const Types = $root.Types = (() => {
                 message.width = Number(object.width);
             if (object.height != null)
                 message.height = Number(object.height);
+            if (object.position != null) {
+                if (typeof object.position !== "object")
+                    throw TypeError(".Types.HangingBoard.position: object expected");
+                message.position = $root.Types.Vector3.fromObject(object.position);
+            }
+            if (object.widthVec != null) {
+                if (typeof object.widthVec !== "object")
+                    throw TypeError(".Types.HangingBoard.widthVec: object expected");
+                message.widthVec = $root.Types.Vector3.fromObject(object.widthVec);
+            }
+            if (object.depthVec != null) {
+                if (typeof object.depthVec !== "object")
+                    throw TypeError(".Types.HangingBoard.depthVec: object expected");
+                message.depthVec = $root.Types.Vector3.fromObject(object.depthVec);
+            }
             return message;
         };
 
@@ -4552,6 +4687,9 @@ export const Types = $root.Types = (() => {
                 object.depth = 0;
                 object.width = 0;
                 object.height = 0;
+                object.position = null;
+                object.widthVec = null;
+                object.depthVec = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -4561,6 +4699,12 @@ export const Types = $root.Types = (() => {
                 object.width = options.json && !isFinite(message.width) ? String(message.width) : message.width;
             if (message.height != null && message.hasOwnProperty("height"))
                 object.height = options.json && !isFinite(message.height) ? String(message.height) : message.height;
+            if (message.position != null && message.hasOwnProperty("position"))
+                object.position = $root.Types.Vector3.toObject(message.position, options);
+            if (message.widthVec != null && message.hasOwnProperty("widthVec"))
+                object.widthVec = $root.Types.Vector3.toObject(message.widthVec, options);
+            if (message.depthVec != null && message.hasOwnProperty("depthVec"))
+                object.depthVec = $root.Types.Vector3.toObject(message.depthVec, options);
             return object;
         };
 

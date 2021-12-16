@@ -38,19 +38,21 @@ export class Tread extends ChildModel {
     if (vRiserParas.riserExist) {
       this.createRiser(vPB.border, vRiserParas)
     }
-    if (!this.isLast) {
-      this.createObj()
-    }
+    this.createObj()
   }
 
   createObj () {
     this.obj = new THREE.Group()
-    this.obj.add(this.botFace.getObj())
-    this.obj.add(this.topFace.getObj())
-    this.obj.add(this.sideFace.getObj())
+    if (!this.isLast) {
+      this.obj.add(this.botFace.getObj())
+      this.obj.add(this.topFace.getObj())
+      this.obj.add(this.sideFace.getObj())
+    }
+    if (!this.isLast || this.parent.parent.exitType === Types.StairExitType.se_riser) {
+      this.riser && this.obj.add(this.riser.getObj())
+    }
     this.obj.userData.uuid = this.uuid
     this.obj.userData.d3Type = 'obj'
-    this.riser && this.obj.add(this.riser.getObj())
   }
 
   /**
@@ -75,8 +77,13 @@ export class Tread extends ChildModel {
     }
     let utilRoute = new Outline(rOutRoute)
     utilRoute.setZCoord(utilRoute.zCoord - this.stepHeight)
-    rOutRoute = utilRoute.offset(this.nossing, !tOutline.isClock)
-    this.riser = new Riser(this, rOutRoute, vRiserParas, this.stepHeight - this.depth)
+    if (this.isLast) {
+      rOutRoute = utilRoute.offset(vRiserParas.depth, tOutline.isClock)
+    } else {
+      rOutRoute = utilRoute.offset(this.nossing, !tOutline.isClock)
+    }
+    let height = this.isLast ? this.stepHeight: this.stepHeight - this.depth
+    this.riser = new Riser(this, rOutRoute, vRiserParas, height)
   }
 
   setHover(vIsHover) {

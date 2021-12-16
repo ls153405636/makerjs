@@ -131,11 +131,6 @@ export class StraightStair extends Stair  {
     }
   }
 
-  addHangingBoard(vInfo) {
-    this.hangingBoard = vInfo
-    this.rebuild()
-  }
-
   getGirderInEdges () {
     let edges = this.border.in.edges
     return [

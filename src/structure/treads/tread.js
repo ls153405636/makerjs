@@ -175,7 +175,7 @@ export class Tread extends ChildInfo {
     let rateArr = this.getSmallColRateArr(num, vArgs)
     let sCols = [], utilE = this.getSideUtilE(vSide), dir = this.getDirection()
     let length = utilE.getLength()
-    let stepHeight = this.getNextTread().stepHeight || this.stepHeight
+    let stepHeight = this.getNextTread()?.stepHeight || this.stepHeight
     /**@type {Types.HandrailParameters} */
     let hArgs = this.parent.parent.getHandParas(vSide)
     /**@type {Types.GirderParameters} */
@@ -266,7 +266,9 @@ export class Tread extends ChildInfo {
     let backOffset = this.parent.parent.getTreadBackOffset()
     if (vArgs.type === Types.GirderType.gsaw) {
       utilE.extendP1(-backOffset)
-      utilE.extendP2(backOffset)
+      if (this.index !== this.parent.parent.realStepNum) {
+        utilE.extendP2(backOffset)
+      }
     }
     return utilE
   }
@@ -303,10 +305,14 @@ export class Tread extends ChildInfo {
       botPois[0].z = 0
       botPois[1].z = 0
     } else {
+      let angle = Math.atan(this.stepHeight / this.stepWidth)
       botPois[0].z = Math.max(botPois[0].z - this.stepHeight - verHeight, 0)
-      botPois[1].z = Math.max(botPois[1].z -verHeight, 0)
+      if (this.index === this.parent.parent.realStepNum) {
+        botPois[1].z = botPois[1].z - verHeight - this.parent.parent.getTreadBackOffset() * Math.tan(angle)
+      } else {
+        botPois[1].z = Math.max(botPois[1].z -verHeight, 0)
+      }
       if (botPois[0].z === 0 && botPois[1].z > 0) {
-        let angle = Math.atan(this.stepHeight / this.stepWidth)
         let p = utilE.clone().extendP2(-botPois[1].z / Math.tan(angle)).p2
         p.z = botPois[0].z
         if (!tool.isVec3Equal(botPois[0], p)) {

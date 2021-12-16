@@ -152,7 +152,7 @@ export class SmallUTypeStair extends UTypeStair {
   updateFlights() {
     let f1 = this.flights[0]
     let f2 = this.flights[1]
-    let depth2 = f2.length + this.landingWidth
+    let depth2 = f2.length + this.landingWidth + this.hangOffset
     let width = f1.stepLength + f2.stepLength + this.gap
     let pos1, pos2, lVec1, lVec2
     if (this.floadSide === Types.Side.si_right) {

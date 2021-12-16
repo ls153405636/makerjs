@@ -17,12 +17,19 @@ import { reqTemp } from './resource/temp'
 import { D2Config } from '../d2/config'
 import { D3Config } from '../d3/d3_config'
 import { Edge3 } from '../utils/edge3'
+import { HangingBoard } from './hanging_board'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
     { value: Types.NossingType.nno, label: '无加边' },
     { value: Types.NossingType.ncommon, label: '普通加边' },
     { value: Types.NossingType.nluxury, label: '豪华加边' },
+  ]
+
+  static EXIT_TYPE_OPTIONS = [
+    {value: Types.StairExitType.se_riser, label:'出口立板'},
+    {value: Types.StairExitType.se_hangingBoard, label:'挂板'},
+    {value: Types.StairExitType.se_none, label:'无'}
   ]
   constructor(vParnet, vAgainstWall = Types.AgainstWallType.aw_left) {
     super(vParnet)
@@ -49,8 +56,11 @@ export class Stair extends Info {
     this.startFlight = null
     /**@type {import('./toolComp/stair_border').StairBorder} */
     this.border = null
+    /**@type {HangingBoard} */
+    this.hangingBoard = null
     /**@type {Array<Flight>} */
     this.segments = []
+    this.exitType = Default.EXIT_TYPE
     this.treadParameters = new Types.TreadParameters({
       depth: Default.TREAD_DEPTH,
       nossingType: Default.TREAD_NOSSING_TYPE,
@@ -88,7 +98,12 @@ export class Stair extends Info {
   }
 
   rebuild() {
-    this.hangOffset = this.hangingBoard?.depth || 0
+    if (this.exitType === Types.StairExitType.se_hangingBoard) {
+      this.hangOffset = this.hangingBoard?.depth || Default.HANG_BOARD_DEPTH
+    } else {
+      this.hangingBoard = null
+      this.hangOffset = 0
+    }
     let gArgs = this.girderParameters
     this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
     this.startStepNum = this.startFlight?.stepNum || 0
@@ -106,6 +121,7 @@ export class Stair extends Info {
     this.computeSize()
     this.computePosition()
     this.updateBorder()
+    this.updatehangingBoard()
     this.updateGirders()
     this.updateHandrails()
     this.updateSmallColumns()
@@ -266,6 +282,32 @@ export class Stair extends Info {
     }
   }
 
+  /**更新挂板 */
+  updatehangingBoard() {
+    if (this.exitType === Types.StairExitType.se_hangingBoard) {
+      let lastF = this.segments[this.segments.length - 1]
+      let lastT2 = this.stepNumRule === Types.StepNumRule.snr_n_add_1 ? 
+                                        lastF.treads[lastF.treads.length - 2] 
+                                        : lastF.treads[lastF.treads.length - 1]
+      let lastT1 = lastF.treads[lastF.treads.length - 1]
+      let vWidth = lastT2.stepLength
+      let vHeight = lastT2.getGirVerHeight(this.girderParameters) + lastT1.stepHeight + 50
+      let vPosition = new Edge().setByVec(lastF.pos, lastF.wVec, -this.hangOffset).p2
+      if (this.girderParameters.type === Types.GirderType.gslab) {
+        vHeight = lastT1.getGirVerHeight(this.girderParameters) + 50
+        vPosition = new Edge().setByVec(vPosition, lastF.lVec, -this.girderParameters.depth).p2
+      }
+      vPosition.z = lastF.getEndHeight()
+      if (this.hangingBoard) {
+        this.hangingBoard.rebuildByParent({vWidth, vPosition})
+      } else {
+        let vWidthVec = new Types.Vector3(lastF.lVec)
+        let vDepthVec = new Types.Vector3(lastF.wVec)
+        this.hangingBoard = new HangingBoard({vParent:this, vWidth, vPosition, vHeight, vWidthVec, vDepthVec})
+      }
+    }
+  }
+
   /**
    * 计算实际踏板轮廓的后边，比平面图中需向后偏移的距离
    */
@@ -312,6 +354,10 @@ export class Stair extends Info {
         type: 'select',
         options: Flight.NUM_RULE_OPTIONS,
       },
+      exitType: {name:'出口类型', 
+                value:f(this.exitType, Stair.EXIT_TYPE_OPTIONS), 
+                type:'select', 
+                options:[...Stair.EXIT_TYPE_OPTIONS]},
       stepNum: { name: '步数', value: this.stepNum, type: 'input' },
       treadParameters: { name: '踏板参数', type: 'group' },
       riserParameters: { name: '立板参数', type: 'group' },
@@ -390,12 +436,8 @@ export class Stair extends Info {
     if (this.bigColumns.length) {
       args.bigColParameters.value = this.bigColumns[0].getArgs()
     }
-    if (this.type === Types.StairType.sstright) {
-      args.hangingBoard = {name:'添加挂板', state:'add'}
-      if(this.hangingBoard) {
-        args.hangingBoard.name = '移除挂板'
-        args.hangingBoard.state = 'delete'
-      }
+    if (this.stepNumRule === Types.StepNumRule.snr_n) {
+      args.exitType.options.splice(0, 1)
     }
     args.startFlight = {name:'添加起步踏', state:'add'}
     if (this.startFlight) {
@@ -412,6 +454,20 @@ export class Stair extends Info {
       }
     }
     return args
+  }
+
+  updateItem(vValue, vKey, vSecondKey) {
+    if (vKey === 'exitType') {
+      let lastF = this.segments[this.segments.length - 1]
+      if (vValue === Types.StairExitType.se_hangingBoard) {
+        lastF.updateItem(lastF.length - Default.HANG_BOARD_DEPTH, 'length')
+      } else if (this.exitType === Types.StairExitType.se_hangingBoard) {
+        lastF.updateItem(lastF.length + Default.HANG_BOARD_DEPTH, 'length')
+      }
+      this.exitType = vValue
+    } else {
+      super.updateItem(vValue, vKey, vSecondKey)
+    }
   }
 
   /**
@@ -496,10 +552,10 @@ export class Stair extends Info {
   }
 
   updateSideHandrails (vSide) {
-    let edges = [], lastUtilE = null
+    let edges = []
     if (this.startFlight) {
       edges = this.startFlight.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
-      lastUtilE = new Edge3(edges[edges.length - 1])
+      //lastUtilE = new Edge3(edges[edges.length - 1])
     }
     for (const f of this.segments) {
       let fEdges = f.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
@@ -569,78 +625,6 @@ export class Stair extends Info {
   }
 
   /**
-   * 更新小柱
-   */
-  // updateSmallColumns() {
-  //   let args = this.smallColParameters
-  //   let size = tool.parseSpecification(args.specification)
-  //   this.smallColumns = []
-  //   let bor = this.border
-  //   this.updateSideSmallCols(bor.in.edges, 'in')
-  //   this.updateSideSmallCols(bor.out.edges, 'out')
-  //   if (this.landings.length > 0) {
-  //     let dis
-  //     if (args.arrangeRule === Types.ArrangeRule.arrThree) {
-  //       dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) * 2 / 3
-  //     } else {
-  //       dis = Math.max(this.flights[0].stepWidth, this.flights[1].stepWidth) / 2
-  //     }
-  //     for (const l of this.landings) {
-  //       this.smallColumns = this.smallColumns.concat(l.createSmallCols(dis, dis, size))
-  //     }
-  //   }
-  // }
-
-  /**
-   * 更新边界中的一侧小柱
-   * @param {Array<import('./toolComp/stair_edge').StairEdge>} vStairEdges 本侧边集
-   * @param {string} vSide 当前小柱属于哪一侧 'in' or 'out'
-   */
-  // updateSideSmallCols(vStairEdges, vSide) {
-  //   let args = this.smallColParameters
-  //   let size = tool.parseSpecification(args.specification)
-  //   let gArgs = this.girderParameters
-  //   let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.sideOffset : this.sideOffset
-  //   for (let i = 0; i < vStairEdges.length; i++) {
-  //     let sideE = vStairEdges[i]
-  //     let flight = sideE.flight
-  //     if (flight?.compType !== COMP_TYPES.FLIGHT) {
-  //       continue
-  //     }
-  //     let k = 0
-  //     /**无起步踏时，小柱起始位置由大柱位置类型决定 */
-  //     if (i === 0 && !this.startFlight) {
-  //       k = Math.abs(1 - this.bigColParameters.posType)
-  //     }
-  //     for (; k < flight.treads.length; k++) {
-  //       let t = flight.treads[k]
-  //       if (t.isLast) {
-  //         continue
-  //       }
-  //       let posArr = []
-  //       let sideOffsetK = sideOffset
-  //       if (vSide === 'out') {
-  //         sideOffsetK = sideOffset + t.stepLength - flight.stepLength
-  //       }
-  //       if (args.arrangeRule === Types.ArrangeRule.arrThree) {
-  //         let index = k % 2
-  //         if (index === 0) {
-  //           let rate = Math.max(1/6, size.x/2/t.stepWidth)
-  //           posArr = t.getColPos([rate, 1-rate], vSide, sideOffsetK)
-  //         } else {
-  //           posArr = t.getColPos([1/2], vSide, sideOffsetK)
-  //         }
-  //       } else {
-  //         posArr = t.getColPos([1/4, 3/4], vSide, sideOffsetK)
-  //       }
-  //       for (const p of posArr) {
-  //         this.smallColumns.push(new SmallColumn(this, p, size))
-  //       }
-  //     }
-  //   }
-  // }
-
-  /**
    * 更新大柱
    */
   updateBigColumns () {
@@ -706,6 +690,7 @@ export class Stair extends Info {
       girders: tool.writeItemArrayPB(this.girders),
       landings: tool.writeItemArrayPB(this.landings),
       position: this.position,
+      exitType: this.exitType
     })
     if (this.hangingBoard) {
       pb.hangingBoard = this.hangingBoard
