@@ -2,7 +2,9 @@ import Victor from 'victor'
 import { Command } from '../../common/command'
 import { COMP_TYPES } from '../../common/common_config'
 import { Core } from '../../common/core'
+import tool from '../../structure/tool'
 import { Types } from '../../types/stair_v2'
+import { Edge } from '../../utils/edge'
 import { D2Config, Z_INDEX } from '../config'
 import d2_tool from '../d2_tool'
 import { ChildWidget } from './child_widget'
@@ -15,17 +17,18 @@ export class HangingBoard extends ChildWidget {
   constructor(vPB) {
     super(vPB.uuid)
     this.width = d2_tool.translateValue(vPB.width)
-    this.height = d2_tool.translateValue(vPB.depth)
-    this.depth = vPB.depth
+    this.depth = d2_tool.translateValue(vPB.depth)
     this.sprite = new PIXI.Container()
+    this.widthVec = vPB.widthVec
+    this.depthVec = vPB.depthVec
+    this.position = d2_tool.translateCoord(vPB.position)
+    this.p1 = new THREE.Vector2(this.position.x, this.position.y)
+    this.p2 = this.p1.clone().addScaledVector(this.widthVec, this.width)
+    this.p3 = this.p2.clone().addScaledVector(this.depthVec, this.depth)
+    this.p4 = this.p1.clone().addScaledVector(this.depthVec, this.depth)
     this.addEvent()
-    // this.flights = vPB.parent.flights[vPB.parent.flights.length - 1]
-    // this.tread = this.flights.treads[this.flights.treads.length - 2]
-    // this.positionX = this.tread.position.x
-    // this.positionY = this.tread.position.y
-    // console.log(this.positionX)
-    // console.log(this.positionY)
     this.draw()
+    this.addDimension()
   }
   
   draw() {
@@ -35,52 +38,12 @@ export class HangingBoard extends ChildWidget {
     changeHangingBoard.visible = false
     changeHangingBoard.lineStyle(1, 0x4478f4)
     changeHangingBoard.beginFill(0xe9efff)
-    changeHangingBoard.drawRect(0, 0, this.width, this.height)
+    changeHangingBoard.drawPolygon(this.p1, this.p2, this.p3, this.p4)
 
     const hangingBoard = new PIXI.Graphics()
-    hangingBoard.lineStyle(1, 0x2d3037)
+    hangingBoard.lineStyle(1, 0x000000)
     hangingBoard.beginFill(0xffffff)
-    hangingBoard.drawRect(0, 0, this.width, this.height)
-
-    // const p1 = new Victor(this.positionX, this.positionY).subtractX(new Victor(500,500))
-    // const p2 = new Victor(this.positionX, this.positionY - this.depth).subtractX(new Victor(500,500))
-    
-    // console.log(p1)
-    // console.log(p2)
-
-    // const hangingBoardLine = new PIXI.Graphics()
-    // hangingBoardLine.lineStyle(1,0x000000)
-    // hangingBoardLine.moveTo(p1.x / 10, p1.y / 10)
-    // hangingBoardLine.lineTo(p2.x / 10, p2.y / 10)
-
-    
-    // // 文字中心位置计算
-    // const position = {
-    //   x: (p1.x - 50 + p2.x - 50) / 2 / 10,
-    //   y: (p1.y + p2.y) / 2 / 10
-    // }
-
-    // // 旋转计算
-    // let newTextRotation = ''
-    // const textRotation = new Victor(p1.x - p2.x, p1.y - p2.y)
-    // const textAngle = textRotation.angle()
-    // if (textAngle == Math.PI || textAngle == 0) {
-    //   newTextRotation = 0
-    // } else if (textAngle < Math.PI) {
-    //   newTextRotation = textRotation.invert().angle()
-    // } else if (textAngle > Math.PI) {
-    //   newTextRotation = textRotation.angle()
-    // }
-    
-    // const hangingBoardLineText = new PIXI.Text(this.depth,{
-    //   fontSize:36,
-    //   fill: 0x000000
-    // })
-    // hangingBoardLineText.scale.set(0.25)
-    // hangingBoardLineText.position.set(position.x, position.y)
-    // hangingBoardLineText.anchor.set(0.5, 0.5)
-    // hangingBoardLineText.rotation = newTextRotation
-    
+    hangingBoard.drawPolygon(this.p1, this.p2, this.p3, this.p4)
 
     hangingBoardContainer.addChild(changeHangingBoard, hangingBoard)
     hangingBoardContainer.zIndex = Z_INDEX.HANGING_BOARD_ZINDEX
@@ -141,5 +104,124 @@ export class HangingBoard extends ChildWidget {
       .on('mouseover', () => {
         _this.setHover()
       })
+  }
+
+  addDimension() {
+    const handBLineContainer = new PIXI.Container()
+    const offSet = new Victor(20,20)
+    let wall
+    let stairP
+    let stairType
+    let isTrue
+    let normal
+    let newLine
+    let offDepth
+    let textPosition
+    let handBReac = tool.createRectOutline(this.p1, this.width, this.depth, this.widthVec, this.depthVec)
+    let thirdEdge = handBReac.edges[3]
+    for(let value of D2Config.WIDGETS.values()) {
+      if (value.getWidgetType() === COMP_TYPES.STAIR) {
+        stairP = d2_tool.translateCoord(value.position)
+        stairType = value.againstWallType
+      }
+    }
+    if (stairType === 3) {
+      isTrue = false
+    }else {
+      isTrue = true
+    }
+    if (this.p1.x < this.p2.x) {
+      normal = new Types.Vector3({ x: -1, y: 0 })
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === COMP_TYPES.WALL) {
+          if (tool.isVec2Equal(value.normal, normal)) {
+            wall = value
+          }
+        }
+      }
+      let wallOutP1 = new Victor( stairP.x - wall.outP1.x, stairP.y - wall.outP1.x)
+      thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.x) + offSet.x, isTrue)
+      textPosition = new Edge(thirdEdge).offset(5, isTrue)
+      textPosition = new Edge(textPosition).extendP2(5)
+    }
+    if (this.p1.x > this.p2.x) {
+      normal = new Types.Vector3({ x: 1, y: 0 })
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === COMP_TYPES.WALL) {
+          if (tool.isVec2Equal(value.normal, normal)) {
+            wall = value
+          }
+        }
+      }
+      let wallOutP1 = new Victor(wall.outP1.x - stairP.x - this.p1.x, wall.outP1.y - stairP.y - this.p1.y)
+      thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.x) + offSet.x, isTrue)
+      textPosition = new Edge(thirdEdge).offset(5, isTrue)
+      textPosition = new Edge(textPosition).extendP2(5)
+    }
+    if (this.p1.y < this.p2.y) {
+      normal = new Types.Vector3({ x: 0, y: -1 })
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === COMP_TYPES.WALL) {
+          if (tool.isVec2Equal(value.normal, normal)) {
+            wall = value
+          }
+        }
+      }
+      let wallOutP1 = new Victor(wall.outP1.x - stairP.x - this.p1.x, wall.outP1.y - stairP.y - this.p1.y)
+      thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.y) + offSet.x, isTrue)
+      textPosition = new Edge(thirdEdge).offset(5, isTrue)
+      textPosition = new Edge(textPosition).extendP2(5)
+    }
+    if (this.p1.y > this.p2.y) {
+      normal = new Types.Vector3({ x: -0, y: 1 })
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === COMP_TYPES.WALL) {
+          if (tool.isVec2Equal(value.normal, normal)) {
+            wall = value
+          }
+        }
+      }
+      let wallOutP1 = new Victor(wall.outP1.x - stairP.x - this.p1.x, wall.outP1.y - stairP.y - this.p1.y)
+      thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.y) + offSet.x, isTrue)
+      textPosition = new Edge(thirdEdge).offset(5, isTrue)
+      textPosition = new Edge(textPosition).extendP2(5)
+    }
+
+
+     // 旋转计算
+     let newTextRotation = ''
+     const textRotation = new Victor(thirdEdge.p1.x - thirdEdge.p2.x, thirdEdge.p1.y - thirdEdge.p2.y)
+     const textAngle = textRotation.angle()
+     if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+       newTextRotation = 0
+     } else if (0 < textAngle < Math.PI) {
+       newTextRotation = textRotation.invert().angle()
+     } else if (0 > textAngle > -Math.PI) {
+       newTextRotation = textRotation.angle()
+     }
+
+    const handBText = new PIXI.Text(this.depth * 10,  {
+      fontSize: 32,
+      fill: 0x000000,
+    })
+
+    handBText.scale.set(0.25)
+    handBText.position.set(textPosition.p2.x,textPosition.p2.y)
+    handBText.anchor.set(0.5, 0.5)
+    if (stairType === 3) {
+      handBText.rotation = -newTextRotation
+    }else {
+      handBText.rotation = newTextRotation
+    }
+
+    const handBLine = new PIXI.Graphics()
+    handBLine.lineStyle(1, 0x000000)
+    handBLine.moveTo(thirdEdge.p1.x, thirdEdge.p1.y)
+    handBLine.lineTo(thirdEdge.p2.x, thirdEdge.p2.y)
+
+    handBLineContainer.addChild(handBLine, handBText)
+    this.sprite.addChild(handBLineContainer)
+
+
   }
 }

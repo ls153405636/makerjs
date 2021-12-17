@@ -42,6 +42,7 @@ export class Stair extends BaseWidget {
     this.girders = []
     this.landings = []
     this.position = vPB.position
+    this.againstWallType = vPB.againstWallType
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
     }
