@@ -21,7 +21,6 @@ export class CementComp extends BaseWidget {
   constructor(vPB, vParent) {
     super(vPB.uuid)
     this.init(vPB)
-    console.log(vPB)
   }
 
   getWidgetType() {
@@ -38,6 +37,7 @@ export class CementComp extends BaseWidget {
     this.rotationY = vPB.rotation.y
     this.disToStart = vPB.disToStart
     this.wallDepth = vPB.wallDepth
+    this.wallLength = vPB.wallLength
     this.draw()
     this.addDimension()
     this.addEvent()
@@ -49,7 +49,6 @@ export class CementComp extends BaseWidget {
 
 
    creatComp(vName) {
-    vName.beginFill(0xffffff, 0.3)
     vName.drawRect(
       -this.width / 2,
       -this.depth / 2,
@@ -94,12 +93,16 @@ export class CementComp extends BaseWidget {
     changeComp.addChild(tilingSprite1)
 
     let comp = new PIXI.Graphics()
-    comp.lineStyle(1, 0x000000,1)
+    if (this.type === Types.ComponentType.cbeam) {
+      comp.lineStyle(1, 0x000000,0.3,0.5,true)
+    }else {
+      comp.lineStyle(1, 0x000000,1)
+    }
     this.creatComp(comp)
     comp.addChild(tilingSprite)
 
 
-    let text = new PIXI.Text(textWord, { fontSize: 48, fill: 0x000000 })
+    let text = new PIXI.Text(textWord, { fontSize: 32, fill: 0x000000 })
     text.scale.set(0.25)
     text.position.set(this.positionX, this.positionY)
     text.anchor.set(0.5, 0.5)
@@ -232,16 +235,34 @@ export class CementComp extends BaseWidget {
     }
 
     const compLineContainer = new PIXI.Container()
+
+    // 标注文字
+    // 宽度标注文字
+    const compLineText1 = new PIXI.Text(this.width * D2Config.SCREEN_RATE, {
+      fontSize: 32,
+      fill: 0x000000,
+    })
+    
+    compLineText1.scale.set(0.25)
+    compLineText1.anchor.set(0.5, 0.5)
+    compLineText1.position.set(0, newP1.y - 4)
+    compLineText1.rotation = newRoationY
     // 标注线
     let compLine = new PIXI.Graphics()
     compLine.lineStyle(1, 0x000000, 1, 0.5, true)
-    // 宽度标注线
-    compLine.moveTo(newP1.x, newP1.y)
-    compLine.lineTo(newP2.x, newP2.y)
-    compLine.moveTo(newP1T.x, newP1T.y)
-    compLine.lineTo(newP1B.x, newP1B.y)
-    compLine.moveTo(newP2T.x, newP2T.y)
-    compLine.lineTo(newP2B.x, newP2B.y)
+
+    if (this.wallLength === wallWidth) {
+      compLineText1.visible = false
+      // return
+    } else {
+      // 宽度标注线
+      compLine.moveTo(newP1.x, newP1.y)
+      compLine.lineTo(newP2.x, newP2.y)
+      compLine.moveTo(newP1T.x, newP1T.y)
+      compLine.lineTo(newP1B.x, newP1B.y)
+      compLine.moveTo(newP2T.x, newP2T.y)
+      compLine.lineTo(newP2B.x, newP2B.y)
+    }
 
     // 深度标注线
     compLine.moveTo(newP3.x, newP3.y)
@@ -263,17 +284,7 @@ export class CementComp extends BaseWidget {
     compLine.lineTo(newP6.x, newP6.y)
     compLine.lineTo(newP6B.x, newP6B.y)
 
-    // 标注文字
-    // 宽度标注文字
-    const compLineText1 = new PIXI.Text(this.width * D2Config.SCREEN_RATE, {
-      fontSize: 32,
-      fill: 0x000000,
-    })
     
-    compLineText1.scale.set(0.25)
-    compLineText1.anchor.set(0.5, 0.5)
-    compLineText1.position.set(0, newP1.y - 4)
-    compLineText1.rotation = newRoationY
 
     // 深度标注文字
     const compLineText2 = new PIXI.Text(this.depth * D2Config.SCREEN_RATE, {

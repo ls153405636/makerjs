@@ -18,7 +18,6 @@ export class Wall extends Info {
    */
   constructor(vParent, vEdge) {
     super(vParent)
-    this.edge = vEdge
     this.holeEdge = vEdge
     this.type = Types.WallType.wboth
     this.startExtend = 0

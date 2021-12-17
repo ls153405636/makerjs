@@ -265,7 +265,7 @@ export class Tread extends ChildWidget {
     let nPosition
     let lNewTextRotation = ''
     let nNewTextRotation = ''
-    const offSet = new Victor(200,200) //偏移出墙的偏移值Y
+    const offSet = new Victor(270,270) //偏移出墙的偏移值Y
     const fOffSet = new Victor(200,200) //偏移出墙的偏移值Y
     
     let wall

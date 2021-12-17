@@ -265,7 +265,7 @@ export class Wall extends BaseWidget {
     // 标注线偏移计算
     const { p1, p2, outP1, outP2, depth, normal, holeP1, holeP2 } = this
     const newNormal = new Victor(normal.x, normal.y)
-    const offSet = new Victor(50, 50) // 墙体标线偏移距离
+    const offSet = new Victor(55, 55) // 墙体标线偏移距离
     const holeLineOffSet = new Victor(70 + this.depth, 70 + this.depth) // 洞口标线偏移距离
     const LineTextoffSet = new Victor(8, 8) // 文字标线偏移距离
     

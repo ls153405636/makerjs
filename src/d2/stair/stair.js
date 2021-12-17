@@ -181,7 +181,7 @@ export class Stair extends BaseWidget {
     let width = stairInfo.width
     let landingWidth = new Victor(width,width)
     let firstDepth = new Victor(depth,depth)
-    const offSet = new Victor(350,350)
+    const offSet = new Victor(370,370)
     const arrow = new Victor(50,50)
     // console.log(stairInfo)
     

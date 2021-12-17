@@ -84,7 +84,7 @@ export class Inlay extends BaseWidget {
         textWord = '洞'
         break
     }
-    let text = new PIXI.Text(textWord, { fontSize: 48, fill: 0x000000 })
+    let text = new PIXI.Text(textWord, { fontSize: 32, fill: 0x000000 })
     text.scale.set(0.25)
     text.position.set(
       this.positionX - text.width / 2,
@@ -158,7 +158,7 @@ export class Inlay extends BaseWidget {
 
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart } = this
-    const offSet = new Victor(7, 7) // 偏移距离
+    const offSet = new Victor(15, 15) // 偏移距离
     const smallOffset = new Victor(2, 2) // 偏移距离
 
     const p1 = new Victor(-this.width / 2, -this.depth / 2)
@@ -291,8 +291,8 @@ export class Inlay extends BaseWidget {
     const offGround = new PIXI.Graphics()
     offGround.lineStyle(1,0x000000)
     offGround.moveTo(p2.x, p2.y)
-    offGround.lineTo(p2.x + 7, p2.y - 7)
-    offGround.lineTo(p2.x + 47, p2.y - 7)
+    offGround.lineTo(p2.x + 7, p2.y - 15)
+    offGround.lineTo(p2.x + 47, p2.y - 15)
 
     let inlay = StructConfig.INFOS.get(this.uuid)
     const inlayOffGround = inlay.offGround
@@ -305,7 +305,7 @@ export class Inlay extends BaseWidget {
     }
     offGroundText.scale.set(0.25)
     offGroundText.anchor.set(0.5, 0.5)
-    offGroundText.position.set(p2.x + 30 , p2.y - 12)
+    offGroundText.position.set(p2.x + 30 , p2.y - 20)
     offGroundText.rotation = newRoationY
 
     offGroundContainer.addChild(
