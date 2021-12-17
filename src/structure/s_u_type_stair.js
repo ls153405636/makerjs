@@ -191,7 +191,7 @@ export class SmallUTypeStair extends UTypeStair {
    */
    updateSideGirder (vSide) {
     for (let i = 0; i < 3; i++) {
-      if (i === 1 && vSide.sideName === 'out') {
+      if (i === 1 && vSide.sideName === 'out' && this.girderParameters.type === Types.GirderType.gslab) {
         continue
       }
       let borders = [], inLast = null, outLast = null, flights = []
