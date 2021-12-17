@@ -37,11 +37,11 @@ export default {
       let el = document.querySelector("#canvas");
       let canvas = await html2canvas(el, {
         scale: window.devicePixelRatio,
-        width: 950,
+        width: 1010,
         height: 680,
         // x: 485,
         // y: 113.5,
-        x: (D2Config.CANVAS_WIDTH - 950) / 2,
+        x: (D2Config.CANVAS_WIDTH - 1010) / 2,
         y: (D2Config.CANVAS_HEIGHT - 680) / 2,
         allowTaint: true,
       })

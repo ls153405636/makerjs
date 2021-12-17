@@ -140,13 +140,13 @@ export class Wall extends BaseWidget {
 
     const holeBlackLine = new PIXI.Graphics()
       holeBlackLine
-      .lineStyle(2,0x000000,1)
+      .lineStyle(2,0x000000, 1)
       .drawPolygon(newHoleEdge1.p1.x, newHoleEdge1.p1.y, newHoleEdge1.p2.x, newHoleEdge1.p2.y)
       this.holeLineSprite = holeBlackLine
       this.holeLineSprite.zIndex = Z_INDEX.HOLE_LINE_ZINDEX
 
     const wall = new PIXI.Graphics()
-    wall.lineStyle(1, 0x929292,1,0)
+    wall.lineStyle(1, 0x929292,1,0,true)
 
     if (this.type === Types.WallType.wfirst) {
       wall.beginFill(0xffffff, 1)
@@ -266,6 +266,7 @@ export class Wall extends BaseWidget {
     const { p1, p2, outP1, outP2, depth, normal, holeP1, holeP2 } = this
     const newNormal = new Victor(normal.x, normal.y)
     const offSet = new Victor(55, 55) // 墙体标线偏移距离
+    const arrow = new Victor(5, 5)
     const holeLineOffSet = new Victor(70 + this.depth, 70 + this.depth) // 洞口标线偏移距离
     const LineTextoffSet = new Victor(8, 8) // 文字标线偏移距离
     
@@ -278,6 +279,10 @@ export class Wall extends BaseWidget {
     const OutP2 = new Victor(outP2.x, outP2.y)
     const newOutP1 = new Victor(outP1.x, outP1.y)
     const newOutP2 = new Victor(outP2.x, outP2.y)
+    let newOutP1T
+    let newOutP1B
+    let newOutP2T
+    let newOutP2B
     const newHoleP1 = new Victor(holeP1.x, holeP1.y)
     const newHoleP2 = new Victor(holeP2.x, holeP2.y)
     
@@ -292,10 +297,14 @@ export class Wall extends BaseWidget {
       newTextRotation = textRotation.angle()
     }
     
-    let lineCP1 = 0
-    let lineCP2 = 0
-    let holeLineCP1 = 0
-    let holeLineCP2 = 0
+    let lineCP1
+    let lineCP2
+    let holeLineCP1
+    let holeLineCP2
+    let holeLineCP1T
+    let holeLineCP1B
+    let holeLineCP2T
+    let holeLineCP2B
     if (p1.x - p2.x < 0 && p1.y - p2.y == 0 || p1.x - p2.x > 0 && p1.y - p2.y == 0) {
       P1.addY(newNormal)
       P2.addY(newNormal)
@@ -304,10 +313,20 @@ export class Wall extends BaseWidget {
       newHoleP1.addY(newNormalHole)
       newHoleP2.addY(newNormalHole)
 
+      newOutP1T = newOutP1.clone().subtractY(arrow)
+      newOutP1B = newOutP1.clone().addY(arrow)
+      newOutP2T = newOutP2.clone().subtractY(arrow)
+      newOutP2B = newOutP2.clone().addY(arrow)
+
       lineCP1 = newOutP1.clone().addY(newNormalText)
       lineCP2 = newOutP2.clone().addY(newNormalText)
       holeLineCP1 = newHoleP1.clone().addY(newNormalText)
       holeLineCP2 = newHoleP2.clone().addY(newNormalText)
+
+      holeLineCP1T = newHoleP1.clone().subtractY(arrow)
+      holeLineCP1B = newHoleP1.clone().addY(arrow)
+      holeLineCP2T = newHoleP2.clone().subtractY(arrow)
+      holeLineCP2B = newHoleP2.clone().addY(arrow)
     }
     if (p1.x - p2.x < 0 && p1.y - p2.y < 0 || p1.x - p2.x > 0 && p1.y - p2.y > 0 ||p1.x - p2.x < 0 && p1.y - p2.y > 0) {
       P1.add(newNormal)
@@ -317,10 +336,20 @@ export class Wall extends BaseWidget {
       newHoleP1.add(newNormalHole)
       newHoleP2.add(newNormalHole)
 
+      newOutP1T = newOutP1.clone().subtract(arrow)
+      newOutP1B = newOutP1.clone().add(arrow)
+      newOutP2T = newOutP2.clone().subtract(arrow)
+      newOutP2B = newOutP2.clone().add(arrow)
+
       lineCP1 = newOutP1.clone().add(newNormalText)
       lineCP2 = newOutP2.clone().add(newNormalText)
       holeLineCP1 = newHoleP1.clone().add(newNormalText)
       holeLineCP2 = newHoleP2.clone().add(newNormalText)
+
+      holeLineCP1T = newHoleP1.clone().subtract(arrow)
+      holeLineCP1B = newHoleP1.clone().add(arrow)
+      holeLineCP2T = newHoleP2.clone().subtract(arrow)
+      holeLineCP2B = newHoleP2.clone().add(arrow)
     }
     if (p1.x - p2.x == 0 && p1.y - p2.y > 0 || p1.x - p2.x == 0 && p1.y - p2.y < 0) {
       P1.addX(newNormal)
@@ -330,10 +359,20 @@ export class Wall extends BaseWidget {
       newHoleP1.addX(newNormalHole)
       newHoleP2.addX(newNormalHole)
 
+      newOutP1T = newOutP1.clone().subtractX(arrow)
+      newOutP1B = newOutP1.clone().addX(arrow)
+      newOutP2T = newOutP2.clone().subtractX(arrow)
+      newOutP2B = newOutP2.clone().addX(arrow)
+
       lineCP1 = newOutP1.clone().addX(newNormalText)
       lineCP2 = newOutP2.clone().addX(newNormalText)
       holeLineCP1 = newHoleP1.clone().addX(newNormalText)
       holeLineCP2 = newHoleP2.clone().addX(newNormalText)
+
+      holeLineCP1T = newHoleP1.clone().subtractX(arrow)
+      holeLineCP1B = newHoleP1.clone().addX(arrow)
+      holeLineCP2T = newHoleP2.clone().subtractX(arrow)
+      holeLineCP2B = newHoleP2.clone().addX(arrow)
     }
     
     // 获取标注线长度
@@ -354,7 +393,7 @@ export class Wall extends BaseWidget {
     if (this.type === Types.WallType.wnone || Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) !== Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
       // 洞口标注文字
       const holeLineText = new PIXI.Text('洞口' + holeLinelength, {
-        fontSize: 60,
+        fontSize: 48,
         fill: 0x2d3037,
       })
       holeLineText.scale.set(0.25)
@@ -365,19 +404,21 @@ export class Wall extends BaseWidget {
       const holeLine = new PIXI.Graphics()
       // 洞口标线
       holeLine
-      .lineStyle(1, 0x000000, 1)
+      .lineStyle(1, 0x000000, 1, 0.5, true)
+
       .moveTo(newHoleP1.x, newHoleP1.y)
       .lineTo(newHoleP2.x, newHoleP2.y)
-      .moveTo(holeP1.x, holeP1.y)
-      .lineTo(holeLineCP1.x, holeLineCP1.y)
-      .moveTo(holeP2.x, holeP2.y)
-      .lineTo(holeLineCP2.x, holeLineCP2.y)
+
+      .moveTo(holeLineCP1T.x, holeLineCP1T.y)
+      .lineTo(holeLineCP1B.x, holeLineCP1B.y)
+      .moveTo(holeLineCP2T.x, holeLineCP2T.y)
+      .lineTo(holeLineCP2B.x, holeLineCP2B.y)
       this.lineContainer.addChild(holeLineText, holeLine)
     }else {
       newHoleP1.multiply(new Victor(0,0)) // 洞口标注点清零
       newHoleP2.multiply(new Victor(0,0))
       const holeLineText = new PIXI.Text('', {
-        fontSize: 60,
+        fontSize: 48,
         fill: 0x2d3037,
       })
       this.lineContainer.addChild(holeLineText)
@@ -391,10 +432,15 @@ export class Wall extends BaseWidget {
       lineCP2.multiply(new Victor(0,0))
       newOutP1.multiply(new Victor(0,0))
       newOutP2.multiply(new Victor(0,0))
+
+      newOutP1T.multiply(new Victor(0,0))
+      newOutP1B.multiply(new Victor(0,0))
+      newOutP2T.multiply(new Victor(0,0))
+      newOutP2B.multiply(new Victor(0,0))
       // 标注文字添加
       // 墙体标注文字
       const lineText = new PIXI.Text('', {
-        fontSize: 60,
+        fontSize: 48,
         fill: 0x000000,
       })
       this.textSprite = lineText
@@ -402,7 +448,7 @@ export class Wall extends BaseWidget {
       // 标注文字添加
       // 墙体标注文字
       const lineText = new PIXI.Text(linelength, {
-        fontSize: 60,
+        fontSize: 48,
         fill: 0x2d3037,
       })
       lineText.scale.set(0.25)
@@ -414,17 +460,14 @@ export class Wall extends BaseWidget {
     // 墙体标注线绘制
     const wallLine = new PIXI.Graphics()
     wallLine
-      .lineStyle(1, 0x000000, 1)
-      .moveTo(OutP1.x, OutP1.y)
-      .lineTo(lineCP1.x, lineCP1.y)
-    
-      .moveTo(OutP2.x, OutP2.y)
-      .lineTo(lineCP2.x, lineCP2.y)
-    
+      .lineStyle(1, 0x000000, 1, 0.5, true)
+
+      .moveTo(newOutP1T.x, newOutP1T.y)
+      .lineTo(newOutP1B.x, newOutP1B.y)
+      .moveTo(newOutP2T.x, newOutP2T.y)
+      .lineTo(newOutP2B.x, newOutP2B.y)
       .moveTo(newOutP1.x,newOutP1.y)
       .lineTo(newOutP2.x, newOutP2.y)
-
-    
     
     this.lineContainer.addChild(wallLine)
     

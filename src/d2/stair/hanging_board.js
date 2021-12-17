@@ -41,7 +41,7 @@ export class HangingBoard extends ChildWidget {
     changeHangingBoard.drawPolygon(this.p1, this.p2, this.p3, this.p4)
 
     const hangingBoard = new PIXI.Graphics()
-    hangingBoard.lineStyle(1, 0x000000)
+    hangingBoard.lineStyle(1, 0x000000,1,0.5,true)
     hangingBoard.beginFill(0xffffff)
     hangingBoard.drawPolygon(this.p1, this.p2, this.p3, this.p4)
 
@@ -117,6 +117,8 @@ export class HangingBoard extends ChildWidget {
     let newLine
     let offDepth
     let textPosition
+    let pT
+    let pB
     let handBReac = tool.createRectOutline(this.p1, this.width, this.depth, this.widthVec, this.depthVec)
     let thirdEdge = handBReac.edges[3]
     for(let value of D2Config.WIDGETS.values()) {
@@ -141,8 +143,11 @@ export class HangingBoard extends ChildWidget {
       }
       let wallOutP1 = new Victor( stairP.x - wall.outP1.x, stairP.y - wall.outP1.x)
       thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.x) + offSet.x, isTrue)
+      pT = new Edge(thirdEdge).offset(5, true)
+      pB = new Edge(thirdEdge).offset(5, false)
       textPosition = new Edge(thirdEdge).offset(5, isTrue)
       textPosition = new Edge(textPosition).extendP2(5)
+      console.log(thirdEdge)
     }
     if (this.p1.x > this.p2.x) {
       normal = new Types.Vector3({ x: 1, y: 0 })
@@ -155,6 +160,8 @@ export class HangingBoard extends ChildWidget {
       }
       let wallOutP1 = new Victor(wall.outP1.x - stairP.x - this.p1.x, wall.outP1.y - stairP.y - this.p1.y)
       thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.x) + offSet.x, isTrue)
+      pT = new Edge(thirdEdge).offset(5, true)
+      pB = new Edge(thirdEdge).offset(5, false)
       textPosition = new Edge(thirdEdge).offset(5, isTrue)
       textPosition = new Edge(textPosition).extendP2(5)
     }
@@ -169,6 +176,8 @@ export class HangingBoard extends ChildWidget {
       }
       let wallOutP1 = new Victor(wall.outP1.x - stairP.x - this.p1.x, wall.outP1.y - stairP.y - this.p1.y)
       thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.y) + offSet.x, isTrue)
+      pT = new Edge(thirdEdge).offset(5, true)
+      pB = new Edge(thirdEdge).offset(5, false)
       textPosition = new Edge(thirdEdge).offset(5, isTrue)
       textPosition = new Edge(textPosition).extendP2(5)
     }
@@ -183,6 +192,8 @@ export class HangingBoard extends ChildWidget {
       }
       let wallOutP1 = new Victor(wall.outP1.x - stairP.x - this.p1.x, wall.outP1.y - stairP.y - this.p1.y)
       thirdEdge = new Edge(thirdEdge).offset(Math.abs(wallOutP1.y) + offSet.x, isTrue)
+      pT = new Edge(thirdEdge).offset(5, true)
+      pB = new Edge(thirdEdge).offset(5, false)
       textPosition = new Edge(thirdEdge).offset(5, isTrue)
       textPosition = new Edge(textPosition).extendP2(5)
     }
@@ -215,9 +226,12 @@ export class HangingBoard extends ChildWidget {
     }
 
     const handBLine = new PIXI.Graphics()
-    handBLine.lineStyle(1, 0x000000)
+    handBLine.lineStyle(1, 0x000000,1,0.5,true)
     handBLine.moveTo(thirdEdge.p1.x, thirdEdge.p1.y)
     handBLine.lineTo(thirdEdge.p2.x, thirdEdge.p2.y)
+
+    handBLine.moveTo(pT.p2.x, pT.p2.y)
+    handBLine.lineTo(pB.p2.x, pB.p2.y)
 
     handBLineContainer.addChild(handBLine, handBText)
     this.sprite.addChild(handBLineContainer)

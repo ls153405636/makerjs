@@ -332,7 +332,7 @@ export class CementComp extends BaseWidget {
     offGroundText.anchor.set(0.5, 0.5)
     
     offGroundText.rotation = newRoationY
-    offGround.lineStyle(1,0x000000)
+    offGround.lineStyle(1,0x000000,1,0.5,true)
     offGround.moveTo(newP3.x, newP3.y)
     if (this.type === 5) {
       offGroundText.position.set(newP3.x + 30 , newP3.y - 12 - this.wallDepth / D2Config.SCREEN_RATE)

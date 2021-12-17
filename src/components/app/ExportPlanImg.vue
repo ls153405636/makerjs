@@ -31,11 +31,11 @@
       </div>
       <!-- 内容-左侧-底部 -->
       <div class="buttom-text">
-       <span>客户姓名：</span>
+       <span>客户姓名</span>
        <input type="text" class="user-name">
-       <span>联系电话：</span>
+       <span>联系电话</span>
        <input type="text" class="user-phone">
-       <span>客户地址：</span>
+       <span>客户地址</span>
        <input type="text" class="user-address">
       </div>
     </div>
@@ -43,7 +43,7 @@
     <div class="right-content">
       <div class="right-text">
         <!-- logo -->
-        <span><img src="" alt=""></span>
+        <span><img src="" alt="">三维工场</span>
         <div v-for="(item,index) in tableData" class="input-content">
           <span :key="index" class="description-text">{{item.name}}</span>
           <input type="input" :placeholder="item.data" class="input-text">
@@ -213,12 +213,12 @@ export default {
   height: 850px;
   margin-top: 75px;
   margin-left: -601px;
-  border: 2px solid #000;
+  border: 3px solid #000;
 }
 /* 中心-左侧 */
 .main-export .left-content {
   position: relative;
-  width: 80%;
+  width: 85%;
   height: 100%;
 }
 /* 中心-左侧-顶部 */
@@ -252,7 +252,7 @@ export default {
 }
 .main-export .left-content .top-text .dimension{
   position: absolute;
-  right: 30px;
+  right: 31px;
   bottom: 0;
   display: block;
   width: 18%;
@@ -295,15 +295,15 @@ export default {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 30px;
+  height: 31px;
   /* background-color: #e76262; */
 }
 .main-export .left-content .buttom-text span {
   float: left;
   display: block;
   width: 80px;
-  height: 30px;
-  line-height: 30px;
+  height: 31px;
+  line-height: 31px;
   font-size: 14px;
   text-align: center;
   box-sizing: border-box;
@@ -325,12 +325,12 @@ export default {
   background-color: #ffffff;
 }
 .main-export .left-content .buttom-text input.user-address {
-  width: 481px;
+  width:541px;
   border-right: none;
 }
 /* 中心-右侧 */
 .main-export .right-content {
-  width: 20%;
+  width: 15%;
   height: 100%;
 }
 .main-export .right-content .right-text {
@@ -342,13 +342,13 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: 30px;
+  height: 31px;
 }
 .main-export .right-content .right-text .input-content .description-text {
   display: block;
   width: 35%;
-  height: 30px;
-  line-height: 30px;
+  height: 31px;
+  line-height: 31px;
   font-size: 14px;
   text-align: center;
   box-sizing: border-box;
@@ -365,14 +365,15 @@ export default {
   border: 0;
   border-bottom: 1px solid #000;
   border-left: 1px solid #000;
+  border-right: 1px solid #000;
   background-color: #ffffff;
 }
 .main-export .right-content .right-text .description-text {
   display: block;
   float: left;
   width: 35%;
-  height: 30px;
-  line-height: 30px;
+  height: 31px;
+  line-height: 31px;
   font-size: 14px;
   text-align: center;
   box-sizing: border-box;
@@ -384,13 +385,14 @@ export default {
   display: block;
   float: left;
   width: 65%;
-  height: 30px;
+  height: 31px;
   outline:none;  
   margin: 0;
   box-sizing: border-box;
   border: 0;
   border-bottom: 1px solid #000;
   border-left: 1px solid #000;
+  border-right: 1px solid #000;
   background-color: #ffffff;
 }
 .main-export .right-content .right-text .user-confirm {
@@ -418,13 +420,18 @@ export default {
   border: 0;
   border-bottom: 1px solid #000;
   border-left: 1px solid #000;
+  border-right: 1px solid #000;
   background-color: #ffffff;
 }
 .main-export .right-content .right-text span {
   display: block;
   width: 100%;
-  height: 121px;
+  height: 101px;
+  font-size: 36px;
+  line-height: 101px;
+  text-align: center;
   border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
   box-sizing: border-box;
   /* background-color: #e76262; */
 }

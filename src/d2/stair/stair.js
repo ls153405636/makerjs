@@ -181,7 +181,7 @@ export class Stair extends BaseWidget {
     let width = stairInfo.width
     let landingWidth = new Victor(width,width)
     let firstDepth = new Victor(depth,depth)
-    const offSet = new Victor(370,370)
+    const offSet = new Victor(400,400)
     const arrow = new Victor(50,50)
     // console.log(stairInfo)
     
@@ -343,7 +343,7 @@ export class Stair extends BaseWidget {
       flightText.rotation = newTextRotation
 
       flightLine
-      .lineStyle(1,0x000000)
+      .lineStyle(1,0x000000, 1, 0.5, true)
       .moveTo(newP1.x / 10, newP1.y / 10)
       .lineTo(newP2.x / 10, newP2.y / 10)
 
@@ -479,7 +479,7 @@ export class Stair extends BaseWidget {
       flightText.anchor.set(0.5, 0.5)
       flightText.rotation = newTextRotation
       landingLine
-      .lineStyle(1,0x000000)
+      .lineStyle(1,0x000000, 1, 0.5, true)
       .moveTo(newLP1.x / 10, newLP1.y / 10)
       .lineTo(newLP2.x / 10, newLP2.y / 10)
       .moveTo(newLP1T.x / 10, newLP1T.y / 10)

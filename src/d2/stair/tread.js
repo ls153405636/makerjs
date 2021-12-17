@@ -265,6 +265,11 @@ export class Tread extends ChildWidget {
     let nPosition
     let lNewTextRotation = ''
     let nNewTextRotation = ''
+
+    let sideEdgeL = stairInfo.parent.sideEdgeL
+    let sideEdgeN = stairInfo.parent.sideEdgeN
+    let lNormal
+    let nNormal
     const offSet = new Victor(270,270) //偏移出墙的偏移值Y
     const fOffSet = new Victor(200,200) //偏移出墙的偏移值Y
     
@@ -562,7 +567,7 @@ export class Tread extends ChildWidget {
           treadLineNum.rotation = newTextRotation
           if (this.isLast === false) {
             treadLine
-            .lineStyle(1,0x000000)
+            .lineStyle(1,0x000000, 1, 0.5, true)
             .moveTo(newP1.x / 10,newP1.y / 10)
             .lineTo(newP2.x / 10,newP2.y / 10)
             .moveTo(newP1T.x / 10,newP1T.y / 10)
@@ -853,7 +858,7 @@ export class Tread extends ChildWidget {
         nTreadLineNum.rotation = nNewTextRotation
         
         treadLine
-        .lineStyle(1,0x000000)
+        .lineStyle(1,0x000000, 1, 0.5, true)
         .moveTo(lNewP1.x / 10, lNewP1.y / 10)
         .lineTo(lNewP2.x / 10, lNewP2.y / 10)
         .moveTo(nNewP1.x / 10, nNewP1.y / 10)
@@ -872,6 +877,24 @@ export class Tread extends ChildWidget {
 
         treadLineContainer.addChild(treadLine, lTreadLineNum, nTreadLineNum)
       }
+
+      // 休息平台总标注
+      lNormal = new Edge(sideEdgeL).getNormal()
+      nNormal = new Edge(sideEdgeN).getNormal()
+      console.log(lNormal)
+
+
+
+      const langdingLine = new PIXI.Graphics()
+      langdingLine.lineStyle(10, 0xff88ff)
+      langdingLine.moveTo(sideEdgeL.p1.x / 10, sideEdgeL.p1.y / 10)
+      langdingLine.lineTo(sideEdgeL.p2.x / 10, sideEdgeL.p2.y / 10)
+      langdingLine.moveTo(sideEdgeN.p1.x / 10, sideEdgeN.p1.y / 10)
+      langdingLine.lineTo(sideEdgeN.p2.x / 10, sideEdgeN.p2.y / 10)
+
+      // treadLineContainer.addChild(langdingLine)
+
+
     }
 
     // 普通踏板标注
@@ -1282,7 +1305,7 @@ export class Tread extends ChildWidget {
         treadLineNum.rotation = newTextRotation
         if (this.isLast === false) {
           treadLine
-          .lineStyle(1,0x000000)
+          .lineStyle(1,0x000000, 1, 0.5, true)
           .moveTo(newP1.x / 10,newP1.y / 10)
           .lineTo(newP2.x / 10,newP2.y / 10)
           .moveTo(newP1T.x / 10,newP1T.y / 10)
@@ -1323,7 +1346,7 @@ export class Tread extends ChildWidget {
           lastText.rotation = firstR
 
           const lastLine = new PIXI.Graphics
-          lastLine.lineStyle(1, 0x000000)
+          lastLine.lineStyle(1, 0x000000, 1, 0.5, true)
           lastLine
           .moveTo(newLastP1.x / 10, newLastP1.y / 10)
           .lineTo(newLastP2.x / 10, newLastP2.y / 10)
@@ -1500,7 +1523,7 @@ export class Tread extends ChildWidget {
         const startTreadLine = new PIXI.Graphics()
   
         startTreadLine
-        .lineStyle(1,0x000000)
+        .lineStyle(1,0x000000, 1, 0.5, true)
         .moveTo(newStartP1.x / 10, newStartP1.y / 10)
         .lineTo(newStartP2.x / 10, newStartP2.y / 10)
   
