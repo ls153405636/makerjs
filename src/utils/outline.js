@@ -90,9 +90,9 @@ export class Outline {
       }
       if (lEdge && lEdge.type !== Types.EdgeType.earc) {
         p1OffsetDir = new THREE.Vector2().addVectors(nor, lEdge.getNormal()).normalize()
-        if (p1OffsetDir.length() < 0.01) {
+        if (p1OffsetDir.length() < 0.05) {
           p1OffsetDir = e.getNormal()
-        } else if (e.getLength() > 0.01) {
+        } else if (e.getLength() > 0.05) {
           let angle = p1OffsetDir.angle() - nor.angle()
           dis1 = dis1 / Math.abs(Math.cos(angle)) 
         }
@@ -101,9 +101,9 @@ export class Outline {
       }
       if (nEdge && nEdge.type !== Types.EdgeType.earc) {
         p2OffsetDir = new THREE.Vector2().addVectors(nor, nEdge.getNormal()).normalize()
-        if (p2OffsetDir.length() < 0.01) {
+        if (p2OffsetDir.length() < 0.05) {
           p2OffsetDir = e.getNormal()
-        } else if (e.getLength() > 0.01) {
+        } else if (e.getLength() > 0.05) {
           let angle = p2OffsetDir.angle() - nor.angle()
           dis2 = dis2 / Math.abs(Math.cos(angle)) 
         }
