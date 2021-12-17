@@ -87,11 +87,4 @@ export class UTypeStair extends Stair {
     this.realStepNum = this.stepNum - this.stepNumRule + 1
   }
 
-  getInSideOffsetPlus () {
-    return this.floadSide === Types.Side.si_left
-  }
-
-  getOutSideOffsetPlus () {
-    return this.floadSide !== Types.Side.si_left
-  }
 }

@@ -5,8 +5,6 @@ import { Flight } from "./flights/flight"
 import { Landing } from "./flights/landing"
 import { Stair } from "./stair"
 import tool from "./tool"
-import { StairBorder } from "./toolComp/stair_border"
-import { StairEdge } from "./toolComp/stair_edge"
 
 
 export class LTypeStair extends Stair {
@@ -152,47 +150,6 @@ export class LTypeStair extends Stair {
     }
   }
 
-  /** 根据楼梯段、休息平台等初始化出楼梯边界
-   * 楼梯边界用于生成大梁扶手大柱小柱的结构部件
-  */
-  updateBorder() {
-    let f1 = this.flights[0]
-    let f2 = this.flights[1]
-    let inEdges, outEdges
-    if (this.floadSide === Types.Side.si_right) {
-      inEdges = [
-        new StairEdge(0, this.depth, 0, f2.stepLength, f1),
-        new StairEdge(0, f2.stepLength, 0, 0, this.landings[0]),
-        new StairEdge(0, 0, f1.stepLength, 0, this.landings[0]),
-        new StairEdge(f1.stepLength, 0, this.width, 0, f2)
-      ]
-      outEdges = [
-        new StairEdge(f1.stepLength, this.depth, f1.stepLength, f2.stepLength, f1),
-        new StairEdge(f1.stepLength, f2.stepLength, this.width, f2.stepLength, f2)
-      ]
-    } else {
-      inEdges = [
-        new StairEdge(this.width, this.depth, this.width, f2.stepLength, f1),
-        new StairEdge(this.width, f2.stepLength, this.width, 0, this.landings[0]),
-        new StairEdge(this.width, 0, this.width - f1.stepLength, 0, this.landings[0]),
-        new StairEdge(this.width - f1.stepLength, 0, 0, 0, f2)
-      ]
-      outEdges = [
-        new StairEdge(this.width - f1.stepLength, this.depth, this.width - f1.stepLength, f2.stepLength, f1),
-        new StairEdge(this.width - f1.stepLength, f2.stepLength, 0, f2.stepLength, f2)
-      ]
-    }
-    if (this.landings[0].corBigCol) {
-      outEdges[0].endCol = this.landings[0].corBigCol
-      outEdges[1].startCol = this.landings[0].corBigCol
-    }
-    if (this.border) {
-      this.border.rebuild(inEdges, outEdges)
-    } else {
-      this.border = new StairBorder(inEdges, outEdges)
-    }
-  }
-
   /** 更新休息平台*/
   updateLandings() {
     let f1 = this.flights[0]
@@ -227,21 +184,6 @@ export class LTypeStair extends Stair {
     this.segments[2] = this.flights[1]
   }
 
-  /**
-   * 根据边界边生成大梁扶手大小柱等部件时，需对边界边进行偏移
-   * 获得内侧边界边偏移时未法线发现还是法线反方向
-   */
-  getInSideOffsetPlus() {
-    return this.floadSide === Types.Side.si_left
-  }
-
-  /**
-   * 获得外侧边界边偏移时为法线方向还是法线反方向
-   */
-  getOutSideOffsetPlus() {
-    return this.floadSide !== Types.Side.si_left
-  }
-
   updateItem(vValue, vKey1, vKey2) {
     if (vKey2 && ['model', 'material'].includes(vKey2)) {
       console.log(1)
@@ -269,11 +211,4 @@ export class LTypeStair extends Stair {
     }
   }
   
-  getGirderInEdges () {
-    let edges = this.border.in.edges
-    return [
-      new Edge(edges[0]).combineEdge(edges[1]),
-      new Edge(edges[2]).combineEdge(edges[3]),
-    ]
-  }
 }
