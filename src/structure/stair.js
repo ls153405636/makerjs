@@ -643,9 +643,9 @@ export class Stair extends Info {
     } else {
       /**有起步踏时，由起步踏计算出大柱位置 */
       let {inPos, outPos} = this.startFlight.computeBigColPos()
-      if (vSide === 'in') {
+      if (vSide.sideName === 'in') {
         position = inPos
-      } else if (vSide === 'out') {
+      } else if (vSide.sideName === 'out') {
         position = outPos
       }
     }
