@@ -3479,6 +3479,8 @@ export const Types = $root.Types = (() => {
          * @property {Types.IVector3|null} [position] Stair position
          * @property {Types.Side|null} [floadSide] Stair floadSide
          * @property {Types.StairExitType|null} [exitType] Stair exitType
+         * @property {Types.IStairSide|null} [inSide] Stair inSide
+         * @property {Types.IStairSide|null} [outSide] Stair outSide
          */
 
         /**
@@ -3687,6 +3689,22 @@ export const Types = $root.Types = (() => {
         Stair.prototype.exitType = 0;
 
         /**
+         * Stair inSide.
+         * @member {Types.IStairSide|null|undefined} inSide
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.inSide = null;
+
+        /**
+         * Stair outSide.
+         * @member {Types.IStairSide|null|undefined} outSide
+         * @memberof Types.Stair
+         * @instance
+         */
+        Stair.prototype.outSide = null;
+
+        /**
          * Creates a new Stair instance using the specified properties.
          * @function create
          * @memberof Types.Stair
@@ -3762,6 +3780,10 @@ export const Types = $root.Types = (() => {
                 writer.uint32(/* id 27, wireType 0 =*/216).int32(message.floadSide);
             if (message.exitType != null && Object.hasOwnProperty.call(message, "exitType"))
                 writer.uint32(/* id 28, wireType 0 =*/224).int32(message.exitType);
+            if (message.inSide != null && Object.hasOwnProperty.call(message, "inSide"))
+                $root.Types.StairSide.encode(message.inSide, writer.uint32(/* id 29, wireType 2 =*/234).fork()).ldelim();
+            if (message.outSide != null && Object.hasOwnProperty.call(message, "outSide"))
+                $root.Types.StairSide.encode(message.outSide, writer.uint32(/* id 30, wireType 2 =*/242).fork()).ldelim();
             return writer;
         };
 
@@ -3876,6 +3898,12 @@ export const Types = $root.Types = (() => {
                     break;
                 case 28:
                     message.exitType = reader.int32();
+                    break;
+                case 29:
+                    message.inSide = $root.Types.StairSide.decode(reader, reader.uint32());
+                    break;
+                case 30:
+                    message.outSide = $root.Types.StairSide.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4063,6 +4091,16 @@ export const Types = $root.Types = (() => {
                 case 3:
                     break;
                 }
+            if (message.inSide != null && message.hasOwnProperty("inSide")) {
+                let error = $root.Types.StairSide.verify(message.inSide);
+                if (error)
+                    return "inSide." + error;
+            }
+            if (message.outSide != null && message.hasOwnProperty("outSide")) {
+                let error = $root.Types.StairSide.verify(message.outSide);
+                if (error)
+                    return "outSide." + error;
+            }
             return null;
         };
 
@@ -4263,6 +4301,16 @@ export const Types = $root.Types = (() => {
                 message.exitType = 3;
                 break;
             }
+            if (object.inSide != null) {
+                if (typeof object.inSide !== "object")
+                    throw TypeError(".Types.Stair.inSide: object expected");
+                message.inSide = $root.Types.StairSide.fromObject(object.inSide);
+            }
+            if (object.outSide != null) {
+                if (typeof object.outSide !== "object")
+                    throw TypeError(".Types.Stair.outSide: object expected");
+                message.outSide = $root.Types.StairSide.fromObject(object.outSide);
+            }
             return message;
         };
 
@@ -4305,6 +4353,8 @@ export const Types = $root.Types = (() => {
                 object.position = null;
                 object.floadSide = options.enums === String ? "si_ph" : 0;
                 object.exitType = options.enums === String ? "seph" : 0;
+                object.inSide = null;
+                object.outSide = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -4370,6 +4420,10 @@ export const Types = $root.Types = (() => {
                 object.floadSide = options.enums === String ? $root.Types.Side[message.floadSide] : message.floadSide;
             if (message.exitType != null && message.hasOwnProperty("exitType"))
                 object.exitType = options.enums === String ? $root.Types.StairExitType[message.exitType] : message.exitType;
+            if (message.inSide != null && message.hasOwnProperty("inSide"))
+                object.inSide = $root.Types.StairSide.toObject(message.inSide, options);
+            if (message.outSide != null && message.hasOwnProperty("outSide"))
+                object.outSide = $root.Types.StairSide.toObject(message.outSide, options);
             return object;
         };
 
@@ -4385,6 +4439,238 @@ export const Types = $root.Types = (() => {
         };
 
         return Stair;
+    })();
+
+    Types.StairSide = (function() {
+
+        /**
+         * Properties of a StairSide.
+         * @memberof Types
+         * @interface IStairSide
+         * @property {string|null} [sideName] StairSide sideName
+         * @property {boolean|null} [handrailExit] StairSide handrailExit
+         * @property {boolean|null} [startBigColExit] StairSide startBigColExit
+         */
+
+        /**
+         * Constructs a new StairSide.
+         * @memberof Types
+         * @classdesc Represents a StairSide.
+         * @implements IStairSide
+         * @constructor
+         * @param {Types.IStairSide=} [properties] Properties to set
+         */
+        function StairSide(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * StairSide sideName.
+         * @member {string} sideName
+         * @memberof Types.StairSide
+         * @instance
+         */
+        StairSide.prototype.sideName = "";
+
+        /**
+         * StairSide handrailExit.
+         * @member {boolean} handrailExit
+         * @memberof Types.StairSide
+         * @instance
+         */
+        StairSide.prototype.handrailExit = false;
+
+        /**
+         * StairSide startBigColExit.
+         * @member {boolean} startBigColExit
+         * @memberof Types.StairSide
+         * @instance
+         */
+        StairSide.prototype.startBigColExit = false;
+
+        /**
+         * Creates a new StairSide instance using the specified properties.
+         * @function create
+         * @memberof Types.StairSide
+         * @static
+         * @param {Types.IStairSide=} [properties] Properties to set
+         * @returns {Types.StairSide} StairSide instance
+         */
+        StairSide.create = function create(properties) {
+            return new StairSide(properties);
+        };
+
+        /**
+         * Encodes the specified StairSide message. Does not implicitly {@link Types.StairSide.verify|verify} messages.
+         * @function encode
+         * @memberof Types.StairSide
+         * @static
+         * @param {Types.IStairSide} message StairSide message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        StairSide.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.sideName != null && Object.hasOwnProperty.call(message, "sideName"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.sideName);
+            if (message.handrailExit != null && Object.hasOwnProperty.call(message, "handrailExit"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.handrailExit);
+            if (message.startBigColExit != null && Object.hasOwnProperty.call(message, "startBigColExit"))
+                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.startBigColExit);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified StairSide message, length delimited. Does not implicitly {@link Types.StairSide.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof Types.StairSide
+         * @static
+         * @param {Types.IStairSide} message StairSide message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        StairSide.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a StairSide message from the specified reader or buffer.
+         * @function decode
+         * @memberof Types.StairSide
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {Types.StairSide} StairSide
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        StairSide.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Types.StairSide();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1:
+                    message.sideName = reader.string();
+                    break;
+                case 2:
+                    message.handrailExit = reader.bool();
+                    break;
+                case 3:
+                    message.startBigColExit = reader.bool();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a StairSide message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof Types.StairSide
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {Types.StairSide} StairSide
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        StairSide.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a StairSide message.
+         * @function verify
+         * @memberof Types.StairSide
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        StairSide.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.sideName != null && message.hasOwnProperty("sideName"))
+                if (!$util.isString(message.sideName))
+                    return "sideName: string expected";
+            if (message.handrailExit != null && message.hasOwnProperty("handrailExit"))
+                if (typeof message.handrailExit !== "boolean")
+                    return "handrailExit: boolean expected";
+            if (message.startBigColExit != null && message.hasOwnProperty("startBigColExit"))
+                if (typeof message.startBigColExit !== "boolean")
+                    return "startBigColExit: boolean expected";
+            return null;
+        };
+
+        /**
+         * Creates a StairSide message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof Types.StairSide
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {Types.StairSide} StairSide
+         */
+        StairSide.fromObject = function fromObject(object) {
+            if (object instanceof $root.Types.StairSide)
+                return object;
+            let message = new $root.Types.StairSide();
+            if (object.sideName != null)
+                message.sideName = String(object.sideName);
+            if (object.handrailExit != null)
+                message.handrailExit = Boolean(object.handrailExit);
+            if (object.startBigColExit != null)
+                message.startBigColExit = Boolean(object.startBigColExit);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a StairSide message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof Types.StairSide
+         * @static
+         * @param {Types.StairSide} message StairSide
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        StairSide.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.sideName = "";
+                object.handrailExit = false;
+                object.startBigColExit = false;
+            }
+            if (message.sideName != null && message.hasOwnProperty("sideName"))
+                object.sideName = message.sideName;
+            if (message.handrailExit != null && message.hasOwnProperty("handrailExit"))
+                object.handrailExit = message.handrailExit;
+            if (message.startBigColExit != null && message.hasOwnProperty("startBigColExit"))
+                object.startBigColExit = message.startBigColExit;
+            return object;
+        };
+
+        /**
+         * Converts this StairSide to JSON.
+         * @function toJSON
+         * @memberof Types.StairSide
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        StairSide.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        return StairSide;
     })();
 
     Types.HangingBoard = (function() {
@@ -4734,6 +5020,8 @@ export const Types = $root.Types = (() => {
          * @property {number|null} [length] Flight length
          * @property {Array.<Types.ITread>|null} [treads] Flight treads
          * @property {Array.<Types.IRiser>|null} [risers] Flight risers
+         * @property {Types.IStairSide|null} [inSide] Flight inSide
+         * @property {Types.IStairSide|null} [outSide] Flight outSide
          */
 
         /**
@@ -4802,6 +5090,22 @@ export const Types = $root.Types = (() => {
         Flight.prototype.risers = $util.emptyArray;
 
         /**
+         * Flight inSide.
+         * @member {Types.IStairSide|null|undefined} inSide
+         * @memberof Types.Flight
+         * @instance
+         */
+        Flight.prototype.inSide = null;
+
+        /**
+         * Flight outSide.
+         * @member {Types.IStairSide|null|undefined} outSide
+         * @memberof Types.Flight
+         * @instance
+         */
+        Flight.prototype.outSide = null;
+
+        /**
          * Creates a new Flight instance using the specified properties.
          * @function create
          * @memberof Types.Flight
@@ -4839,6 +5143,10 @@ export const Types = $root.Types = (() => {
             if (message.risers != null && message.risers.length)
                 for (let i = 0; i < message.risers.length; ++i)
                     $root.Types.Riser.encode(message.risers[i], writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+            if (message.inSide != null && Object.hasOwnProperty.call(message, "inSide"))
+                $root.Types.StairSide.encode(message.inSide, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+            if (message.outSide != null && Object.hasOwnProperty.call(message, "outSide"))
+                $root.Types.StairSide.encode(message.outSide, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
             return writer;
         };
 
@@ -4894,6 +5202,12 @@ export const Types = $root.Types = (() => {
                     if (!(message.risers && message.risers.length))
                         message.risers = [];
                     message.risers.push($root.Types.Riser.decode(reader, reader.uint32()));
+                    break;
+                case 9:
+                    message.inSide = $root.Types.StairSide.decode(reader, reader.uint32());
+                    break;
+                case 10:
+                    message.outSide = $root.Types.StairSide.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -4962,6 +5276,16 @@ export const Types = $root.Types = (() => {
                         return "risers." + error;
                 }
             }
+            if (message.inSide != null && message.hasOwnProperty("inSide")) {
+                let error = $root.Types.StairSide.verify(message.inSide);
+                if (error)
+                    return "inSide." + error;
+            }
+            if (message.outSide != null && message.hasOwnProperty("outSide")) {
+                let error = $root.Types.StairSide.verify(message.outSide);
+                if (error)
+                    return "outSide." + error;
+            }
             return null;
         };
 
@@ -5008,6 +5332,16 @@ export const Types = $root.Types = (() => {
                     message.risers[i] = $root.Types.Riser.fromObject(object.risers[i]);
                 }
             }
+            if (object.inSide != null) {
+                if (typeof object.inSide !== "object")
+                    throw TypeError(".Types.Flight.inSide: object expected");
+                message.inSide = $root.Types.StairSide.fromObject(object.inSide);
+            }
+            if (object.outSide != null) {
+                if (typeof object.outSide !== "object")
+                    throw TypeError(".Types.Flight.outSide: object expected");
+                message.outSide = $root.Types.StairSide.fromObject(object.outSide);
+            }
             return message;
         };
 
@@ -5033,6 +5367,8 @@ export const Types = $root.Types = (() => {
                 object.stepHeight = 0;
                 object.stepParameters = null;
                 object.length = 0;
+                object.inSide = null;
+                object.outSide = null;
             }
             if (message.uuid != null && message.hasOwnProperty("uuid"))
                 object.uuid = message.uuid;
@@ -5052,6 +5388,10 @@ export const Types = $root.Types = (() => {
                 for (let j = 0; j < message.risers.length; ++j)
                     object.risers[j] = $root.Types.Riser.toObject(message.risers[j], options);
             }
+            if (message.inSide != null && message.hasOwnProperty("inSide"))
+                object.inSide = $root.Types.StairSide.toObject(message.inSide, options);
+            if (message.outSide != null && message.hasOwnProperty("outSide"))
+                object.outSide = $root.Types.StairSide.toObject(message.outSide, options);
             return object;
         };
 

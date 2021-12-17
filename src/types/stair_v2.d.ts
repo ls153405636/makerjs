@@ -1354,6 +1354,12 @@ export namespace Types {
 
         /** Stair exitType */
         exitType?: (Types.StairExitType|null);
+
+        /** Stair inSide */
+        inSide?: (Types.IStairSide|null);
+
+        /** Stair outSide */
+        outSide?: (Types.IStairSide|null);
     }
 
     /** Represents a Stair. */
@@ -1434,6 +1440,12 @@ export namespace Types {
         /** Stair exitType. */
         public exitType: Types.StairExitType;
 
+        /** Stair inSide. */
+        public inSide?: (Types.IStairSide|null);
+
+        /** Stair outSide. */
+        public outSide?: (Types.IStairSide|null);
+
         /**
          * Creates a new Stair instance using the specified properties.
          * @param [properties] Properties to set
@@ -1500,6 +1512,108 @@ export namespace Types {
 
         /**
          * Converts this Stair to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+    }
+
+    /** Properties of a StairSide. */
+    interface IStairSide {
+
+        /** StairSide sideName */
+        sideName?: (string|null);
+
+        /** StairSide handrailExit */
+        handrailExit?: (boolean|null);
+
+        /** StairSide startBigColExit */
+        startBigColExit?: (boolean|null);
+    }
+
+    /** Represents a StairSide. */
+    class StairSide implements IStairSide {
+
+        /**
+         * Constructs a new StairSide.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: Types.IStairSide);
+
+        /** StairSide sideName. */
+        public sideName: string;
+
+        /** StairSide handrailExit. */
+        public handrailExit: boolean;
+
+        /** StairSide startBigColExit. */
+        public startBigColExit: boolean;
+
+        /**
+         * Creates a new StairSide instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns StairSide instance
+         */
+        public static create(properties?: Types.IStairSide): Types.StairSide;
+
+        /**
+         * Encodes the specified StairSide message. Does not implicitly {@link Types.StairSide.verify|verify} messages.
+         * @param message StairSide message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: Types.IStairSide, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified StairSide message, length delimited. Does not implicitly {@link Types.StairSide.verify|verify} messages.
+         * @param message StairSide message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: Types.IStairSide, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a StairSide message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns StairSide
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.StairSide;
+
+        /**
+         * Decodes a StairSide message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns StairSide
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.StairSide;
+
+        /**
+         * Verifies a StairSide message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a StairSide message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns StairSide
+         */
+        public static fromObject(object: { [k: string]: any }): Types.StairSide;
+
+        /**
+         * Creates a plain object from a StairSide message. Also converts values to other types if specified.
+         * @param message StairSide
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: Types.StairSide, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this StairSide to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };
@@ -1651,6 +1765,12 @@ export namespace Types {
 
         /** Flight risers */
         risers?: (Types.IRiser[]|null);
+
+        /** Flight inSide */
+        inSide?: (Types.IStairSide|null);
+
+        /** Flight outSide */
+        outSide?: (Types.IStairSide|null);
     }
 
     /** Represents a Flight. */
@@ -1679,6 +1799,12 @@ export namespace Types {
 
         /** Flight risers. */
         public risers: Types.IRiser[];
+
+        /** Flight inSide. */
+        public inSide?: (Types.IStairSide|null);
+
+        /** Flight outSide. */
+        public outSide?: (Types.IStairSide|null);
 
         /**
          * Creates a new Flight instance using the specified properties.
