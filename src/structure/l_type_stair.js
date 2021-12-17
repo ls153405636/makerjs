@@ -200,7 +200,7 @@ export class LTypeStair extends Stair {
     let ori = new Types.Vector3({x:this.girOffset, y:this.girOffset})
     let nextIndex = 1
     if (this.floadSide === Types.Side.si_left) {
-      ori.x = f2.length
+      ori.x = f2.length + this.hangOffset
       nextIndex = 3
     }
     let border = tool.createRectOutline(ori, f1.stepLength - this.girOffset, f2.stepLength - this.girOffset)
