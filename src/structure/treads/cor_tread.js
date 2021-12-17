@@ -11,9 +11,9 @@ export class CorTread extends Tread {
     this.lastEdgeIndex = vLastEdgeIndex
     this.nextEdgeIndex = vNextEdgeIndex
     this.type = Types.TreadType.tCor
-    /**休台踏步所有轮廓一律为顺时针，clock用于判断转角对角点和前后楼梯边的关系 */
+    /**休台踏步所有轮廓一律为顺时针，此处clock指楼梯走向是否为顺时针 */
     /**此处设计不够科学合理，为临时方法，后续有时间需重新设计调整 */
-    this.clock = vClock
+    this.flodClock = vClock
     this.curOrder = 'last'
     this.rebuildByParent({vIndex, vBorder})
   }
@@ -32,7 +32,7 @@ export class CorTread extends Tread {
     let index = this[this.curOrder+'EdgeIndex']
     let edge = this.border.stepOutline.edges[index]
     let vec
-    if (this.clock) {
+    if (this.flodClock) {
       vec = new Edge(edge).getVec()
     } else {
       vec = new Edge(edge).getVec().negate()
@@ -46,8 +46,11 @@ export class CorTread extends Tread {
     let gArgs = this.parent.parent.getGirderParas(vSide)
     let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
     utilE.offset(sideOffset, false)
-    if (!this.clock) {
+    if (!this.flodClock) {
       utilE.reserve()
+    }
+    if (vSide === 'out') {
+      utilE = this.getOutSideUtilE(utilE)
     }
     return utilE
   }
@@ -136,11 +139,8 @@ export class CorTread extends Tread {
     return {lastDis, interval}
   }
 
-  getGirUtilE (vSide, vArgs) {
-    if (vSide === 'out') {
-      return null
-    }
-    let utilE = this.getSideUtilE()
+  getGirUtilE ({vArgs, vSide}) {
+    let utilE = this.getSideUtilE(vSide)
     let backOffset = this.parent.parent.getTreadBackOffset()
     if (vArgs.type === Types.GirderType.gsaw) {
       if (this.curOrder === 'last') {
@@ -171,7 +171,7 @@ export class CorTread extends Tread {
     return refT.getUpGirVerHeight(vArgs)
   }
 
-  createSideSlabBorder(utilE, vIsFirst, vArgs, vLast) {
+  createSideSlabBorder({utilE, vArgs, vLast}) {
     let botPois = [], topPois = []
     topPois[0] = utilE.getP1PB()
     topPois[1] = utilE.getP2PB()
@@ -209,12 +209,6 @@ export class CorTread extends Tread {
       p.z = topPois[1].z + heightDiff
       topPois.push(p)
     }
-    // if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
-    //   botPois.splice(0, 0, vLast.poi)
-    // } 
-    // if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
-    //   topPois.splice(0, 0, vLast.topPoi)
-    // }
     this.adaptGirLastPois(topPois, botPois, vLast)
     let edges = tool.createOutlineByPois(botPois, false).edges
     let topEdges = tool.createOutlineByPois(topPois, false).edges

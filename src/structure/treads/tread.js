@@ -75,13 +75,13 @@ export class Tread extends ChildInfo {
     let gArgs = this.parent.parent.getGirderParas(vSide)
     let sideOffset = gArgs.type === Types.GirderType.gslab ? -this.parent.parent.sideOffset : this.parent.parent.sideOffset
     if (this.type === Types.TreadType.tSpec) {
-      /**休台踏板轮廓一定是顺时针，clock不代表轮廓方向，单独处理 */
+      /**休台踏板轮廓一定是顺时针*/
       utilE.offset(sideOffset, false)
-      if (!this.clock) {
+      if (!this.flodClock) {
         utilE.reserve()
       }
     } else {
-      if (this.stepLength !== this.parent.stepLength) {
+      if (this.stepLength !== this.parent.stepLength && vSide === 'out') {
         utilE.offset(this.stepLength - this.parent.stepLength, !this.clock)
       }
       utilE.offset(sideOffset, !this.clock)
@@ -99,7 +99,7 @@ export class Tread extends ChildInfo {
    * @param {boolean} vIsFirst 此踏板是否为当前大梁所包含的第一个踏板
    */
    getGirBorder (vSide, vArgs, vIsFirst, vInLast, vOutLast) {
-    let utilE = this.getGirUtilE(vSide, vArgs)
+    let utilE = this.getGirUtilE({vSide, vArgs})
     let depth = this.parent.parent.treadParameters.depth
     if (vArgs.type === Types.GirderType.gsaw) {
       utilE.setZCoord(this.position.z - depth)
@@ -109,11 +109,11 @@ export class Tread extends ChildInfo {
     outUtilE.offset(vArgs.depth/2, vSide === 'in')
     let inRst, outRst
     if (vArgs.type === Types.GirderType.gsaw) {
-      inRst = this.createSideSawBorder(inUtilE, vIsFirst, vArgs, vInLast)
-      outRst = this.createSideSawBorder(outUtilE, vIsFirst, vArgs, vOutLast)
+      inRst = this.createSideSawBorder({utilE:inUtilE, vIsFirst, vArgs, vLast:vInLast})
+      outRst = this.createSideSawBorder({utilE:outUtilE, vIsFirst, vArgs, vLast:vOutLast})
     } else {
-      inRst = this.createSideSlabBorder(inUtilE, vIsFirst, vArgs, vInLast)
-      outRst = this.createSideSlabBorder(outUtilE, vIsFirst, vArgs, vOutLast)
+      inRst = this.createSideSlabBorder({utilE:inUtilE, vIsFirst, vArgs, vLast:vInLast})
+      outRst = this.createSideSlabBorder({utilE:outUtilE, vIsFirst, vArgs, vLast:vOutLast})
     }
     return new Types.TreadGirBorder({
       inEdges: inRst.edges,
@@ -261,7 +261,7 @@ export class Tread extends ChildInfo {
    * @returns
    * @memberof Tread
    */
-  getGirUtilE(vSide, vArgs) {
+  getGirUtilE({vSide, vArgs}) {
     let utilE = this.getSideUtilE(vSide)
     let backOffset = this.parent.parent.getTreadBackOffset()
     if (vArgs.type === Types.GirderType.gsaw) {
@@ -293,7 +293,7 @@ export class Tread extends ChildInfo {
    * @returns
    * @memberof Tread
    */
-  createSideSawBorder (utilE, vIsFirst, vArgs, vLast) {
+  createSideSawBorder ({utilE, vIsFirst, vArgs, vLast}) {
     let botPois = [], topPois = []
     topPois[0] = utilE.getP1PB()
     topPois[1] = utilE.getP1PB()
@@ -353,7 +353,7 @@ export class Tread extends ChildInfo {
    * @param {Types.GirderParameters} vArgs 
    * @param {*} vLast 
    */
-  createSideSlabBorder (utilE, vIsFirst, vArgs, vLast) {
+  createSideSlabBorder ({utilE, vIsFirst, vArgs, vLast}) {
     let botPois = [], topPois = []
     topPois[0] = utilE.getP1PB()
     topPois[1] = utilE.getP2PB()
@@ -446,6 +446,43 @@ export class Tread extends ChildInfo {
       nextT = nextF?.treads[0]
     }
     return nextT
+  }
+
+  /**
+   *休台踏板，根据内工具边获取外工具边
+   *
+   * @param {Edge} vInSideUtilE
+   * @memberof Tread
+   */
+  getOutSideUtilE(vInSideUtilE) {
+    let outUtilE = vInSideUtilE.clone()
+    let inGArgs = this.parent.parent.getGirderParas('in')
+    let outGArgs = this.parent.parent.getGirderParas('out')
+    let offsetDis
+    if (this.type === Types.TreadType.tCor) {
+      let offsetEdgeIndex = this.curOrder === 'last' ? this.nextEdgeIndex : this.lastEdgeIndex
+      offsetDis = new Edge(this.border.stepOutline.edges[offsetEdgeIndex]).getLength()
+    } else if (this.index === this.parent.treadIndex + 1) {
+      offsetDis = this.getLastTread().stepLength
+    } else {
+      offsetDis = this.getNextTread().stepLength
+    }
+    if (inGArgs.type === Types.GirderType.gslab) {
+      offsetDis += inGArgs.depth / 2
+    } else {
+      offsetDis -= this.parent.parent.sideOffset
+    }
+    if (outGArgs.type === Types.GirderType.gslab) {
+      offsetDis += outGArgs.depth /2
+    } else {
+      offsetDis -= this.parent.parent.sideOffset
+    }
+    if (this.flodClock) {
+      outUtilE.offset(offsetDis, false)
+    } else {
+      outUtilE.offset(offsetDis, true)
+    }
+    return outUtilE
   }
 
 
