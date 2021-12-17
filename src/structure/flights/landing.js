@@ -1,7 +1,6 @@
 import { COMP_TYPES } from "../../common/common_config";
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
-import { Edge3 } from "../../utils/edge3";
 import { Outline } from "../../utils/outline";
 import { BigColumn } from "../big_column";
 import { ChildInfo } from "../child_info";
@@ -68,7 +67,7 @@ export class Landing extends ChildInfo {
     this.edges = vBorder.edges
     this.lastStepWidth = vLastStepWidth
     this.nextStepWidth = vNextStepWidth
-    /**@type {Array<Tread>} */
+    /**@type {Array<import('../treads/tread').Tread>} */
     this.treads = []
     this.edgeL = this.edges[this.lastEdgeIndex]
     this.edgeN = this.edges[this.nextEdgeIndex]
@@ -479,7 +478,9 @@ export class Landing extends ChildInfo {
    */
   createGirderRoute ({vSide, vArgs, vOrder, vInLast, vOutLast}) {
     if (vSide === 'out') {
-      return []
+      if (vArgs.type === Types.GirderType.gslab || this.type !== Types.LandingCutType.lct_first) {
+        return []
+      }
     }
     let borders = []
     let execute = vOrder === 'last' ? true : false 

@@ -16,8 +16,6 @@ export class Loft {
     this.cutFacePoisSet = []
     this.isClock = vRoute.isClock
     this.isClose = vRoute.isClose
-    /**@type {Array<Edge3>}  全部为直线边，为实际放样所需的路径边*/
-    this.brokenEdges = []
     /**@type {Array<Edge3>}  未进行拆分的工具边，主要用于后续生成线框*/
     this.wholeUtilEs = []
     this.createRoute(vRoute)
