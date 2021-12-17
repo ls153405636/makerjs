@@ -11,6 +11,7 @@ export class Component extends Info {
    */
   constructor(vParent, vType) {
     super(vParent)
+    this.wallLength = Math.hypot(vParent.edge.p1.x - vParent.edge.p2.x, vParent.edge.p1.y - vParent.edge.p2.y)
     this.type = vType
     this.offGround = 0
     let angle = new Edge(this.parent.edge).getAngle()
@@ -63,7 +64,8 @@ export class Component extends Info {
       rotation: this.rotation,
       interval: this.interval,
       position: this.position,
-      wallDepth: this.wallDepth
+      wallDepth: this.wallDepth,
+      wallLength: this.wallLength
     })
   }
 }
@@ -123,6 +125,7 @@ export class Cloumn extends Component {
 export class Beam extends Component {
   constructor(vParent, vType) {
     super(vParent, vType)
+    this.parent = vParent
     this.width = new Edge(this.parent.edge).getLength()
     this.height = Default.CEMENT_SIZE
     this.depth = Default.CEMENT_SIZE
