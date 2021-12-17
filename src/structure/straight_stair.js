@@ -3,8 +3,6 @@ import { Types } from '../types/stair_v2'
 import { Default } from './config'
 import { Stair } from './stair'
 import { Edge } from '../utils/edge'
-import { StairEdge } from './toolComp/stair_edge'
-import { StairBorder } from './toolComp/stair_border'
 
 export class StraightStair extends Stair  {
   constructor(vParent, vAgainstWall) {
@@ -111,39 +109,6 @@ export class StraightStair extends Stair  {
     } else {
       return super.getItemValue(vItem)
     }
-  }
-  
-  updateBorder() {
-    let inEdges, outEdges
-    let leftEdges = [new StairEdge(0, this.depth, 0, 0, this.flights[0])]
-    let rightEdges = [new StairEdge(this.width, this.depth, this.width, 0, this.flights[0])]
-    if (this.againstWallType === Types.AgainstWallType.aw_right) {
-      inEdges = rightEdges
-      outEdges = leftEdges
-    } else {
-      inEdges = leftEdges
-      outEdges = rightEdges
-    }
-    if (this.border) {
-      this.border.rebuild(inEdges, outEdges)
-    } else {
-      this.border = new StairBorder(inEdges, outEdges)
-    }
-  }
-
-  getGirderInEdges () {
-    let edges = this.border.in.edges
-    return [
-      new Edge(edges[0])
-    ]
-  }
-
-  getInSideOffsetPlus () {
-    return this.againstWallType === Types.AgainstWallType.aw_right
-  }
-
-  getOutSideOffsetPlus () {
-    return this.againstWallType !== Types.AgainstWallType.aw_right
   }
 }
 

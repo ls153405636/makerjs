@@ -6,17 +6,13 @@ import tool from './tool'
 import { Girder } from './girder'
 import { Landing } from './flights/landing'
 import { Edge } from '../utils/edge'
-import { Outline } from "../utils/outline"
 import { BigColumn } from "./big_column"
 import { Handrail } from "./handrail"
 import { SmallColumn } from "./small_column"
 import { StartFlight } from './flights/start_flight'
 import { StairSide } from './toolComp/stair_side'
-import { COMP_TYPES } from '../common/common_config'
-import { reqTemp } from './resource/temp'
 import { D2Config } from '../d2/config'
 import { D3Config } from '../d3/d3_config'
-import { Edge3 } from '../utils/edge3'
 import { HangingBoard } from './hanging_board'
 
 export class Stair extends Info {
@@ -54,8 +50,6 @@ export class Stair extends Info {
     this.hangOffset = 0
     /**@type {StartFlight} */
     this.startFlight = null
-    /**@type {import('./toolComp/stair_border').StairBorder} */
-    this.border = null
     /**@type {HangingBoard} */
     this.hangingBoard = null
     /**@type {Array<Flight>} */
@@ -95,6 +89,8 @@ export class Stair extends Info {
         specification: Default.HAND_SPEC,
       }),
     })
+    this.inSide = new StairSide('in')
+    this.outSide = new StairSide('out')
   }
 
   rebuild() {
@@ -120,7 +116,6 @@ export class Stair extends Info {
     this.updateSegments()
     this.computeSize()
     this.computePosition()
-    this.updateBorder()
     this.updatehangingBoard()
     this.updateGirders()
     this.updateHandrails()
@@ -144,24 +139,8 @@ export class Stair extends Info {
   /** 根据楼梯尺寸及楼梯类型计算楼梯位置*/
   computePosition() {}
 
-  /** 根据楼梯段、休息平台等初始化出楼梯边界
-   * 楼梯边界用于生成大梁扶手大柱小柱的结构部件
-  */
-  updateBorder() {}
-
   /** 更新休息平台*/
   updateLandings() {}
-
-  /**
-   * 根据边界边生成大梁扶手大小柱等部件时，需对边界边进行偏移
-   * 获得内侧边界边偏移时未法线发现还是法线反方向
-   */
-  getInSideOffsetPlus() {}
-
-  /**
-   * 获得外侧边界边偏移时为法线方向还是法线反方向
-   */
-  getOutSideOffsetPlus() {}
 
   /**更新楼梯分段 */
   updateSegments() {}
@@ -332,9 +311,16 @@ export class Stair extends Info {
     return this.handrailParameters
   }
 
+  getSideOffset() {
+    if (this.girderParameters.type === Types.GirderType.gslab) {
+      return -this.sideOffset
+    } else {
+      return this.sideOffset
+    }
+  }
+
 
   getArgs() {
-    //reqTemp()
     let f = tool.getItemFromOptions
     let args = {
       startBeamDepth: {
@@ -359,12 +345,14 @@ export class Stair extends Info {
                 type:'select', 
                 options:[...Stair.EXIT_TYPE_OPTIONS]},
       stepNum: { name: '步数', value: this.stepNum, type: 'input' },
+      inSide:{name:'内侧参数', type:'group', value:this.inSide.getArgs()},
+      outSide:{name:'外侧参数', type:'group', value:this.outSide.getArgs()},
       treadParameters: { name: '踏板参数', type: 'group' },
       riserParameters: { name: '立板参数', type: 'group' },
       girderParameters: { name: '大梁参数', type: 'group' },
       handrailParameters: { name: '扶手参数', type: 'group' },
       smallColParameters: { name: '小柱参数', type: 'group' },
-      bigColParameters: { name: '大柱参数', type: 'group' },
+      bigColParameters: { name: '起步大柱参数', type: 'group' },
     }
     let targs = this.treadParameters
     args.treadParameters.value = {
@@ -494,8 +482,8 @@ export class Stair extends Info {
 
   updateGirders () {
     this.girders = []
-    this.updateSideGirder(this.border.in)
-    this.updateSideGirder(this.border.out)
+    this.updateSideGirder(this.inSide)
+    this.updateSideGirder(this.outSide)
   }
 
   /**
@@ -546,9 +534,8 @@ export class Stair extends Info {
    */
   updateHandrails () {
     this.handrails = []
-    let bor = this.border
-    this.updateSideHandrails(bor.in)
-    this.updateSideHandrails(bor.out)
+    this.inSide.handrailExit && this.updateSideHandrails(this.inSide)
+    this.outSide.handrailExit && this.updateSideHandrails(this.outSide)
   }
 
   updateSideHandrails (vSide) {
@@ -606,9 +593,8 @@ export class Stair extends Info {
 
   updateSmallColumns() {
     this.smallColumns = []
-    let bor = this.border
-    this.updateSideSmallColumns(bor.in)
-    this.updateSideSmallColumns(bor.out)
+    this.inSide.handrailExit && this.updateSideSmallColumns(this.inSide)
+    this.outSide.handrailExit && this.updateSideSmallColumns(this.outSide)
   }
 
   /**
@@ -629,17 +615,17 @@ export class Stair extends Info {
    */
   updateBigColumns () {
     this.bigColumns = []
-    this.updateSideBigCol(this.border.in.edges[0], 'in', this.getInSideOffsetPlus())
-    this.updateSideBigCol(this.border.out.edges[0], 'out', this.getOutSideOffsetPlus())
+    this.inSide.startBigColExit && this.updateSideBigCol(this.inSide)
+    this.outSide.startBigColExit && this.updateSideBigCol(this.outSide)
   }
 
   /**
-   * 更新边界一侧的大柱
-   * @param {Array<import('./toolComp/stair_edge').StairEdge>} vStairEdge 本侧边集
-   * @param {string} vSide 当前是哪一侧 'in' or 'out'
-   * @param {boolean} vSideOffsetPlus 大柱在楼梯宽度方向的位置由边界边偏移得到，偏移方向是否为法线方向
+   *
+   *
+   * @param {StairSide} vSide
+   * @memberof Stair
    */
-  updateSideBigCol (vStairEdge, vSide, vSideOffsetPlus) {
+  updateSideBigCol (vSide) {
     let args = this.bigColParameters
     let position = new Types.Vector3()
     /**无起步踏时，根据大柱位置类型计算大柱位置 */
@@ -647,8 +633,12 @@ export class Stair extends Info {
       let size = tool.parseSpecification(args.specification)
       let {offset, zCoord} = this.computeBigColPosAttr()
       offset = offset + size.x / 2
-      let edge = new Edge(vStairEdge).offset(this.sideOffset, vSideOffsetPlus)
-      position = new Edge(edge).extendP1(offset).p1
+      let firstF = this.segments[0]
+      position = new Edge().setByVec(firstF.pos, firstF.wVec, firstF.length+offset).p2
+      position = new Edge().setByVec(position, firstF.lVec, this.getSideOffset()).p2
+      if (vSide.sideName === 'out') {
+        position = new Edge().setByVec(position, firstF.lVec, firstF.stepLength-this.getSideOffset()*2).p2
+      }
       position.z = zCoord
     } else {
       /**有起步踏时，由起步踏计算出大柱位置 */
@@ -660,12 +650,12 @@ export class Stair extends Info {
       }
     }
     let height = this.handrailParameters.height + this.stepHeight + Default.BIG_COL_UP_HEIGHT
-    if (this.border[vSide].bigCol) {
-      this.border[vSide].bigCol.rebuildByParent(position, height)
+    if (vSide.startBigCol) {
+      vSide.startBigCol.rebuildByParent(position, height)
     } else {
-      this.border[vSide].bigCol = new BigColumn({vParent:this, vPosition:position, vType:Types.BigColumnType.bc_start, vHeight:height})
+      vSide.startBigCol = new BigColumn({vParent:this, vPosition:position, vType:Types.BigColumnType.bc_start, vHeight:height})
     }
-    this.bigColumns.push(this.border[vSide].bigCol)
+    this.bigColumns.push(vSide.startBigCol)
   }
 
 

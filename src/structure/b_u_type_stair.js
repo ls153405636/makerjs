@@ -5,8 +5,6 @@ import { Default } from "./config"
 import { Flight } from "./flights/flight"
 import { Landing } from "./flights/landing"
 import tool from "./tool"
-import { StairBorder } from "./toolComp/stair_border"
-import { StairEdge } from "./toolComp/stair_edge"
 
 
 export class BigUTypeStair extends UTypeStair {
@@ -188,68 +186,6 @@ export class BigUTypeStair extends UTypeStair {
     }
     this.landings[0].updateCorBigCol()
     this.landings[1].updateCorBigCol()
-  }
-
-  updateBorder() {
-    let lSL = this.floadSide === Types.Side.si_right ? this.flights[0].stepLength : this.flights[2].stepLength
-    let f2SL = this.flights[1].stepLength
-    let rSL = this.floadSide === Types.Side.si_right ? this.flights[2].stepLength : this.flights[0].stepLength
-    let lDepth = this.floadSide === Types.Side.si_right ? this.depth1 : this.depth2
-    let rDepth = this.floadSide === Types.Side.si_right ? this.depth2 : this.depth1
-    let lFlight = this.floadSide === Types.Side.si_right ? this.flights[0] : this.flights[2]
-    let rFlight = this.floadSide === Types.Side.si_right ? this.flights[2] : this.flights[0]
-    let lLand = this.floadSide === Types.Side.si_right ? this.landings[0] : this.landings[1]
-    let rLand = this.floadSide === Types.Side.si_right ? this.landings[1] : this.landings[0]
-    let inPois = []
-    inPois[0] = {x:0, y:lDepth}
-    inPois[1] = {x:0, y:f2SL}
-    inPois[2] = {x:0, y:0}
-    inPois[3] = {x:lSL, y:0}
-    inPois[4] = {x:this.width - rSL, y:0}
-    inPois[5] = {x:this.width, y:0}
-    inPois[6] = {x:this.width, y:f2SL}
-    inPois[7] = {x:this.width, y:rDepth}
-    let inFlights = [lFlight, lLand, lLand, this.flights[1], rLand, rLand, rFlight]
-    let outPois = []
-    outPois[0] = {x:lSL, y:lDepth}
-    outPois[1] = {x:lSL, y:f2SL}
-    outPois[2] = {x:this.width - rSL, y:f2SL}
-    outPois[3] = {x:this.width - rSL, y:rDepth}
-    let outFlights = [lFlight, this.flights[1], rFlight]
-    if (this.floadSide === Types.Side.si_left) {
-      inPois.reverse()
-      outPois.reverse()
-      inFlights.reverse()
-      outFlights.reverse()
-    }
-    let inEdges = []
-    let outEdges = []
-    for (let i = 0; i < inPois.length - 1; i++) {
-      let p1 = inPois[i], p2 = inPois[i+1], f = inFlights[i]
-      inEdges.push(new StairEdge(p1.x, p1.y, p2.x, p2.y, f)) 
-    }
-    for (let i = 0; i < outPois.length - 1; i++) {
-      let p1 = outPois[i], p2 = outPois[i+1], f = outFlights[i]
-      outEdges.push(new StairEdge(p1.x, p1.y, p2.x, p2.y,f))
-    }
-    outEdges[0].endCol = this.landings[0].corBigCol
-    outEdges[1].startCol = this.landings[0].corBigCol
-    outEdges[1].endCol = this.landings[1].corBigCol
-    outEdges[2].startCol = this.landings[1].corBigCol
-    if (this.border) {
-      this.border.rebuild(inEdges, outEdges)
-    } else {
-      this.border = new StairBorder(inEdges, outEdges)
-    }
-  }
-
-  getGirderInEdges () {
-    let edges = this.border.in.edges
-    return [
-      new Edge(edges[0]).combineEdge(edges[1]),
-      new Edge(new Edge(edges[2]).combineEdge(edges[3])).combineEdge(edges[4]),
-      new Edge(edges[5]).combineEdge(edges[6])
-    ]
   }
 
   updateSegments() {

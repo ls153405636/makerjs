@@ -5,8 +5,6 @@ import { Default } from "./config"
 import { Flight } from "./flights/flight"
 import { Landing } from "./flights/landing"
 import tool from "./tool"
-import { StairBorder } from "./toolComp/stair_border"
-import { StairEdge } from "./toolComp/stair_edge"
 import { Girder } from "./girder";
 
 export class SmallUTypeStair extends UTypeStair {
@@ -44,54 +42,6 @@ export class SmallUTypeStair extends UTypeStair {
     return {
       ...newArgs,
       ...groups
-    }
-  }
-
-  updateBorder() {
-    let f1SL = this.flights[0].stepLength
-    let f2SL = this.flights[1].stepLength
-    let inEdges, outEdges
-    if (this.floadSide === Types.Side.si_left) {
-      inEdges = [
-        new StairEdge(this.width, this.depth1, this.width, this.landingWidth, this.flights[0]),
-        new StairEdge(this.width, this.landingWidth, this.width, 0, this.landings[0]),
-        new StairEdge(this.width, 0, f2SL+this.gap, 0, this.landings[0]),
-        new StairEdge(f2SL+this.gap, 0, 0, 0, this.landings[1]),
-        new StairEdge(0, 0, 0, this.landingWidth, this.landings[1]),
-        new StairEdge(0, this.landingWidth, 0, this.depth2, this.flights[1])
-      ]
-      outEdges = [
-        new StairEdge(f2SL+this.gap, this.depth1, f2SL+this.gap, this.landingWidth, this.flights[0]),
-        new StairEdge(f2SL, this.landingWidth, f2SL, this.depth2, this.flights[1])
-      ]
-      if (this.gap > 0) {
-        outEdges.splice(1, 0, new StairEdge(f2SL+this.gap, this.landingWidth, f2SL, this.landingWidth))
-      }
-    } else {
-      inEdges = [
-        new StairEdge(0, this.depth1, 0, this.landingWidth, this.flights[0]),
-        new StairEdge(0, this.landingWidth, 0, 0, this.landings[0]),
-        new StairEdge(0, 0, f1SL, 0, this.landings[0]),
-        new StairEdge(f1SL, 0, this.width, 0, this.landings[1]),
-        new StairEdge(this.width, 0, this.width, this.landingWidth, this.landings[1]),
-        new StairEdge(this.width, this.landingWidth, this.width, this.depth2, this.flights[1])
-      ]
-      outEdges = [
-        new StairEdge(f1SL, this.depth1, f1SL, this.landingWidth, this.flights[0]),
-        new StairEdge(f1SL+this.gap, this.landingWidth, f1SL+this.gap, this.depth2, this.flights[1])
-      ]
-      if (this.gap > 0) {
-        outEdges.splice(1, 0, new StairEdge(f1SL, this.landingWidth, f1SL+this.gap, this.landingWidth))
-      }
-    }
-    if (this.landings[0].corBigCol) {
-      outEdges[0].endCol = this.landings[0].corBigCol
-      outEdges[1].startCol = this.landings[0].corBigCol
-    }
-    if (this.border) {
-      this.border.rebuild(inEdges, outEdges)
-    } else {
-      this.border = new StairBorder(inEdges, outEdges)
     }
   }
 
@@ -228,15 +178,6 @@ export class SmallUTypeStair extends UTypeStair {
     this.landings[0].updateCorBigCol()
   }
 
-  getGirderInEdges () {
-    let edges = this.border.in.edges
-    return [
-      new Edge(edges[0]).combineEdge(edges[1]),
-      new Edge(edges[2]).combineEdge(edges[3]),
-      new Edge(edges[4]).combineEdge(edges[5])
-    ]
-  }
-
   updateSegments() {
     this.segments[0] = this.flights[0]
     this.segments[1] = this.landings[0]
@@ -250,7 +191,7 @@ export class SmallUTypeStair extends UTypeStair {
    */
    updateSideGirder (vSide) {
     for (let i = 0; i < 3; i++) {
-      if (i === 1 && vSide.sideName === 'out') {
+      if (i === 1 && vSide.sideName === 'out' && this.girderParameters.type === Types.GirderType.gslab) {
         continue
       }
       let borders = [], inLast = null, outLast = null, flights = []

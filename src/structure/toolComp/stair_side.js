@@ -1,17 +1,18 @@
-import { StairEdge } from "./stair_edge"
 
 export class StairSide {
-  constructor(vSideName, vEdges) {
+  constructor(vSideName) {
     this.sideName = vSideName
-    this.girders = []
-    /**@type {Array<StairEdge>} */
-    this.edges = vEdges
+    this.handrailExit = true
+    this.startBigColExit = true
     this.girders = []
     this.handrails = []
-    this.bigCol = null
+    this.startBigCol = null
   }
 
-  rebuild(vEdges) {
-    this.edges = vEdges
+  getArgs() {
+    return {
+      handrailExit:{name:'扶手小柱有无', value: this.handrailExit, type: 'switch' },
+      startBigColExit:{name:'起步大柱有无', value: this.startBigColExit, type: 'switch'},
+    }
   }
 }

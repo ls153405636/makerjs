@@ -258,6 +258,14 @@ message Stair {
   Vector3            position                 = 26;  //为包围框左上角顶点的坐标
   Side               floadSide                = 27;  //折梯的转折方向
   StairExitType      exitType                 = 28;  //楼梯的出口类型
+  StairSide          inSide                   = 29;  //内侧
+  StairSide          outSide                  = 30;  //外侧
+}
+
+message StairSide {
+  string sideName = 1;
+  bool handrailExit = 2;
+  bool startBigColExit = 3;
 }
 
 //挂板
@@ -279,6 +287,8 @@ message Flight {
   float          length         = 6; //总长
   repeated       Tread treads   = 7;  //踏板集合
   repeated       Riser risers   = 8;  //立板集合
+  StairSide      inSide         = 9;  //内侧
+  StairSide      outSide        = 10;  //外侧
 }
 
 //踏板

@@ -187,45 +187,6 @@ export class Landing extends ChildInfo {
     }
   }
 
-  createSmallCols (vDis1, vDis2, vSize) {
-    let gArgs = this.parent.girderParameters
-    let utilSEL
-    let utilSEN
-    let cols = []
-    let borderGap1 = vDis1
-    let borderGap2 = vDis2
-    if (gArgs.type === Types.GirderType.gslab) {
-      utilSEL = new Edge(new Edge(this.sideEdgeL).offset(this.parent.sideOffset))
-      utilSEN = new Edge(new Edge(this.sideEdgeN).offset(this.parent.sideOffset))
-      borderGap1 -= this.parent.sideOffset
-      borderGap2 -= this.parent.sideOffset
-    } else {
-      utilSEL = new Edge(new Edge(this.sideEdgeL).offset(this.parent.sideOffset, false))
-      utilSEN = new Edge(new Edge(this.sideEdgeN).offset(this.parent.sideOffset, false))
-      borderGap1 += this.parent.sideOffset
-      borderGap2 += this.parent.sideOffset
-    }
-    while(utilSEL.getLength() > borderGap1) {
-      let pos
-      if (this.lastEdgeIndex === this.corIndex) {
-        pos = utilSEL.extendP1(-vDis1).p1
-      } else {
-        pos = utilSEL.extendP2(-vDis1).p2
-      }
-      cols.push(new SmallColumn(this.parent, pos, vSize))
-    }
-    while(utilSEN.getLength() > borderGap2) {
-      let pos
-      if (this.lastEdgeIndex === this.corIndex) {
-        pos = utilSEN.extendP2(-vDis2).p2
-      } else {
-        pos = utilSEN.extendP1(-vDis2).p1
-      }
-      cols.push(new SmallColumn(this.parent, pos, vSize))
-    }
-    return cols
-  }
-
   createFirstBorders() {
     let outline = this.createOutlineByPois(this.pois, 1)
     let backOffset = this.parent.getTreadBackOffset()
