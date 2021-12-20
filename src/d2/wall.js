@@ -13,6 +13,8 @@ import { Core } from '../common/core'
 import { Command } from '../common/command'
 import { COMP_TYPES } from '../common/common_config'
 import { Edge } from '../utils/edge'
+import tool from '../structure/tool'
+import { types } from 'protobufjs'
 
 export class Wall extends BaseWidget {
   /**
@@ -98,6 +100,22 @@ export class Wall extends BaseWidget {
 
   // 墙体绘制
   draw() {
+    // 补齐墙缺口
+    let wallEdge= new Types.Edge({
+      p1: new Types.Vector3({x: this.outP1.x, y: this.outP1.y}),
+      p2: new Types.Vector3({x: this.outP2.x, y: this.outP2.y}),
+      type: Types.EdgeType.estraight,
+    })
+    let lVec = new Edge(wallEdge).getVec()
+    let wVec = this.normal
+    let smallWall = []
+    smallWall[0] = wallEdge.p2
+    smallWall[1] = new Edge().setByVec(smallWall[0], lVec, this.depth).p2
+    smallWall[2] = new Edge().setByVec(smallWall[1], wVec, -this.depth).p2
+    smallWall[3] = new Edge().setByVec(smallWall[2], lVec, -this.depth).p2
+    smallWall[4] = new Edge().setByVec(smallWall[3], wVec, this.depth).p2
+    console.log(smallWall)
+
     //创建墙体纹理
     var texture = null
     switch (this.type) {
@@ -147,13 +165,22 @@ export class Wall extends BaseWidget {
 
     const wall = new PIXI.Graphics()
     wall.lineStyle(1, 0x929292,1,0,true)
-
+    
     if (this.type === Types.WallType.wfirst) {
       wall.beginFill(0xffffff, 1)
     } else {
       wall.beginFill(0xe5e5e5, 1)
     }
     wall.drawPolygon(path)
+    if (Math.hypot(this.holeEdge.p1.x - this.holeEdge.p2.x, this.holeEdge.p1.y - this.holeEdge.p2.y) === Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) * 10) {
+      let path1 = []
+      for (let i = 0; i < smallWall.length; i++) {
+        path1.push(smallWall[i].x, smallWall[i].y)
+      }
+      wall.drawPolygon(path1)
+    }else {
+      // 
+    }
     wall.endFill()
 
     wall.addChild(tilingSprite)
