@@ -22,7 +22,7 @@ export class Riser extends ChildModel {
     let outRoute = vFrontRoute
     let inRoute = new Outline(outRoute).offset(vParas.depth, !vFrontRoute.isClock)
     let edges = [...outRoute.edges]
-
+    this.materila = vParas.material
     for (let i = inRoute.edges.length - 1; i>=0; i--) {
       let e = new Edge(inRoute.edges[i]).reserve()
       if (i === inRoute.edges.length - 1 ) {
@@ -72,9 +72,9 @@ export class Riser extends ChildModel {
 
   createObj() {
     this.obj = new THREE.Group()
-    this.obj.add(this.botFace.getObj())
-    this.obj.add(this.topFace.getObj())
-    this.obj.add(this.sideFace.getObj())
+    this.obj.add(this.botFace.setMaterial(this.materila).getObj())
+    this.obj.add(this.topFace.setMaterial(this.materila).getObj())
+    this.obj.add(this.sideFace.setMaterial(this.materila).getObj())
     this.obj.userData.uuid = this.uuid
     this.obj.userData.d3Type = 'obj'
   }

@@ -1,5 +1,4 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { Default, StructConfig } from '../structure/config'
 
 export class D3Scene {
   constructor() {

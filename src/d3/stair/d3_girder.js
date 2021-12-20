@@ -72,6 +72,7 @@ export class Girder extends ChildModel {
     let geo = new THREE.BufferGeometry()
     geo.setAttribute('position', positionAttr)
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:D3Default.PANEL_COLOR, side:THREE.DoubleSide}))
+    d3_tool.loadMaterial(this.paras.material.path, this.mesh)
     this.mesh.userData.uuid = this.uuid
     this.mesh.userData.d3Type = 'obj'
     this.lineFrame.add(inFrame, outFrame)

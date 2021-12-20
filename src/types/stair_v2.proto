@@ -230,7 +230,7 @@ message Component {
 }
 
 message Material {
-
+  string   path = 1;
 }
 
 //一套楼梯

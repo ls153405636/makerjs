@@ -1201,6 +1201,9 @@ export namespace Types {
 
     /** Properties of a Material. */
     interface IMaterial {
+
+        /** Material path */
+        path?: (string|null);
     }
 
     /** Represents a Material. */
@@ -1211,6 +1214,9 @@ export namespace Types {
          * @param [properties] Properties to set
          */
         constructor(properties?: Types.IMaterial);
+
+        /** Material path. */
+        public path: string;
 
         /**
          * Creates a new Material instance using the specified properties.

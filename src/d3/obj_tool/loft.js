@@ -222,4 +222,15 @@ export class Loft {
   getObj () {
     return this.obj
   }
+
+  /**
+   *
+   *
+   * @param {Types.Material} vMatPB
+   * @memberof Loft
+   */
+  setMaterial (vMatPB) {
+    d3_tool.loadMaterial(vMatPB.path, this.mesh)
+    return this
+  }
 }

@@ -22,7 +22,7 @@ export class Handrail extends ChildModel {
   }
 
   createObj() {
-    this.obj = this.loft.getObj()
+    this.obj = this.loft.setMaterial(this.paras.material).getObj()
     this.obj.userData.uuid = this.uuid
     //this.obj.userData.d3Type = 'obj'
   }
