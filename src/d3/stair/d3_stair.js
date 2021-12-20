@@ -73,8 +73,8 @@ export class Stair extends BaseModel {
       this.girders.push(new Girder(this, g, vPB.girderParameters))
     }
     for (let i = 0; i < vPB.handrails.length; i++) {
-      let g = vPB.handrails[i]
-      this.handrails.push(new Handrail(this, g, vPB.handrailParameters))
+      let h = vPB.handrails[i]
+      this.handrails.push(new Handrail(this, h, vPB.handrailParameters))
     }
     for (const sCol of vPB.smallColumns) {
       this.smallColumns.push(new SmallColumn(this, sCol, vPB.smallColParameters))

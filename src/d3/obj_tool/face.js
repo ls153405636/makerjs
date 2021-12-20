@@ -1,5 +1,7 @@
 import earCut from 'earcut'
+import { Types } from '../../types/stair_v2';
 import { D3Config, D3Default, RENDER_ORDER } from '../d3_config';
+import d3_tool from '../d3_tool';
 
 export class Face {
   /**
@@ -37,23 +39,27 @@ export class Face {
     this.obj = new THREE.Group()
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:D3Default.PANEL_COLOR, side:THREE.DoubleSide}))
     this.mesh.userData.d3Type = 'face'
-    this.lineFrame = this.createLineFrame(this.route.isClose ? pois.concat([pois[0]]) : pois)
+    this.lineFrame = d3_tool.createFrameByPois(pois.concat([pois[0]]))
     this.obj.add(this.mesh, this.lineFrame)
-  }
-
-  createLineFrame (vPois) {
-    let geo = new THREE.BufferGeometry().setFromPoints(vPois)
-    let lineFrame = new THREE.Line(geo, D3Config.FRAME_MAT)
-    lineFrame.renderOrder = RENDER_ORDER.FRAME
-    return lineFrame
   }
 
   /**
    * 
-   * @param {THREE.Material} vMaterila 
+   * @param {THREE.Material} vMaterial 
    */
-  setLineMaterial (vMaterila) {
-    this.lineFrame.material = vMaterila
+  setLineMaterial (vMaterial) {
+    this.lineFrame.material = vMaterial
+  }
+
+  /**
+   *
+   *
+   * @param {Types.Material} vMatPB
+   * @memberof Face
+   */
+  setMaterial (vMatPB) {
+    d3_tool.loadMaterial(vMatPB.path, this.mesh)
+    return this
   }
 
   getObj() {

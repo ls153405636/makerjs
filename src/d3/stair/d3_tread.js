@@ -23,6 +23,7 @@ export class Tread extends ChildModel {
     this.stepHeight = vPB.stepHeight
     this.sideNossing = vParas.sideNossing
     this.nossing = vParas.nossingType!==Types.NossingType.nno ? vParas.nossing : 0
+    this.material = vParas.material
     this.isLast = vPB.isLast
     this.isSelected = false
     this.type = vPB.type
@@ -44,9 +45,9 @@ export class Tread extends ChildModel {
   createObj () {
     this.obj = new THREE.Group()
     if (!this.isLast) {
-      this.obj.add(this.botFace.getObj())
-      this.obj.add(this.topFace.getObj())
-      this.obj.add(this.sideFace.getObj())
+      this.obj.add(this.botFace.setMaterial(this.material).getObj())
+      this.obj.add(this.topFace.setMaterial(this.material).getObj())
+      this.obj.add(this.sideFace.setMaterial(this.material).getObj())
     }
     if (!this.isLast || this.parent.parent.exitType === Types.StairExitType.se_riser) {
       this.riser && this.obj.add(this.riser.getObj())

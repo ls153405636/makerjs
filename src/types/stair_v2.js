@@ -3296,6 +3296,7 @@ export const Types = $root.Types = (() => {
          * Properties of a Material.
          * @memberof Types
          * @interface IMaterial
+         * @property {string|null} [path] Material path
          */
 
         /**
@@ -3312,6 +3313,14 @@ export const Types = $root.Types = (() => {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * Material path.
+         * @member {string} path
+         * @memberof Types.Material
+         * @instance
+         */
+        Material.prototype.path = "";
 
         /**
          * Creates a new Material instance using the specified properties.
@@ -3337,6 +3346,8 @@ export const Types = $root.Types = (() => {
         Material.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.path != null && Object.hasOwnProperty.call(message, "path"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.path);
             return writer;
         };
 
@@ -3371,6 +3382,9 @@ export const Types = $root.Types = (() => {
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 1:
+                    message.path = reader.string();
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -3406,6 +3420,9 @@ export const Types = $root.Types = (() => {
         Material.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.path != null && message.hasOwnProperty("path"))
+                if (!$util.isString(message.path))
+                    return "path: string expected";
             return null;
         };
 
@@ -3420,7 +3437,10 @@ export const Types = $root.Types = (() => {
         Material.fromObject = function fromObject(object) {
             if (object instanceof $root.Types.Material)
                 return object;
-            return new $root.Types.Material();
+            let message = new $root.Types.Material();
+            if (object.path != null)
+                message.path = String(object.path);
+            return message;
         };
 
         /**
@@ -3432,8 +3452,15 @@ export const Types = $root.Types = (() => {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        Material.toObject = function toObject() {
-            return {};
+        Material.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults)
+                object.path = "";
+            if (message.path != null && message.hasOwnProperty("path"))
+                object.path = message.path;
+            return object;
         };
 
         /**

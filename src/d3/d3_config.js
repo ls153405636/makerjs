@@ -20,6 +20,7 @@ export const D3Config = {
         linewidth: 2,
         /*resolution: new THREE.Vector2(window.innerWidth, window.innerHeight)*/
       }),
+  LOADED_MAT: new Map()
 }
 
 export const RENDER_ORDER = {
@@ -27,7 +28,7 @@ export const RENDER_ORDER = {
 }
 
 export const D3Default = {
-  PANEL_COLOR: 0xce4e25,
+  PANEL_COLOR: 0xffffff,
   lINE_COLOR: 0x000000,
   FLOOR_COLOR: 0xbcac96,
   WALL_COLOR: 0xe5e5e5

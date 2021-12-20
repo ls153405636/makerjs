@@ -60,10 +60,12 @@ export class Stair extends Info {
       nossingType: Default.TREAD_NOSSING_TYPE,
       nossing: Default.TREAD_NOSSING,
       sideNossing: Default.TREAD_SIDE_NOSSING,
+      material: Default.TREAD_MATERIAL
     })
     this.riserParameters = new Types.RiserParameters({
       riserExist: true,
       depth: Default.RISER_DEPTH,
+      material: Default.MATERIAL
     })
     this.smallColParameters = new Types.SmallColParameters({
       arrangeRule: Default.SMALL_COL_ARR_RULE,
@@ -81,13 +83,15 @@ export class Stair extends Info {
       type: Default.GIRDER_TYPE,
       fOffsetStep: Default.GIRDER_F_OFFSET,
       bSuppotHeight: Default.GIRDER_B_HEIGHT,
-      aboveHeight: Default.GIRDER_ABOVE_HEIGHT
+      aboveHeight: Default.GIRDER_ABOVE_HEIGHT,
+      material: Default.MATERIAL
     })
     this.handrailParameters = new Types.HandrailParameters({
       height: Default.HAND_HEIGHT,
       source: new Types.DxfData({
         specification: Default.HAND_SPEC,
       }),
+      material: Default.MATERIAL
     })
     this.inSide = new StairSide('in')
     this.outSide = new StairSide('out')
@@ -673,6 +677,7 @@ export class Stair extends Info {
         stepNum: this.stepNum,
       }),
       girderParameters: this.girderParameters,
+      handrailParameters: this.handrailParameters,
       flights: tool.writeItemArrayPB(this.flights),
       smallColumns: tool.writeItemArrayPB(this.smallColumns),
       bigColumns: tool.writeItemArrayPB(this.bigColumns),
