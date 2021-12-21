@@ -18,6 +18,7 @@ export class Component extends Info {
     this.rotation = new Types.Vector3({ y: angle })
     this.interval = 0
     this.wallDepth = vParent.depth
+    
   }
 
   addInfo() {
@@ -47,6 +48,8 @@ export class Component extends Info {
   }
 
   rebuild() {
+    let toS = this.disToStart
+    let toE = this.disToEnd
     this.computePosition()
     this.updateCanvas()
   }
@@ -79,7 +82,7 @@ export class Inlay extends Component {
     this.depth = this.parent.depth
     this.offGround = 0
     this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
-    this.disToEnd = new Edge(this.parent.edge).getLength() - (new Edge(this.parent.edge).getLength() - this.width) / 2- this.width
+    this.disToEnd = new Edge(this.parent.edge).getLength() - (new Edge(this.parent.edge).getLength() - this.width) / 2 - this.width
     this.rebuild()
   }
 
@@ -92,7 +95,7 @@ export class Inlay extends Component {
       },
       disToEnd: {
         name: '距终点的距离',
-        value: new Edge(this.parent.edge).getLength() - this.disToStart- this.width,
+        value: new Edge(this.parent.edge).getLength() - this.disToStart - this.width,
         type: 'input',
       },
       width: { name: '宽度', value: this.width, type: 'input' },
@@ -112,6 +115,7 @@ export class Cloumn extends Component {
     this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
     this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
+    
   }
 
   getArgs() {

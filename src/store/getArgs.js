@@ -1,6 +1,8 @@
 const state = {
   getArgs: '',
   isFocus: true,
+  toStart: 0,
+  toEnd: 0,
 }
 
 const getters = {
@@ -18,6 +20,10 @@ const mutations = {
     state.isFocus = payload.focus
     // state.isShow = payload.value
   },
+  getDis(state, payload) {
+    state.toStart = payload.start
+    state.toEnd = payload.end
+  }
 }
 
 const actions = {}
