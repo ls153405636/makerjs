@@ -641,7 +641,7 @@ export class Stair extends Info {
       position = new Edge().setByVec(firstF.pos, firstF.wVec, firstF.length+offset).p2
       position = new Edge().setByVec(position, firstF.lVec, this.getSideOffset()).p2
       if (vSide.sideName === 'out') {
-        position = new Edge().setByVec(position, firstF.lVec, firstF.stepLength-this.getSideOffset()*2).p2
+        position = new Edge().setByVec(position, firstF.lVec, firstF.stepLength-this.sideOffset*2).p2
       }
       position.z = zCoord
     } else {
@@ -678,6 +678,8 @@ export class Stair extends Info {
       }),
       girderParameters: this.girderParameters,
       handrailParameters: this.handrailParameters,
+      smallColParameters: this.smallColParameters,
+      bigColParameters: this.bigColParameters,
       flights: tool.writeItemArrayPB(this.flights),
       smallColumns: tool.writeItemArrayPB(this.smallColumns),
       bigColumns: tool.writeItemArrayPB(this.bigColumns),

@@ -1,6 +1,8 @@
 import { Types } from "../types/stair_v2"
 import { D3Config, RENDER_ORDER } from "./d3_config"
 import { D3Scene } from "./d3_scene"
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader'
 
 /**
  * 
@@ -77,7 +79,7 @@ let _LOADED_NUM = 0
 function loadMaterial(vPath, vMesh) {
   if (D3Config.LOADED_MAT.get(vPath)) {
     let mat = D3Config.LOADED_MAT.get(vPath).clone()
-    computeGeoUV(vMesh.geometry, mat.map.image.width, matmap.image.height)
+    computeGeoUV(vMesh.geometry, mat.map.image.width, mat.map.image.height)
     vMesh.material = mat
   } else {
     _LOAD_NUM ++
@@ -85,7 +87,7 @@ function loadMaterial(vPath, vMesh) {
       computeGeoUV(vMesh.geometry, texture.image.width, texture.image.height)
       texture.wrapS = THREE.RepeatWrapping
       texture.wrapT = THREE.RepeatWrapping
-      let material = new THREE.MeshBasicMaterial({map:texture, side:THREE.DoubleSide})
+      let material = new THREE.MeshLambertMaterial({map:texture, side:THREE.DoubleSide})
       vMesh.material = material
       _LOADED_NUM ++
       if (_LOADED_NUM === _LOAD_NUM) {
@@ -98,10 +100,35 @@ function loadMaterial(vPath, vMesh) {
   }
 }
 
+let _GLTF_LOAD_NUM = 0
+let _GLTF_LOADED_NUM = 0
+
+function loadGltf(vPath, onSuccess) {
+  if (D3Config.LOADED_GLTF.get(vPath)) {
+    let gltf = D3Config.LOADED_GLTF.get(vPath).clone()
+    onSuccess(gltf)
+  } else {
+    _GLTF_LOAD_NUM++
+    const dracoLoader = new DRACOLoader()
+    dracoLoader.setDecoderPath('/draco/')
+    new GLTFLoader().setDRACOLoader(dracoLoader).load(vPath, (object) => {
+      onSuccess(object.scene.children[0].clone())
+      _GLTF_LOADED_NUM++
+      if (_GLTF_LOADED_NUM === _GLTF_LOAD_NUM) {
+        new D3Scene().render()
+        _GLTF_LOAD_NUM = 0
+        _GLTF_LOADED_NUM = 0
+      }
+      D3Config.LOADED_GLTF.set(vPath, object.scene.children[0])
+    })
+  }
+}
+
 export default {
   translateCoord,
   createFrameByPois,
   createFrameByGeo,
   computeGeoUV,
-  loadMaterial
+  loadMaterial,
+  loadGltf
 }

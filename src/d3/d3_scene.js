@@ -29,6 +29,8 @@ export class D3Scene {
 
     this.axes = new THREE.AxesHelper(20000)
     this.scene.add(this.axes)
+
+    this.initLight()
   }
 
   addToPage() {
@@ -38,6 +40,56 @@ export class D3Scene {
 
   render() {
     this.renderer.render(this.scene, this.camera)
+  }
+
+  initLight() {
+    let pointColor = 0xffffff
+    let lightStrength = [0.72, 0.60, 0.48, 0.36]
+    let topColor = 0xffffff
+
+    let lights = new THREE.Group()
+
+    const directLight0 = new THREE.DirectionalLight( pointColor, lightStrength[0] )
+    directLight0.position.set( 60000, 0, 60000 )
+    lights.add( directLight0 )
+
+    const directLight1 = new THREE.DirectionalLight( pointColor, lightStrength[1] )
+    directLight1.position.set( 0, 0, 60000 )
+    lights.add( directLight1 )
+
+    const directLight2 = new THREE.DirectionalLight( pointColor, lightStrength[2] )
+    directLight2.position.set( -60000, 0, 60000 )
+    lights.add( directLight2 )
+
+    const directLight3 = new THREE.DirectionalLight( pointColor, lightStrength[3] )
+    directLight3.position.set( -60000, 0, 0 )
+    lights.add( directLight3 )
+
+    const directLight4 = new THREE.DirectionalLight( pointColor, lightStrength[0] )
+    directLight4.position.set( -60000, 0, -60000 )
+    lights.add( directLight4 )
+
+    const directLight5 = new THREE.DirectionalLight( pointColor, lightStrength[1] )
+    directLight5.position.set( 0, 0, -60000 )
+    lights.add( directLight5 )
+
+    const directLight6 = new THREE.DirectionalLight( pointColor, lightStrength[2] )
+    directLight6.position.set( 60000, 0, -60000 )
+    lights.add( directLight6 )
+
+    const directLight7 = new THREE.DirectionalLight( pointColor, lightStrength[3] )
+    directLight7.position.set( 60000, 0, 0 )
+    lights.add( directLight7 )
+
+    const directLight8 = new THREE.DirectionalLight( topColor, 1.0 )
+    directLight8.position.set( 0, 10000, 0 )
+    lights.add( directLight8 )
+
+    const directLight9 = new THREE.DirectionalLight( topColor, 1.0 )
+    directLight9.position.set( 0, -10000, 0 )
+    lights.add( directLight9 )
+
+    this.scene.add(lights)
   }
 
   addEle(vObj) {

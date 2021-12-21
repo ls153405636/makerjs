@@ -145,7 +145,7 @@ export class Tread extends ChildInfo {
         let bigColSize = tool.parseSpecification(bArgs.specification)
         let offset = Default.BIG_COL_GAP + bigColSize.y / 2 
         edge = utilE.extendP1(offset)
-        let offset_h = this.stepWidth * offset / nextT.stepHeight
+        let offset_h = nextT.stepHeight * offset / this.stepWidth
         edge.p1.z = this.position.z + vArgs.height - offset_h
         edge.p2.z = nextT.position.z + vArgs.height
       }

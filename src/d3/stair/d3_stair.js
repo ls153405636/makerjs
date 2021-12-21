@@ -58,6 +58,8 @@ export class Stair extends BaseModel {
     this.hangingBoard = null
     this.exitType = vPB.exitType
     this.position = d3_tool.translateCoord(vPB.position)
+    this.obj = new THREE.Group()
+    this.columnObjs = new THREE.Group()
     if (vPB.hangingBoard) {
       this.hangingBoard = new HangingBoard(this, vPB.hangingBoard)
     }
@@ -76,17 +78,23 @@ export class Stair extends BaseModel {
       let h = vPB.handrails[i]
       this.handrails.push(new Handrail(this, h, vPB.handrailParameters))
     }
-    for (const sCol of vPB.smallColumns) {
-      this.smallColumns.push(new SmallColumn(this, sCol, vPB.smallColParameters))
+    let scope = this
+    let smallColInit = function(vGltf) {
+      for (const sCol of vPB.smallColumns) {
+        scope.smallColumns.push(new SmallColumn({vParent:scope, vPB:sCol, vParas:vPB.smallColParameters, vGltf:vGltf.clone()}))
+      }
     }
-    for (const bCol of vPB.bigColumns) {
-      this.bigColumns.push(new BigColumn(this, bCol, vPB.bigColParameters))
+    let bigColInit = function(vGltf) {
+      for (const bCol of vPB.bigColumns) {
+        scope.bigColumns.push(new BigColumn({vParent:scope, vPB:bCol, vParas:vPB.smallColParameters, vGltf:vGltf.clone()}))
+      }
     }
+    d3_tool.loadGltf(vPB.smallColParameters.source.modelPath, smallColInit)
+    d3_tool.loadGltf(vPB.bigColParameters.source.modelPath, bigColInit)
     this.createObj()
   }
 
   createObj() {
-    this.obj = new THREE.Group()
     for (const f of this.flights) {
       f.getObj() && this.obj.add(f.getObj())
     }
@@ -96,16 +104,15 @@ export class Stair extends BaseModel {
     for (const h of this.handrails) {
       h.getObj() && this.obj.add(h.getObj())
     }
-    for (const sCol of this.smallColumns) {
-      sCol.getObj() && this.obj.add(sCol.getObj())
-    }
-    for (const bCol of this.bigColumns) {
-      bCol.getObj() && this.obj.add(bCol.getObj())
-    }
+    this.obj.add(this.columnObjs)
     if (this.hangingBoard) {
       this.hangingBoard.getObj() && this.obj.add(this.hangingBoard.getObj())
     }
     this.obj.position.copy(this.position)
     D3Config.OBJS.push(this.obj)
+  }
+
+  addColumnObj(vObj) {
+    this.columnObjs.add(vObj)
   }
 }

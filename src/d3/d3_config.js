@@ -20,7 +20,8 @@ export const D3Config = {
         linewidth: 2,
         /*resolution: new THREE.Vector2(window.innerWidth, window.innerHeight)*/
       }),
-  LOADED_MAT: new Map()
+  LOADED_MAT: new Map(),
+  LOADED_GLTF: new Map()
 }
 
 export const RENDER_ORDER = {
