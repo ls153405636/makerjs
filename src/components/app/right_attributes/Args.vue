@@ -27,7 +27,7 @@
           size="medium"
           v-model="arg.value.value"
           :label="arg.value.label"
-          @change="updateArgs(arg.value.value, index, arg.type)"
+          @change="updateArgs($event, arg.value.value, index, arg.type)"
         >
           <el-option
             v-for="item in arg.options"
@@ -43,7 +43,7 @@
         <el-switch
           size="medium"
           v-model="arg.value"
-          @change="updateArgs(arg.value, index, arg.type, key)"
+          @change="updateArgs($event, arg.value, index, arg.type, key)"
         ></el-switch>
       </el-form-item>
 
@@ -66,7 +66,7 @@
                   size="medium"
                   :disabled="item1.disabled"
                   v-model="item1.value"
-                  @keydown.enter.prevent="updateArgs($event,item1.value, index, item1.type, key)"
+                  @keydown.enter.prevent="updateArgs($event, item1.value, index, item1.type, key)"
                 >
                   <!-- @blur="updateArgs(item1.value, index, item1.type, key)" -->
                   <!-- @keydown.enter.prevent="enterBlur($event)" -->
@@ -81,7 +81,7 @@
                   v-model="item1.value.value"
                   :label="item1.value.label"
                   @change="
-                    updateArgs(item1.value.value, index, item1.type, key)
+                    updateArgs($event, item1.value.value, index, item1.type, key)
                   "
                 >
                   <el-option
@@ -97,7 +97,7 @@
               <el-form-item v-if="item1.type === 'switch'" :label="item1.name">
                 <el-switch
                   v-model="item1.value"
-                  @change="updateArgs(item1.value, index, item1.type, key)"
+                  @change="updateArgs($event, item1.value, index, item1.type, key)"
                 ></el-switch>
               </el-form-item>
 
@@ -163,8 +163,8 @@ export default defineComponent({
       }
       if (type === 'input') {
         value = Number(value)
+        event.target.blur()
       }
-      value = value
       let argItems = new Map()
       if (secondKey) {
         let item = new Map()
@@ -175,7 +175,6 @@ export default defineComponent({
       }
       let core = new Core()
       core.execute(new Command(core.cmds.EleUpdateCmd, argItems))
-      event.target.blur()
     },
   },
 
