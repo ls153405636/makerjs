@@ -43,6 +43,7 @@ export class Hole extends BaseWidget {
     }
     // 绘制多边形
     let hole = new PIXI.Graphics()
+    hole.beginFill(0x4478f4, 0.1)
     hole.drawPolygon(path)
     hole.endFill()
     this.sprite.addChild(hole)

@@ -183,6 +183,12 @@ export class Stair extends BaseWidget {
     let firstDepth = new Victor(depth,depth)
     const offSet = new Victor(550,550)
     const arrow = new Victor(50,50)
+
+    // 文字样式
+    const textStyle =  {
+      fontSize: 32,
+      fill: 0x000000,
+    }
     // console.log(stairInfo)
     
     // 获取第一级踏步
@@ -332,10 +338,7 @@ export class Stair extends BaseWidget {
       
 
       const flightLine = new PIXI.Graphics()
-      const flightText = new PIXI.Text(flightTextLength, {
-        fontSize: 36,
-        fill: 0x000000
-      })
+      const flightText = new PIXI.Text('267', textStyle)
 
       flightText.scale.set(0.25)
       flightText.position.set(flightPosition.x, flightPosition.y)
