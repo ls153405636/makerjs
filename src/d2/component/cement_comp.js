@@ -42,7 +42,6 @@ export class CementComp extends BaseWidget {
     this.draw()
     this.addDimension()
     this.addEvent()
-    console.log(vPB)
   }
 
   /**
