@@ -20,6 +20,7 @@ export class Inlay extends BaseWidget {
   constructor(vPB) {
     super(vPB.uuid)
     this.init(vPB)
+    console.log(vPB)
   }
 
   getWidgetType() {
@@ -155,7 +156,9 @@ export class Inlay extends BaseWidget {
   }
   addDimension() {
     // 标注线绘制
-
+    let inlay = StructConfig.INFOS.get(this.uuid)
+    const wallLength = inlay.wallLength
+    console.log(inlay)
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart } = this
     const offSet = new Victor(15, 15) // 偏移距离
@@ -170,6 +173,10 @@ export class Inlay extends BaseWidget {
     const p6 = new Victor(-this.width / 2, -this.depth / 2).subtractX(
       new Victor(disToStart / D2Config.SCREEN_RATE, 0)
     )
+    const p7 = new Victor(this.width / 2, -this.depth / 2)
+    const p8 = new Victor(this.width / 2, -this.depth / 2).addX(
+      new Victor((wallLength - disToStart) / D2Config.SCREEN_RATE - this.width, 0)
+    )
 
     const newP1 = p1.clone().subtractY(offSet)
     const newP2 = p2.clone().subtractY(offSet)
@@ -177,8 +184,10 @@ export class Inlay extends BaseWidget {
     const newP3 = p3.clone().addX(offSet)
     const newP4 = p4.clone().addX(offSet)
 
-    const newP5 = p5.clone().addY(offSet)
-    const newP6 = p6.clone().addY(offSet)
+    const newP5 = p5.clone().subtractY(offSet)
+    const newP6 = p6.clone().subtractY(offSet)
+    const newP7 = p7.clone().subtractY(offSet)
+    const newP8 = p8.clone().subtractY(offSet)
 
     const newP1T = new Victor(newP1.x, newP1.y).subtractY(smallOffset)
     const newP1B = new Victor(newP1.x, newP1.y).addY(smallOffset)
@@ -190,20 +199,14 @@ export class Inlay extends BaseWidget {
     const newP4T = new Victor(newP4.x, newP4.y).subtractX(smallOffset)
     const newP4B = new Victor(newP4.x, newP4.y).addX(smallOffset)
 
-    let newP5T = 0
-    let newP5B = 0
-    let newP6T = 0
-    let newP6B = 0
-    if (disToStart !== 0) {
-      newP5T = new Victor(newP5.x, newP5.y).subtract(smallOffset)
-      newP5B = new Victor(newP5.x, newP5.y)
-        .subtractX(smallOffset)
-        .addY(smallOffset)
-      newP6T = new Victor(newP6.x, newP6.y)
-        .subtractY(smallOffset)
-        .addX(smallOffset)
-      newP6B = new Victor(newP6.x, newP6.y).add(smallOffset)
-    }
+    let newP5T = new Victor(newP5.x, newP5.y).subtractY(smallOffset)
+    let newP5B = new Victor(newP5.x, newP5.y).addY(smallOffset)
+    let newP6T = new Victor(newP6.x, newP6.y).subtractY(smallOffset)
+    let newP6B = new Victor(newP6.x, newP6.y).addY(smallOffset)
+    let newP7T = new Victor(newP7.x, newP7.y).subtractY(smallOffset)
+    let newP7B = new Victor(newP7.x, newP7.y).addY(smallOffset)
+    let newP8T = new Victor(newP8.x, newP8.y).subtractY(smallOffset)
+    let newP8B = new Victor(newP8.x, newP8.y).addY(smallOffset)
 
     // 文字旋转角度
     let newRoationY = rotationY
@@ -237,14 +240,23 @@ export class Inlay extends BaseWidget {
     // 距离标注线
     compLine.moveTo(newP5.x, newP5.y)
     compLine.lineTo(newP6.x, newP6.y)
+    compLine.moveTo(newP7.x, newP7.y)
+    compLine.lineTo(newP8.x, newP8.y)
 
-    compLine.moveTo(newP5T.x, newP5T.y)
-    compLine.lineTo(newP5.x, newP5.y)
-    compLine.lineTo(newP5B.x, newP5B.y)
+    compLine.moveTo(newP7T.x, newP7T.y)
+    compLine.lineTo(newP7B.x, newP7B.y)
+    compLine.moveTo(newP8T.x, newP8T.y)
+    compLine.lineTo(newP8B.x, newP8B.y)
+    if (disToStart === 0) {
+      // 
+    }else {
+      compLine.moveTo(newP5T.x, newP5T.y)
+      compLine.lineTo(newP5B.x, newP5B.y)
+      compLine.moveTo(newP6T.x, newP6T.y)
+      compLine.lineTo(newP6B.x, newP6B.y)
+    }
 
-    compLine.moveTo(newP6T.x, newP6T.y)
-    compLine.lineTo(newP6.x, newP6.y)
-    compLine.lineTo(newP6B.x, newP6B.y)
+
 
     // 标注文字
     // 宽度标注文字
@@ -294,7 +306,7 @@ export class Inlay extends BaseWidget {
     offGround.lineTo(p2.x + 7, p2.y - 15)
     offGround.lineTo(p2.x + 47, p2.y - 15)
 
-    let inlay = StructConfig.INFOS.get(this.uuid)
+    
     const inlayOffGround = inlay.offGround
     const offGroundText = new PIXI.Text('离地' + inlayOffGround,{
       fontSize: 32,
