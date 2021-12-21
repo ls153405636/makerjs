@@ -55,7 +55,7 @@ export class Tread extends ChildInfo {
   }
 
   updateItem (vValue, vKey, vSecondKey) {
-    if (['stepHeight', 'stepLength', 'stepWidth'].includes(vKey)) {
+    if (['inheritW', 'inheritH', 'inheritL', 'stepLength', 'stepHeight'].includes(vSecondKey)) {
       this[vSecondKey] = vValue
     }
     else {
