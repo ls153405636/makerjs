@@ -373,7 +373,7 @@ export class Stair extends BaseWidget {
       let isClock = e.isClock
       let lP = new Victor((e.edges[0].p1.x + e.edges[0].p2.x) / 2, e.edges[0].p1.y).subtractX(fLangdingLength)
       let lNextP = lP.clone().addX(landingWidth)
-      // console.log(lP)
+      console.log(lP)
       // console.log(lNextP)
 
       let wall = null
