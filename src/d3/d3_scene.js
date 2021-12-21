@@ -24,8 +24,8 @@ export class D3Scene {
 
     this.control = new OrbitControls(this.camera, this.renderer.domElement)
 
-    // this.grider = new THREE.GridHelper(20000, 20, 0xc1c2c3, 0xc1c2c3)
-    // this.scene.add(this.grider)
+    this.grider = new THREE.GridHelper(20000, 20, 0xc1c2c3, 0xc1c2c3)
+    this.scene.add(this.grider)
 
     this.axes = new THREE.AxesHelper(20000)
     this.scene.add(this.axes)

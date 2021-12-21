@@ -175,7 +175,7 @@ export class Flight extends ChildInfo {
       if (t.inheritH) {
         this.endHeight += this.stepHeight
       } else {
-        this.endHeight += this.endHeight + t.stepHeight
+        this.endHeight = this.endHeight + t.stepHeight
       }
     }
     if (this.endHeight === this.startHeight) {
