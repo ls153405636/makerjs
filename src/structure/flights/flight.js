@@ -80,7 +80,7 @@ export class Flight extends ChildInfo {
     args.name = '楼梯段参数'
     let stepWithArr = []
     for (const t of this.treads) {
-      if (!stepWithArr.includes(t.stepWidth)) {
+      if (!stepWithArr.includes(t.stepWidth) && !t.isLast) {
         args.stepWidthD.value = args.stepWidthD.value + (args.stepWidthD.value? '/':'') + t.stepWidth
         stepWithArr.push(t.stepWidth)
       }
@@ -148,7 +148,7 @@ export class Flight extends ChildInfo {
       if (this.fixedNum) {
         this.stepWidth = this.fixedLength / this.fixedNum
       } else {
-        this.stepWidth = 0
+        this.stepWidth = this.length / this.realStepNum
       }
     } else {
       this.stepWidth = this.length / this.realStepNum
