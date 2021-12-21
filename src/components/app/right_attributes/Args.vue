@@ -13,9 +13,10 @@
           size="medium"
           :disabled="arg.disabled"
           v-model.lazy="arg.value"
-          @blur="updateArgs(arg.value, index, arg.type)"
-          @keydown.enter.prevent="enterBlur($event)"
+          @keydown.enter.prevent="updateArgs($event, arg.value, index, arg.type)"
         >
+          <!-- @blur="enterBlur(arg.value, arg.value)" -->
+          <!-- @keydown.enter.prevent="enterBlur($event)" -->
           <template #append>mm</template>
         </el-input>
       </el-form-item>
@@ -65,9 +66,10 @@
                   size="medium"
                   :disabled="item1.disabled"
                   v-model="item1.value"
-                  @blur="updateArgs(item1.value, index, item1.type, key)"
-                  @keydown.enter.prevent="enterBlur($event)"
+                  @keydown.enter.prevent="updateArgs($event,item1.value, index, item1.type, key)"
                 >
+                  <!-- @blur="updateArgs(item1.value, index, item1.type, key)" -->
+                  <!-- @keydown.enter.prevent="enterBlur($event)" -->
                   <template #append>mm</template>
                 </el-input>
               </el-form-item>
@@ -144,7 +146,7 @@ export default defineComponent({
       console.log(file)
     },
 
-    updateArgs(value, key, type, secondKey) {
+    updateArgs(event, value, key, type, secondKey) {
       if (this.$store.state.right_attribute.cur_args.floorHeight) {
         let holeArgs = this.$store.state.right_attribute.cur_args.floorHeight
         if (holeArgs.value === 0 || holeArgs.value === '') {
@@ -152,16 +154,17 @@ export default defineComponent({
           type: 'getArgs/getFocus',
           focus: true
           })
-      }else {
-        this.$store.commit({
-        type: 'getArgs/getFocus',
-        focus: false
-        })
-      }
+        }else {
+          this.$store.commit({
+          type: 'getArgs/getFocus',
+          focus: false
+          })
+        }
       }
       if (type === 'input') {
         value = Number(value)
       }
+      value = value
       let argItems = new Map()
       if (secondKey) {
         let item = new Map()
@@ -172,8 +175,6 @@ export default defineComponent({
       }
       let core = new Core()
       core.execute(new Command(core.cmds.EleUpdateCmd, argItems))
-    },
-    enterBlur(event) {
       event.target.blur()
     },
   },
