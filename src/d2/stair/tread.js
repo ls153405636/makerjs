@@ -36,6 +36,23 @@ export class Tread extends ChildWidget {
     this.addEvent()
   }
 
+  creatText(vName, vPos) {
+    vName.scale.set(0.25)
+    vName.position.set((vPos.p1.x + vPos.p2.x) / 20, (vPos.p1.y + vPos.p2.y) / 20)
+    vName.anchor.set(0.5, 0.5)
+    let newTextRotation = ''
+    let textRotation = new Victor(vPos.p1.x - vPos.p2.x, vPos.p1.y - vPos.p2.y)
+    let textAngle = textRotation.angle()
+    if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+      newTextRotation = 0
+    } else if (0 < textAngle < Math.PI) {
+      newTextRotation = textRotation.invert().angle()
+    } else if (0 > textAngle > -Math.PI) {
+      newTextRotation = textRotation.angle()
+    }
+    vName.rotation = newTextRotation
+  }
+
   draw() {
     // 中心位置计算
     let positionX = 0
@@ -234,6 +251,13 @@ export class Tread extends ChildWidget {
     const treadLineContainer = new PIXI.Container()
     const treadLine = new PIXI.Graphics()
     const arrow = new Victor(50,50) //偏移出墙的偏移值
+
+    // 文字样式
+    const textStyle =  {
+      fontSize: 32,
+      fill: 0x000000,
+    }
+    
     let p1
     let p2
     
@@ -266,20 +290,31 @@ export class Tread extends ChildWidget {
     let lNewTextRotation = ''
     let nNewTextRotation = ''
 
+    let lTreadLineLength
+    let nTreadLineLength
+    let treadLinelength
+
     let sideEdgeL = stairInfo.parent.sideEdgeL
+    let sideEdgeLT
+    let sideEdgeLB
     let sideEdgeN = stairInfo.parent.sideEdgeN
+    let sideEdgeNT
+    let sideEdgeNB
     let lNormal
     let nNormal
     const offSet = new Victor(270,270) //偏移出墙的偏移值Y
     const fOffSet = new Victor(200,200) //偏移出墙的偏移值Y
     
     let wall
+    let lWall
+    let nWall
     let stairP
     let lastEdge
     let nextEdge
     // 文字中心位置
     let position 
 
+    // 获取楼梯位置
     for(let value of D2Config.WIDGETS.values()) {
       if (value.getWidgetType() === COMP_TYPES.STAIR) {
         stairP = d2_tool.translateCoord(value.position)
@@ -517,13 +552,11 @@ export class Tread extends ChildWidget {
           }
     
           // 长度计算
-          const treadLinelength =
+          treadLinelength =
           Math.round(Math.hypot(p1.x - p2.x, p1.y - p2.y) )
+          
     
-          const treadLineNum = new PIXI.Text(treadLinelength, {
-            fontSize: 32,
-            fill: 0x000000,
-          })
+          const treadLineNum = new PIXI.Text(treadLinelength, textStyle)
           if (this.isLast) {
             treadLineNum.visible = false
           }
@@ -835,22 +868,18 @@ export class Tread extends ChildWidget {
           nNewTextRotation = nTextRotation.angle()
         }
 
-        const lTreadLineLength = Math.round(Math.hypot(lNewP1.x - lNewP2.x, lNewP1.y - lNewP2.y) )
-        const nTreadLineLength = Math.round(Math.hypot(nNewP1.x - nNewP2.x, nNewP1.y - nNewP2.y) )
-        const lTreadLineNum = new PIXI.Text(lTreadLineLength, {
-          fontSize: 32,
-          fill: 0x000000,
-        })
+        lTreadLineLength = Math.round(Math.hypot(lNewP1.x - lNewP2.x, lNewP1.y - lNewP2.y))
+        nTreadLineLength = Math.round(Math.hypot(nNewP1.x - nNewP2.x, nNewP1.y - nNewP2.y))
+        console.log(lTreadLineLength)
+        console.log(nTreadLineLength)
+        const lTreadLineNum = new PIXI.Text(lTreadLineLength, textStyle)
 
         lTreadLineNum.scale.set(0.25)
         lTreadLineNum.position.set(lPosition.x, lPosition.y)
         lTreadLineNum.anchor.set(0.5, 0.5)
         lTreadLineNum.rotation = lNewTextRotation
 
-        const nTreadLineNum = new PIXI.Text(nTreadLineLength, {
-          fontSize: 32,
-          fill: 0x000000,
-        })
+        const nTreadLineNum = new PIXI.Text(nTreadLineLength, textStyle)
 
         nTreadLineNum.scale.set(0.25)
         nTreadLineNum.position.set(nPosition.x, nPosition.y)
@@ -881,18 +910,101 @@ export class Tread extends ChildWidget {
       // 休息平台总标注
       lNormal = new Edge(sideEdgeL).getNormal()
       nNormal = new Edge(sideEdgeN).getNormal()
-      console.log(lNormal)
+      let wallOutP1
+      if (girderType === Types.GirderType.gsaw) {
+        // 
+      }else {
+        if (againstWallType === Types.AgainstWallType.aw_no || againstWallType === Types.AgainstWallType.aw_left) {
+          sideEdgeL = new Edge(sideEdgeL).extendP2(girderDepth)
+          sideEdgeN = new Edge(sideEdgeN).extendP1(girderDepth)
+        }else{
+          sideEdgeL = new Edge(sideEdgeL).extendP1(girderDepth)
+          sideEdgeN = new Edge(sideEdgeN).extendP2(girderDepth)
+        }
+      }
+
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === COMP_TYPES.WALL) {
+          if (tool.isVec2Equal(value.normal, lNormal)) {
+            lWall = value
+            if (value.getWidgetType() === COMP_TYPES.STAIR) {
+              stairP = d2_tool.translateCoord(value.position)
+            }
+          }
+        }
+      }
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === COMP_TYPES.WALL) {
+          if (tool.isVec2Equal(value.normal, nNormal)) {
+            nWall = value
+            if (value.getWidgetType() === COMP_TYPES.STAIR) {
+              stairP = d2_tool.translateCoord(value.position)
+            }
+          }
+        }
+      }
+      if (sideEdgeL.p1.x < sideEdgeL.p2.x || sideEdgeL.p1.x > sideEdgeL.p2.x) {
+        wallOutP1 = new Victor((lWall.outP1.x - stairP.x) * 10 - sideEdgeL.p1.x, (lWall.outP1.y - stairP.y) * 10 - sideEdgeL.p1.y)
+        sideEdgeL = new Edge(sideEdgeL).offset(Math.abs(wallOutP1.y) + offSet.x + 140, true)
+      }
+      if (sideEdgeL.p1.y > sideEdgeL.p2.y || sideEdgeL.p1.y < sideEdgeL.p2.y) {
+        wallOutP1 = new Victor((lWall.outP1.x - stairP.x) * 10 - sideEdgeL.p1.x, (lWall.outP1.y - stairP.y) * 10 - sideEdgeL.p1.y)
+        sideEdgeL = new Edge(sideEdgeL).offset(Math.abs(wallOutP1.x) + offSet.x + 140, true)
+      }
+
+      if (sideEdgeN.p1.y < sideEdgeN.p2.y || sideEdgeN.p1.y > sideEdgeN.p2.y) {
+        wallOutP1 = new Victor((nWall.outP1.x - stairP.x) * 10 - sideEdgeN.p1.x, (nWall.outP1.y - stairP.y) * 10 - sideEdgeN.p1.y)
+        sideEdgeN = new Edge(sideEdgeN).offset(Math.abs(wallOutP1.x) + offSet.x + 140, true)
+      }
+      if (sideEdgeN.p1.x < sideEdgeN.p2.x || sideEdgeN.p1.x > sideEdgeN.p2.x) {
+        wallOutP1 = new Victor((nWall.outP1.x - stairP.x) * 10 - sideEdgeN.p1.x, (nWall.outP1.y - stairP.y) * 10 - sideEdgeN.p1.y)
+        sideEdgeN = new Edge(sideEdgeN).offset(Math.abs(wallOutP1.y) + offSet.x + 140, true)
+      }
+      sideEdgeLT = new Edge(sideEdgeL).offset(arrow.x, true)
+      sideEdgeLB = new Edge(sideEdgeL).offset(arrow.x, false)
+      sideEdgeNT = new Edge(sideEdgeN).offset(arrow.x, true)
+      sideEdgeNB = new Edge(sideEdgeN).offset(arrow.x, false)
 
 
 
       const langdingLine = new PIXI.Graphics()
-      langdingLine.lineStyle(10, 0xff88ff)
+      langdingLine.lineStyle(1, 0x000000, 1, 0.5, true)
       langdingLine.moveTo(sideEdgeL.p1.x / 10, sideEdgeL.p1.y / 10)
       langdingLine.lineTo(sideEdgeL.p2.x / 10, sideEdgeL.p2.y / 10)
+
       langdingLine.moveTo(sideEdgeN.p1.x / 10, sideEdgeN.p1.y / 10)
       langdingLine.lineTo(sideEdgeN.p2.x / 10, sideEdgeN.p2.y / 10)
 
-      // treadLineContainer.addChild(langdingLine)
+      langdingLine.moveTo(sideEdgeLT.p1.x / 10, sideEdgeLT.p1.y / 10)
+      langdingLine.lineTo(sideEdgeLB.p1.x / 10, sideEdgeLB.p1.y / 10)
+      langdingLine.moveTo(sideEdgeLT.p2.x / 10, sideEdgeLT.p2.y / 10)
+      langdingLine.lineTo(sideEdgeLB.p2.x / 10, sideEdgeLB.p2.y / 10)
+
+      langdingLine.moveTo(sideEdgeNT.p1.x / 10, sideEdgeNT.p1.y / 10)
+      langdingLine.lineTo(sideEdgeNB.p1.x / 10, sideEdgeNB.p1.y / 10)
+      langdingLine.moveTo(sideEdgeNT.p2.x / 10, sideEdgeNT.p2.y / 10)
+      langdingLine.lineTo(sideEdgeNB.p2.x / 10, sideEdgeNB.p2.y / 10)
+
+      const landingTextLengthL =
+        Math.round(Math.hypot(sideEdgeL.p1.x - sideEdgeL.p2.x, sideEdgeL.p1.y - sideEdgeL.p2.y) )
+      const landingTextLengthN =
+        Math.round(Math.hypot(sideEdgeN.p1.x - sideEdgeN.p2.x, sideEdgeN.p1.y - sideEdgeN.p2.y) )
+
+      
+      const landingLineTextL = new PIXI.Text(landingTextLengthL,textStyle)
+      this.creatText(landingLineTextL, sideEdgeLT)
+
+      const landingLineTextN = new PIXI.Text(landingTextLengthN,textStyle)
+      this.creatText(landingLineTextN, sideEdgeNT)
+      for (let i = 0; i < stairInfo.parent.parent.landings.length; i++ ) {
+        let landingType = stairInfo.parent.parent.landings[i].type
+        if (landingType === 1) {
+          continue
+        }else {
+          treadLineContainer.addChild(langdingLine, landingLineTextL, landingLineTextN)
+        }
+      }
+
 
 
     }
@@ -1323,10 +1435,7 @@ export class Tread extends ChildWidget {
            .moveTo(newFirstP2T.x / 10, newFirstP2T.y / 10, )
            .lineTo(newFirstP2B.x / 10, newFirstP2B.y / 10, )
 
-          const firstText = new PIXI.Text(firstTextLength, {
-            fontSize: 36,
-            fill: 0x000000
-          })
+          const firstText = new PIXI.Text(firstTextLength, textStyle)
           firstText.scale.set(0.25)
           firstText.position.set(firstPosition.x, firstPosition.y)
           firstText.anchor.set(0.5, 0.5)
@@ -1336,10 +1445,7 @@ export class Tread extends ChildWidget {
         
         if (this.isLast === true) {
 
-          const lastText = new PIXI.Text(lastTextLength, {
-            fontSize: 36,
-            fill: 0x000000
-          })
+          const lastText = new PIXI.Text(lastTextLength, textStyle)
           lastText.scale.set(0.25)
           lastText.position.set(lastPosition.x, lastPosition.y)
           lastText.anchor.set(0.5, 0.5)
@@ -1541,20 +1647,14 @@ export class Tread extends ChildWidget {
         .moveTo(newStartP2T.x / 10, newStartP2T.y / 10)
         .lineTo(newStartP2B.x / 10, newStartP2B.y / 10)
   
-        const startTreadLineNum = new PIXI.Text(startTreadLinelength, {
-          fontSize: 32,
-          fill: 0x000000,
-        })
+        const startTreadLineNum = new PIXI.Text(startTreadLinelength, textStyle)
   
         startTreadLineNum.scale.set(0.25)
         startTreadLineNum.position.set(position.x, position.y)
         startTreadLineNum.anchor.set(0.5, 0.5)
         startTreadLineNum.rotation = newStartTextRotation
   
-        const startTreadLineNum1 = new PIXI.Text(startTreadLinelength1, {
-          fontSize: 32,
-          fill: 0x000000,
-        })
+        const startTreadLineNum1 = new PIXI.Text(startTreadLinelength1, textStyle)
   
         startTreadLineNum1.scale.set(0.25)
         startTreadLineNum1.position.set(position1.x, position1.y + 5)

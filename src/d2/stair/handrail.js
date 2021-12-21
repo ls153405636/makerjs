@@ -27,7 +27,6 @@ export class Handrail extends ChildWidget {
 
     this.inEdges = inRoute.edges
     this.outEdges = outRoute.edges
-    console.log(this.outEdges)
 
     this.draw()
     this.addEvent()
