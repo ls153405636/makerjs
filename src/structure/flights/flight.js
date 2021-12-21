@@ -25,6 +25,7 @@ export class Flight extends ChildInfo {
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
     this.realStepNum = this.stepNum - this.stepNumRule + 1
+    this.fixedStepWidthNum = this.realStepNum
     this.clock = vClock
     this.compType = COMP_TYPES.FLIGHT
     this.rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec, vStartHeight })
@@ -62,7 +63,7 @@ export class Flight extends ChildInfo {
       stepLength: { name: '步长', value: this.stepLength, type: 'input' },
       stepWidthD: {
         name: '步宽',
-        value: this.stepWidth,
+        value: '',
         type: 'input',
         disabled: true,
       },
@@ -79,11 +80,8 @@ export class Flight extends ChildInfo {
     args.name = '楼梯段参数'
     let stepWithArr = []
     for (const t of this.treads) {
-      if (
-        t.stepWidth !== this.stepWidth &&
-        !stepWithArr.includes(t.stepWidth)
-      ) {
-        args.stepWidthD.value = args.stepWidthD.value + '/' + t.stepWidth
+      if (!stepWithArr.includes(t.stepWidth)) {
+        args.stepWidthD.value = args.stepWidthD.value + (args.stepWidthD.value? '/':'') + t.stepWidth
         stepWithArr.push(t.stepWidth)
       }
     }
@@ -136,19 +134,22 @@ export class Flight extends ChildInfo {
 
   computeStepWidth() {
     if (this.treads.length) {
-      let step_num = 0
-      let widthSum = this.length
+      this.fixedLength = this.length
+      this.fixedNum = this.realStepNum
       for (const t of this.treads) {
         if (t.isLast) {
           continue
         }
-        if (t.inheritW) {
-          step_num++
-        } else {
-          widthSum = widthSum - t.stepWidth
+        if (!t.inheritW) {
+          this.fixedNum--
+          this.fixedLength -= t.stepWidth
         }
       }
-      this.stepWidth = widthSum / step_num
+      if (this.fixedNum) {
+        this.stepWidth = this.fixedLength / this.fixedNum
+      } else {
+        this.stepWidth = 0
+      }
     } else {
       this.stepWidth = this.length / this.realStepNum
     }
@@ -156,19 +157,8 @@ export class Flight extends ChildInfo {
   }
 
   getStepWidthRange() {
-    let fixedLength = this.length
-    let fixedNum = this.realStepNum
-    for (const t of this.treads) {
-      if (t.isLast) {
-        continue
-      }
-      if (!t.inheritW) {
-        fixedNum--
-        fixedLength -= t.stepWidth
-      }
-    }
-    let range = fixedLength - fixedNum * Default.STEP_WIDTH_MIN
-    return range
+    let range = this.fixedLength - this.fixedNum * Default.STEP_WIDTH_MIN
+    return Math.max(range, 0)
   }
 
   /**

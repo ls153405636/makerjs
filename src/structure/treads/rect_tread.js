@@ -91,6 +91,9 @@ export class RectTread extends Tread {
       let range = this.parent.getStepWidthRange()
       let value = Math.max(vValue, Default.STEP_WIDTH_MIN)
       value = Math.min(value, this.stepWidth+range)
+      if (this.parent.fixedNum === 0) {
+        this.parent.updateItem(this.parent.length + value - this.stepWidth, 'length')
+      }
       this.stepWidth = value
     }
     else {
