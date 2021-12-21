@@ -93,6 +93,13 @@ export class Landing extends ChildInfo {
     if (gArgs.type === Types.GirderType.gslab) {
       options.splice(1,1)
     }
+    this.getLWFlight()
+    let length = this.lengthF.stepLength, width
+    if (this.parent.type === Types.StairType.s_small_u_type) {
+      width = this.parent.landingWidth
+    } else {
+      width = this.widthF.stepLength
+    }
     return {
       name: '休息平台参数',
       type:{
@@ -100,7 +107,35 @@ export class Landing extends ChildInfo {
         value:f(this.type, Landing.CUT_TYPE_MAP), 
         type:'select',
         options:options},
+      length: {name:'长度', value:length, type:'input'},
+      width: {name:'宽度', value:width, type:'input'}
+    }
+  }
 
+  updateItem(vValue, vKey, vSecondKey) {
+    if (vKey === 'length') {
+      this.lengthF.updateItem(vValue, 'stepLength')
+    } else if (vKey === 'width') {
+      if (this.parent.type === Types.StairType.s_small_u_type) {
+        this.parent.updateItem(vValue, 'landingWidth')
+      } else {
+        this.widthF.updateItem(vValue, 'stepLength')
+      }
+    } else {
+      super.updateItem(vValue, vKey, vSecondKey)
+    }
+  }
+
+  getLWFlight() {
+    if (this.lengthF && this.widthF) {
+      return
+    }
+    if ([0, 2].includes(this.lastEdgeIndex)) {
+      this.lengthF = this.parent.segments[this.index-1]
+      this.widthF = this.parent.segments[this.index+1]
+    } else {
+      this.lengthF = this.parent.segments[this.index+1]
+      this.widthF = this.parent.segments[this.index-1]
     }
   }
 
