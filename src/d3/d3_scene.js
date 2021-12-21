@@ -1,4 +1,5 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { Types } from '../types/stair_v2'
 
 export class D3Scene {
   constructor() {
@@ -36,6 +37,18 @@ export class D3Scene {
   addToPage() {
     document.querySelector('#scene').appendChild(this.renderer.domElement)
     this.render()
+  }
+
+  /**
+   *
+   * @param {Types.Vector3} vSize
+   * @param {Types.Vector3} vCenter
+   * @memberof D3Scene
+   */
+  resetCamera(vSize, vCenter) {
+    this.camera.position.set(vCenter.x + vSize.x*2, vCenter.y + vSize.y*2, vCenter.z + vSize.z*2)
+    this.camera.lookAt(new THREE.Vector3(vCenter.x, vCenter.y, vCenter.z))
+    this.control.target = new THREE.Vector3(vCenter.x, vCenter.y, vCenter.z)
   }
 
   render() {
