@@ -20,7 +20,6 @@ export class Inlay extends BaseWidget {
   constructor(vPB) {
     super(vPB.uuid)
     this.init(vPB)
-    console.log(vPB)
   }
 
   getWidgetType() {
@@ -35,6 +34,7 @@ export class Inlay extends BaseWidget {
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.disToStart = vPB.disToStart
+    this.disToEnd = vPB.wallLength - this.disToStart - vPB.width
     this.rotationY = vPB.rotation.y
     this.draw()
     this.addDimension()
@@ -158,9 +158,8 @@ export class Inlay extends BaseWidget {
     // 标注线绘制
     let inlay = StructConfig.INFOS.get(this.uuid)
     const wallLength = inlay.wallLength
-    console.log(inlay)
     // 标注线点计算
-    const { positionX, positionY, rotationY, disToStart } = this
+    const { positionX, positionY, rotationY, disToStart, disToEnd } = this
     const offSet = new Victor(15, 15) // 偏移距离
     const smallOffset = new Victor(2, 2) // 偏移距离
 
@@ -243,10 +242,14 @@ export class Inlay extends BaseWidget {
     compLine.moveTo(newP7.x, newP7.y)
     compLine.lineTo(newP8.x, newP8.y)
 
-    compLine.moveTo(newP7T.x, newP7T.y)
-    compLine.lineTo(newP7B.x, newP7B.y)
-    compLine.moveTo(newP8T.x, newP8T.y)
-    compLine.lineTo(newP8B.x, newP8B.y)
+    if (disToEnd === 0) {
+      // 
+    } else {
+      compLine.moveTo(newP7T.x, newP7T.y)
+      compLine.lineTo(newP7B.x, newP7B.y)
+      compLine.moveTo(newP8T.x, newP8T.y)
+      compLine.lineTo(newP8B.x, newP8B.y)
+    }
     if (disToStart === 0) {
       // 
     }else {
@@ -280,31 +283,48 @@ export class Inlay extends BaseWidget {
     compLineText2.rotation = newRoationY - Math.PI / 2
 
     // 距离标注文字
-    let disText
-    if (disToStart === 0) {
-      disText = ''
-    } else {
-      disText = disToStart
-    }
+    let disText = Math.round(Math.hypot(newP5.x - newP6.x, newP5.y - newP6.y) * 10 * 100) / 100
+    let disText1 = Math.round(Math.hypot(newP7.x - newP8.x, newP7.y - newP8.y) * 10 * 100) / 100
     const compLineText3 = new PIXI.Text(disText, {
       fontSize: 32,
       fill: 0x000000,
     })
+    const compLineText4 = new PIXI.Text(disText1, {
+      fontSize: 32,
+      fill: 0x000000,
+    })
+    if (disToStart === 0) {
+      compLineText3.visible = false
+    } else {
+      compLineText3.visible = true
+    }
+    if (disToEnd === 0) {
+      compLineText4.visible = false
+    } else {
+      compLineText4.visible = true
+    }
     compLineText3.scale.set(0.25)
     compLineText3.anchor.set(0.5, 0.5)
     compLineText3.position.set(
-      -this.width / 2 - disToStart / 2 / D2Config.SCREEN_RATE,
-      newP5.y - 4
+      (newP5.x + newP6.x) / 2,
+      (newP5.y + newP6.y) / 2 - 4
     )
     compLineText3.rotation = newRoationY
+
+    compLineText4.scale.set(0.25)
+    compLineText4.anchor.set(0.5, 0.5)
+    compLineText4.position.set(
+      (newP7.x + newP8.x) / 2,
+      (newP7.y + newP8.y) / 2 - 4
+    )
+    compLineText4.rotation = newRoationY
 
     // 离地高度标线
     const offGroundContainer = new PIXI.Container()
     const offGround = new PIXI.Graphics()
-    offGround.lineStyle(1,0x000000)
-    offGround.moveTo(p2.x, p2.y)
-    offGround.lineTo(p2.x + 7, p2.y - 15)
-    offGround.lineTo(p2.x + 47, p2.y - 15)
+    offGround.lineStyle(1,0x000000, 1, 0.5 ,true)
+    offGround.moveTo(newP8.x, newP8.y)
+    offGround.lineTo(newP8.x + 40, newP8.y)
 
     
     const inlayOffGround = inlay.offGround
@@ -317,7 +337,7 @@ export class Inlay extends BaseWidget {
     }
     offGroundText.scale.set(0.25)
     offGroundText.anchor.set(0.5, 0.5)
-    offGroundText.position.set(p2.x + 30 , p2.y - 20)
+    offGroundText.position.set(newP8.x + 20 , newP8.y - 4)
     offGroundText.rotation = newRoationY
 
     offGroundContainer.addChild(
@@ -329,7 +349,8 @@ export class Inlay extends BaseWidget {
       compLine,
       compLineText1,
       compLineText2,
-      compLineText3
+      compLineText3,
+      compLineText4
     )
     compLineContainer.position.set(positionX, positionY)
     compLineContainer.rotation = this.rotationY

@@ -77,13 +77,9 @@ export class Inlay extends Component {
     this.width = Default.INLAY_WIDTH
     this.height = Default.INLAY_HEIGHT
     this.depth = this.parent.depth
-    this.offGround = 0 // 门默认离地0，窗、洞另考虑
-    let toStart = new Edge(this.parent.edge).getLength() / 2 - this.width / 2
-    let toEnd = new Edge(this.parent.edge).getLength() - this.width - toStart
-    this.disToStart = new Edge(this.parent.edge).getLength() - toEnd - this.width
-    this.disToEnd = new Edge(this.parent.edge).getLength() - toStart - this.width
-    console.log(this.disToEnd)
-    console.log(this.disToStart)
+    this.offGround = 0
+    this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
   }
 
@@ -96,7 +92,7 @@ export class Inlay extends Component {
       },
       disToEnd: {
         name: '距终点的距离',
-        value: new Edge(this.parent.edge).getLength() - this.disToStart,
+        value: new Edge(this.parent.edge).getLength() - this.disToStart - this.width,
         type: 'input',
       },
       width: { name: '宽度', value: this.width, type: 'input' },
@@ -114,14 +110,20 @@ export class Cloumn extends Component {
     this.depth = Default.CEMENT_SIZE
     this.offGround = this.parent.height - this.height
     this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
   }
 
   getArgs() {
     return {
       disToStart: {
-        name: '距端点的距离',
+        name: '距起点的距离',
         value: this.disToStart,
+        type: 'input',
+      },
+      disToEnd: {
+        name: '距终点的距离',
+        value: new Edge(this.parent.edge).getLength() - this.disToStart - this.width,
         type: 'input',
       },
       width: { name: '宽度', value: this.width, type: 'input' },

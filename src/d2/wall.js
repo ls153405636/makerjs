@@ -114,7 +114,6 @@ export class Wall extends BaseWidget {
     smallWall[2] = new Edge().setByVec(smallWall[1], wVec, -this.depth).p2
     smallWall[3] = new Edge().setByVec(smallWall[2], lVec, -this.depth).p2
     smallWall[4] = new Edge().setByVec(smallWall[3], wVec, this.depth).p2
-    console.log(smallWall)
 
     //创建墙体纹理
     var texture = null
@@ -172,15 +171,15 @@ export class Wall extends BaseWidget {
       wall.beginFill(0xe5e5e5, 1)
     }
     wall.drawPolygon(path)
-    if (Math.hypot(this.holeEdge.p1.x - this.holeEdge.p2.x, this.holeEdge.p1.y - this.holeEdge.p2.y) === Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) * 10) {
-      let path1 = []
-      for (let i = 0; i < smallWall.length; i++) {
-        path1.push(smallWall[i].x, smallWall[i].y)
-      }
-      wall.drawPolygon(path1)
-    }else {
-      // 
-    }
+    // if (Math.hypot(this.holeEdge.p1.x - this.holeEdge.p2.x, this.holeEdge.p1.y - this.holeEdge.p2.y) === Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) * 10) {
+    //   let path1 = []
+    //   for (let i = 0; i < smallWall.length; i++) {
+    //     path1.push(smallWall[i].x, smallWall[i].y)
+    //   }
+    //   wall.drawPolygon(path1)
+    // }else {
+    //   // 
+    // }
     wall.endFill()
 
     wall.addChild(tilingSprite)

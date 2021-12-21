@@ -36,11 +36,13 @@ export class CementComp extends BaseWidget {
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.rotationY = vPB.rotation.y
     this.disToStart = vPB.disToStart
+    this.disToEnd = vPB.wallLength - this.disToStart - vPB.width
     this.wallDepth = vPB.wallDepth
     this.wallLength = vPB.wallLength
     this.draw()
     this.addDimension()
     this.addEvent()
+    console.log(vPB)
   }
 
   /**
@@ -170,7 +172,7 @@ export class CementComp extends BaseWidget {
     let comp = StructConfig.INFOS.get(this.uuid)
     let wallWidth = comp.width
     // 标注线点计算
-    const { positionX, positionY, rotationY, disToStart } = this
+    const { positionX, positionY, rotationY, disToStart, disToEnd } = this
     const offSet = new Victor(7, 7) // 偏移距离
     const arrow = new Victor(2, 2)
     const p1 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
@@ -178,9 +180,13 @@ export class CementComp extends BaseWidget {
     const p3 = new Victor(this.width / 2, -this.depth / 2)
     const p4 = new Victor(this.width / 2, this.depth / 2)
 
-    const p5 = new Victor(-this.width / 2, -this.depth / 2)
-    const p6 = new Victor(-this.width / 2, -this.depth / 2).subtractX(
+    const p5 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
+    const p6 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE).subtractX(
       new Victor(disToStart / D2Config.SCREEN_RATE, 0)
+    )
+    const p7 = new Victor(this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
+    const p8 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE).addX(
+      new Victor((this.wallLength - disToStart) / D2Config.SCREEN_RATE, 0)
     )
 
     const newP1 = p1.clone().subtractY(offSet)
@@ -197,33 +203,30 @@ export class CementComp extends BaseWidget {
       newP4 = p4.clone().addX(offSet)
     }
 
-    const newP5 = p5.clone().addY(offSet)
-    const newP6 = p6.clone().addY(offSet)
+    const newP5 = p5.clone().subtractY(offSet)
+    const newP6 = p6.clone().subtractY(offSet)
+    const newP7 = p7.clone().subtractY(offSet)
+    const newP8 = p8.clone().subtractY(offSet)
 
     const newP1T = new Victor(newP1.x, newP1.y).subtractY(arrow)
     const newP1B = new Victor(newP1.x, newP1.y).addY(arrow)
     const newP2T = new Victor(newP2.x, newP2.y).subtractY(arrow)
     const newP2B = new Victor(newP2.x, newP2.y).addY(arrow)
 
+    const newP5T = new Victor(newP5.x, newP5.y).subtractY(arrow)
+    const newP5B = new Victor(newP5.x, newP5.y).addY(arrow)
+    const newP6T = new Victor(newP6.x, newP6.y).subtractY(arrow)
+    const newP6B = new Victor(newP6.x, newP6.y).addY(arrow)
+    const newP7T = new Victor(newP7.x, newP7.y).subtractY(arrow)
+    const newP7B = new Victor(newP7.x, newP7.y).addY(arrow)
+    const newP8T = new Victor(newP8.x, newP8.y).subtractY(arrow)
+    const newP8B = new Victor(newP8.x, newP8.y).addY(arrow)
+
     const newP3T = new Victor(newP3.x, newP3.y).subtractX(arrow)
     const newP3B = new Victor(newP3.x, newP3.y).addX(arrow)
     const newP4T = new Victor(newP4.x, newP4.y).subtractX(arrow)
     const newP4B = new Victor(newP4.x, newP4.y).addX(arrow)
 
-    let newP5T = 0
-    let newP5B = 0
-    let newP6T = 0
-    let newP6B = 0
-    if (disToStart !== 0) {
-      newP5T = new Victor(newP5.x, newP5.y).subtract(arrow)
-      newP5B = new Victor(newP5.x, newP5.y)
-        .subtractX(arrow)
-        .addY(arrow)
-      newP6T = new Victor(newP6.x, newP6.y)
-        .subtractY(arrow)
-        .addX(arrow)
-      newP6B = new Victor(newP6.x, newP6.y).add(arrow)
-    }
 
     // 文字旋转角度
     let newRoationY = rotationY
@@ -275,14 +278,25 @@ export class CementComp extends BaseWidget {
     // 距离标注线
     compLine.moveTo(newP5.x, newP5.y)
     compLine.lineTo(newP6.x, newP6.y)
+    compLine.moveTo(newP7.x, newP7.y)
+    compLine.lineTo(newP8.x, newP8.y)
 
-    compLine.moveTo(newP5T.x, newP5T.y)
-    compLine.lineTo(newP5.x, newP5.y)
-    compLine.lineTo(newP5B.x, newP5B.y)
-
-    compLine.moveTo(newP6T.x, newP6T.y)
-    compLine.lineTo(newP6.x, newP6.y)
-    compLine.lineTo(newP6B.x, newP6B.y)
+    if (disToEnd === 0) {
+      // 
+    } else {
+      compLine.moveTo(newP7T.x, newP7T.y)
+      compLine.lineTo(newP7B.x, newP7B.y)
+      compLine.moveTo(newP8T.x, newP8T.y)
+      compLine.lineTo(newP8B.x, newP8B.y)
+    }
+    if (disToStart === 0) {
+      // 
+    }else {
+      compLine.moveTo(newP5T.x, newP5T.y)
+      compLine.lineTo(newP5B.x, newP5B.y)
+      compLine.moveTo(newP6T.x, newP6T.y)
+      compLine.lineTo(newP6B.x, newP6B.y)
+    }
 
     
 
@@ -297,23 +311,41 @@ export class CementComp extends BaseWidget {
     compLineText2.rotation = newRoationY - Math.PI / 2
 
     // 距离标注文字
-    let disText
-    if (disToStart === 0) {
-      disText = ''
-    } else {
-      disText = disToStart
-    }
+    let disText = Math.round(Math.hypot(newP5.x - newP6.x, newP5.y - newP6.y) * 10 * 100) / 100
+    let disText1 = Math.round(Math.hypot(newP7.x - newP8.x, newP7.y - newP8.y) * 10 * 100) / 100
     const compLineText3 = new PIXI.Text(disText, {
       fontSize: 32,
       fill: 0x000000,
     })
+    const compLineText4 = new PIXI.Text(disText1, {
+      fontSize: 32,
+      fill: 0x000000,
+    })
+    if (disToStart === 0) {
+      compLineText3.visible = false
+    } else {
+      compLineText3.visible = true
+    }
+    if (disToEnd === 0) {
+      compLineText4.visible = false
+    } else {
+      compLineText4.visible = true
+    }
     compLineText3.scale.set(0.25)
     compLineText3.anchor.set(0.5, 0.5)
     compLineText3.position.set(
-      -this.width / 2 - disToStart / 2 / D2Config.SCREEN_RATE,
-      newP5.y - 4
+      (newP5.x + newP6.x) / 2,
+      (newP5.y + newP6.y) / 2 - 4
     )
     compLineText3.rotation = newRoationY
+
+    compLineText4.scale.set(0.25)
+    compLineText4.anchor.set(0.5, 0.5)
+    compLineText4.position.set(
+      (newP7.x + newP8.x) / 2,
+      (newP7.y + newP8.y) / 2 - 4
+    )
+    compLineText4.rotation = newRoationY
 
 
     // 离地高度标线
@@ -335,9 +367,9 @@ export class CementComp extends BaseWidget {
     offGround.lineStyle(1,0x000000,1,0.5,true)
     offGround.moveTo(newP3.x, newP3.y)
     if (this.type === 5) {
-      offGroundText.position.set(newP3.x + 30 , newP3.y - 12 - this.wallDepth / D2Config.SCREEN_RATE)
-      offGround.lineTo(newP3.x + 7, newP3.y - 7 - this.wallDepth / D2Config.SCREEN_RATE)
-      offGround.lineTo(newP3.x + 47, newP3.y - 7 - this.wallDepth / D2Config.SCREEN_RATE)
+      offGroundText.position.set(newP8.x + 20 , newP8.y - 4)
+      offGround.moveTo(newP8.x, newP8.y)
+      offGround.lineTo(newP8.x + 40, newP8.y)
     }else {
       offGroundText.position.set(newP3.x + 30 , newP3.y - 12)
       offGround.lineTo(newP3.x + 7, newP3.y - 7)
@@ -355,7 +387,8 @@ export class CementComp extends BaseWidget {
       compLine,
       compLineText1,
       compLineText2,
-      compLineText3
+      compLineText3,
+      compLineText4
     )
     compLineContainer.position.set(positionX, positionY)
     compLineContainer.rotation = this.rotationY
