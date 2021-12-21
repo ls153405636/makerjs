@@ -331,7 +331,7 @@ export class Tread extends ChildInfo {
         botPois[0] = utilE.clone().extendP1(- widthDiff).p1
       }
       botPois[0].z = botPois[1].z
-      if (this.curOrder === 'last') {
+      if (this.curOrder === 'last' && vLast) {
         botPois.splice(0, 0, vLast.poi)
       }
     }
