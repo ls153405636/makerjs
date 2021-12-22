@@ -13,8 +13,6 @@ import { Core } from '../common/core'
 import { Command } from '../common/command'
 import { COMP_TYPES } from '../common/common_config'
 import { Edge } from '../utils/edge'
-import tool from '../structure/tool'
-import { types } from 'protobufjs'
 
 export class Wall extends BaseWidget {
   /**
