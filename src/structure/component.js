@@ -18,7 +18,7 @@ export class Component extends Info {
     this.rotation = new Types.Vector3({ y: angle })
     this.interval = 0
     this.wallDepth = vParent.depth
-    
+    this.wallEndExtend = vParent.endExtend
   }
 
   addInfo() {
@@ -48,10 +48,22 @@ export class Component extends Info {
   }
 
   rebuild() {
-    let toS = this.disToStart
-    let toE = this.disToEnd
+    this.updateItem()
     this.computePosition()
     this.updateCanvas()
+  }
+  
+  updateItem(vValue, vKey, vSecondKey) {
+    if (vValue === undefined) {
+      this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
+    }else {
+      this.disToEnd = vValue
+    }
+    if (vKey === 'disToEnd') {
+      this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width
+    } else {
+      super.updateItem(vValue, vKey, vSecondKey)
+    }
   }
 
   writePB() {
@@ -82,7 +94,7 @@ export class Inlay extends Component {
     this.depth = this.parent.depth
     this.offGround = 0
     this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
-    this.disToEnd = new Edge(this.parent.edge).getLength() - (new Edge(this.parent.edge).getLength() - this.width) / 2 - this.width
+    this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
   }
 
@@ -95,7 +107,7 @@ export class Inlay extends Component {
       },
       disToEnd: {
         name: '距终点的距离',
-        value: new Edge(this.parent.edge).getLength() - this.disToStart - this.width,
+        value: this.disToEnd,
         type: 'input',
       },
       width: { name: '宽度', value: this.width, type: 'input' },
@@ -127,7 +139,7 @@ export class Cloumn extends Component {
       },
       disToEnd: {
         name: '距终点的距离',
-        value: new Edge(this.parent.edge).getLength() - this.disToStart - this.width,
+        value: this.disToEnd,
         type: 'input',
       },
       width: { name: '宽度', value: this.width, type: 'input' },

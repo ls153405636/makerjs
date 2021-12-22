@@ -157,6 +157,7 @@ export class Inlay extends BaseWidget {
   addDimension() {
     // 标注线绘制
     let inlay = StructConfig.INFOS.get(this.uuid)
+    const wallEndExtend = inlay.parent.endExtend
     const wallLength = inlay.wallLength
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart, disToEnd } = this
@@ -185,8 +186,16 @@ export class Inlay extends BaseWidget {
 
     const newP5 = p5.clone().subtractY(offSet)
     const newP6 = p6.clone().subtractY(offSet)
-    const newP7 = p7.clone().subtractY(offSet)
-    const newP8 = p8.clone().subtractY(offSet)
+    let newP7
+    let newP8
+    
+    if (wallEndExtend === 240) {
+      newP7 = p7.clone().subtractY(offSet)
+      newP8 = p8.clone().subtractY(offSet).subtractX(new Victor(24,24))
+    }else {
+      newP7 = p7.clone().subtractY(offSet)
+      newP8 = p8.clone().subtractY(offSet)
+    }
 
     const newP1T = new Victor(newP1.x, newP1.y).subtractY(smallOffset)
     const newP1B = new Victor(newP1.x, newP1.y).addY(smallOffset)

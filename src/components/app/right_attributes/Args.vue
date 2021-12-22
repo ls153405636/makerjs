@@ -147,7 +147,6 @@ export default defineComponent({
     },
 
     updateArgs(event, value, key, type, secondKey) {
-      console.log(value, key, type, secondKey)
       if (this.$store.state.right_attribute.cur_args.floorHeight) {
         let holeArgs = this.$store.state.right_attribute.cur_args.floorHeight
         if (holeArgs.value === 0 || holeArgs.value === '') {
