@@ -13,9 +13,9 @@ export class Flight extends ChildInfo {
     { value: Types.StepNumRule.snr_n, label: 'n步' },
     { value: Types.StepNumRule.snr_n_add_1, label: 'n+1步' },
   ]
-  constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vPos, vLVec, vWVec, vLength, vClock = true, vStartHeight}) {
+  constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vPos, vLVec, vWVec, vLength, vClock = true, vStartHeight, vStepLength}) {
     super(vParent)
-    this.stepLength = Default.STEP_LENGTH
+    this.stepLength = vStepLength || Default.STEP_LENGTH
     this.length = Math.round(vLength)
     this.isLast = isLast
     this.index = vIndex

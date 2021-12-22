@@ -13,6 +13,11 @@ export class SmallUTypeStair extends UTypeStair {
     this.gap = Default.U_TYPE_GAP
     this.landingWidth = Default.STEP_LENGTH
     this.type = Types.StairType.s_small_u_type
+    let edgeLength = new Edge(this.parent.hole.getEdgeByPos('top')).getLength()
+    if (edgeLength < 1800) {
+      this.gap = 0
+      this.landingWidth = edgeLength/2
+    }
     this.rebuild()
   }
 
@@ -48,8 +53,13 @@ export class SmallUTypeStair extends UTypeStair {
   initFlights() {
     let hole = this.parent.hole
     let rightEdge = hole.getEdgeByPos('right')
+    let edgeLength = new Edge(this.parent.hole.getEdgeByPos('top')).getLength()
+    let stepLength = Default.STEP_LENGTH
+    if (edgeLength < 1800) {
+      stepLength = edgeLength / 2
+    }
     let depth2 = new Edge(rightEdge).getLength()
-    let width = Default.STEP_LENGTH * 2 + this.gap
+    let width =stepLength * 2 + this.gap
     let fStepNum = this.realStepNum - Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2
     let num2 = Number(((depth2 - this.landingWidth) / Default.STEP_WIDTH).toFixed(0))
     let num1 = fStepNum - num2
@@ -84,7 +94,8 @@ export class SmallUTypeStair extends UTypeStair {
                                   vWVec:new Types.Vector3({y:1}), 
                                   vLength:depth1 - this.landingWidth,
                                   vStartHeight: 0,
-                                  vClock:this.floadSide === Types.Side.si_right})
+                                  vClock:this.floadSide === Types.Side.si_right,
+                                  vStepLength:stepLength})
     this.flights[1] = new Flight({vParent:this, 
                                   vStepNum:num2, 
                                   vStepNumRule:this.stepNumRule, 
@@ -96,7 +107,8 @@ export class SmallUTypeStair extends UTypeStair {
                                   vWVec:new Types.Vector3({y:-1}), 
                                   vLength:depth2 - this.landingWidth - this.hangOffset,
                                   vStartHeight:(num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE) * 2)*this.stepHeight,
-                                  vClock:this.floadSide === Types.Side.si_right})
+                                  vClock:this.floadSide === Types.Side.si_right,
+                                  vStepLength:stepLength})
   }
 
   updateFlights() {
