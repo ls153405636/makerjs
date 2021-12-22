@@ -39,6 +39,8 @@ export class CementComp extends BaseWidget {
     this.disToEnd = vPB.wallLength - this.disToStart - vPB.width
     this.wallDepth = vPB.wallDepth
     this.wallLength = vPB.wallLength
+    let compData = StructConfig.INFOS.get(this.uuid)
+    this.wallEndExtend = compData.parent.endExtend
     this.draw()
     this.addDimension()
     this.addEvent()
@@ -51,10 +53,10 @@ export class CementComp extends BaseWidget {
 
    creatComp(vName) {
     vName.drawRect(
-      -this.width / 2,
-      -this.depth / 2,
-      this.width,
-      this.depth
+    -this.width / 2,
+    -this.depth / 2,
+    this.width,
+    this.depth
     )
     vName.endFill()
     vName.position.set(this.positionX, this.positionY)
@@ -78,12 +80,11 @@ export class CementComp extends BaseWidget {
         texture = PIXI.Texture.from(wPillar)
         break
     }
-
     var tilingSprite = new PIXI.TilingSprite(texture, this.width, this.depth)
+    var tilingSprite1 = new PIXI.TilingSprite(texture, this.width, this.depth)
     tilingSprite.anchor.set(0.5, 0.5)
     tilingSprite.tileScale.set(0.1) // 纹理缩放
 
-    var tilingSprite1 = new PIXI.TilingSprite(texture, this.width, this.depth)
     tilingSprite1.anchor.set(0.5, 0.5)
     tilingSprite1.tileScale.set(0.1) // 纹理缩放
 
@@ -169,6 +170,7 @@ export class CementComp extends BaseWidget {
   addDimension() {
     // 标注线绘制
     let comp = StructConfig.INFOS.get(this.uuid)
+    const wallEndExtend = comp.parent.endExtend
     let wallWidth = comp.width
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart, disToEnd } = this
@@ -204,8 +206,15 @@ export class CementComp extends BaseWidget {
 
     const newP5 = p5.clone().subtractY(offSet)
     const newP6 = p6.clone().subtractY(offSet)
-    const newP7 = p7.clone().subtractY(offSet)
-    const newP8 = p8.clone().subtractY(offSet)
+    let newP7
+    let newP8
+    if (wallEndExtend === 240) {
+      newP7 = p7.clone().subtractY(offSet)
+      newP8 = p8.clone().subtractY(offSet).subtractX(new Victor(24,24))
+    }else {
+      newP7 = p7.clone().subtractY(offSet)
+      newP8 = p8.clone().subtractY(offSet)
+    }
 
     const newP1T = new Victor(newP1.x, newP1.y).subtractY(arrow)
     const newP1B = new Victor(newP1.x, newP1.y).addY(arrow)
@@ -253,7 +262,7 @@ export class CementComp extends BaseWidget {
     let compLine = new PIXI.Graphics()
     compLine.lineStyle(1, 0x000000, 1, 0.5, true)
 
-    if (this.wallLength === wallWidth) {
+    if (this.wallLength - wallEndExtend === wallWidth) {
       compLineText1.visible = false
       // return
     } else {
@@ -277,18 +286,18 @@ export class CementComp extends BaseWidget {
     // 距离标注线
     compLine.moveTo(newP5.x, newP5.y)
     compLine.lineTo(newP6.x, newP6.y)
-    compLine.moveTo(newP7.x, newP7.y)
-    compLine.lineTo(newP8.x, newP8.y)
-
-    if (disToEnd === 0) {
+    console.log(disToEnd === 0 || this.type === 4)
+    if (disToEnd === 0 || this.type === 4) {
       // 
     } else {
+      compLine.moveTo(newP7.x, newP7.y)
+      compLine.lineTo(newP8.x, newP8.y)
       compLine.moveTo(newP7T.x, newP7T.y)
       compLine.lineTo(newP7B.x, newP7B.y)
       compLine.moveTo(newP8T.x, newP8T.y)
       compLine.lineTo(newP8B.x, newP8B.y)
     }
-    if (disToStart === 0) {
+    if (disToStart === 0 || this.type === 4) {
       // 
     }else {
       compLine.moveTo(newP5T.x, newP5T.y)
@@ -310,8 +319,15 @@ export class CementComp extends BaseWidget {
     compLineText2.rotation = newRoationY - Math.PI / 2
 
     // 距离标注文字
-    let disText = Math.round(Math.hypot(newP5.x - newP6.x, newP5.y - newP6.y) * 10 * 100) / 100
-    let disText1 = Math.round(Math.hypot(newP7.x - newP8.x, newP7.y - newP8.y) * 10 * 100) / 100
+    let disText
+    let disText1
+    if (wallEndExtend === 240 && this.type === 4) {
+      disText = ''
+      disText1 = ''
+    }else {
+      disText = Math.round(Math.hypot(newP5.x - newP6.x, newP5.y - newP6.y) * 10 * 100) / 100
+      disText1 = Math.round(Math.hypot(newP7.x - newP8.x, newP7.y - newP8.y) * 10 * 100) / 100
+    }
     const compLineText3 = new PIXI.Text(disText, {
       fontSize: 32,
       fill: 0x000000,

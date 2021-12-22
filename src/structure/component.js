@@ -55,12 +55,20 @@ export class Component extends Info {
   
   updateItem(vValue, vKey, vSecondKey) {
     if (vValue === undefined) {
-      this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
+      if (this.wallEndExtend === 240) {
+        this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width - 240
+      }else {
+        this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
+      }
     }else {
       this.disToEnd = vValue
     }
     if (vKey === 'disToEnd') {
-      this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width
+      if (this.wallEndExtend === 240) {
+        this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width - 120
+      }else {
+        this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width
+      }
     } else {
       super.updateItem(vValue, vKey, vSecondKey)
     }
@@ -93,7 +101,11 @@ export class Inlay extends Component {
     this.height = Default.INLAY_HEIGHT
     this.depth = this.parent.depth
     this.offGround = 0
-    this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    if (this.wallEndExtend === 240) {
+      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2 - 120
+    }else {
+      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    }
     this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
   }
@@ -124,7 +136,11 @@ export class Cloumn extends Component {
     this.height = this.parent.height
     this.depth = Default.CEMENT_SIZE
     this.offGround = this.parent.height - this.height
-    this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    if (this.wallEndExtend === 240) {
+      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2 - 120
+    }else {
+      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    }
     this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
     
@@ -155,7 +171,11 @@ export class Beam extends Component {
   constructor(vParent, vType) {
     super(vParent, vType)
     this.parent = vParent
-    this.width = new Edge(this.parent.edge).getLength()
+    if (this.wallEndExtend === 240) {
+      this.width = new Edge(this.parent.edge).getLength() - 240
+    }else {
+      this.width = new Edge(this.parent.edge).getLength()
+    }
     this.height = Default.CEMENT_SIZE
     this.depth = Default.CEMENT_SIZE
     this.offGround = this.parent.height - this.height
