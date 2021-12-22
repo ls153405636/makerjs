@@ -24,7 +24,6 @@ export class Flight extends ChildInfo {
     this.startTread = false
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
-    this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.fixedStepWidthNum = this.realStepNum
     this.clock = vClock
     this.compType = COMP_TYPES.FLIGHT
@@ -43,6 +42,7 @@ export class Flight extends ChildInfo {
     this.wVec = vWVec
     this.stepHeight = this.parent.stepHeight
     this.startHeight = vStartHeight
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.computeStepWidth()
     this.computeEndHeight()
     this.updateTreads()
@@ -51,7 +51,6 @@ export class Flight extends ChildInfo {
   updateItem(vValue, vKey, vSecondKey) {
     if (['stepNum', 'stepNumRule'].includes(vKey)) {
       this.treads = []
-      this.realStepNum = this.stepNum - this.stepNumRule + 1
     }
     super.updateItem(vValue, vKey, vSecondKey)
   }
