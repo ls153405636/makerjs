@@ -127,6 +127,7 @@ export class Stair extends Info {
     this.updatehangingBoard()
     this.updateGirders()
     this.updateHandrails()
+    this.updateStairPositon()
     this.updateSmallColumns()
     this.updateBigColumns()
     this.updateCanvas('Stair')
@@ -161,7 +162,13 @@ export class Stair extends Info {
     StructConfig.INFOS.delete(this.uuid)
   }
 
-
+  /**移动整个楼梯 */
+  updateStairPositon() {
+    this.position.y += this.startMoveB
+    this.position.y -= this.startMoveT
+    this.position.x += this.startMoveR
+    this.position.x -= this.startMoveL
+  }
   /**计算步高 */
   computeStepHeight() {
     let step_num = 0
