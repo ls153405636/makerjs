@@ -124,10 +124,10 @@ export class Stair extends Info {
     this.updateSegments()
     this.computeSize()
     this.computePosition()
+    this.updateStairPositon()
     this.updatehangingBoard()
     this.updateGirders()
     this.updateHandrails()
-    this.updateStairPositon()
     this.updateSmallColumns()
     this.updateBigColumns()
     this.updateCanvas('Stair')
@@ -164,10 +164,10 @@ export class Stair extends Info {
 
   /**移动整个楼梯 */
   updateStairPositon() {
-    this.position.y += this.startMoveB
     this.position.y -= this.startMoveT
     this.position.x += this.startMoveR
-    this.position.x -= this.startMoveL
+    // this.position.y += this.startMoveB
+    // this.position.x -= this.startMoveL
   }
   /**计算步高 */
   computeStepHeight() {
@@ -348,16 +348,16 @@ export class Stair extends Info {
         value: this.startMoveR,
         type: 'input',
       },
-      startMoveB: {
-        name: '下移',
-        value: this.startMoveB,
-        type: 'input',
-      },
-      startMoveL: {
-        name: '左移',
-        value: this.startMoveL,
-        type: 'input',
-      },
+      // startMoveB: {
+      //   name: '下移',
+      //   value: this.startMoveB,
+      //   type: 'input',
+      // },
+      // startMoveL: {
+      //   name: '左移',
+      //   value: this.startMoveL,
+      //   type: 'input',
+      // },
       startBeamDepth: {
         name: '起步梁厚',
         value: this.startBeamDepth,
