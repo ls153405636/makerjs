@@ -35,12 +35,16 @@ export class CementComp extends BaseWidget {
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.rotationY = vPB.rotation.y
-    this.disToStart = vPB.disToStart
-    this.disToEnd = vPB.wallLength - this.disToStart - vPB.width
     this.wallDepth = vPB.wallDepth
     this.wallLength = vPB.wallLength
     let compData = StructConfig.INFOS.get(this.uuid)
     this.wallEndExtend = compData.parent.endExtend
+    this.disToStart = vPB.disToStart
+    if (this.wallEndExtend === 240) {
+      this.disToEnd = vPB.wallLength - this.disToStart - vPB.width - 240
+    }else {
+      this.disToEnd = vPB.wallLength - this.disToStart - vPB.width
+    }
     this.draw()
     this.addDimension()
     this.addEvent()
@@ -174,7 +178,7 @@ export class CementComp extends BaseWidget {
     let wallWidth = comp.width
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart, disToEnd } = this
-    const offSet = new Victor(7, 7) // 偏移距离
+    const offSet = new Victor(8, 8) // 偏移距离
     const arrow = new Victor(2, 2)
     const p1 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
     const p2 = new Victor(this.width / 2, -this.depth / 2 -this.wallDepth / D2Config.SCREEN_RATE)
@@ -286,7 +290,6 @@ export class CementComp extends BaseWidget {
     // 距离标注线
     compLine.moveTo(newP5.x, newP5.y)
     compLine.lineTo(newP6.x, newP6.y)
-    console.log(disToEnd === 0 || this.type === 4)
     if (disToEnd === 0 || this.type === 4) {
       // 
     } else {
@@ -336,6 +339,7 @@ export class CementComp extends BaseWidget {
       fontSize: 32,
       fill: 0x000000,
     })
+    console.log(this)
     if (disToStart === 0) {
       compLineText3.visible = false
     } else {

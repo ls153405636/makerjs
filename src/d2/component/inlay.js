@@ -36,6 +36,14 @@ export class Inlay extends BaseWidget {
     this.disToStart = vPB.disToStart
     this.disToEnd = vPB.wallLength - this.disToStart - vPB.width
     this.rotationY = vPB.rotation.y
+    this.inlay = StructConfig.INFOS.get(this.uuid)
+    this.wallEndExtend = this.inlay.parent.endExtend
+    this.wallLength = this.inlay.wallLength
+    if (this.wallEndExtend === 240) {
+      this.disToEnd = vPB.wallLength - this.disToStart - vPB.width - 240
+    }else {
+      this.disToEnd = vPB.wallLength - this.disToStart - vPB.width
+    }
     this.draw()
     this.addDimension()
     this.addEvent()
@@ -156,12 +164,10 @@ export class Inlay extends BaseWidget {
   }
   addDimension() {
     // 标注线绘制
-    let inlay = StructConfig.INFOS.get(this.uuid)
-    const wallEndExtend = inlay.parent.endExtend
-    const wallLength = inlay.wallLength
+    
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart, disToEnd } = this
-    const offSet = new Victor(15, 15) // 偏移距离
+    const offSet = new Victor(16, 16) // 偏移距离
     const smallOffset = new Victor(2, 2) // 偏移距离
 
     const p1 = new Victor(-this.width / 2, -this.depth / 2)
@@ -175,7 +181,7 @@ export class Inlay extends BaseWidget {
     )
     const p7 = new Victor(this.width / 2, -this.depth / 2)
     const p8 = new Victor(this.width / 2, -this.depth / 2).addX(
-      new Victor((wallLength - disToStart) / D2Config.SCREEN_RATE - this.width, 0)
+      new Victor((this.wallLength - disToStart) / D2Config.SCREEN_RATE - this.width, 0)
     )
 
     const newP1 = p1.clone().subtractY(offSet)
@@ -189,7 +195,7 @@ export class Inlay extends BaseWidget {
     let newP7
     let newP8
     
-    if (wallEndExtend === 240) {
+    if (this.wallEndExtend === 240) {
       newP7 = p7.clone().subtractY(offSet)
       newP8 = p8.clone().subtractY(offSet).subtractX(new Victor(24,24))
     }else {
@@ -336,7 +342,7 @@ export class Inlay extends BaseWidget {
     offGround.lineTo(newP8.x + 40, newP8.y)
 
     
-    const inlayOffGround = inlay.offGround
+    const inlayOffGround = this.inlay.offGround
     const offGroundText = new PIXI.Text('离地' + inlayOffGround,{
       fontSize: 32,
       fill: 0x000000,

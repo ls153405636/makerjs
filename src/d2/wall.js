@@ -22,7 +22,6 @@ export class Wall extends BaseWidget {
   constructor(vPB) {
     super(vPB.uuid)
     this.init(vPB)
-    console.log(vPB)
   }
 
   // 求旋转
@@ -291,9 +290,9 @@ export class Wall extends BaseWidget {
     // 标注线偏移计算
     const { p1, p2, outP1, outP2, depth, normal, holeP1, holeP2 } = this
     const newNormal = new Victor(normal.x, normal.y)
-    const offSet = new Victor(69, 69) // 墙体标线偏移距离
+    const offSet = new Victor(72, 72) // 墙体标线偏移距离
     const arrow = new Victor(5, 5)
-    const holeLineOffSet = new Victor(83 + this.depth, 83 + this.depth) // 洞口标线偏移距离
+    const holeLineOffSet = new Victor(87 + this.depth, 87 + this.depth) // 洞口标线偏移距离
     const LineTextoffSet = new Victor(8, 8) // 文字标线偏移距离
     
     newNormal.multiply(offSet)

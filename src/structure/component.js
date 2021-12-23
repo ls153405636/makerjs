@@ -56,16 +56,16 @@ export class Component extends Info {
   updateItem(vValue, vKey, vSecondKey) {
     if (vValue === undefined) {
       if (this.wallEndExtend === 240) {
-        this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width - 240
+        this.disToEnd = new Edge(this.parent.edge).getLength() - 240 - this.disToStart - this.width
       }else {
         this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
       }
-    }else {
+    }else{
       this.disToEnd = vValue
     }
     if (vKey === 'disToEnd') {
       if (this.wallEndExtend === 240) {
-        this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width - 120
+        this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width - 240
       }else {
         this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width
       }
@@ -102,11 +102,11 @@ export class Inlay extends Component {
     this.depth = this.parent.depth
     this.offGround = 0
     if (this.wallEndExtend === 240) {
-      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2 - 120
+      this.disToStart = ((new Edge(this.parent.edge).getLength()-240 )- this.width) / 2
     }else {
-      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+      this.disToStart = (new Edge(this.parent.edge).getLength()- this.width) / 2
     }
-    this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
+    // this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
   }
 
@@ -137,11 +137,11 @@ export class Cloumn extends Component {
     this.depth = Default.CEMENT_SIZE
     this.offGround = this.parent.height - this.height
     if (this.wallEndExtend === 240) {
-      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2 - 120
+      this.disToStart = ((new Edge(this.parent.edge).getLength()-240 )- this.width) / 2
     }else {
-      this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+      this.disToStart = (new Edge(this.parent.edge).getLength()- this.width) / 2
     }
-    this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
+    // this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
     
   }

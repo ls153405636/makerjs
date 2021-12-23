@@ -181,7 +181,7 @@ export class Stair extends BaseWidget {
     let width = stairInfo.width
     let landingWidth = new Victor(width,width)
     let firstDepth = new Victor(depth,depth)
-    const offSet = new Victor(550,550)
+    const offSet = new Victor(580,580)
     const arrow = new Victor(50,50)
 
     // 文字样式
@@ -189,7 +189,6 @@ export class Stair extends BaseWidget {
       fontSize: 32,
       fill: 0x000000,
     }
-    // console.log(stairInfo)
     
     // 获取第一级踏步
     let wallLength
@@ -206,20 +205,14 @@ export class Stair extends BaseWidget {
       if (type === 1) {
         p = new Victor((e.edges[2].p1.x + e.edges[2].p2.x) / 2, (e.edges[2].p1.y + e.edges[2].p2.y) / 2)
         nextP = p.clone().subtractY(firstDepth)
-        // console.log(p)
-        // console.log(nextP)
       }
       if (stairtType === Types.TreadType.tStart && stairtE.edges.length === 5) {
         p = new Victor((stairtE.edges[0].p1.x + stairtE.edges[0].p2.x) / 2, stairtE.edges[3].p1.y)
         nextP = p.clone().subtractY(firstDepth).subtractY(new Victor(0, stairtE.edges[3].p1.y - stairtE.edges[0].p1.y))
-        // console.log(p)
-        // console.log(nextP)
       }
       if (stairtType === Types.TreadType.tStart && stairtE.edges.length === 4) {
         p = new Victor((stairtE.edges[2].p1.x + stairtE.edges[2].p2.x) / 2, (stairtE.edges[2].p1.y + stairtE.edges[2].p2.y) / 2)
         nextP = p.clone().subtractY(firstDepth).subtractY(new Victor(0, stairtE.edges[2].p1.y - stairtE.edges[0].p1.y))
-        // console.log(p)
-        // console.log(nextP)
       }
 
       let wall = null
@@ -248,13 +241,8 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
-        // console.log(stairP)
-        // console.log(wall.outP1)
-        // console.log(wall.outP2)
-        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
 
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-        // console.log(wallOutP1)
         newP1 = new Victor(wallOutP1.x * 10, p.y)
         newP2 = new Victor(wallOutP1.x * 10, nextP.y)
 
@@ -264,8 +252,6 @@ export class Stair extends BaseWidget {
         newP1B = newP1.clone().addX(arrow)
         newP2T = newP2.clone().subtractX(arrow)
         newP2B = newP2.clone().addX(arrow)
-        // console.log(newP1)
-        // console.log(newP2)
 
         // 中心位置计算
         flightPosition = {
@@ -284,13 +270,8 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
-        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
-        // console.log(stairP)
-        // console.log(wall.outP1)
-        // console.log(wall.p1)
 
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-        // console.log(wallOutP1)
         newP1 = new Victor(wallOutP1.x * 10, p.y)
         newP2 = new Victor(wallOutP1.x * 10, nextP.y)
 
@@ -300,8 +281,6 @@ export class Stair extends BaseWidget {
         newP1B = newP1.clone().addX(arrow)
         newP2T = newP2.clone().subtractX(arrow)
         newP2B = newP2.clone().addX(arrow)
-        // console.log(newP1)
-        // console.log(newP2)
 
         // 中心位置计算
         flightPosition = {
@@ -309,7 +288,12 @@ export class Stair extends BaseWidget {
         y: (newP1B.y + newP2B.y) / 2 / 10
       }
       }
-
+      var wallEndExtend1 = wall.endExtend
+      if (wallEndExtend1 === 240) {
+        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y)) - 24
+      }else {
+        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
+      }
       // 标注长度计算
       const flightTextLength =
       Math.round(Math.hypot(p.x - nextP.x, p.y - nextP.y) )
@@ -338,7 +322,7 @@ export class Stair extends BaseWidget {
       
 
       const flightLine = new PIXI.Graphics()
-      const flightText = new PIXI.Text('267', textStyle)
+      const flightText = new PIXI.Text(flightTextLength, textStyle)
 
       flightText.scale.set(0.25)
       flightText.position.set(flightPosition.x, flightPosition.y)
@@ -368,13 +352,10 @@ export class Stair extends BaseWidget {
     for (let i = 0; i < stairInfo.landings.length; i++) {
       let lTread = stairInfo.landings[0].treads
       let e = stairInfo.landings[0].treads[0].border.stepOutline
-      // console.log(e)
       let fLangdingLength = new Victor((e.edges[0].p2.x + e.edges[0].p1.x) / 2, 0)
       let isClock = e.isClock
       let lP = new Victor((e.edges[0].p1.x + e.edges[0].p2.x) / 2, e.edges[0].p1.y).subtractX(fLangdingLength)
       let lNextP = lP.clone().addX(landingWidth)
-      console.log(lP)
-      // console.log(lNextP)
 
       let wall = null
       let stairP = null
@@ -399,7 +380,6 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
-        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
 
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
         // console.log(wallOutP1)
@@ -431,9 +411,13 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
+      }
+      var wallEndExtend = wall.endExtend
+      if (wallEndExtend === 240) {
+        wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y)) - 24
+      }else {
         wallLength =  Math.round(Math.hypot(wall.p1.x - wall.p2.x, wall.p1.y - wall.p2.y))
       }
-
       // 标注长度计算
       const landingTextLength =
       Math.round(Math.hypot(lP.x - lNextP.x, lP.y - lNextP.y) )

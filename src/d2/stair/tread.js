@@ -302,8 +302,8 @@ export class Tread extends ChildWidget {
     let sideEdgeNB
     let lNormal
     let nNormal
-    const offSet = new Victor(270,270) //偏移出墙的偏移值Y
-    const fOffSet = new Victor(200,200) //偏移出墙的偏移值Y
+    const offSet = new Victor(300,300) //偏移出墙的偏移值Y
+    const fOffSet = new Victor(180,180) //偏移出墙的偏移值Y
     
     let wall
     let lWall
@@ -870,8 +870,6 @@ export class Tread extends ChildWidget {
 
         lTreadLineLength = Math.round(Math.hypot(lNewP1.x - lNewP2.x, lNewP1.y - lNewP2.y))
         nTreadLineLength = Math.round(Math.hypot(nNewP1.x - nNewP2.x, nNewP1.y - nNewP2.y))
-        console.log(lTreadLineLength)
-        console.log(nTreadLineLength)
         const lTreadLineNum = new PIXI.Text(lTreadLineLength, textStyle)
 
         lTreadLineNum.scale.set(0.25)
@@ -1605,9 +1603,17 @@ export class Tread extends ChildWidget {
         Math.round(Math.hypot(startTP1L.x - startTP1R.x, startTP1L.y - startTP1R.y) )
   
         // 文字中心位置计算
-        const position = {
-          x: (newStartP1T.x + newStartP2T.x) / 2 / 10,
-          y: (newStartP1T.y + newStartP2T.y) / 2 / 10
+        let position
+        if (this.isClock === true) {
+          position = {
+            x: (newStartP1T.x + newStartP2T.x) / 2 / 10,
+            y: (newStartP1T.y + newStartP2T.y) / 2 / 10
+          }
+        } else {
+          position = {
+            x: (newStartP1B.x + newStartP2B.x) / 2 / 10,
+            y: (newStartP1B.y + newStartP2B.y) / 2 / 10
+          }
         }
         const position1 = {
           x: (startTP2L.x + startTP2R.x) / 2 / 10,
@@ -1624,6 +1630,9 @@ export class Tread extends ChildWidget {
           newStartTextRotation = startTextRotation.invert().angle()
         } else if (startTextAngle < Math.PI) {
           newStartTextRotation = startTextRotation.angle()
+        }
+        if (this.isClock === false) {
+          newStartTextRotation = -newStartTextRotation
         }
   
         const startTreadLine = new PIXI.Graphics()
