@@ -90,6 +90,14 @@ export class StraightStair extends Stair  {
     } else if (this.againstWallType === Types.AgainstWallType.aw_left) {
       this.position.x = topEdge.p1.x
     }
+    this.position.y += this.startMoveB
+    this.position.y -= this.startMoveT
+    this.position.x += this.startMoveR
+    this.position.x -= this.startMoveL
+    // this.startMoveB = 0
+    // this.startMoveT = 0
+    // this.startMoveR = 0
+    // this.startMoveL = 0
   }
 
   updateItem(vValue, vKey1, vKey2) {

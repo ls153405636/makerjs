@@ -112,7 +112,6 @@ export class Wall extends BaseWidget {
     smallWall[2] = new Edge().setByVec(smallWall[1], wVec, -this.depth).p2
     smallWall[3] = new Edge().setByVec(smallWall[2], lVec, -this.depth).p2
     smallWall[4] = new Edge().setByVec(smallWall[3], wVec, this.depth).p2
-    console.log(smallWall)
 
     //创建墙体纹理
     var texture = null

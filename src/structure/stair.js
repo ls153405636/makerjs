@@ -32,6 +32,10 @@ export class Stair extends Info {
     this.againstWallType = vAgainstWall
     this.startBeamDepth = 0
     this.exitBeamDepth = 0
+    this.startMoveT = 0
+    this.startMoveR = 0
+    this.startMoveB = 0
+    this.startMoveL = 0
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
     this.realStepNum = this.stepNum - this.stepNumRule + 1
@@ -327,6 +331,26 @@ export class Stair extends Info {
   getArgs() {
     let f = tool.getItemFromOptions
     let args = {
+      startMoveT: {
+        name: '上移',
+        value: this.startMoveT,
+        type: 'input',
+      },
+      startMoveR: {
+        name: '右移',
+        value: this.startMoveR,
+        type: 'input',
+      },
+      startMoveB: {
+        name: '下移',
+        value: this.startMoveB,
+        type: 'input',
+      },
+      startMoveL: {
+        name: '左移',
+        value: this.startMoveL,
+        type: 'input',
+      },
       startBeamDepth: {
         name: '起步梁厚',
         value: this.startBeamDepth,
