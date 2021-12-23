@@ -1,4 +1,4 @@
-gi<template>
+<template>
   <div class="right-args">
     <el-form
       v-for="(arg, index) in cur_args"
