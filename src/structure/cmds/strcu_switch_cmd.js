@@ -28,6 +28,8 @@ export class StrucSwitchCmd extends Action {
       d2_action.importProject(proj)
     } else {
       d3_action.importProject(proj)
+      let {size, center} = new Structure().stair?.getBoxInfo() || new Structure().hole.getBoxInfo()
+      new D3Scene().resetCamera(size, center)
       new D3Scene().render()
     }
   }

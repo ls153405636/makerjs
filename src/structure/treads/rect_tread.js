@@ -1,6 +1,7 @@
 import { Types } from "../../types/stair_v2"
 import { Edge } from "../../utils/edge"
 import { Outline } from "../../utils/outline"
+import { Default } from "../config"
 import tool from "../tool"
 import { Tread } from "./tread"
 
@@ -83,6 +84,21 @@ export class RectTread extends Tread {
       ...super.getArgs()
     }
     return args
+  }
+
+  updateItem(vValue, vKey, vSecondKey) {
+    if (vSecondKey === 'stepWidth') {
+      let range = this.parent.getStepWidthRange()
+      let value = Math.max(vValue, Default.STEP_WIDTH_MIN)
+      value = Math.min(value, this.stepWidth+range)
+      if (this.parent.fixedNum === 0) {
+        this.parent.updateItem(this.parent.length + value - this.stepWidth, 'length')
+      }
+      this.stepWidth = value
+    }
+    else {
+      super.updateItem(vValue, vKey, vSecondKey)
+    }
   }
 
   getColPos (vRateArr, vSide, vSideOffset) {

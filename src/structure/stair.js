@@ -662,6 +662,18 @@ export class Stair extends Info {
     this.bigColumns.push(vSide.startBigCol)
   }
 
+  getBoxInfo() {
+    let size = new Types.Vector3()
+    size.x = this.width
+    size.y = this.height
+    size.z = this.depth || Math.max(this.depth1, this.depth2)
+    let center = new Types.Vector3()
+    center.x = this.position.x + size.x / 2
+    center.y = this.height / 2
+    center.z = this.position.y + size.z / 2
+    return {size, center}
+  }
+
 
   writePB() {
     let pb = new Types.Stair({

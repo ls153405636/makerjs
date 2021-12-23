@@ -46,6 +46,13 @@ export class RectHole extends Hole {
     }
   }
 
+  getBoxInfo() {
+    return {
+      size: new Types.Vector3({x:this.length, y:this.floorHeight, z:this.width}),
+      center: new Types.Vector3({x:this.parent.center.x, y:this.floorHeight/2, z:this.parent.center.y})
+    }
+  }
+
   writePB() {
     return new Types.Hole({
       uuid: this.uuid,

@@ -55,7 +55,7 @@ export class Tread extends ChildInfo {
   }
 
   updateItem (vValue, vKey, vSecondKey) {
-    if (['stepHeight', 'stepLength', 'stepWidth'].includes(vKey)) {
+    if (['inheritW', 'inheritH', 'inheritL', 'stepLength', 'stepHeight'].includes(vSecondKey)) {
       this[vSecondKey] = vValue
     }
     else {
@@ -331,7 +331,7 @@ export class Tread extends ChildInfo {
         botPois[0] = utilE.clone().extendP1(- widthDiff).p1
       }
       botPois[0].z = botPois[1].z
-      if (this.curOrder === 'last') {
+      if (this.curOrder === 'last' && vLast) {
         botPois.splice(0, 0, vLast.poi)
       }
     }
