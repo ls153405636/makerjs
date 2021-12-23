@@ -23,6 +23,8 @@ export const Default = {
   INLAY_WIDTH: 600,
   INLAY_HEIGHT: 2000,
   CEMENT_SIZE: 300,
+  DISTOSTART: 0,
+  DISTOEND: 2200,
   STEP_NUM_RULE: Types.StepNumRule.snr_n_add_1,
   STEP_NUM: 18,
   STEP_LENGTH: 900,
