@@ -94,10 +94,6 @@ export class StraightStair extends Stair  {
     this.position.y -= this.startMoveT
     this.position.x += this.startMoveR
     this.position.x -= this.startMoveL
-    // this.startMoveB = 0
-    // this.startMoveT = 0
-    // this.startMoveR = 0
-    // this.startMoveL = 0
   }
 
   updateItem(vValue, vKey1, vKey2) {

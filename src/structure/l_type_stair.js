@@ -147,6 +147,10 @@ export class LTypeStair extends Stair {
         this.position.y = topEdge.p1.y
       }
     }
+    this.position.y += this.startMoveB
+    this.position.y -= this.startMoveT
+    this.position.x += this.startMoveR
+    this.position.x -= this.startMoveL
   }
 
   /** 更新休息平台*/

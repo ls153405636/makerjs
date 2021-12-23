@@ -27,6 +27,10 @@ export class UTypeStair extends Stair {
     } else {
       this.position.x = new Edge(topEdge).getCenter().x - this.width / 2
     }
+    this.position.y += this.startMoveB
+    this.position.y -= this.startMoveT
+    this.position.x += this.startMoveR
+    this.position.x -= this.startMoveL
   }
 
   updateItem(vValue, vKey1, vKey2) {
