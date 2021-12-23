@@ -38,6 +38,7 @@ enum StairType {
   sl_type = 2; //L型梯
   s_small_u_type = 3; //小U型梯
   s_big_u_type = 4; //大U型梯
+  s_arc_type = 5; //弧形梯（只要有一段楼梯段是圆弧）
 }
 
 enum Side {

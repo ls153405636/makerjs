@@ -21,7 +21,6 @@ export class Flight extends ChildInfo {
     this.index = vIndex
     /**@type {Array<RectTread>} */
     this.treads = []
-    this.startTread = false
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
     this.fixedStepWidthNum = this.realStepNum
