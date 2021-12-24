@@ -192,6 +192,9 @@ export class Stair extends BaseWidget {
     
     // 获取第一级踏步
     let wallLength
+    let wall = null
+    let stairP = null
+    let stepLength = stairInfo.width
     for (let i = 0; i < stairInfo.flights.length; i++) {
       let tread = stairInfo.flights[0].treads
       let e = stairInfo.flights[0].treads[0].border.stepOutline
@@ -214,17 +217,13 @@ export class Stair extends BaseWidget {
         p = new Victor((stairtE.edges[2].p1.x + stairtE.edges[2].p2.x) / 2, (stairtE.edges[2].p1.y + stairtE.edges[2].p2.y) / 2)
         nextP = p.clone().subtractY(firstDepth).subtractY(new Victor(0, stairtE.edges[2].p1.y - stairtE.edges[0].p1.y))
       }
-
-      let wall = null
-      let stairP = null
-      let stepLength = stairInfo.width
+      
       let newP1
       let newP2
       let newP1T
       let newP1B
       let newP2T
       let newP2B
-
       let flightPosition
 
       
@@ -333,10 +332,8 @@ export class Stair extends BaseWidget {
       .lineStyle(1,0x000000, 1, 0.5, true)
       .moveTo(newP1.x / 10, newP1.y / 10)
       .lineTo(newP2.x / 10, newP2.y / 10)
-
       .moveTo(newP1T.x / 10, newP1T.y / 10)
       .lineTo(newP1B.x / 10, newP1B.y / 10)
-
       .moveTo(newP2T.x / 10, newP2T.y / 10)
       .lineTo(newP2B.x / 10, newP2B.y / 10)
 
@@ -352,14 +349,11 @@ export class Stair extends BaseWidget {
     for (let i = 0; i < stairInfo.landings.length; i++) {
       let lTread = stairInfo.landings[0].treads
       let e = stairInfo.landings[0].treads[0].border.stepOutline
-      let fLangdingLength = new Victor((e.edges[0].p2.x + e.edges[0].p1.x) / 2, 0)
       let isClock = e.isClock
+      let fLangdingLength = new Victor((e.edges[0].p2.x + e.edges[0].p1.x) / 2, 0)
       let lP = new Victor((e.edges[0].p1.x + e.edges[0].p2.x) / 2, e.edges[0].p1.y).subtractX(fLangdingLength)
       let lNextP = lP.clone().addX(landingWidth)
 
-      let wall = null
-      let stairP = null
-      let stepLength = stairInfo.width
       let newLP1
       let newLP2
       let newLP1T
@@ -382,13 +376,10 @@ export class Stair extends BaseWidget {
         }
 
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-        // console.log(wallOutP1)
 
         // 左侧
         newLP1 = new Victor(lP.x, wallOutP1.y * 10)
         newLP2 = new Victor(lNextP.x, wallOutP1.y * 10)
-        // console.log(newLP1)
-        // console.log(newLP2)
 
         newLP1 = newLP1.subtractY(offSet)
         newLP2 = newLP2.subtractY(offSet)
@@ -396,9 +387,6 @@ export class Stair extends BaseWidget {
         newLP1B = newLP1.clone().addY(arrow)
         newLP2T = newLP2.clone().subtractY(arrow)
         newLP2B = newLP2.clone().addY(arrow)
-
-
-
       }else {
         let normal = new Types.Vector3({ x: -0, y: 1 })
         for(let value of D2Config.WIDGETS.values()) {
@@ -483,7 +471,11 @@ export class Stair extends BaseWidget {
     }
 
 
-
+    // 起步止步距离标注
+    // 1.获取第一级台阶
+    // 2.获取最后一级台阶
+    // 3.获取这两级台阶之间的距离
+    
 
     this.sprite.addChild(flightContainer)
   }

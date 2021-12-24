@@ -31,6 +31,7 @@ export class Tread extends ChildWidget {
     this.isLast = vPB.isLast
     this.parent = vParent
     this.depth = Default.WALL_DEPTH
+    this.stairInfo = StructConfig.INFOS.get(this.uuid)
     this.draw()
     this.addDimension()
     this.addEvent()
@@ -64,6 +65,15 @@ export class Tread extends ChildWidget {
     }
     positionX = positionX / this.edges.length
     positionY = positionY / this.edges.length
+
+    // 起步踏第一级标号被遮盖
+    if (this.type === Types.TreadType.tStart && this.stairInfo.parent.treads.length === 2 && this.index === 1) {
+      if (this.stairInfo.parent.modelType === Types.StartTreadType.st_el_2) {
+        positionY += this.stairInfo.parent.offset2 + this.stepWidth / 4
+      }else {
+        positionY += this.stepWidth / 4
+      }
+    }
 
     this.sprite = new PIXI.Container()
     const treadContainer = new PIXI.Container()
@@ -241,16 +251,16 @@ export class Tread extends ChildWidget {
       })
   }
   addDimension() {
-    let stairInfo = StructConfig.INFOS.get(this.uuid)
-    const againstWallType = stairInfo.parent.parent.againstWallType
-    const lastEdgeIndex = stairInfo.lastEdgeIndex
-    const nextEdgeIndex = stairInfo.nextEdgeIndex
-    const girderType = stairInfo.parent.parent.girderParameters.type
-    const girderDepth = stairInfo.parent.parent.girderParameters.depth
+    const againstWallType = this.stairInfo.parent.parent.againstWallType
+    const lastEdgeIndex = this.stairInfo.lastEdgeIndex
+    const nextEdgeIndex = this.stairInfo.nextEdgeIndex
+    const girderType = this.stairInfo.parent.parent.girderParameters.type
+    const girderDepth = this.stairInfo.parent.parent.girderParameters.depth
     // 踏板标注线绘制
     const treadLineContainer = new PIXI.Container()
     const treadLine = new PIXI.Graphics()
     const arrow = new Victor(50,50) //偏移出墙的偏移值
+    const stepLengthV = new Victor(this.stepLength / 2,this.stepLength / 2) //偏移出墙的偏移值
 
     // 文字样式
     const textStyle =  {
@@ -294,16 +304,21 @@ export class Tread extends ChildWidget {
     let nTreadLineLength
     let treadLinelength
 
-    let sideEdgeL = stairInfo.parent.sideEdgeL
+    let sideEdgeL = this.stairInfo.parent.sideEdgeL
     let sideEdgeLT
     let sideEdgeLB
-    let sideEdgeN = stairInfo.parent.sideEdgeN
+    let sideEdgeN = this.stairInfo.parent.sideEdgeN
     let sideEdgeNT
     let sideEdgeNB
     let lNormal
     let nNormal
     const offSet = new Victor(300,300) //偏移出墙的偏移值Y
-    const fOffSet = new Victor(180,180) //偏移出墙的偏移值Y
+    let fOffSet
+    if (this.index === this.stairInfo.parent.parent.stepNum - 1) {
+      fOffSet = new Victor(540,540) //偏移出墙的偏移值Y
+    }else {
+      fOffSet = new Victor(180,180) //偏移出墙的偏移值Y
+    }
     
     let wall
     let lWall
@@ -994,8 +1009,8 @@ export class Tread extends ChildWidget {
 
       const landingLineTextN = new PIXI.Text(landingTextLengthN,textStyle)
       this.creatText(landingLineTextN, sideEdgeNT)
-      for (let i = 0; i < stairInfo.parent.parent.landings.length; i++ ) {
-        let landingType = stairInfo.parent.parent.landings[i].type
+      for (let i = 0; i < this.stairInfo.parent.parent.landings.length; i++ ) {
+        let landingType = this.stairInfo.parent.parent.landings[i].type
         if (landingType === 1) {
           continue
         }else {
@@ -1062,8 +1077,8 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractX(arrow)
           newP2B = newP2.clone().addX(arrow)
   
-          newLastP1 = lastP.clone().subtractY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().subtractY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().subtractY(fOffSet).subtractX(stepLengthV)
+          newLastP2 = lastP.clone().subtractY(fOffSet).addX(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractY(arrow)
           newLastP1B = newLastP1.clone().addY(arrow)
@@ -1103,8 +1118,8 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractY(arrow)
           newP2B = newP2.clone().addY(arrow)
   
-          newLastP1 = lastP.clone().addX(fOffSet).subtractY(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().addX(fOffSet).addY(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().addX(fOffSet).subtractY(stepLengthV)
+          newLastP2 = lastP.clone().addX(fOffSet).addY(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractX(arrow)
           newLastP1B = newLastP1.clone().addX(arrow)
@@ -1145,8 +1160,8 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractX(arrow)
           newP2B = newP2.clone().addX(arrow)
   
-          newLastP1 = lastP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().addY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().addY(fOffSet).subtractX(stepLengthV)
+          newLastP2 = lastP.clone().addY(fOffSet).addX(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractY(arrow)
           newLastP1B = newLastP1.clone().addY(arrow)
@@ -1187,8 +1202,8 @@ export class Tread extends ChildWidget {
           newP2T = p2.clone().addY(offSet).subtractY(arrow)
           newP2B = p2.clone().addY(offSet).addY(arrow)
   
-          newLastP1 = lastP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().addY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().addY(fOffSet).subtractX(stepLengthV)
+          newLastP2 = lastP.clone().addY(fOffSet).addX(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractX(arrow)
           newLastP1B = newLastP1.clone().addX(arrow)
@@ -1219,8 +1234,8 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractX(arrow)
           newP2B = newP2.clone().addX(arrow)
   
-          newLastP1 = lastP.clone().subtractY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().subtractY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().subtractY(fOffSet).subtractX(stepLengthV)
+          newLastP2 = lastP.clone().subtractY(fOffSet).addX(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractY(arrow)
           newLastP1B = newLastP1.clone().addY(arrow)
@@ -1260,8 +1275,8 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractY(arrow)
           newP2B = newP2.clone().addY(arrow)
   
-          newLastP1 = lastP.clone().subtractX(fOffSet).subtractY(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().subtractX(fOffSet).addY(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().subtractX(fOffSet).subtractY(stepLengthV)
+          newLastP2 = lastP.clone().subtractX(fOffSet).addY(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractX(arrow)
           newLastP1B = newLastP1.clone().addX(arrow)
@@ -1302,8 +1317,8 @@ export class Tread extends ChildWidget {
           newP2T = newP2.clone().subtractX(arrow)
           newP2B = newP2.clone().addX(arrow)
   
-          newLastP1 = lastP.clone().addY(fOffSet).subtractX(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().addY(fOffSet).addX(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().addY(fOffSet).subtractX(stepLengthV)
+          newLastP2 = lastP.clone().addY(fOffSet).addX(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractY(arrow)
           newLastP1B = newLastP1.clone().addY(arrow)
@@ -1343,8 +1358,8 @@ export class Tread extends ChildWidget {
           newP2T = p2.clone().addY(offSet).subtractY(arrow)
           newP2B = p2.clone().addY(offSet).addY(arrow)
   
-          newLastP1 = lastP.clone().addY(fOffSet).subtractY(new Victor(this.stepLength / 2,this.stepLength / 2))
-          newLastP2 = lastP.clone().addY(fOffSet).addY(new Victor(this.stepLength / 2,this.stepLength / 2))
+          newLastP1 = lastP.clone().addY(fOffSet).subtractY(stepLengthV)
+          newLastP2 = lastP.clone().addY(fOffSet).addY(stepLengthV)
 
           newLastP1T = newLastP1.clone().subtractX(arrow)
           newLastP1B = newLastP1.clone().addX(arrow)
@@ -1440,9 +1455,7 @@ export class Tread extends ChildWidget {
           firstText.rotation = firstR
           treadLineContainer.addChild(firstText)
         }
-        
-        if (this.isLast === true) {
-
+        if (this.index === this.stairInfo.parent.parent.stepNum - 1) {
           const lastText = new PIXI.Text(lastTextLength, textStyle)
           lastText.scale.set(0.25)
           lastText.position.set(lastPosition.x, lastPosition.y)
