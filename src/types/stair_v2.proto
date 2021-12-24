@@ -118,6 +118,7 @@ enum TreadType {
   tStart = 2; //起步踏
   tSpec = 3; //针对休息平台的异性踏
   tCor = 4; //有两条侧边的转角踏
+  tArc = 5; //弧形踏板
 }
 
 //起步踏板类型

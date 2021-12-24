@@ -81,6 +81,7 @@ export const Types = $root.Types = (() => {
      * @property {number} sl_type=2 sl_type value
      * @property {number} s_small_u_type=3 s_small_u_type value
      * @property {number} s_big_u_type=4 s_big_u_type value
+     * @property {number} s_arc_type=5 s_arc_type value
      */
     Types.StairType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
@@ -89,6 +90,7 @@ export const Types = $root.Types = (() => {
         values[valuesById[2] = "sl_type"] = 2;
         values[valuesById[3] = "s_small_u_type"] = 3;
         values[valuesById[4] = "s_big_u_type"] = 4;
+        values[valuesById[5] = "s_arc_type"] = 5;
         return values;
     })();
 
@@ -265,6 +267,7 @@ export const Types = $root.Types = (() => {
      * @property {number} tStart=2 tStart value
      * @property {number} tSpec=3 tSpec value
      * @property {number} tCor=4 tCor value
+     * @property {number} tArc=5 tArc value
      */
     Types.TreadType = (function() {
         const valuesById = {}, values = Object.create(valuesById);
@@ -273,6 +276,7 @@ export const Types = $root.Types = (() => {
         values[valuesById[2] = "tStart"] = 2;
         values[valuesById[3] = "tSpec"] = 3;
         values[valuesById[4] = "tCor"] = 4;
+        values[valuesById[5] = "tArc"] = 5;
         return values;
     })();
 
@@ -3985,6 +3989,7 @@ export const Types = $root.Types = (() => {
                 case 2:
                 case 3:
                 case 4:
+                case 5:
                     break;
                 }
             if (message.againstWallType != null && message.hasOwnProperty("againstWallType"))
@@ -4169,6 +4174,10 @@ export const Types = $root.Types = (() => {
             case "s_big_u_type":
             case 4:
                 message.type = 4;
+                break;
+            case "s_arc_type":
+            case 5:
+                message.type = 5;
                 break;
             }
             switch (object.againstWallType) {
@@ -5747,6 +5756,7 @@ export const Types = $root.Types = (() => {
                 case 2:
                 case 3:
                 case 4:
+                case 5:
                     break;
                 }
             return null;
@@ -5807,6 +5817,10 @@ export const Types = $root.Types = (() => {
             case "tCor":
             case 4:
                 message.type = 4;
+                break;
+            case "tArc":
+            case 5:
+                message.type = 5;
                 break;
             }
             return message;
