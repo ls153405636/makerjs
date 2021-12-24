@@ -17,7 +17,6 @@ export class LTypeStair extends Stair {
     } else {
       this.floadSide = vFloadSide || Types.Side.si_right
     }
-    
     this.rebuild()
   }
 

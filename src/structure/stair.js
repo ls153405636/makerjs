@@ -32,6 +32,10 @@ export class Stair extends Info {
     this.againstWallType = vAgainstWall
     this.startBeamDepth = 0
     this.exitBeamDepth = 0
+    this.startMoveT = 0
+    this.startMoveR = 0
+    this.startMoveB = 0
+    this.startMoveL = 0
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
     this.realStepNum = this.stepNum - this.stepNumRule + 1
@@ -120,6 +124,7 @@ export class Stair extends Info {
     this.updateSegments()
     this.computeSize()
     this.computePosition()
+    this.updateStairPositon()
     this.updatehangingBoard()
     this.updateGirders()
     this.updateHandrails()
@@ -165,7 +170,13 @@ export class Stair extends Info {
     StructConfig.INFOS.delete(this.uuid)
   }
 
-
+  /**移动整个楼梯 */
+  updateStairPositon() {
+    this.position.y -= this.startMoveT
+    this.position.x += this.startMoveR
+    // this.position.y += this.startMoveB
+    // this.position.x -= this.startMoveL
+  }
   /**计算步高 */
   computeStepHeight() {
     let step_num = 0
@@ -335,6 +346,26 @@ export class Stair extends Info {
   getArgs() {
     let f = tool.getItemFromOptions
     let args = {
+      startMoveT: {
+        name: '上移',
+        value: this.startMoveT,
+        type: 'input',
+      },
+      startMoveR: {
+        name: '右移',
+        value: this.startMoveR,
+        type: 'input',
+      },
+      // startMoveB: {
+      //   name: '下移',
+      //   value: this.startMoveB,
+      //   type: 'input',
+      // },
+      // startMoveL: {
+      //   name: '左移',
+      //   value: this.startMoveL,
+      //   type: 'input',
+      // },
       startBeamDepth: {
         name: '起步梁厚',
         value: this.startBeamDepth,

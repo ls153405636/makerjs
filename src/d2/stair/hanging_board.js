@@ -108,7 +108,7 @@ export class HangingBoard extends ChildWidget {
 
   addDimension() {
     const handBLineContainer = new PIXI.Container()
-    const offSet = new Victor(27,27)
+    const offSet = new Victor(30,30)
     let wall
     let stairP
     let stairType

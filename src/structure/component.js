@@ -18,6 +18,7 @@ export class Component extends Info {
     this.rotation = new Types.Vector3({ y: angle })
     this.interval = 0
     this.wallDepth = vParent.depth
+    this.wallEndExtend = vParent.endExtend
   }
 
   addInfo() {
@@ -47,8 +48,30 @@ export class Component extends Info {
   }
 
   rebuild() {
+    this.updateItem()
     this.computePosition()
     this.updateCanvas()
+  }
+  
+  updateItem(vValue, vKey, vSecondKey) {
+    if (vValue === undefined) {
+      if (this.wallEndExtend === 240) {
+        this.disToEnd = new Edge(this.parent.edge).getLength() - 240 - this.disToStart - this.width
+      }else {
+        this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
+      }
+    }else{
+      this.disToEnd = vValue
+    }
+    if (vKey === 'disToEnd') {
+      if (this.wallEndExtend === 240) {
+        this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width - 240
+      }else {
+        this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width
+      }
+    } else {
+      super.updateItem(vValue, vKey, vSecondKey)
+    }
   }
 
   writePB() {
@@ -60,6 +83,7 @@ export class Component extends Info {
       type: this.type,
       offGround: this.offGround,
       disToStart: this.disToStart,
+      disToEnd: this.disToEnd,
       angle: this.angle,
       rotation: this.rotation,
       interval: this.interval,
@@ -76,16 +100,26 @@ export class Inlay extends Component {
     this.width = Default.INLAY_WIDTH
     this.height = Default.INLAY_HEIGHT
     this.depth = this.parent.depth
-    this.offGround = 0 // 门默认离地0，窗、洞另考虑
-    this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    this.offGround = 0
+    if (this.wallEndExtend === 240) {
+      this.disToStart = ((new Edge(this.parent.edge).getLength()-240 )- this.width) / 2
+    }else {
+      this.disToStart = (new Edge(this.parent.edge).getLength()- this.width) / 2
+    }
+    // this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
   }
 
   getArgs() {
     return {
       disToStart: {
-        name: '距端点的距离',
+        name: '距起点的距离',
         value: this.disToStart,
+        type: 'input',
+      },
+      disToEnd: {
+        name: '距终点的距离',
+        value: this.disToEnd,
         type: 'input',
       },
       width: { name: '宽度', value: this.width, type: 'input' },
@@ -102,15 +136,26 @@ export class Cloumn extends Component {
     this.height = this.parent.height
     this.depth = Default.CEMENT_SIZE
     this.offGround = this.parent.height - this.height
-    this.disToStart = (new Edge(this.parent.edge).getLength() - this.width) / 2
+    if (this.wallEndExtend === 240) {
+      this.disToStart = ((new Edge(this.parent.edge).getLength()-240 )- this.width) / 2
+    }else {
+      this.disToStart = (new Edge(this.parent.edge).getLength()- this.width) / 2
+    }
+    // this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
     this.rebuild()
+    
   }
 
   getArgs() {
     return {
       disToStart: {
-        name: '距端点的距离',
+        name: '距起点的距离',
         value: this.disToStart,
+        type: 'input',
+      },
+      disToEnd: {
+        name: '距终点的距离',
+        value: this.disToEnd,
         type: 'input',
       },
       width: { name: '宽度', value: this.width, type: 'input' },
@@ -126,7 +171,11 @@ export class Beam extends Component {
   constructor(vParent, vType) {
     super(vParent, vType)
     this.parent = vParent
-    this.width = new Edge(this.parent.edge).getLength()
+    if (this.wallEndExtend === 240) {
+      this.width = new Edge(this.parent.edge).getLength() - 240
+    }else {
+      this.width = new Edge(this.parent.edge).getLength()
+    }
     this.height = Default.CEMENT_SIZE
     this.depth = Default.CEMENT_SIZE
     this.offGround = this.parent.height - this.height

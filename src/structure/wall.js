@@ -21,7 +21,7 @@ export class Wall extends Info {
     this.holeEdge = vEdge
     this.type = Types.WallType.wboth
     this.startExtend = 0
-    this.endExtend = 0
+    this.endExtend = 240
     this.depth = Default.WALL_DEPTH
     this.height = this.parent.floorHeight
     this.rebuild()

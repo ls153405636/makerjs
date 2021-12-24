@@ -86,6 +86,7 @@ export class Wall extends BaseWidget {
     this.outP2 = d2_tool.translateCoord(vPB.outEdge.p2)
     this.depth = d2_tool.translateValue(vPB.depth)
     this.normal = vPB.normal
+    this.endExtend = vPB.endExtend
     this.type = vPB.type
     this.alpha = 0
     this.holeEdge = vPB.holeEdge
@@ -112,7 +113,6 @@ export class Wall extends BaseWidget {
     smallWall[2] = new Edge().setByVec(smallWall[1], wVec, -this.depth).p2
     smallWall[3] = new Edge().setByVec(smallWall[2], lVec, -this.depth).p2
     smallWall[4] = new Edge().setByVec(smallWall[3], wVec, this.depth).p2
-    console.log(smallWall)
 
     //创建墙体纹理
     var texture = null
@@ -170,15 +170,15 @@ export class Wall extends BaseWidget {
       wall.beginFill(0xe5e5e5, 1)
     }
     wall.drawPolygon(path)
-    if (Math.hypot(this.holeEdge.p1.x - this.holeEdge.p2.x, this.holeEdge.p1.y - this.holeEdge.p2.y) === Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) * 10) {
-      let path1 = []
-      for (let i = 0; i < smallWall.length; i++) {
-        path1.push(smallWall[i].x, smallWall[i].y)
-      }
-      wall.drawPolygon(path1)
-    }else {
-      // 
-    }
+    // if (Math.hypot(this.holeEdge.p1.x - this.holeEdge.p2.x, this.holeEdge.p1.y - this.holeEdge.p2.y) === Math.hypot(this.p1.x - this.p2.x, this.p1.y - this.p2.y) * 10) {
+    //   let path1 = []
+    //   for (let i = 0; i < smallWall.length; i++) {
+    //     path1.push(smallWall[i].x, smallWall[i].y)
+    //   }
+    //   wall.drawPolygon(path1)
+    // }else {
+    //   // 
+    // }
     wall.endFill()
 
     wall.addChild(tilingSprite)
@@ -290,14 +290,15 @@ export class Wall extends BaseWidget {
     // 标注线偏移计算
     const { p1, p2, outP1, outP2, depth, normal, holeP1, holeP2 } = this
     const newNormal = new Victor(normal.x, normal.y)
-    const offSet = new Victor(69, 69) // 墙体标线偏移距离
+    const offSet = new Victor(72, 72) // 墙体标线偏移距离
     const arrow = new Victor(5, 5)
-    const holeLineOffSet = new Victor(83 + this.depth, 83 + this.depth) // 洞口标线偏移距离
+    const holeLineOffSet = new Victor(87 + this.depth, 87 + this.depth) // 洞口标线偏移距离
     const LineTextoffSet = new Victor(8, 8) // 文字标线偏移距离
     
     newNormal.multiply(offSet)
     const newNormalText = new Victor(normal.x, normal.y).multiply(LineTextoffSet)
     const newNormalHole = new Victor(normal.x, normal.y).multiply(holeLineOffSet)
+
     const P1 = new Victor(p1.x, p1.y)
     const P2 = new Victor(p2.x, p2.y)
     const OutP1 = new Victor(outP1.x, outP1.y)
@@ -330,11 +331,15 @@ export class Wall extends BaseWidget {
     let holeLineCP1B
     let holeLineCP2T
     let holeLineCP2B
-    if (p1.x - p2.x < 0 && p1.y - p2.y == 0 || p1.x - p2.x > 0 && p1.y - p2.y == 0) {
+    if (p1.x < p2.x && p1.y === p2.y) {
       P1.addY(newNormal)
       P2.addY(newNormal)
       newOutP1.addY(newNormal)
-      newOutP2.addY(newNormal)
+      if (this.endExtend === 240) {
+        newOutP2.addY(newNormal).subtractX(new Victor(24,24))
+      }else {
+        newOutP2.addY(newNormal)
+      }
       newHoleP1.addY(newNormalHole)
       newHoleP2.addY(newNormalHole)
 
@@ -353,7 +358,34 @@ export class Wall extends BaseWidget {
       holeLineCP2T = newHoleP2.clone().subtractY(arrow)
       holeLineCP2B = newHoleP2.clone().addY(arrow)
     }
-    if (p1.x - p2.x < 0 && p1.y - p2.y < 0 || p1.x - p2.x > 0 && p1.y - p2.y > 0 ||p1.x - p2.x < 0 && p1.y - p2.y > 0) {
+    if (p1.x > p2.x && p1.y === p2.y) {
+      P1.addY(newNormal)
+      P2.addY(newNormal)
+      newOutP1.addY(newNormal)
+      if (this.endExtend === 240) {
+        newOutP2.addY(newNormal).addX(new Victor(24,24))
+      }else {
+        newOutP2.addY(newNormal)
+      }
+      newHoleP1.addY(newNormalHole)
+      newHoleP2.addY(newNormalHole)
+
+      newOutP1T = newOutP1.clone().subtractY(arrow)
+      newOutP1B = newOutP1.clone().addY(arrow)
+      newOutP2T = newOutP2.clone().subtractY(arrow)
+      newOutP2B = newOutP2.clone().addY(arrow)
+
+      lineCP1 = newOutP1.clone().addY(newNormalText)
+      lineCP2 = newOutP2.clone().addY(newNormalText)
+      holeLineCP1 = newHoleP1.clone().addY(newNormalText)
+      holeLineCP2 = newHoleP2.clone().addY(newNormalText)
+
+      holeLineCP1T = newHoleP1.clone().subtractY(arrow)
+      holeLineCP1B = newHoleP1.clone().addY(arrow)
+      holeLineCP2T = newHoleP2.clone().subtractY(arrow)
+      holeLineCP2B = newHoleP2.clone().addY(arrow)
+    }
+    if (p1.x < p2.x && p1.y > p2.y) {
       P1.add(newNormal)
       P2.add(newNormal)
       newOutP1.add(newNormal)
@@ -376,11 +408,88 @@ export class Wall extends BaseWidget {
       holeLineCP2T = newHoleP2.clone().subtract(arrow)
       holeLineCP2B = newHoleP2.clone().add(arrow)
     }
-    if (p1.x - p2.x == 0 && p1.y - p2.y > 0 || p1.x - p2.x == 0 && p1.y - p2.y < 0) {
+    if (p1.x < p2.x && p1.y < p2.y) {
+      P1.add(newNormal)
+      P2.add(newNormal)
+      newOutP1.add(newNormal)
+      newOutP2.add(newNormal)
+      newHoleP1.add(newNormalHole)
+      newHoleP2.add(newNormalHole)
+
+      newOutP1T = newOutP1.clone().subtract(arrow)
+      newOutP1B = newOutP1.clone().add(arrow)
+      newOutP2T = newOutP2.clone().subtract(arrow)
+      newOutP2B = newOutP2.clone().add(arrow)
+
+      lineCP1 = newOutP1.clone().add(newNormalText)
+      lineCP2 = newOutP2.clone().add(newNormalText)
+      holeLineCP1 = newHoleP1.clone().add(newNormalText)
+      holeLineCP2 = newHoleP2.clone().add(newNormalText)
+
+      holeLineCP1T = newHoleP1.clone().subtract(arrow)
+      holeLineCP1B = newHoleP1.clone().add(arrow)
+      holeLineCP2T = newHoleP2.clone().subtract(arrow)
+      holeLineCP2B = newHoleP2.clone().add(arrow)
+    }
+    if (p1.x > p2.x && p1.y > p2.y) {
+      P1.add(newNormal)
+      P2.add(newNormal)
+      newOutP1.add(newNormal)
+      newOutP2.add(newNormal)
+      newHoleP1.add(newNormalHole)
+      newHoleP2.add(newNormalHole)
+
+      newOutP1T = newOutP1.clone().subtract(arrow)
+      newOutP1B = newOutP1.clone().add(arrow)
+      newOutP2T = newOutP2.clone().subtract(arrow)
+      newOutP2B = newOutP2.clone().add(arrow)
+
+      lineCP1 = newOutP1.clone().add(newNormalText)
+      lineCP2 = newOutP2.clone().add(newNormalText)
+      holeLineCP1 = newHoleP1.clone().add(newNormalText)
+      holeLineCP2 = newHoleP2.clone().add(newNormalText)
+
+      holeLineCP1T = newHoleP1.clone().subtract(arrow)
+      holeLineCP1B = newHoleP1.clone().add(arrow)
+      holeLineCP2T = newHoleP2.clone().subtract(arrow)
+      holeLineCP2B = newHoleP2.clone().add(arrow)
+    }
+    if (p1.x === p2.x && p1.y > p2.y) {
       P1.addX(newNormal)
       P2.addX(newNormal)
       newOutP1.addX(newNormal)
-      newOutP2.addX(newNormal)
+      if (this.endExtend === 240) {
+        newOutP2.addX(newNormal).addY(new Victor(24,24))
+      }else {
+        newOutP2.addX(newNormal)
+      }
+      newHoleP1.addX(newNormalHole)
+      newHoleP2.addX(newNormalHole)
+
+      newOutP1T = newOutP1.clone().subtractX(arrow)
+      newOutP1B = newOutP1.clone().addX(arrow)
+      newOutP2T = newOutP2.clone().subtractX(arrow)
+      newOutP2B = newOutP2.clone().addX(arrow)
+
+      lineCP1 = newOutP1.clone().addX(newNormalText)
+      lineCP2 = newOutP2.clone().addX(newNormalText)
+      holeLineCP1 = newHoleP1.clone().addX(newNormalText)
+      holeLineCP2 = newHoleP2.clone().addX(newNormalText)
+
+      holeLineCP1T = newHoleP1.clone().subtractX(arrow)
+      holeLineCP1B = newHoleP1.clone().addX(arrow)
+      holeLineCP2T = newHoleP2.clone().subtractX(arrow)
+      holeLineCP2B = newHoleP2.clone().addX(arrow)
+    }
+    if (p1.x === p2.x && p1.y < p2.y) {
+      P1.addX(newNormal)
+      P2.addX(newNormal)
+      newOutP1.addX(newNormal)
+      if (this.endExtend === 240) {
+        newOutP2.addX(newNormal).subtractY(new Victor(24,24))
+      }else {
+        newOutP2.addX(newNormal)
+      }
       newHoleP1.addX(newNormalHole)
       newHoleP2.addX(newNormalHole)
 
@@ -402,7 +511,7 @@ export class Wall extends BaseWidget {
     
     // 获取标注线长度
     const linelength =
-      Math.round(Math.hypot(P1.x - P2.x, P1.y - P2.y) * 10 * 100) / 100
+      Math.round(Math.hypot(newOutP1.x - newOutP2.x, newOutP1.y - newOutP2.y) * 10 * 100) / 100
 
     const holeLinelength =
       Math.round(Math.hypot(holeP1.x - holeP2.x, holeP1.y - holeP2.y) * 10 * 100) / 100
@@ -415,7 +524,7 @@ export class Wall extends BaseWidget {
     
 
     // 判断洞口边长是否等于墙体边长（不相等或墙消失，让洞口标线显示）
-    if (this.type === Types.WallType.wnone || Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) !== Math.hypot(P1.x - P2.x, P1.y - P2.y)) {
+    if (this.type === Types.WallType.wnone || Math.hypot(newHoleP1.x - newHoleP2.x, newHoleP1.y - newHoleP2.y) !== Math.hypot(newOutP1.x - newOutP2.x, newOutP1.y - newOutP2.y)) {
       // 洞口标注文字
       const holeLineText = new PIXI.Text('洞口' + holeLinelength, {
         fontSize: 48,
