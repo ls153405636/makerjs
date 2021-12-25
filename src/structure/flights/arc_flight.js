@@ -33,7 +33,7 @@ export class ArcFlight extends ChildInfo{
 
   updateTreads() {
     let step_num = this.realStepNum
-    let lastPos = this.pos
+    let treadPos = this.pos
     let heightSum = this.endHeight
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
       if (this.treads[this.stepNum - 1] && (!this.treads[this.stepNum - 1].inheritH)) {
@@ -45,7 +45,7 @@ export class ArcFlight extends ChildInfo{
     let commonParas = { vParent: this, vIsLast: false }
     for (let i = 0; i < step_num; i++) {
       let index = step_num - i + this.treadIndex
-      let pos = new Types.Vector3(lastPos) 
+      let pos = new Types.Vector3(treadPos) 
       pos.z = heightSum
       let paras = { ...commonParas, vIndex: index, vPos: pos, vIsLast: false }
       if (this.treads[step_num - i - 1]) {
@@ -57,7 +57,7 @@ export class ArcFlight extends ChildInfo{
       }
     }
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      pos = new Types.Vector3(lastPos) 
+      pos = new Types.Vector3(treadPos) 
       pos.z = this.endHeight
       let paras = {
         ...commonParas,
