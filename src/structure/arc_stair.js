@@ -7,9 +7,15 @@ import {UtilVec2} from '../utils/util_vec_2'
 
 
 export class ArcStair extends Stair {
-  constructor(vParent, vFloadSide) {
-    super(vParent)
-    this.floadSide = vFloadSide
+  constructor(vParent, vAgainstWall, vFloadSide) {
+    super(vParent, vAgainstWall)
+    if (this.againstWallType === Types.AgainstWallType.aw_left) {
+      this.floadSide = Types.Side.si_right
+    } else if (this.againstWallType === Types.AgainstWallType.aw_right) {
+      this.floadSide = Types.Side.si_left
+    } else {
+      this.floadSide = vFloadSide || Types.Side.si_right
+    }
     this.stepLength = Default.STEP_LENGTH
     this.rebuild()
   }

@@ -8,8 +8,8 @@ import tool from "./tool"
 
 
 export class BigUTypeStair extends UTypeStair {
-  constructor(vParnet, vAgainstWall, vFloadSide) {
-    super(vParnet, vAgainstWall, vFloadSide)
+  constructor(vParent, vAgainstWall, vFloadSide) {
+    super(vParent, vAgainstWall, vFloadSide)
     this.rebuild()
   }
 

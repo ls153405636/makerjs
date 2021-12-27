@@ -8,8 +8,8 @@ import tool from "./tool"
 import { Girder } from "./girder";
 
 export class SmallUTypeStair extends UTypeStair {
-  constructor(vParnet, vAgainstWall, vFloadSide) {
-    super(vParnet, vAgainstWall, vFloadSide)
+  constructor(vParent, vAgainstWall, vFloadSide) {
+    super(vParent, vAgainstWall, vFloadSide)
     this.gap = Default.U_TYPE_GAP
     this.landingWidth = Default.STEP_LENGTH
     this.type = Types.StairType.s_small_u_type
