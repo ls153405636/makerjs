@@ -1,0 +1,140 @@
+import { Types } from '../../types/stair_v2'
+import { Edge } from '../../utils/edge'
+import {ChildInfo} from '../child_info'
+import { Default } from '../config'
+import { ArcTread } from '../treads/arc_tread'
+import { UtilVec2 } from '../../utils/util_vec_2'
+import tool from '../tool'
+import {Flight} from './flight'
+
+export class ArcFlight extends ChildInfo{
+  constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vRadius, vClock, vEndLVec, vPos, vStartHeight}) {
+    super(vParent)
+    this.radius = vRadius
+    this.clock = vClock
+    this.endLVec = vEndLVec
+    this.stepNum = vStepNum
+    this.stepNumRule = vStepNumRule
+    /**@type {Array<ArcTread>} */
+    this.treads = []
+    this.arcWidth = Default.ARC_WIDTH
+    this.rebuildByParent({vPos, vIndex, vTreadIndex, isLast, vStartHeight})
+  }
+
+  rebuildByParent({vPos, vIndex, vTreadIndex, isLast, vStartHeight}) {
+    this.pos = vPos
+    this.isLast = isLast
+    this.index = vIndex
+    this.treadIndex = vTreadIndex
+    this.stepHeight = this.parent.stepHeight
+    this.stepLength = this.parent.stepLength
+    this.startHeight = vStartHeight
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
+    this.center = new Edge().setByVec(this.pos, this.endLVec, this.radius).p2
+    this.stepAngle = 2* Math.sinh(this.arcWidth/2/this.radius)
+    this.computeEndHeight()
+    this.updateTreads()
+  }
+
+  getArgs() {
+    let f = tool.getItemFromOptions
+    let args = {
+      stepLength: { name: '步长', value: this.stepLength, type: 'input' },
+      radius: {name:'外弧半径', value:this.radius, type:'input'},
+      arcWidth: {name:'外弧弧宽', value:this.arcWidth, type:'input'}
+    }
+    if (this.isLast) {
+      args.stepNumRule = {
+        name: '步数规则',
+        value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
+        type: 'select',
+        options: Flight.NUM_RULE_OPTIONS,
+      }
+    }
+    args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
+    args.name = '楼梯段参数'
+    return args
+  }
+
+  updateTreads() {
+    let step_num = this.realStepNum
+    let treadPos = this.pos
+    let endLVec = this.endLVec
+    let heightSum = this.endHeight
+    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
+      if (this.treads[this.stepNum - 1] && (!this.treads[this.stepNum - 1].inheritH)) {
+        heightSum = heightSum - this.treads[this.stepNum - 1].stepHeight
+      } else {
+        heightSum = heightSum - this.stepHeight
+      }
+    }
+    let commonParas = { vParent: this, vIsLast: false }
+    for (let i = 0; i < step_num; i++) {
+      let vIndex = step_num - i + this.treadIndex
+      let vPos = new Types.Vector3(treadPos) 
+      vPos.z = heightSum
+      let vEndLVec = new UtilVec2(endLVec).writePB()
+      let paras = { ...commonParas, vIndex, vPos, vEndLVec}
+      if (this.treads[step_num - i - 1]) {
+        this.treads[step_num - i - 1].rebuildByParent(paras)
+        heightSum = heightSum - this.treads[step_num - i - 1].stepHeight
+      } else {
+        this.treads[step_num - i - 1] = new ArcTread(paras)
+        heightSum = heightSum - this.stepHeight
+      }
+      let lastT = this.treads[step_num - i - 1]
+      treadPos = lastT.border.stepOutline.edges[3].p1
+      endLVec = lastT.startLVec
+    }
+    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
+      let angle = this.clock ? this.stepAngle : -this.stepAngle
+      let vEndLVec = new UtilVec2(this.endLVec).round(angle).normalize().writePB()
+      let vPos = new Edge().setByVec(this.center, vEndLVec, -this.radius).p2
+      vPos.z = this.endHeight
+      let paras = {
+        ...commonParas, vPos, vEndLVec,
+        vIndex: this.stepNum + this.treadIndex,
+        vIsLast: true,
+      }
+      if (this.treads[step_num]) {
+        this.treads[step_num].rebuildByParent(paras)
+      } else {
+        this.treads[step_num] = new ArcTread(paras)
+      }
+    }
+  }
+
+  computeEndHeight() {
+    this.endHeight = this.startHeight
+    for (const t of this.treads) {
+      if (t.inheritH) {
+        this.endHeight += this.stepHeight
+      } else {
+        this.endHeight = this.endHeight + t.stepHeight
+      }
+    }
+    if (this.endHeight === this.startHeight) {
+      this.endHeight += this.stepNum * this.stepHeight
+    }
+  }
+
+  updateItem(vValue, vKey, vSecondKey) {
+    if (['stepNum', 'stepNumRule'].includes(vKey)) {
+      this.treads = []
+    }
+    super.updateItem(vValue, vKey, vSecondKey)
+  }
+
+  writePB() {
+    return new Types.Flight({
+      uuid: this.uuid,
+      stepParameters: new Types.StepParameters({
+        stepLength: this.stepLength,
+        stepWidth: this.stepWidth,
+        stepNumRule: this.stepNumRule,
+        stepNum: this.stepNum,
+      }),
+      treads: tool.writeItemArrayPB(this.treads),
+    })
+  }
+}

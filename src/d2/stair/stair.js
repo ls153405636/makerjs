@@ -72,7 +72,7 @@ export class Stair extends BaseWidget {
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
-    this.addDimension()
+    //this.addDimension()
   }
 
   destroy() {

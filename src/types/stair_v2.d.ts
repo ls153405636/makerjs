@@ -33,7 +33,8 @@ export namespace Types {
         sstright = 1,
         sl_type = 2,
         s_small_u_type = 3,
-        s_big_u_type = 4
+        s_big_u_type = 4,
+        s_arc_type = 5
     }
 
     /** Side enum. */
@@ -115,7 +116,8 @@ export namespace Types {
         trect = 1,
         tStart = 2,
         tSpec = 3,
-        tCor = 4
+        tCor = 4,
+        tArc = 5
     }
 
     /** StartTreadType enum. */

@@ -140,7 +140,15 @@ export class Stair extends Info {
   updateFlights() {}
 
   /** 根据楼梯段、起步踏、休息平台等计算总步数*/
-  computeStepNum() {}
+  computeStepNum() {
+    this.stepNum = 0
+    for (const f of this.segments) {
+      this.stepNum += f.stepNum
+    }
+    this.stepNum += (this.startFlight?.stepNum || 0)
+    this.stepNumRule = this.segments[this.segments.length - 1].stepNumRule
+    this.realStepNum = this.stepNum - this.stepNumRule + 1
+  }
 
   /** 根据楼梯段、休息平台计算楼梯尺寸（不包含起步踏）*/
   computeSize() {}

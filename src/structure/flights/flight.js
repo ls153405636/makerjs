@@ -21,7 +21,6 @@ export class Flight extends ChildInfo {
     this.index = vIndex
     /**@type {Array<RectTread>} */
     this.treads = []
-    this.startTread = false
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
     this.fixedStepWidthNum = this.realStepNum
@@ -88,7 +87,7 @@ export class Flight extends ChildInfo {
   }
 
   updateTreads() {
-    let step_num = this.stepNum + 1 - this.stepNumRule
+    let step_num = this.realStepNum
     let widthSum = 0
     let heightSum = this.endHeight
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
@@ -276,7 +275,6 @@ export class Flight extends ChildInfo {
         stepWidth: this.stepWidth,
         stepNumRule: this.stepNumRule,
         stepNum: this.stepNum,
-        length: this.length
       }),
       treads: tool.writeItemArrayPB(this.treads),
     })

@@ -33,7 +33,7 @@ export class Tread extends ChildWidget {
     this.depth = Default.WALL_DEPTH
     this.stairInfo = StructConfig.INFOS.get(this.uuid)
     this.draw()
-    this.addDimension()
+    //this.addDimension()
     this.addEvent()
   }
 
