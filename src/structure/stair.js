@@ -124,12 +124,12 @@ export class Stair extends Info {
     this.updateSegments()
     this.computeSize()
     this.computePosition()
-    // this.updateStairPositon()
-    // this.updatehangingBoard()
-    // this.updateGirders()
-    // this.updateHandrails()
-    // this.updateSmallColumns()
-    // this.updateBigColumns()
+    this.updateStairPositon()
+    this.updatehangingBoard()
+    this.updateGirders()
+    this.updateHandrails()
+    this.updateSmallColumns()
+    this.updateBigColumns()
     this.updateCanvas('Stair')
   }
   
