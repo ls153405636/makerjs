@@ -1,5 +1,6 @@
 import { D2Config } from '../d2/config'
 import { Types } from '../types/stair_v2'
+import { ArcStair } from './arc_stair'
 import { BigUTypeStair } from './b_u_type_stair'
 import { StructConfig } from './config'
 import { RectHole } from './hole'
@@ -34,18 +35,19 @@ export class Structure {
   }
 
   initStair({type = Types.StairType.sstright,againstWall,floadSide = Types.Side.si_right}) {
-    if (type === Types.StairType.sstright) {
-      this.stair = new StraightStair(this, againstWall)
-    }
-    if (type === Types.StairType.sl_type) {
-      this.stair = new LTypeStair(this, againstWall, floadSide)
-    }
-    if (type === Types.StairType.s_small_u_type) {
-      this.stair = new SmallUTypeStair(this, againstWall, floadSide)
-    }
-    if (type === Types.StairType.s_big_u_type) {
-      this.stair = new BigUTypeStair(this, againstWall, floadSide)
-    }
+    // if (type === Types.StairType.sstright) {
+    //   this.stair = new StraightStair(this, againstWall)
+    // }
+    // if (type === Types.StairType.sl_type) {
+    //   this.stair = new LTypeStair(this, againstWall, floadSide)
+    // }
+    // if (type === Types.StairType.s_small_u_type) {
+    //   this.stair = new SmallUTypeStair(this, againstWall, floadSide)
+    // }
+    // if (type === Types.StairType.s_big_u_type) {
+    //   this.stair = new BigUTypeStair(this, againstWall, floadSide)
+    // }
+    this.stair = new ArcStair(this, floadSide)
     return this
   }
 

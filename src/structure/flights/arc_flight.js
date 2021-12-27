@@ -3,6 +3,8 @@ import { Edge } from '../../utils/edge'
 import {ChildInfo} from '../child_info'
 import { Default } from '../config'
 import { ArcTread } from '../treads/arc_tread'
+import { UtilVec2 } from '../../utils/util_vec_2'
+import tool from '../tool'
 
 export class ArcFlight extends ChildInfo{
   constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vRadius, vClock, vEndLVec, vPos, vStartHeight}) {
@@ -12,6 +14,8 @@ export class ArcFlight extends ChildInfo{
     this.endLVec = vEndLVec
     this.stepNum = vStepNum
     this.stepNumRule = vStepNumRule
+    /**@type {Array<ArcTread>} */
+    this.treads = []
     this.arcWidth = Default.ARC_WIDTH
     this.rebuildByParent({vPos, vIndex, vTreadIndex, isLast, vStartHeight})
   }
@@ -27,13 +31,14 @@ export class ArcFlight extends ChildInfo{
     this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.center = new Edge().setByVec(this.pos, this.endLVec, this.radius).p2
     this.stepAngle = 2* Math.sinh(this.arcWidth/2/this.radius)
-    this.inRaius = this.radius - this.stepLength
     this.computeEndHeight()
+    this.updateTreads()
   }
 
   updateTreads() {
     let step_num = this.realStepNum
     let treadPos = this.pos
+    let endLVec = this.endLVec
     let heightSum = this.endHeight
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
       if (this.treads[this.stepNum - 1] && (!this.treads[this.stepNum - 1].inheritH)) {
@@ -44,10 +49,11 @@ export class ArcFlight extends ChildInfo{
     }
     let commonParas = { vParent: this, vIsLast: false }
     for (let i = 0; i < step_num; i++) {
-      let index = step_num - i + this.treadIndex
-      let pos = new Types.Vector3(treadPos) 
-      pos.z = heightSum
-      let paras = { ...commonParas, vIndex: index, vPos: pos, vIsLast: false }
+      let vIndex = step_num - i + this.treadIndex
+      let vPos = new Types.Vector3(treadPos) 
+      vPos.z = heightSum
+      let vEndLVec = new UtilVec2(endLVec).writePB()
+      let paras = { ...commonParas, vIndex, vPos, vEndLVec}
       if (this.treads[step_num - i - 1]) {
         this.treads[step_num - i - 1].rebuildByParent(paras)
         heightSum = heightSum - this.treads[step_num - i - 1].stepHeight
@@ -55,13 +61,17 @@ export class ArcFlight extends ChildInfo{
         this.treads[step_num - i - 1] = new ArcTread(paras)
         heightSum = heightSum - this.stepHeight
       }
+      let lastT = this.treads[step_num - i - 1]
+      treadPos = lastT.border.stepOutline.edges[3].p1
+      endLVec = lastT.startLVec
     }
     if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      pos = new Types.Vector3(treadPos) 
-      pos.z = this.endHeight
+      let angle = this.clock ? this.stepAngle : -this.stepAngle
+      let vEndLVec = new UtilVec2(this.endLVec).round(angle).normalize().writePB()
+      let vPos = new Edge().setByVec(this.center, vEndLVec, -this.radius).p2
+      vPos.z = this.endHeight
       let paras = {
-        ...commonParas,
-        vPos: pos,
+        ...commonParas, vPos, vEndLVec,
         vIndex: this.stepNum + this.treadIndex,
         vIsLast: true,
       }
@@ -87,5 +97,23 @@ export class ArcFlight extends ChildInfo{
     }
   }
 
+  updateItem(vValue, vKey, vSecondKey) {
+    if (['stepNum', 'stepNumRule'].includes(vKey)) {
+      this.treads = []
+    }
+    super.updateItem(vValue, vKey, vSecondKey)
+  }
 
+  writePB() {
+    return new Types.Flight({
+      uuid: this.uuid,
+      stepParameters: new Types.StepParameters({
+        stepLength: this.stepLength,
+        stepWidth: this.stepWidth,
+        stepNumRule: this.stepNumRule,
+        stepNum: this.stepNum,
+      }),
+      treads: tool.writeItemArrayPB(this.treads),
+    })
+  }
 }

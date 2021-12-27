@@ -17,11 +17,24 @@ export class UtilVec2 {
   }
 
   getAngle() {
-    return this.vec.angle()
+    let angle = this.vec.angle()
+    return angle % (Math.PI*2)
   }
 
+  /**
+   *threejs中xy轴旋转，默认方向为逆时针，但xy到xz平面发生翻转，因此此旋转默认的方向为xz平面的逆时针
+   *
+   * @param {*} vAngle
+   * @returns
+   * @memberof UtilVec2
+   */
   round(vAngle) {
-    this.vec.rotateAround(center, vAngle)
+    this.vec.rotateAround(UtilVec2.center, vAngle)
+    return this
+  }
+
+  normalize() {
+    this.vec.normalize()
     return this
   }
 

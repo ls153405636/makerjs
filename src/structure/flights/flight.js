@@ -275,7 +275,6 @@ export class Flight extends ChildInfo {
         stepWidth: this.stepWidth,
         stepNumRule: this.stepNumRule,
         stepNum: this.stepNum,
-        length: this.length
       }),
       treads: tool.writeItemArrayPB(this.treads),
     })

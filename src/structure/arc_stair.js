@@ -11,22 +11,69 @@ export class ArcStair extends Stair {
     super(vParent)
     this.floadSide = vFloadSide
     this.stepLength = Default.STEP_LENGTH
+    this.rebuild()
+  }
+
+  rebuild() {
+    if (this.exitType === Types.StairExitType.se_hangingBoard) {
+      this.hangOffset = this.hangingBoard?.depth || Default.HANG_BOARD_DEPTH
+    } else {
+      this.hangingBoard = null
+      this.hangOffset = 0
+    }
+    let gArgs = this.girderParameters
+    this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
+    this.startStepNum = this.startFlight?.stepNum || 0
+    this.computeSideOffset()
+    if (this.flights.length) {
+      this.computeStepNum()
+      this.computeStepHeight()
+      this.updateFlights()
+    } else {
+      this.initFlights()
+    }
+    this.updateStartFlight()
+    this.updateLandings()
+    this.updateSegments()
+    this.computeSize()
+    this.computePosition()
+    // this.updateStairPositon()
+    // this.updatehangingBoard()
+    // this.updateGirders()
+    // this.updateHandrails()
+    // this.updateSmallColumns()
+    // this.updateBigColumns()
+    this.updateCanvas('Stair')
   }
 
   initFlights() {
-    let botEdge = this.parent.hole.getEdge('bot')
+    let botEdge = this.parent.hole.getEdgeByPos('bot')
     let utilEndE = new Edge(botEdge)
-    let vClock = this.floadSide === Types.Side.si_left ? true : false
+    let vClock = this.floadSide === Types.Side.si_right ? true : false
     (!vClock) && utilEndE.reserve()
     let vRadius = Math.max(utilEndE.getLength() / 2, this.stepLength)
     let vStepNum = Math.floor(this.parent.hole.floorHeight / Default.STEP_HEIGHT)
     this.stepNum = vStepNum
+    this.stepHeight = this.parent.hole.floorHeight / this.stepNum
+    let vStepNumRule = this.stepNumRule
     let vEndLVec = new UtilVec2(utilEndE.getVec()).writePB()
     let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
-    this.flights[0] = new ArcFlight({vParent:this, vRadius, vClock, vCenter, vEndLVec, vPos})
+    this.flights[0] = new ArcFlight({vParent:this, vStepNum, vStepNumRule, 
+                                     vTreadIndex:0, 
+                                     vIndex:0,
+                                     isLast:true, vRadius, vClock, vEndLVec, vPos,
+                                     vStartHeight:0})
   }
 
+
   updateFlights() {
-    
+    {vPos, vIndex, vTreadIndex, isLast, vStartHeight}
   }
+
+  computePosition() {
+    let topEdge = this.parent.hole.getEdgeByPos('top')
+    this.position = topEdge.p1
+  }
+
+
 }
