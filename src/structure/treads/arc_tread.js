@@ -37,7 +37,6 @@ export class ArcTread extends Tread {
   createArcBorder() {
     let stepOutline = this.createArcOutline(this.startLVec, this.startLVec, this.startAngle, this.startAngle)
 
-    
     let treadInStartVec = this.getTreadStartVec(this.outRadius)
     let treadOutStartVec = this.getTreadStartVec(this.inRadius)
     let treadInStartAngle = new UtilVec2(treadInStartVec).negate().getAngle()

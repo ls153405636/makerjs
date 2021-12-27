@@ -67,7 +67,8 @@ export class ArcStair extends Stair {
 
 
   updateFlights() {
-    {vPos, vIndex, vTreadIndex, isLast, vStartHeight}
+    let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
+    this.flights[0].rebuildByParent({vPos, vIndex:0, vTreadIndex:0, isLast:true, vStartHeight:0})
   }
 
   computePosition() {
@@ -75,5 +76,18 @@ export class ArcStair extends Stair {
     this.position = topEdge.p1
   }
 
+  updateItem(vValue, vKey1, vKey2) {
+    if (vKey2 && ['model', 'material'].includes(vKey2)) {
+      console.log(1)
+    } else if (['stepNum','stepNumRule'].includes(vKey1)) {
 
+      this.flights[0].updateItem(vValue, vKey1, vKey2)
+    } else {
+      super.updateItem(vValue, vKey1, vKey2)
+    }
+  }
+
+  updateSegments() {
+    this.segments[0] = this.flights[0]
+  }
 }

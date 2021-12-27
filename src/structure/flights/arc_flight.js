@@ -5,6 +5,7 @@ import { Default } from '../config'
 import { ArcTread } from '../treads/arc_tread'
 import { UtilVec2 } from '../../utils/util_vec_2'
 import tool from '../tool'
+import {Flight} from './flight'
 
 export class ArcFlight extends ChildInfo{
   constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vRadius, vClock, vEndLVec, vPos, vStartHeight}) {
@@ -33,6 +34,26 @@ export class ArcFlight extends ChildInfo{
     this.stepAngle = 2* Math.sinh(this.arcWidth/2/this.radius)
     this.computeEndHeight()
     this.updateTreads()
+  }
+
+  getArgs() {
+    let f = tool.getItemFromOptions
+    let args = {
+      stepLength: { name: '步长', value: this.stepLength, type: 'input' },
+      radius: {name:'外弧半径', value:this.radius, type:'input'},
+      arcWidth: {name:'外弧弧宽', value:this.arcWidth, type:'input'}
+    }
+    if (this.isLast) {
+      args.stepNumRule = {
+        name: '步数规则',
+        value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
+        type: 'select',
+        options: Flight.NUM_RULE_OPTIONS,
+      }
+    }
+    args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
+    args.name = '楼梯段参数'
+    return args
   }
 
   updateTreads() {
