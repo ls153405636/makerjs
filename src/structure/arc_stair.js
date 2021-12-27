@@ -55,6 +55,7 @@ export class ArcStair extends Stair {
     let vStepNum = Math.floor(this.parent.hole.floorHeight / Default.STEP_HEIGHT)
     this.stepNum = vStepNum
     this.stepHeight = this.parent.hole.floorHeight / this.stepNum
+    this.stepHeight = Number(this.stepHeight.toFixed(2))
     let vStepNumRule = this.stepNumRule
     let vEndLVec = new UtilVec2(utilEndE.getVec()).writePB()
     let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
@@ -64,7 +65,6 @@ export class ArcStair extends Stair {
                                      isLast:true, vRadius, vClock, vEndLVec, vPos,
                                      vStartHeight:0})
   }
-
 
   updateFlights() {
     let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
@@ -76,11 +76,16 @@ export class ArcStair extends Stair {
     this.position = topEdge.p1
   }
 
+  computeSize() {
+    this.width = 0
+    this.depth = 0
+    this.height = this.parent.hole.floorHeight
+  }
+
   updateItem(vValue, vKey1, vKey2) {
     if (vKey2 && ['model', 'material'].includes(vKey2)) {
       console.log(1)
     } else if (['stepNum','stepNumRule'].includes(vKey1)) {
-
       this.flights[0].updateItem(vValue, vKey1, vKey2)
     } else {
       super.updateItem(vValue, vKey1, vKey2)
