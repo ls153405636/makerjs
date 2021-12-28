@@ -121,6 +121,8 @@ export class ArcFlight extends ChildInfo{
   updateItem(vValue, vKey, vSecondKey) {
     if (['stepNum', 'stepNumRule'].includes(vKey)) {
       this.treads = []
+    } else if (vKey === 'stepLength') {
+      this.parent.updateItem(vValue, vKey, vSecondKey)
     }
     super.updateItem(vValue, vKey, vSecondKey)
   }
@@ -136,5 +138,9 @@ export class ArcFlight extends ChildInfo{
       }),
       treads: tool.writeItemArrayPB(this.treads),
     })
+  }
+
+  getEndHeight () {
+    return this.endHeight
   }
 }

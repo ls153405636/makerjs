@@ -6,14 +6,21 @@
           <span>楼梯参数</span>
         </div>
       </template>
+      <el-button
+        size="medium"
+        v-if="cur_args.enterFlight != undefined"
+        @click="change('enterFlight', cur_args.enterFlight.state)"
+      >
+        {{ cur_args.enterFlight.name }}
+      </el-button>
+      <el-button
+        size="medium"
+        v-if="cur_args.exitFlight != undefined"
+        @click="change('exitFlight', cur_args.exitFlight.state)"
+      >
+        {{ cur_args.exitFlight.name }}
+      </el-button>
       <div class="two-button">
-        <el-button
-          size="medium"
-          v-if="cur_args.hangingBoard != undefined"
-          @click="addEle('hangingBoard', cur_args.hangingBoard.state)"
-        >
-          {{ cur_args.hangingBoard.name }}
-        </el-button>
         <el-button
           width="80"
           size="medium"
@@ -53,6 +60,10 @@ export default {
         core.execute(new Command(core.cmds.EleDelCmd, { type: vType }))
       }
     },
+    change(vKey, vState) {
+      let core = new Core()
+      core.execute(new Command(core.cmds.ChangeCmd({key:vKey, state:vState})))
+    }
   },
   props: {
     args: Object,

@@ -93,4 +93,20 @@ export class ArcTread extends Tread {
     outline = new Outline(outline).setZCoord(this.position.z)
     return outline
   }
+
+  getEndWVec () {
+    let angle = this.clock ? -Math.PI/2 : Math.PI/2
+    let endWVec = new UtilVec2(this.endLVec).round(angle).normalize().writePB()
+    return endWVec
+  }
+
+  getStartWVec () {
+    let angle = this.clock ? -Math.PI/2 : Math.PI/2
+    let startWVec = new UtilVec2(this.startLVec).round(angle).normalize().writePB()
+    return startWVec
+  }
+
+  getStartPos() {
+    return this.border.stepOutline.edges[2].p2
+  }
 }

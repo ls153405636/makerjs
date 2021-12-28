@@ -32,10 +32,10 @@ export class Stair extends Info {
     this.againstWallType = vAgainstWall
     this.startBeamDepth = 0
     this.exitBeamDepth = 0
-    this.startMoveT = 0
-    this.startMoveR = 0
-    this.startMoveB = 0
-    this.startMoveL = 0
+    this.stairMoveT = 0
+    this.stairMoveR = 0
+    // this.startMoveB = 0
+    // this.startMoveL = 0
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
     this.realStepNum = this.stepNum - this.stepNumRule + 1
@@ -172,8 +172,8 @@ export class Stair extends Info {
 
   /**移动整个楼梯 */
   updateStairPositon() {
-    this.position.y -= this.startMoveT
-    this.position.x += this.startMoveR
+    this.position.y -= this.stairMoveT
+    this.position.x += this.stairMoveR
     // this.position.y += this.startMoveB
     // this.position.x -= this.startMoveL
   }
@@ -246,8 +246,10 @@ export class Stair extends Info {
   addStartFlight(vStartFlight) {
     let f1 = this.flights[0]
     let firstTread = f1.treads[0]
-    f1.updateItem(f1.stepNum - 1, 'stepNum')
-    f1.updateItem(f1.length - firstTread.stepWidth, 'length')
+    if(f1.realStepNum > 1) {
+      f1.updateItem(f1.stepNum - 1, 'stepNum')
+      f1.updateItem(f1.length - firstTread.stepWidth, 'length')
+    }
     this.flights.push(vStartFlight)
     this.startFlight = vStartFlight
     this.rebuild()
@@ -348,12 +350,12 @@ export class Stair extends Info {
     let args = {
       startMoveT: {
         name: '上移',
-        value: this.startMoveT,
+        value: this.stairMoveT,
         type: 'input',
       },
       startMoveR: {
         name: '右移',
-        value: this.startMoveR,
+        value: this.stairMoveR,
         type: 'input',
       },
       // startMoveB: {
@@ -377,16 +379,16 @@ export class Stair extends Info {
         type: 'input',
       },
       stepHeightD: {name:'步高', value:this.stepHeight, type:'input', disabled:true},
+      exitType: {name:'出口类型', 
+                value:f(this.exitType, Stair.EXIT_TYPE_OPTIONS), 
+                type:'select', 
+                options:[...Stair.EXIT_TYPE_OPTIONS]},
       stepNumRule: {
         name: '步数规则',
         value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
         type: 'select',
         options: Flight.NUM_RULE_OPTIONS,
       },
-      exitType: {name:'出口类型', 
-                value:f(this.exitType, Stair.EXIT_TYPE_OPTIONS), 
-                type:'select', 
-                options:[...Stair.EXIT_TYPE_OPTIONS]},
       stepNum: { name: '步数', value: this.stepNum, type: 'input' },
       inSide:{name:'内侧参数', type:'group', value:this.inSide.getArgs()},
       outSide:{name:'外侧参数', type:'group', value:this.outSide.getArgs()},

@@ -6,6 +6,7 @@ import { D3SelectCmd } from '../d3/cmds/d3_select_cmd'
 import { D3SwitchCmd } from '../d3/cmds/d3_switch_cmd'
 import { StrucEleAddCmd } from '../structure/cmds/strcu_ele_add_cmd'
 import { StrucSwitchCmd } from '../structure/cmds/strcu_switch_cmd'
+import { StrucChangeCmd } from '../structure/cmds/struc_change_cmd'
 import { StrucEleDelCmd } from '../structure/cmds/struc_ele_del_cmd'
 import { StrucHoleInitCmd } from '../structure/cmds/struc_hole_init_cmd'
 import { StrucSelecteCmd } from '../structure/cmds/struc_selecte_cmd'
@@ -39,6 +40,10 @@ export const allCmds = {
 
   EleUpdateCmd: {
     struc: StrucUpdateCmd,
+  },
+
+  ChangeCmd: {
+    struc: StrucChangeCmd
   },
 
   SelecteCmd: {

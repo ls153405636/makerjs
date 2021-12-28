@@ -40,6 +40,9 @@ export class Flight extends ChildInfo {
     this.lVec = vLVec
     this.wVec = vWVec
     this.stepHeight = this.parent.stepHeight
+    if (this.parent.type === Types.StairType.s_arc_type) {
+      this.stepLength = this.parent.stepLength
+    }
     this.startHeight = vStartHeight
     this.realStepNum = this.stepNum - this.stepNumRule + 1
     this.computeStepWidth()
@@ -50,8 +53,12 @@ export class Flight extends ChildInfo {
   updateItem(vValue, vKey, vSecondKey) {
     if (['stepNum', 'stepNumRule'].includes(vKey)) {
       this.treads = []
+      super.updateItem(vValue, vKey, vSecondKey)
+    } else if (vKey === 'stepLength' && this.parent.type === Types.StairType.s_arc_type) {
+      this.parent.updateItem(vValue, vKey, vSecondKey)
+    } else {
+      super.updateItem(vValue, vKey, vSecondKey)
     }
-    super.updateItem(vValue, vKey, vSecondKey)
   }
 
   getArgs() {

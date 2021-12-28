@@ -353,11 +353,13 @@ export class StartFlight extends ChildInfo{
         stepNum = 2
       }
       this.treads = []
-      let stepNumDiff = this.stepNum - stepNum
-      let f1 = this.parent.flights[0]
-      let lengthDiff = f1.stepWidth * stepNumDiff
-      f1.updateItem(f1.stepNum + stepNumDiff, 'stepNum')
-      f1.updateItem(f1.length + lengthDiff, 'length')
+      let stepNumDiff = stepNum - this.stepNum
+      if (stepNumDiff >= 0 || f1.stepNum > stepNumDiff) {
+        let f1 = this.parent.flights[0]
+        let lengthDiff = f1.stepWidth * stepNumDiff
+        f1.updateItem(f1.stepNum + stepNumDiff, 'stepNum')
+        f1.updateItem(f1.length + lengthDiff, 'length') 
+      }
       this.stepNum = stepNum
     }else {
       super.updateItem(vValue, vKey1, vKey2)

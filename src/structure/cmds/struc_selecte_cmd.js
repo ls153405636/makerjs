@@ -17,7 +17,7 @@ export class StrucSelecteCmd extends Action {
       this.info = new Structure().stair || new Structure().hole
       this.type = new Structure().stair ? COMP_TYPES.STAIR : COMP_TYPES.HOLE
     }
-    if (this.info && StructConfig?.uuid !== this.uuid) {
+    if (this.info /*&& StructConfig?.SELECTED.uuid !== this.uuid*/) {
       StructConfig.SELECTED = this.info
       CUR_DATA.SELECTED_TYPE = this.type
       store.commit('right_attribute/setCurType', this.type)
