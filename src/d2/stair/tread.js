@@ -21,6 +21,7 @@ export class Tread extends ChildWidget {
     this.edges = vPB.border.stepOutline.edges
     this.isClock = vPB.border.stepOutline.isClock
     this.inIndex = vPB.border.inIndex
+    this.outIndex = vPB.border.outIndex
     this.frontIndex = vPB.border.frontIndex
     this.backIndex = vPB.border.backIndex
     this.index = vPB.index
@@ -33,16 +34,25 @@ export class Tread extends ChildWidget {
     this.depth = Default.WALL_DEPTH
     this.stairInfo = StructConfig.INFOS.get(this.uuid)
     this.draw()
-    //this.addDimension()
+    this.addDimension()
+    if (this.type === Types.StairType.s_arc_type) {
+      this.ArcStairDemension()
+    }
     this.addEvent()
+    // console.log(vPB)
   }
 
   creatText(vName, vPos) {
     vName.scale.set(0.25)
-    vName.position.set((vPos.p1.x + vPos.p2.x) / 20, (vPos.p1.y + vPos.p2.y) / 20)
+    vName.position.set((vPos.p1.x + vPos.p2.x) / 2, (vPos.p1.y + vPos.p2.y) / 2)
     vName.anchor.set(0.5, 0.5)
     let newTextRotation = ''
     let textRotation = new Victor(vPos.p1.x - vPos.p2.x, vPos.p1.y - vPos.p2.y)
+    if (this.isClock === true && this.type === 5 && vPos.p1.y < vPos.p2.y) {
+      textRotation = new Victor(vPos.p2.x - vPos.p1.x, vPos.p2.y - vPos.p1.y)
+    }else if (this.isClock === false && this.type === 5 && vPos.p1.y > vPos.p2.y) {
+      textRotation = new Victor(vPos.p2.x - vPos.p1.x, vPos.p2.y - vPos.p1.y)
+    }
     let textAngle = textRotation.angle()
     if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
       newTextRotation = 0
@@ -958,55 +968,57 @@ export class Tread extends ChildWidget {
       }
       if (sideEdgeL.p1.x < sideEdgeL.p2.x || sideEdgeL.p1.x > sideEdgeL.p2.x) {
         wallOutP1 = new Victor((lWall.outP1.x - stairP.x) * 10 - sideEdgeL.p1.x, (lWall.outP1.y - stairP.y) * 10 - sideEdgeL.p1.y)
-        sideEdgeL = new Edge(sideEdgeL).offset(Math.abs(wallOutP1.y) + offSet.x + 140, true)
+        sideEdgeL = d2_tool.translateEdges(new Edge(sideEdgeL).offset(Math.abs(wallOutP1.y) + offSet.x + 140, true))
       }
       if (sideEdgeL.p1.y > sideEdgeL.p2.y || sideEdgeL.p1.y < sideEdgeL.p2.y) {
         wallOutP1 = new Victor((lWall.outP1.x - stairP.x) * 10 - sideEdgeL.p1.x, (lWall.outP1.y - stairP.y) * 10 - sideEdgeL.p1.y)
-        sideEdgeL = new Edge(sideEdgeL).offset(Math.abs(wallOutP1.x) + offSet.x + 140, true)
+        sideEdgeL = d2_tool.translateEdges(new Edge(sideEdgeL).offset(Math.abs(wallOutP1.x) + offSet.x + 140, true))
       }
 
       if (sideEdgeN.p1.y < sideEdgeN.p2.y || sideEdgeN.p1.y > sideEdgeN.p2.y) {
         wallOutP1 = new Victor((nWall.outP1.x - stairP.x) * 10 - sideEdgeN.p1.x, (nWall.outP1.y - stairP.y) * 10 - sideEdgeN.p1.y)
-        sideEdgeN = new Edge(sideEdgeN).offset(Math.abs(wallOutP1.x) + offSet.x + 140, true)
+        sideEdgeN = d2_tool.translateEdges(new Edge(sideEdgeN).offset(Math.abs(wallOutP1.x) + offSet.x + 140, true))
       }
       if (sideEdgeN.p1.x < sideEdgeN.p2.x || sideEdgeN.p1.x > sideEdgeN.p2.x) {
         wallOutP1 = new Victor((nWall.outP1.x - stairP.x) * 10 - sideEdgeN.p1.x, (nWall.outP1.y - stairP.y) * 10 - sideEdgeN.p1.y)
-        sideEdgeN = new Edge(sideEdgeN).offset(Math.abs(wallOutP1.y) + offSet.x + 140, true)
+        sideEdgeN = d2_tool.translateEdges(new Edge(sideEdgeN).offset(Math.abs(wallOutP1.y) + offSet.x + 140, true))
       }
-      sideEdgeLT = new Edge(sideEdgeL).offset(arrow.x, true)
-      sideEdgeLB = new Edge(sideEdgeL).offset(arrow.x, false)
-      sideEdgeNT = new Edge(sideEdgeN).offset(arrow.x, true)
-      sideEdgeNB = new Edge(sideEdgeN).offset(arrow.x, false)
+      sideEdgeLT = new Edge(sideEdgeL).offset(arrow.x / 10, true)
+      sideEdgeLB = new Edge(sideEdgeL).offset(arrow.x / 10, false)
+      sideEdgeNT = new Edge(sideEdgeN).offset(arrow.x / 10, true)
+      sideEdgeNB = new Edge(sideEdgeN).offset(arrow.x / 10, false)
 
 
 
       const langdingLine = new PIXI.Graphics()
       langdingLine.lineStyle(1, 0x000000, 1, 0.5, true)
-      langdingLine.moveTo(sideEdgeL.p1.x / 10, sideEdgeL.p1.y / 10)
-      langdingLine.lineTo(sideEdgeL.p2.x / 10, sideEdgeL.p2.y / 10)
+      langdingLine.moveTo(sideEdgeL.p1.x, sideEdgeL.p1.y)
+      langdingLine.lineTo(sideEdgeL.p2.x, sideEdgeL.p2.y)
 
-      langdingLine.moveTo(sideEdgeN.p1.x / 10, sideEdgeN.p1.y / 10)
-      langdingLine.lineTo(sideEdgeN.p2.x / 10, sideEdgeN.p2.y / 10)
+      langdingLine.moveTo(sideEdgeN.p1.x, sideEdgeN.p1.y)
+      langdingLine.lineTo(sideEdgeN.p2.x, sideEdgeN.p2.y)
 
-      langdingLine.moveTo(sideEdgeLT.p1.x / 10, sideEdgeLT.p1.y / 10)
-      langdingLine.lineTo(sideEdgeLB.p1.x / 10, sideEdgeLB.p1.y / 10)
-      langdingLine.moveTo(sideEdgeLT.p2.x / 10, sideEdgeLT.p2.y / 10)
-      langdingLine.lineTo(sideEdgeLB.p2.x / 10, sideEdgeLB.p2.y / 10)
+      langdingLine.moveTo(sideEdgeLT.p1.x, sideEdgeLT.p1.y)
+      langdingLine.lineTo(sideEdgeLB.p1.x, sideEdgeLB.p1.y)
+      langdingLine.moveTo(sideEdgeLT.p2.x, sideEdgeLT.p2.y)
+      langdingLine.lineTo(sideEdgeLB.p2.x, sideEdgeLB.p2.y)
 
-      langdingLine.moveTo(sideEdgeNT.p1.x / 10, sideEdgeNT.p1.y / 10)
-      langdingLine.lineTo(sideEdgeNB.p1.x / 10, sideEdgeNB.p1.y / 10)
-      langdingLine.moveTo(sideEdgeNT.p2.x / 10, sideEdgeNT.p2.y / 10)
-      langdingLine.lineTo(sideEdgeNB.p2.x / 10, sideEdgeNB.p2.y / 10)
+      langdingLine.moveTo(sideEdgeNT.p1.x, sideEdgeNT.p1.y)
+      langdingLine.lineTo(sideEdgeNB.p1.x, sideEdgeNB.p1.y)
+      langdingLine.moveTo(sideEdgeNT.p2.x, sideEdgeNT.p2.y)
+      langdingLine.lineTo(sideEdgeNB.p2.x, sideEdgeNB.p2.y)
 
       const landingTextLengthL =
-        Math.round(Math.hypot(sideEdgeL.p1.x - sideEdgeL.p2.x, sideEdgeL.p1.y - sideEdgeL.p2.y) )
+        Math.round(Math.hypot(sideEdgeL.p1.x - sideEdgeL.p2.x, sideEdgeL.p1.y - sideEdgeL.p2.y) * 10 )
       const landingTextLengthN =
-        Math.round(Math.hypot(sideEdgeN.p1.x - sideEdgeN.p2.x, sideEdgeN.p1.y - sideEdgeN.p2.y) )
+        Math.round(Math.hypot(sideEdgeN.p1.x - sideEdgeN.p2.x, sideEdgeN.p1.y - sideEdgeN.p2.y) * 10 )
 
       
       const landingLineTextL = new PIXI.Text(landingTextLengthL,textStyle)
       this.creatText(landingLineTextL, sideEdgeLT)
-
+      
+      console.log(landingTextLengthL)
+      console.log(landingTextLengthN)
       const landingLineTextN = new PIXI.Text(landingTextLengthN,textStyle)
       this.creatText(landingLineTextN, sideEdgeNT)
       for (let i = 0; i < this.stairInfo.parent.parent.landings.length; i++ ) {
@@ -1689,5 +1701,73 @@ export class Tread extends ChildWidget {
     }
 
     this.sprite.addChild(treadLineContainer)
+  }
+
+
+  ArcStairDemension() {
+    // 文字样式
+    const textStyle =  {
+      fontSize: 32,
+      fill: 0x000000,
+    }
+    let arcOffset = 150 // 弧宽标注偏移距离
+    let arcArrow = 40  // 端头长度
+    // 判断edge是否顺时针
+    let isTrue
+    if (this.isClock === true) {
+      isTrue = true
+    }else {
+      isTrue = false
+    }
+
+
+    // 获取外弧边
+    let outArcEdge = this.edges[this.inIndex]
+    let newOutArcEdge = d2_tool.translateEdges(new Edge(outArcEdge).offset(arcOffset,isTrue))
+    let outArcEdgeT = d2_tool.translateEdges(new Edge(outArcEdge).offset(arcOffset + arcArrow, isTrue))
+    let outArcEdgeB = d2_tool.translateEdges(new Edge(outArcEdge).offset(arcOffset - arcArrow, isTrue))
+    let outArcEdgeLength = Math.round(new Edge(outArcEdge).getLength())
+    
+    let inArcEdge = this.edges[this.outIndex]
+    let newInArcEdge = d2_tool.translateEdges(new Edge(inArcEdge).offset(arcOffset,isTrue))
+    let inArcEdgeT = d2_tool.translateEdges(new Edge(inArcEdge).offset(arcOffset + arcArrow, isTrue))
+    let inArcEdgeB = d2_tool.translateEdges(new Edge(inArcEdge).offset(arcOffset - arcArrow, isTrue))
+    let inArcEdgeLength = Math.round(new Edge(inArcEdge).getLength())
+
+    const outArcContainer = new PIXI.Container()
+    const outArcLine = new PIXI.Graphics()
+    outArcLine.lineStyle(1, 0x000000, 1, 0.5, true)
+    
+    const inArcLine = new PIXI.Graphics()
+    inArcLine.lineStyle(1, 0x000000, 1, 0.5, true)
+
+    const outArcText = new PIXI.Text(outArcEdgeLength, textStyle)
+    const inArcText = new PIXI.Text(inArcEdgeLength, textStyle)
+    outArcText.visible = false
+    inArcText.visible = false
+    
+    if (this.index === 7) {
+      outArcText.visible = true
+      inArcText.visible = true
+      outArcLine.moveTo(newOutArcEdge.p1.x, newOutArcEdge.p1.y)
+      outArcLine.lineTo(newOutArcEdge.p2.x, newOutArcEdge.p2.y)
+      outArcLine.moveTo(outArcEdgeT.p1.x, outArcEdgeT.p1.y)
+      outArcLine.lineTo(outArcEdgeB.p1.x, outArcEdgeB.p1.y)
+      outArcLine.moveTo(outArcEdgeT.p2.x, outArcEdgeT.p2.y)
+      outArcLine.lineTo(outArcEdgeB.p2.x, outArcEdgeB.p2.y)
+      
+      inArcLine.moveTo(newInArcEdge.p1.x, newInArcEdge.p1.y)
+      inArcLine.lineTo(newInArcEdge.p2.x, newInArcEdge.p2.y)
+      inArcLine.moveTo(inArcEdgeT.p1.x, inArcEdgeT.p1.y)
+      inArcLine.lineTo(inArcEdgeB.p1.x, inArcEdgeB.p1.y)
+      inArcLine.moveTo(inArcEdgeT.p2.x, inArcEdgeT.p2.y)
+      inArcLine.lineTo(inArcEdgeB.p2.x, inArcEdgeB.p2.y)
+
+    }
+    this.creatText(outArcText, outArcEdgeT)
+    this.creatText(inArcText, inArcEdgeB)
+
+    outArcContainer.addChild(outArcLine,inArcLine, inArcText, outArcText)
+    this.sprite.addChild(outArcContainer)
   }
 }

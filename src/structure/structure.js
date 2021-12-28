@@ -47,7 +47,9 @@ export class Structure {
     if (type === Types.StairType.s_big_u_type) {
       this.stair = new BigUTypeStair(this, againstWall, floadSide)
     }
-    //this.stair = new ArcStair(this, againstWall, floadSide)
+    if (type === Types.StairType.s_arc_type) {
+      this.stair = new ArcStair(this, againstWall, floadSide)
+    }
     return this
   }
 

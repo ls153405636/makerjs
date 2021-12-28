@@ -75,7 +75,11 @@ export class ArcStair extends Stair {
     let botEdge = this.parent.hole.getEdgeByPos('bot')
     let utilEndE = new Edge(botEdge)
     let vClock = this.floadSide === Types.Side.si_right ? true : false
-    (!vClock) && utilEndE.reserve()
+    let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
+    if (!vClock) {
+      utilEndE.reserve()
+      vPos.x = 0
+    }
     let vRadius = Math.max(utilEndE.getLength() / 2, this.stepLength)
     let vStepNum = Math.floor(this.parent.hole.floorHeight / Default.STEP_HEIGHT)
     this.stepNum = vStepNum
@@ -83,7 +87,6 @@ export class ArcStair extends Stair {
     this.stepHeight = Number(this.stepHeight.toFixed(2))
     let vStepNumRule = this.stepNumRule
     let vEndLVec = new UtilVec2(utilEndE.getVec()).writePB()
-    let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
     this.arcFlight = new ArcFlight({vParent:this, vStepNum, vStepNumRule, 
                                      vTreadIndex:0, 
                                      vIndex:0,
