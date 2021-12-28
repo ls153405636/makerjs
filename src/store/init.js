@@ -44,6 +44,7 @@ const state = {
       1: { value: Types.StairType.sl_type, label: 'L梯' },
       2: { value: Types.StairType.s_small_u_type, label: '小U型梯' },
       3: { value: Types.StairType.s_big_u_type, label: '大U型梯' },
+      4: { value: Types.StairType.s_arc_type, label: '弧形梯' },
     },
     value: { value: Types.StairType.sstright, label: '直梯' },
   },
