@@ -1,4 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
+import { COMP_TYPES } from '../common/common_config'
+import { StructConfig } from '../structure/config'
+import { Types } from '../types/stair_v2'
 import { D2Config } from './config'
 import { Movie } from './movie'
 export class BaseWidget {
@@ -7,6 +10,7 @@ export class BaseWidget {
     this.uuid = uuid || uuidv4()
     this.sprite = null
     this.isSelected = false
+    this.isChange = false
     D2Config.WIDGETS.set(this.uuid, this)
   }
 
@@ -39,6 +43,7 @@ export class BaseWidget {
     D2Config.WIDGETS.set(this.uuid, this)
     this.init(vPB)
     this.addToStage()
+    
   }
 
   setuuid(uuid) {
