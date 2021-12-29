@@ -6,6 +6,7 @@ import { Stair } from "./stair"
 export class UTypeStair extends Stair {
   constructor(vParent, vAgainstWall, vFloadSide ) {
     super(vParent, vAgainstWall)
+    this.type = Types.StairType.s_big_u_type
     if (this.againstWallType === Types.AgainstWallType.aw_left) {
       this.floadSide = Types.Side.si_right
     } else if (this.againstWallType === Types.AgainstWallType.aw_right) {
