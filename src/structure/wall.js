@@ -41,14 +41,24 @@ export class Wall extends Info {
     this.components = new Map()
     this.updateCanvas('Wall')
     let stairId
+    let inlayId
     for(let value of D2Config.WIDGETS.values()) {
       if (value.getWidgetType() === COMP_TYPES.STAIR) {
         stairId = value.uuid
+      }
+      if (value.getWidgetType() === COMP_TYPES.INLAY) {
+        inlayId = value.uuid
       }
     }
     let stairInfo = StructConfig.INFOS.get(stairId)
     if (stairInfo !== undefined) {
       stairInfo.updateCanvas()
+    }
+    let inlayInfo = StructConfig.INFOS.get(inlayId)
+    if (inlayInfo !== undefined) {
+      // inlayInfo.disToStart = 0
+      inlayInfo.depth = this.depth
+      inlayInfo.rebuild()
     }
   }
 

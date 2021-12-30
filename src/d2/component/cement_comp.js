@@ -339,7 +339,6 @@ export class CementComp extends BaseWidget {
       fontSize: 32,
       fill: 0x000000,
     })
-    console.log(this)
     if (disToStart === 0) {
       compLineText3.visible = false
     } else {
