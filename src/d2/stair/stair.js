@@ -72,7 +72,7 @@ export class Stair extends BaseWidget {
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
-    if (this.type !== 5) {
+    if (this.type !== Types.StairType.s_arc_type) {
       this.addDimension()
     }
   }
@@ -452,7 +452,7 @@ export class Stair extends BaseWidget {
     // 2.获取最后一级台阶
     // 3.获取这两级台阶之间的距离
     let isTrue
-    if (this.againstWallType === 1 || this.againstWallType === 2) {
+    if (this.againstWallType === Types.AgainstWallType.aw_no || this.againstWallType === Types.AgainstWallType.aw_left) {
       isTrue = true
     } else {
       isTrue = false
@@ -461,14 +461,14 @@ export class Stair extends BaseWidget {
     let firstTread = firstF.tread[firstF.tread.length - 1]
     let lastF = this.flights[this.flights.length - 1]
     let lastTread
-    if (stepNumRule === 2) {
+    if (stepNumRule === Types.StepNumRule.snr_n_add_1) {
       lastTread = lastF.tread[lastF.tread.length - 2]
-    }else if (stepNumRule === 1) {
+    }else if (stepNumRule === Types.StepNumRule.snr_n) {
       lastTread = lastF.tread[lastF.tread.length - 1]
     }
     let firstEdge = d2_tool.translateEdges(firstTread.border.stepOutline.edges[1])
     let lastEdge = d2_tool.translateEdges(lastTread.border.stepOutline.edges[1])
-    if (girderType === 1) {
+    if (girderType === Types.GirderType.gslab) {
       firstEdge = d2_tool.translateEdges(new Edge(firstTread.border.stepOutline.edges[1]).offset(girderDepth, isTrue))
       lastEdge = d2_tool.translateEdges(new Edge(lastTread.border.stepOutline.edges[1]).offset(girderDepth, isTrue))
     }
@@ -486,7 +486,7 @@ export class Stair extends BaseWidget {
     }
 
     const firstToEndLine = new PIXI.Graphics()
-    firstToEndLine.lineStyle(1, 0x000000)
+    firstToEndLine.lineStyle(1, 0x000000, 1, 0.5, true)
     firstToEndLine.moveTo(firstEdge.p2.x, firstEdge.p2.y)
     firstToEndLine.lineTo(lastEdge.p1.x, firstEdge.p2.y)
 
