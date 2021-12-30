@@ -8,6 +8,7 @@
       </template>
       <el-button
         size="medium"
+        width="100"
         v-if="cur_args.enterFlight != undefined"
         @click="change('enterFlight', cur_args.enterFlight.state)"
       >
@@ -15,6 +16,7 @@
       </el-button>
       <el-button
         size="medium"
+        width="100"
         v-if="cur_args.exitFlight != undefined"
         @click="change('exitFlight', cur_args.exitFlight.state)"
       >
@@ -25,7 +27,7 @@
           width="80"
           size="medium"
           v-if="cur_args.startFlight != undefined"
-          @click="addEle('startFlight', cur_args.startFlight.state)"
+          @click="change('startFlight', cur_args.startFlight.state)"
         >
           {{ cur_args.startFlight.name }}
         </el-button>
@@ -52,17 +54,17 @@ export default {
     ...mapState('right_attribute', ['cur_args']),
   },
   methods: {
-    addEle(vType, vState) {
-      let core = new Core()
-      if (vState === 'add') {
-        core.execute(new Command(core.cmds.EleAddCmd, { type: vType }))
-      } else {
-        core.execute(new Command(core.cmds.EleDelCmd, { type: vType }))
-      }
-    },
+    // addEle(vType, vState) {
+    //   let core = new Core()
+    //   if (vState === 'add') {
+    //     core.execute(new Command(core.cmds.EleAddCmd, { type: vType }))
+    //   } else {
+    //     core.execute(new Command(core.cmds.EleDelCmd, { type: vType }))
+    //   }
+    // },
     change(vKey, vState) {
       let core = new Core()
-      core.execute(new Command(core.cmds.ChangeCmd({key:vKey, state:vState})))
+      core.execute(new Command(core.cmds.ChangeCmd, {key:vKey, state:vState}))
     }
   },
   props: {

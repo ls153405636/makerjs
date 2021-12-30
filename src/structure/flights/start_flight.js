@@ -1,12 +1,12 @@
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { Outline } from "../../utils/outline";
-import { ChildInfo } from "../child_info";
 import { Default } from "../config";
 import tool from "../tool";
 import { StartTread } from "../treads/start_tread";
+import { StraightFlight } from "./straight_flight";
 
-export class StartFlight extends ChildInfo{
+export class StartFlight extends StraightFlight{
   static START_TYPE_OPTION = [
     {value: Types.StartTreadType.st_el, label: '椭圆型'},
     {value: Types.StartTreadType.st_el_2, label: '双层椭圆型'},
@@ -18,22 +18,18 @@ export class StartFlight extends ChildInfo{
     {value: Types.StartTreadShapeType.sts_left, label: '去掉内侧造型'},
     {value: Types.StartTreadShapeType.sts_right, label: '去掉外侧造型'},
   ]
-  constructor ({vParent, vPos, vLVec, vWVec, vStepLength, vStepWidth, vStepHeight, vClock}) {
-    super(vParent)
-    this.stepLength = vStepLength
-    this.initStePlength = vStepLength
+  constructor ({vParent, vStepWidth, vStepHeight, vClock}) {
+    super({vParent, vClock})
     this.stepWidth = vStepWidth
     this.stepHeight = vStepHeight
     this.stepNum = 1 //需根据当前的
     this.modelType = Types.StartTreadType.st_el
     this.shapeType = Types.StartTreadShapeType.sts_no
-    /**@type {Array<Tread>} */
+    /**@type {Array<StartTread>} */
     this.treads = []
     this.length = 0
-    this.startHeight = 0
-    this.type = 'start'
-    this.isClock = vClock
-    this.rebuildByParent({vPos, vLVec, vWVec, vStepLength})
+    this.type = Types.FlightType.fStart
+    //this.rebuildByParent({vPos, vLVec, vWVec, vStepLength})
   }
 
   addInfo() {
@@ -56,9 +52,7 @@ export class StartFlight extends ChildInfo{
   }
 
   rebuildByParent ({vPos, vLVec, vWVec, vStepLength}) {
-    this.lVec = vLVec
-    this.wVec = vWVec
-    this.pos = vPos
+    super.rebuildByParent({vIndex:0, vTreadIndex:0, vIsLast:false, vPos, vWVec, vLVec})
     this.positionIn = this.pos || new Types.Vector3()
     this.positionC = new Edge().setByVec(this.positionIn, this.lVec, vStepLength/2).p2
     this.positionOut = new Edge().setByVec(this.positionIn, this.lVec, vStepLength).p2
@@ -206,7 +200,7 @@ export class StartFlight extends ChildInfo{
 
   // 单层椭圆
   createElOutline({start, stepWidth = this.stepWidth, offset1 = this.offset1, offset2 = this.offset2}) {
-    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
+    let outline = new Types.Outline({isClock:this.clock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]
@@ -232,8 +226,8 @@ export class StartFlight extends ChildInfo{
   //双层椭圆
   createElDOutline({start, stepWidth = this.stepWidth, offset1 = this.offset1, offset2 = this.offset2}) {
 
-    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
-    let outline1 = new Types.Outline({isClock:this.isClock, isClose:true})
+    let outline = new Types.Outline({isClock:this.clock, isClose:true})
+    let outline1 = new Types.Outline({isClock:this.clock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边
@@ -272,7 +266,7 @@ export class StartFlight extends ChildInfo{
 
   // 单层圆角矩形
   createRROutline({start, stepWidth = this.stepWidth}) {
-    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
+    let outline = new Types.Outline({isClock:this.clock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边
@@ -283,13 +277,13 @@ export class StartFlight extends ChildInfo{
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outL = outE
     } else {
-      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.isClock)
+      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.clock)
     }
 
     if (this.shapeType === Types.StartTreadShapeType.sts_left) {
       inL = inE
     } else {
-      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.isClock)
+      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.clock)
     }
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outline.edges.push(bE,outL, dE,inArc)
@@ -303,8 +297,8 @@ export class StartFlight extends ChildInfo{
 
   // 双层圆角矩形
   createRRDOutline({start, stepWidth = this.stepWidth}) {
-    let outline = new Types.Outline({isClock:this.isClock, isClose:true})
-    let outline1 = new Types.Outline({isClock:this.isClock, isClose:true})
+    let outline = new Types.Outline({isClock:this.clock, isClose:true})
+    let outline1 = new Types.Outline({isClock:this.clock, isClose:true})
     let rectOutline = tool.createRectOutline(start, this.stepLength, stepWidth, this.lVec, this.wVec)
     
     let bE = rectOutline.edges[0]//后边
@@ -313,21 +307,21 @@ export class StartFlight extends ChildInfo{
     let lE = rectOutline.edges[3]// 左边
     let new_rE = new Edge(rectOutline.edges[1]).extendP2(stepWidth)
     let new_lE = new Edge(rectOutline.edges[3]).extendP1(stepWidth)
-    let new_dE = new Edge(dE).offset(stepWidth, this.isClock)
+    let new_dE = new Edge(dE).offset(stepWidth, this.clock)
     let outArc, inArc , outL,inL// 右圆弧、 左圆弧
     let outArc_d, inArc_d // 第二层右圆弧， 第层左圆弧
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outL = new_rE
     } else {
-      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.isClock)
-      outArc_d = this.createArcEdge(bE.p2, this.wVec, stepWidth, -Math.PI / 2, Math.PI / 2, this.isClock)
+      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.clock)
+      outArc_d = this.createArcEdge(bE.p2, this.wVec, stepWidth, -Math.PI / 2, Math.PI / 2, this.clock)
     }
 
     if (this.shapeType === Types.StartTreadShapeType.sts_left) {
       inL = new_lE
     } else {
-      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.isClock)
-      inArc_d = this.createArcEdge(new_dE.p2,this.wVec,  -stepWidth, Math.PI / 2, -Math.PI / 2, this.isClock)
+      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.clock)
+      inArc_d = this.createArcEdge(new_dE.p2,this.wVec,  -stepWidth, Math.PI / 2, -Math.PI / 2, this.clock)
     }
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outline.edges.push(bE,rE,dE,inArc)
@@ -352,15 +346,15 @@ export class StartFlight extends ChildInfo{
       else if (this.modelType === 2 || this.modelType === 4) {
         stepNum = 2
       }
-      this.treads = []
       let stepNumDiff = stepNum - this.stepNum
-      if (stepNumDiff >= 0 || f1.stepNum > stepNumDiff) {
-        let f1 = this.parent.flights[0]
+      let f1 = this.parent.segments[0]
+      if (f1.type === Types.FlightType.frect && f1.stepNum > stepNumDiff) {
         let lengthDiff = f1.stepWidth * stepNumDiff
-        f1.updateItem(f1.stepNum + stepNumDiff, 'stepNum')
-        f1.updateItem(f1.length + lengthDiff, 'length') 
+        f1.updateItem(f1.stepNum - stepNumDiff, 'stepNum')
+        f1.updateItem(f1.length - lengthDiff, 'length') 
       }
       this.stepNum = stepNum
+      this.parent.clearTreads()
     }else {
       super.updateItem(vValue, vKey1, vKey2)
     }

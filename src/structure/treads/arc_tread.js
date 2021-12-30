@@ -26,7 +26,7 @@ export class ArcTread extends Tread {
     if (this.inheritH) {
       this.stepHeight = this.parent.stepHeight
     }
-    //若楼梯为顺时针，梯板倒着画，则此处应为逆时针旋转，又因threejs的xy平面与实际相反，则再转为顺时针旋转，楼梯逆时针同理
+    //若楼梯为顺时针，梯板倒着画，则需end向量逆时针旋转得到start向量
     let angle = this.clock ? -this.stepAngle : this.stepAngle
     this.startLVec = new UtilVec2(this.endLVec).round(angle).normalize().writePB()
     this.startAngle = new UtilVec2(this.startLVec).negate().getAngle()
@@ -95,13 +95,13 @@ export class ArcTread extends Tread {
   }
 
   getEndWVec () {
-    let angle = this.clock ? -Math.PI/2 : Math.PI/2
+    let angle = this.clock ? Math.PI/2 : -Math.PI/2
     let endWVec = new UtilVec2(this.endLVec).round(angle).normalize().writePB()
     return endWVec
   }
 
   getStartWVec () {
-    let angle = this.clock ? -Math.PI/2 : Math.PI/2
+    let angle = this.clock ? Math.PI/2 : -Math.PI/2
     let startWVec = new UtilVec2(this.startLVec).round(angle).normalize().writePB()
     return startWVec
   }

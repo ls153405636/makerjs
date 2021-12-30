@@ -3,15 +3,14 @@ import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { Outline } from "../../utils/outline";
 import { BigColumn } from "../big_column";
-import { ChildInfo } from "../child_info";
 import { Default } from "../config";
-import { SmallColumn } from "../small_column";
 import tool from "../tool";
 import { CorTread } from "../treads/cor_tread";
 import { SpecTread } from "../treads/spec_tread";
+import { Flight } from "./flight";
 
 
-export class Landing extends ChildInfo {
+export class Landing extends Flight {
   static STEP_NUM_MAP = new Map([
     [Types.LandingCutType.lct_first, 1],
     [Types.LandingCutType.lct_second, 3],
@@ -31,9 +30,9 @@ export class Landing extends ChildInfo {
    * @param {Object} param0 
    * @param {Types.Outline} param0.vBorder 
    */
-  constructor ({vParent, vTreadIndex, vBorder, vLastEdgeIndex, vNextEdgeIndex, vLastStepWidth, vNextStepWidth, vStartHeight, vIndex}) {
-    super(vParent)
-    this.type = Default.LANDING_TYPE
+  constructor ({vParent, vLastEdgeIndex, vNextEdgeIndex}) {
+    super({vParent, vClock:true})
+    this.cutType = Default.LANDING_TYPE
     this.corIndex = Math.max(vLastEdgeIndex, vNextEdgeIndex)
     if (Math.abs(vLastEdgeIndex - vNextEdgeIndex) === 3) {
       this.corIndex = 0
@@ -41,13 +40,12 @@ export class Landing extends ChildInfo {
     this.oppoIndex = Math.abs(this.corIndex - 2)
     this.lastEdgeIndex = vLastEdgeIndex
     this.nextEdgeIndex = vNextEdgeIndex
-    this.lastVec = new Edge(vBorder.edges[this.lastEdgeIndex]).getNormal().negate()
-    this.nextVec = new Edge(vBorder.edges[this.nextEdgeIndex]).getNormal()
-    this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
-    this.index = vIndex
+    this.stepNum = Landing.STEP_NUM_MAP.get(this.cutType)
     this.corBigCol = null //转角大柱
     this.oppoBigCol = null //对角大柱
-    this.rebuildByParent({vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth, vStartHeight})
+    this.lastVec = new Types.Vector3()
+    this.nextVec = new Types.Vector3()
+    //this.rebuildByParent({vIndex, vTreadIndex, vBorder,  vLastStepWidth, vNextStepWidth, vStartHeight})
   }
 
   /**
@@ -58,7 +56,8 @@ export class Landing extends ChildInfo {
    * @param {Number} param0.vLastStepWidth 上段楼梯的步宽
    * @param {Number} param0.vNextStepWidth 下段楼梯的步宽
    */
-  rebuildByParent ({vTreadIndex, vBorder, vLastStepWidth, vNextStepWidth, vStartHeight}) {
+  rebuildByParent ({vIndex, vTreadIndex, vBorder, vLastStepWidth, vNextStepWidth}) {
+    super.rebuildByParent({vIsLast:false, vIndex:vIndex, vTreadIndex:vTreadIndex})
     this.pois = []
     vBorder.edges.forEach(e => {
       this.pois.push(e.p1)
@@ -73,17 +72,12 @@ export class Landing extends ChildInfo {
     this.edgeN = this.edges[this.nextEdgeIndex]
     this.sideEdgeL = this.edges[(this.nextEdgeIndex + 2)%4]
     this.sideEdgeN = this.edges[(this.lastEdgeIndex + 2)%4]
-    this.startHeight = vStartHeight
     this.stepHeight = this.parent.stepHeight
-    this.endHeight = this.stepHeight + this.stepHeight * this.stepNum
     this.compType = COMP_TYPES.LANDING
+    this.lastVec = new Edge(vBorder.edges[this.lastEdgeIndex]).getNormal().negate()
+    this.nextVec = new Edge(vBorder.edges[this.nextEdgeIndex]).getNormal()
     this.updateTreads()
     //this.updateCorBigCol()
-  }
-
-  rebuild () {
-    this.stepNum = Landing.STEP_NUM_MAP.get(this.type)
-    super.rebuild()
   }
   
   getArgs() {
@@ -102,9 +96,9 @@ export class Landing extends ChildInfo {
     }
     return {
       name: '休息平台参数',
-      type:{
+      cutType:{
         name:'分割方案', 
-        value:f(this.type, Landing.CUT_TYPE_MAP), 
+        value:f(this.cutType, Landing.CUT_TYPE_MAP), 
         type:'select',
         options:options},
       length: {name:'长度', value:length, type:'input'},
@@ -121,6 +115,13 @@ export class Landing extends ChildInfo {
       } else {
         this.widthF.updateItem(vValue, 'stepLength')
       }
+    } else if (vKey === 'cutType') {
+      this.cutType = vValue
+      let stepNum = Landing.STEP_NUM_MAP.get(this.cutType)
+      let diff = stepNum - this.stepNum
+      this.parent.updateItem(this.parent.stepNum - diff, 'stepNum', null)
+      this.stepNum = stepNum
+      this.realStepNum = this.stepNum
     } else {
       super.updateItem(vValue, vKey, vSecondKey)
     }
@@ -142,7 +143,7 @@ export class Landing extends ChildInfo {
   writePB() {
     return new Types.Landing({
       uuid:this.uuid,
-      type:this.type,
+      type:this.cutType,
       treads: tool.writeItemArrayPB(this.treads)
     })
   }
@@ -150,8 +151,6 @@ export class Landing extends ChildInfo {
   addBigCol (vInfo, vPosName) {
     this[vPosName] = vInfo
   }
-
-  
 
   updateCorBigCol () {
     let size = this.corBigCol?.size || tool.parseSpecification(Default.BIG_COL_SPEC)
@@ -184,9 +183,9 @@ export class Landing extends ChildInfo {
 
   updateTreads() {
     let borders = []
-    if (this.type === Types.LandingCutType.lct_first) {
+    if (this.cutType === Types.LandingCutType.lct_first) {
       borders = this.createFirstBorders()
-    } else if (this.type === Types.LandingCutType.lct_second) {
+    } else if (this.cutType === Types.LandingCutType.lct_second) {
       borders = this.createSecondBorders()
     } else {
       borders = this.createInCutBorders()
@@ -194,12 +193,12 @@ export class Landing extends ChildInfo {
     for (let i = 0; i < borders.length; i++) {
       let paras = {vParent:this, vIsLast:false, vIndex:this.treadIndex + i + 1, vBorder:borders[i]}
       paras.vClock = this.lastEdgeIndex === this.corIndex
-      let isCor = (this.type === Types.LandingCutType.lct_first)
+      let isCor = (this.cutType === Types.LandingCutType.lct_first)
                   || (borders.length === 3 && i === 1)
-                  || (this.type === Types.LandingCutType.lct_third && i === 1)
-                  || (this.type === Types.LandingCutType.lct_fourth && i === 0)
+                  || (this.cutType === Types.LandingCutType.lct_third && i === 1)
+                  || (this.cutType === Types.LandingCutType.lct_fourth && i === 0)
       if (isCor) {
-        if (this.type === Types.LandingCutType.lct_first) {
+        if (this.cutType === Types.LandingCutType.lct_first) {
           paras.vLastEdgeIndex = (this.nextEdgeIndex + 2)%4
           paras.vNextEdgeIndex = (this.lastEdgeIndex + 2)%4
         } else if (this.lastEdgeIndex === this.corIndex) {
@@ -325,7 +324,7 @@ export class Landing extends ChildInfo {
       let pL = this.edgeL.p2 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p1 //下段楼梯对应边的另个端点
       let cutP = new Edge(inEdgeL).extendP1(-this.nextStepWidth).p1 //内部切割点
-      if (this.type === Types.LandingCutType.lct_third) {
+      if (this.cutType === Types.LandingCutType.lct_third) {
         let pois1 = [this.bpL, cutP, cor, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
@@ -338,7 +337,7 @@ export class Landing extends ChildInfo {
         frontIndexs.push([1, 2])
         inIndexs.push([3, 4])
 
-      } else if (this.type === Types.LandingCutType.lct_fourth) {
+      } else if (this.cutType === Types.LandingCutType.lct_fourth) {
         let pois1 = [this.bpN, cutP, cor, pL, oppo]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.nextVec, this.nextVec, this.lastVec], backOffset, 1))
@@ -376,7 +375,7 @@ export class Landing extends ChildInfo {
       let pL = this.edgeL.p1 //上段楼梯对应边的另个端点
       let pN = this.edgeN.p2 //下段楼梯对应边的另个端点
       let cutP = new Edge(inEdgeL).extendP2(-this.nextStepWidth).p2 //内部切割点
-      if (this.type === Types.LandingCutType.lct_third) {
+      if (this.cutType === Types.LandingCutType.lct_third) {
         let pois1 = [cor, cutP, this.bpL, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec,this.lastVec,this.lastVec], backOffset, 1))
@@ -389,7 +388,7 @@ export class Landing extends ChildInfo {
         frontIndexs.push([3, 4])
         inIndexs.push([1, 2])
 
-      } else if (this.type === Types.LandingCutType.lct_fourth) {
+      } else if (this.cutType === Types.LandingCutType.lct_fourth) {
         let pois1 = [cor, cutP, this.bpN, oppo, pL]
         outlines.push(this.createOutlineByPois(pois1, 1))
         treadOutlines.push(this.createTreadOutline(pois1, [this.lastVec, this.nextVec, this.nextVec], backOffset, 1))
@@ -457,16 +456,6 @@ export class Landing extends ChildInfo {
   }
 
   /**
-   * 获取休台的终止高度
-   * @param {Number} vStartHeight 起始高度 本函数会在rebuildByParent之前调用，类内部的起始高度可能还未更新
-   * @returns 
-   */
-  getEndHeight (vStartHeight) {
-    let height = vStartHeight || this.startHeight
-    return height + this.stepNum * this.parent.stepHeight
-  }
-
-  /**
    * 
    * @param {Object} param0 
    * @param {string} param0.vOrder 当前休台所接楼梯的顺序，前接楼梯为'last',后接楼梯为'next'
@@ -474,7 +463,7 @@ export class Landing extends ChildInfo {
    */
   createGirderRoute ({vSide, vArgs, vOrder, vInLast, vOutLast}) {
     if (vSide === 'out') {
-      if (vArgs.type === Types.GirderType.gslab || this.type !== Types.LandingCutType.lct_first) {
+      if (vArgs.type === Types.GirderType.gslab || this.cutType !== Types.LandingCutType.lct_first) {
         return []
       }
     }

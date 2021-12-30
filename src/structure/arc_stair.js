@@ -4,7 +4,7 @@ import { Default } from "./config";
 import { ArcFlight } from "./flights/arc_flight";
 import { Stair } from "./stair";
 import {UtilVec2} from '../utils/util_vec_2'
-import { Flight } from "./flights/flight";
+import { RectFlight } from "./flights/rect_flight";
 
 
 export class ArcStair extends Stair {
@@ -17,10 +17,11 @@ export class ArcStair extends Stair {
     } else {
       this.floadSide = vFloadSide || Types.Side.si_right
     }
+    this.type = Types.StairType.s_arc_type
     this.stepLength = Default.STEP_LENGTH
-    /**@type {Flight} */
+    /**@type {RectFlight} */
     this.enterFlight = null
-    /**@type {Flight} */
+    /**@type {RectFlight} */
     this.exitFlight = null
     /**@type {ArcFlight} */
     this.arcFlight = null
@@ -38,19 +39,17 @@ export class ArcStair extends Stair {
     this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
     this.startStepNum = this.startFlight?.stepNum || 0
     this.computeSideOffset()
-    if (this.flights.length) {
-      this.computeStepNum()
-      this.computeStepHeight()
-      this.updateFlights()
-    } else {
-      this.initFlights()
+    if (!this.segments.length) {
+      this.initSegments()
     }
-    this.updateStartFlight()
-    this.updateLandings()
-    this.updateSegments()
     this.computeSize()
     this.computePosition()
+    this.computeStepNum()
+    this.computeStepHeight()
+    this.updateStartHeight()
     this.updateStairPositon()
+    this.updateSegments()
+    this.updateStartFlight()
     // this.updatehangingBoard()
     // this.updateGirders()
     // this.updateHandrails()
@@ -63,60 +62,65 @@ export class ArcStair extends Stair {
     let args = super.getArgs()
     args.enterFlight = {
       name: this.enterFlight ?'移除入口楼梯段' : '添加入口楼梯段',
-      state: this.enterFlight? 'add' : 'delete'
+      state: this.enterFlight? 'delete' : 'add'
     }
     args.exitFlight = {
       name: this.exitFlight ?'移除出口楼梯段' : '添加出口楼梯段',
       state: this.exitFlight? 'delete' : 'add'
     }
+    return args
   }
 
-  initFlights() {
+  initSegments() {
     let botEdge = this.parent.hole.getEdgeByPos('bot')
     let utilEndE = new Edge(botEdge)
+    let vParent = this
     let vClock = this.floadSide === Types.Side.si_right ? true : false
-    let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
     if (!vClock) {
       utilEndE.reserve()
-      vPos.x = 0
     }
     let vRadius = Math.max(utilEndE.getLength() / 2, this.stepLength)
     let vStepNum = Math.floor(this.parent.hole.floorHeight / Default.STEP_HEIGHT)
-    this.stepNum = vStepNum
-    this.stepHeight = this.parent.hole.floorHeight / this.stepNum
-    this.stepHeight = Number(this.stepHeight.toFixed(2))
     let vStepNumRule = this.stepNumRule
     let vEndLVec = new UtilVec2(utilEndE.getVec()).writePB()
-    this.arcFlight = new ArcFlight({vParent:this, vStepNum, vStepNumRule, 
-                                     vTreadIndex:0, 
-                                     vIndex:0,
-                                     isLast:true, vRadius, vClock, vEndLVec, vPos,
-                                     vStartHeight:0})
-    this.flights[0] = this.arcFlight      
-    this.segments[0] = this.arcFlight                             
+
+    this.arcFlight = new ArcFlight({vParent, vStepNum, vStepNumRule, vRadius, vClock, vEndLVec})
+
+    this.flights.push(this.arcFlight)
+    this.segments.push(this.arcFlight)
   }
 
-  updateFlights() {
-    let startHeight = this.startFlight?.getEndHeight() || 0
-    if (this.enterFlight) {
-      let enterParas = this.getEnterFRebuildParas()
-      this.enterFlight.rebuildByParent(enterParas)
-      startHeight = this.enterFlight.getEndHeight()
+  updateSegments() {
+    let vArcPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
+    if (this.floadSide === Types.Side.si_left) {
+      vArcPos.x = 0
     }
-    let arcParas = this.getArcFRebuildParas()
-    arcParas.startHeight = startHeight
-    this.arcFlight.rebuildByParent(arcParas)
-    startHeight = this.arcFlight.getEndHeight()
     if (this.exitFlight) {
-      let exitParas = this.getExitFRebuildParas()
-      exitParas.startHeight = startHeight
-      this.exitFlight.rebuildByParent(exitParas)
+      let angle = this.arcFlight.clock ? Math.PI/2 : -Math.PI/2
+      let vWVec = new UtilVec2(this.arcFlight.endLVec).round(angle).normalize().writePB()
+      this.exitFlight.rebuildByParent({vIndex:this.arcFlight.index + 1, 
+                                       vTreadIndex:this.startStepNum + (this.enterFlight?.stepNum || 0) + this.arcFlight.stepNum, 
+                                       vIsLast:true, 
+                                       vPos:vArcPos, 
+                                       vLVec:this.arcFlight.endLVec, vWVec})
+      vArcPos = new Edge().setByVec(vArcPos, this.exitFlight.wVec, this.exitFlight.length).p2
+    }
+    this.arcFlight.rebuildByParent({vPos: vArcPos, 
+                                    vIndex:this.enterFlight ? 1 : 0, 
+                                    vTreadIndex:this.startStepNum + (this.enterFlight?.stepNum || 0), 
+                                    vIsLast:this.exitFlight ? false : true})
+    if (this.enterFlight) {
+      let {lVec:vLVec, wVec:vWVec, pos:vPos} = this.arcFlight.getStartPosVec()
+      this.enterFlight.rebuildByParent({vIndex:0, 
+                                        vTreadIndex:this.startStepNum, 
+                                        vIsLast:false, 
+                                        vPos, vLVec, vWVec})
     }
   }
 
   computePosition() {
     let topEdge = this.parent.hole.getEdgeByPos('top')
-    this.position = topEdge.p1
+    this.position = new Types.Vector3(topEdge.p1)
   }
 
   computeSize() {
@@ -125,95 +129,39 @@ export class ArcStair extends Stair {
     this.height = this.parent.hole.floorHeight
   }
 
-  updateItem(vValue, vKey1, vKey2) {
-    if (vKey2 && ['model', 'material'].includes(vKey2)) {
-      console.log(1)
-    } else if (vKey1 === 'stepNumRule') {
-      this.segments[this.segments.length - 1].updateItem(vValue, vKey1, vKey2)
-    } else if (vKey1 === 'stepNum') {
-      this.arcFlight.updateItem(vValue, vKey1, vKey2)
-    } else {
-      super.updateItem(vValue, vKey1, vKey2)
-    }
-  }
-
-  getArcFRebuildParas() {
-    let vPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
-    if (this.floadSide === Types.Side.si_left) {
-      vPos.x = 0
-    }
-    let vIndex = this.enterFlight ? 1 : 0
-    let vTreadIndex = this.enterFlight?.treads.length || 0
-    let isLast = this.exitFlight === null
-    return {vPos, vIndex, vTreadIndex, isLast}
-  }
-
-  getExitFRebuildParas() {
-    let lastT = this.arcFlight.treads[this.arcFlight.realStepNum.length - 1]
-    let vTreadIndex = lastT.index + 1
-    let vLVec = lastT.endLVec
-    let vWVec = lastT.getEndWVec()
-    let vPos = new Edge().setByVec(lastT.position, vLVec, -vLength).p2
-    return {vTreadIndex, vPos, vLVec, vWVec}
-  }
-
-  getEnterFRebuildParas() {
-    let vTreadIndex = 0
-    let nextT = this.arcFlight.treads[0]
-    let vPos = nextT.getStartPos()
-    let vLVec = nextT.startLVec
-    let vWVec = nextT.getStartWVec()
-    let vStartHeight = 0
-    return {vTreadIndex, vPos, vLVec, vWVec, vStartHeight}
-  }
-
   addEnterFlight() {
     let vParent = this
     let vStepNum = 3
     let vStepNumRule = Types.StepNumRule.snr_n
-    let vIndex = 0
-    let isLast = false
     let vLength = vStepNum * Default.STEP_WIDTH
     let vClock = this.arcFlight.clock
     let vStepLength = this.stepLength
-    let paras = this.getEnterFRebuildParas()
-    let flight = new Flight({vParent, vStepNum, vStepNumRule, vIndex, isLast, vLength, vClock, vStepLength, ...paras})
-    this.enterFlight = flight
-    this.flights.splice(0, 0, flight)
-    this.segments.splice(0, 0, flight)
+    this.enterFlight = new RectFlight({vParent, vStepNum, vStepNumRule, vLength, vClock, vStepLength})
+    this.flights.splice(0, 0, this.enterFlight)
+    this.segments.splice(0, 0, this.enterFlight)
     this.rebuild()
   }
 
   removeEnterFlight() {
     this.flights.splice(0, 1)
     this.segments.splice(0, 1)
-    this.arcFlight.index = 0
     this.enterFlight = null
     this.rebuild()
   }
 
   addExitFlight() {
     let vParent = this
-    let vLength = this.stairMoveT || Default.STEP_WIDTH * 3
-    let realNum = Math.max(Math.floor(vLength / Default.STEP_WIDTH), 1) 
-    let vStepNum = realNum + this.stepNumRule - 1
+    let vStepNum = 4
     let vStepNumRule = this.stepNumRule
-    let isLast = true
-    let vIndex = this.segments.length
+    let vLength = 3 * Default.STEP_WIDTH
     let vClock = this.arcFlight.clock
-    let stepHeight = this.parent.hole.floorHeight / (this.stepNum + realNum)
-    let vStartHeight = this.parent.hole.floorHeight - vStepNum * stepHeight
     let vStepLength = this.stepLength
-    let paras = this.getExitFRebuildParas()
-    let flight = new Flight({vParent, vStepNum, vStepNumRule, vIndex, isLast, vLength, vClock, vStepLength, vStartHeight, ...paras})
-    this.stairMoveT = vLength
-    this.arcFlight.treads = []
+    this.exitFlight = new RectFlight({vParent, vStepNum, vStepNumRule, vLength, vClock, vStepLength})
     if (this.arcFlight.stepNumRule === Types.StepNumRule.snr_n_add_1) {
       this.arcFlight.updateItem(Types.StepNumRule.snr_n, 'stepNumRule')
       this.arcFlight.updateItem(this.arcFlight.stepNum - 1, 'stepNum')
     }
-    this.exitFlight = flight
-    this.flights.push(this.exitFlight)
+    this.updateFlights()
     this.segments.push(this.exitFlight)
     this.rebuild()
   }
@@ -223,11 +171,17 @@ export class ArcStair extends Stair {
       this.arcFlight.updateItem(Types.StepNumRule.snr_n_add_1, 'stepNumRule')
       this.arcFlight.updateItem(this.arcFlight.stepNum + 1, 'stepNum')
     }
-    this.arcFlight.treads = []
     this.exitFlight = null
-    this.flights.pop()
+    this.updateFlights()
     this.segments.pop()
-    this.stairMoveT = 0
     this.rebuild()
+  }
+
+  updateFlights() {
+    this.flights = []
+    this.enterFlight && this.flights.push(this.enterFlight)
+    this.arcFlight && this.flights.push(this.arcFlight)
+    this.exitFlight && this.flights.push(this.exitFlight)
+    this.startFlight && this.flights.push(this.startFlight)
   }
 }

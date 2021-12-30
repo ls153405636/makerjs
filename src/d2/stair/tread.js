@@ -34,10 +34,10 @@ export class Tread extends ChildWidget {
     this.depth = Default.WALL_DEPTH
     this.stairInfo = StructConfig.INFOS.get(this.uuid)
     this.draw()
-    this.addDimension()
-    if (this.type === Types.StairType.s_arc_type) {
-      this.ArcStairDemension()
-    }
+    //this.addDimension()
+    // if (this.type === Types.StairType.s_arc_type) {
+    //   this.ArcStairDemension()
+    // }
     this.addEvent()
     // console.log(vPB)
   }

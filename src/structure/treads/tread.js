@@ -155,7 +155,7 @@ export class Tread extends ChildInfo {
       edge.p2.z = nextT.position.z + vArgs.height
     } else {
       edge.p1.z = this.position.z + vArgs.height
-      edge.p2.z = nextT.position.z + vArgs.height
+      edge.p2.z = (this.getNextTread()?.position.z || this.position.z + this.stepHeight) + vArgs.height
     }
     return edge
   }

@@ -1,289 +1,93 @@
-import { COMP_TYPES } from '../../common/common_config'
-import { Types } from '../../types/stair_v2'
-import { Edge } from '../../utils/edge'
-import { Edge3 } from '../../utils/edge3'
-import { ChildInfo } from '../child_info'
-import { Default } from '../config'
-import tool from '../tool'
-//import { Tread } from './tread'
-import { RectTread } from '../treads/rect_tread'
+import { Types } from "../../types/stair_v2";
+import { ChildInfo } from "../child_info";
 
-export class Flight extends ChildInfo {
+
+export class Flight extends ChildInfo{
   static NUM_RULE_OPTIONS = [
     { value: Types.StepNumRule.snr_n, label: 'n步' },
     { value: Types.StepNumRule.snr_n_add_1, label: 'n+1步' },
   ]
-  constructor({vParent, vStepNum, vStepNumRule, vIndex, vTreadIndex, isLast, vPos, vLVec, vWVec, vLength, vClock = true, vStartHeight, vStepLength}) {
+  constructor({vParent, vClock}) {
     super(vParent)
-    this.stepLength = vStepLength || Default.STEP_LENGTH
-    this.length = Math.round(vLength)
-    this.isLast = isLast
-    this.index = vIndex
-    /**@type {Array<RectTread>} */
+    this.stepNum = 0
+    this.stepNumRule = Types.StepNumRule.snr_n
+    this.realStepNum = 0
+    /**@type {Array<import('../treads/tread').Tread>} */
     this.treads = []
-    this.stepNum = vStepNum
-    this.stepNumRule = vStepNumRule
-    this.fixedStepWidthNum = this.realStepNum
+    this.startHeight = 0
+    this.endHeight = 0
+    this.endHeight = 0
+    this.stepWidth = 0
+    this.stepLength = 0
+    this.stepHeight = 0
+    this.index = 0
+    this.treadIndex = 0
     this.clock = vClock
-    this.compType = COMP_TYPES.FLIGHT
-    this.rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec, vStartHeight })
+    this.isLast = false
+    this.stepHeight = this.parent.stepHeight
   }
 
-  /**
-   * 根据父级数据更新楼梯段
-   * @param {Object} param0
-   * 所有index均为在程序数组中从0开始的index
-   */
-  rebuildByParent({ vTreadIndex, vPos, vLVec, vWVec, vStartHeight }) {
+  rebuildByParent({vIndex, vTreadIndex, vIsLast}) {
+    this.index = vIndex
     this.treadIndex = vTreadIndex
-    this.pos = vPos
-    this.lVec = vLVec
-    this.wVec = vWVec
+    this.isLast = vIsLast
     this.stepHeight = this.parent.stepHeight
-    if (this.parent.type === Types.StairType.s_arc_type) {
-      this.stepLength = this.parent.stepLength
-    }
-    this.startHeight = vStartHeight
-    this.realStepNum = this.stepNum - this.stepNumRule + 1
-    this.computeStepWidth()
-    this.computeEndHeight()
-    this.updateTreads()
   }
 
   updateItem(vValue, vKey, vSecondKey) {
     if (['stepNum', 'stepNumRule'].includes(vKey)) {
-      this.treads = []
       super.updateItem(vValue, vKey, vSecondKey)
-    } else if (vKey === 'stepLength' && this.parent.type === Types.StairType.s_arc_type) {
-      this.parent.updateItem(vValue, vKey, vSecondKey)
+      this.realStepNum = this.stepNum - this.stepNumRule + 1
+      this.parent.clearTreads()
     } else {
       super.updateItem(vValue, vKey, vSecondKey)
     }
   }
 
-  getArgs() {
-    let f = tool.getItemFromOptions
-    let args = {
-      length: { name: '总长', value: this.length, type: 'input' },
-      stepLength: { name: '步长', value: this.stepLength, type: 'input' },
-      stepWidthD: {
-        name: '步宽',
-        value: '',
-        type: 'input',
-        disabled: true,
-      },
-    }
-    if (this.isLast) {
-      args.stepNumRule = {
-        name: '步数规则',
-        value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
-        type: 'select',
-        options: Flight.NUM_RULE_OPTIONS,
-      }
-    }
-    args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
-    args.name = '楼梯段参数'
-    let stepWithArr = []
-    for (const t of this.treads) {
-      if (!stepWithArr.includes(t.stepWidth) && !t.isLast) {
-        args.stepWidthD.value = args.stepWidthD.value + (args.stepWidthD.value? '/':'') + t.stepWidth
-        stepWithArr.push(t.stepWidth)
-      }
-    }
-    return args
+  clearTreads() {
+    this.treads = []
+    this.endHeight = 0
   }
 
-  updateTreads() {
-    let step_num = this.realStepNum
-    let widthSum = 0
-    let heightSum = this.endHeight
-    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      if (this.treads[this.stepNum - 1] && (!this.treads[this.stepNum - 1].inheritH)) {
-        heightSum = heightSum - this.treads[this.stepNum - 1].stepHeight
-      } else {
-        heightSum = heightSum - this.stepHeight
-      }
-    }
-    let commonParas = { vParent: this, vIsLast: false }
-    for (let i = 0; i < step_num; i++) {
-      let index = step_num - i + this.treadIndex
-      let pos = new Edge().setByVec(this.pos, this.wVec, widthSum).p2
-      pos.z = heightSum
-      let paras = { ...commonParas, vIndex: index, vPos: pos, vIsLast: false }
-      if (this.treads[step_num - i - 1]) {
-        this.treads[step_num - i - 1].rebuildByParent(paras)
-        widthSum = widthSum + this.treads[step_num - i - 1].stepWidth
-        heightSum = heightSum - this.treads[step_num - i - 1].stepHeight
-      } else {
-        this.treads[step_num - i - 1] = new RectTread(paras)
-        widthSum = widthSum + this.stepWidth
-        heightSum = heightSum - this.stepHeight
-      }
-    }
-    if (this.stepNumRule === Types.StepNumRule.snr_n_add_1) {
-      let pos = new Edge().setByVec(this.pos, this.wVec, -this.stepWidth - this.parent.hangOffset).p2
-      pos.z = this.endHeight
-      let paras = {
-        ...commonParas,
-        vPos: pos,
-        vIndex: this.stepNum + this.treadIndex,
-        vIsLast: true,
-      }
-      if (this.treads[step_num]) {
-        this.treads[step_num].rebuildByParent(paras)
-      } else {
-        this.treads[step_num] = new RectTread(paras)
-      }
-    }
+  getStartPosVec() {
+    return {lVec:new Types.Vector3(), wVec:new Types.Vector3(), pos:new Types.Vector3()}
   }
 
-  computeStepWidth() {
-    if (this.treads.length) {
-      this.fixedLength = this.length
-      this.fixedNum = this.realStepNum
-      for (const t of this.treads) {
-        if (t.isLast) {
-          continue
-        }
-        if (!t.inheritW) {
-          this.fixedNum--
-          this.fixedLength -= t.stepWidth
-        }
-      }
-      if (this.fixedNum) {
-        this.stepWidth = this.fixedLength / this.fixedNum
-      } else {
-        this.stepWidth = this.length / this.realStepNum
-      }
-    } else {
-      this.stepWidth = this.length / this.realStepNum
-    }
-    this.stepWidth = Number(this.stepWidth.toFixed(2))
+  getEndPosVec() {
+    return {lVec:new Types.Vector3(), wVec:new Types.Vector3(), pos:new Types.Vector3()}
   }
 
-  getStepWidthRange() {
-    let range = this.fixedLength - this.fixedNum * Default.STEP_WIDTH_MIN
-    return Math.max(range, 0)
-  }
-
-  /**
-   * 根据所引获取楼梯段戒指到此级的长度
-   * @param {Number} vNum 为踏板在楼梯段的treads数组中的索引
-   * @returns
-   */
-  getLengthByNum(vNum) {
-    let step_num = this.stepNum + 1 - this.stepNumRule
-    let i = step_num - 1
-    let length = 0
-    for (; i >= vNum; i--) {
-      length = length + this.treads[i].stepWidth
-    }
-    return length
+  setStartHeight(vStartHeight) {
+    this.startHeight = vStartHeight
+    return this
   }
 
   computeEndHeight() {
     this.endHeight = this.startHeight
     for (const t of this.treads) {
       if (t.inheritH) {
-        this.endHeight += this.stepHeight
+        this.endHeight += this.parent.stepHeight
       } else {
         this.endHeight = this.endHeight + t.stepHeight
       }
     }
     if (this.endHeight === this.startHeight) {
-      this.endHeight += this.stepNum * this.stepHeight
+      this.endHeight += this.stepNum * this.parent.stepHeight
     }
   }
 
-  getEndHeight () {
+  getEndHeight() {
+    if (!this.endHeight) {
+      this.computeEndHeight()
+    }
     return this.endHeight
   }
 
-  getTreadByNum(vNum) {
-    return this.treads[vNum]
-  }
+  createGirderRoute() {}
 
-  /**
-   * 根据某一侧创建出大梁的踏板单位轮廓集合
-   * @param {string} vSide 
-   * @param {Types.GirderParameters} vArgs 
-   */
-  createGirderRoute({vSide, vArgs, vInLast, vOutLast}) {
-    let borders = []
-    let inLast = vInLast, outLast = vOutLast
-    for (let i = 0; i < this.treads.length; i++) {
-      if (this.treads[i].isLast) {
-        continue
-      }
-      let border = this.treads[i].getGirBorder(vSide, vArgs, i === 0 && (!inLast), inLast, outLast)
-      if (border) {
-        inLast = {
-          poi:border.inEdges[border.inEdges.length - 1].p2,
-          topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2
-        }
-        outLast = {
-          poi:border.outEdges[border.outEdges.length - 1].p2,
-          topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2
-        }
-        borders.push(border)
-      }
-    } 
-    return borders
-  }
+  updateTreads() {}
 
-  /**
-   *
-   *创建某一侧的扶手路径边集
-   * @param {Object} arguments[0]
-   * @returns
-   * @memberof Flight
-   */
-  createHandEdges({vSide, vArgs}) {
-    let edges = []
-    let lastUtilE = null
-    for (let i = 0; i < this.treads.length; i++) {
-      if (this.treads[i].isLast) {
-        continue
-      }
-      let edge = this.treads[i].getHandEdge(vSide, vArgs)
-      if (!edge) {
-        continue
-      }
-      //edges.push(edge)
-      if (lastUtilE && lastUtilE.isD3ParallelTo(edge)) {
-        edges[edges.length - 1] = lastUtilE.combineEdge(edge)
-      } else {
-        edges.push(edge)
-        lastUtilE = new Edge3(edge)
-      }
-    }
-    return edges
-  }
+  createHandEdges() {}
 
-  createSmallCols({vSide, vArgs, vLastNum}) {
-    let sCols = []
-    let lastNum = vLastNum
-    for (let i = 0; i < this.treads.length; i++) {
-      if (this.treads[i].isLast) {
-        continue
-      }
-      let tSCols = this.treads[i].getSmallCols(vSide, vArgs, i === 0, lastNum)
-      lastNum = tSCols.length
-      sCols = sCols.concat(tSCols)
-    }
-    return {sCols, lastNum}
-  }
-
-  writePB() {
-    return new Types.Flight({
-      uuid: this.uuid,
-      stepParameters: new Types.StepParameters({
-        stepLength: this.stepLength,
-        stepWidth: this.stepWidth,
-        stepNumRule: this.stepNumRule,
-        stepNum: this.stepNum,
-      }),
-      treads: tool.writeItemArrayPB(this.treads),
-    })
-  }
+  createSmallCols() {}
 }

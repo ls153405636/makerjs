@@ -1,7 +1,7 @@
 import { Types } from "../types/stair_v2"
 import { Edge } from "../utils/edge"
 import { Default } from "./config"
-import { Flight } from "./flights/flight"
+import { RectFlight } from "./flights/rect_flight"
 import { Landing } from "./flights/landing"
 import { Stair } from "./stair"
 import tool from "./tool"
@@ -17,11 +17,13 @@ export class LTypeStair extends Stair {
     } else {
       this.floadSide = vFloadSide || Types.Side.si_right
     }
+    this.f1 = null
+    this.f2 = null
+    this.l1 = null
     this.rebuild()
   }
 
-  /**初始化楼梯段 */
-  initFlights() {
+  initSegments() {
     let hole = this.parent.hole
     let topEdge = hole.getEdgeByPos('top')
     let width = new Edge(topEdge).getLength()
@@ -30,86 +32,65 @@ export class LTypeStair extends Stair {
     num1 = Math.max(num1, 3)
     let depth = num1 * ((width - Default.STEP_LENGTH)/num2) + Default.STEP_LENGTH
     num2 = num2 + this.stepNumRule - 1
-    this.stepNum = num1 + num2 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE)
-    this.realStepNum = this.stepNum - this.stepNumRule + 1
-    this.stepHeight = Number((hole.floorHeight / this.stepNum).toFixed(2))
-    let wVec2 = new Types.Vector3({x:-1}) 
-    let lVec1 = new Types.Vector3({x:1})
-    let pos2 = new Types.Vector3({x:width - this.hangOffset, y:this.girOffset})
-    let pos1 = new Types.Vector3({x:this.girOffset, y:Default.STEP_LENGTH})
+
+    let vParent = this, vClock = this.floadSide === Types.Side.si_right
+    this.f1 = new RectFlight({vParent, vClock,
+                             vStepNum:num1, 
+                             vStepNumRule:Types.StepNumRule.snr_n,  
+                             vLength:depth - Default.STEP_LENGTH})
+    this.f2 = new RectFlight({vParent, vClock,
+                             vStepNum: num2,
+                             vStepNumRule: this.stepNumRule,
+                             vLength: width - Default.STEP_LENGTH})
+
+    let vNextEdgeIndex = 1, vLastEdgeIndex = 2
     if (this.floadSide === Types.Side.si_left) {
-      pos2.x = this.hangOffset
-      pos1.x = width - this.girOffset
-      lVec1.x = -1
-      wVec2.x = 1
+      vNextEdgeIndex = 3
     }
-    this.flights[0] = new Flight({vParent:this, 
-                                  vStepNum:num1, 
-                                  vStepNumRule:Types.StepNumRule.snr_n, 
-                                  vIndex:0, 
-                                  vTreadIndex:0, 
-                                  isLast:false, 
-                                  vPos:pos1, 
-                                  vLVec:lVec1, 
-                                  vWVec:new Types.Vector3({y:1}), 
-                                  vLength:depth - Default.STEP_LENGTH,
-                                  vClock:this.floadSide === Types.Side.si_right,
-                                  vStartHeight: 0})
-    this.flights[1] = new Flight({vParent:this, 
-                                  vStepNum:num2, 
-                                  vStepNumRule:this.stepNumRule, 
-                                  vIndex:2, 
-                                  vTreadIndex:num1 + Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE), 
-                                  isLast:true, 
-                                  vPos:pos2, 
-                                  vLVec:new Types.Vector3({y:1}), 
-                                  vWVec:wVec2, 
-                                  vLength:width - Default.STEP_LENGTH,
-                                  vClock:this.floadSide === Types.Side.si_right,
-                                  vStartHeight:(num1+Landing.STEP_NUM_MAP.get(Default.LANDING_TYPE))*this.stepHeight})
+    this.l1 = new Landing({vParent, vLastEdgeIndex, vNextEdgeIndex})
+
+    this.flights.push(this.f1, this.f2)
+    this.landings.push(this.l1)
+    this.segments.push(this.f1, this.l1, this.f2)
   }
 
-  /** 更新楼梯段*/
-  updateFlights() {
-    let f1 = this.flights[0]
-    let f2 = this.flights[1] 
-    let width = f1.stepLength + f2.length + this.hangOffset
+  updateSegments() {
+    let width = this.f1.stepLength + this.f2.length + this.hangOffset
     let wVec2 = new Types.Vector3({x:-1})  
     let lVec1 = new Types.Vector3({x:1})
     let pos2 = new Types.Vector3({x:width - this.hangOffset, y:this.girOffset})
-    let pos1 = new Types.Vector3({x:this.girOffset, y:f2.stepLength})
+    let pos1 = new Types.Vector3({x:this.girOffset, y:this.f2.stepLength})
     if (this.floadSide === Types.Side.si_left) {
       pos2.x = this.hangOffset
       pos1.x = width - this.girOffset
       lVec1.x = -1
       wVec2.x = 1
     }
-    f1.rebuildByParent({vTreadIndex:this.startStepNum, 
-                        vPos:pos1, 
-                        vLVec:lVec1, 
-                        vWVec:new Types.Vector3({y:1}),
-                        vStartHeight:this.startFlight?.getEndHeight() || 0,
-                        vClock:this.floadSide === Types.Side.si_right,})
-    f2.rebuildByParent({vTreadIndex:this.startStepNum + f1.stepNum + this.landings[0].stepNum, 
-                        vPos:pos2, 
-                        vLVec:new Types.Vector3({y:1}), 
-                        vWVec:wVec2,
-                        vStartHeight:this.landings[0].getEndHeight(f1.getEndHeight()),
-                        vClock:this.floadSide === Types.Side.si_right,})
-  }
+    this.f1.rebuildByParent({vIndex:0, 
+                             vTreadIndex:this.startStepNum, 
+                             vIsLast:false, 
+                             vPos:pos1, 
+                             vLVec:lVec1, 
+                             vWVec:new Types.Vector3({y:1})})
+    
+    this.f2.rebuildByParent({vIndex:2, 
+                             vTreadIndex:this.startStepNum + this.f1.stepNum + this.landings[0].stepNum,
+                             vIsLast:true,
+                             vPos:pos2,
+                             vLVec:new Types.Vector3({y:1}),
+                             vWVec:wVec2})
 
-  /** 根据楼梯段、起步踏、休息平台等计算总步数*/
-  computeStepNum() {
-    this.stepNum = 0
-    for (const f of this.flights) {
-      this.stepNum = this.stepNum + f.stepNum
+    let ori = new Types.Vector3({x:this.girOffset, y:this.girOffset})
+    if (this.floadSide === Types.Side.si_left) {
+      ori.x = this.f2.length + this.hangOffset
     }
-    for (const l of this.landings) {
-      this.stepNum = this.stepNum + l.stepNum
-    }
-    let lastIndex = this.startFlight ? this.flights.length - 2 : this.flights.length - 1
-    this.stepNumRule = this.flights[lastIndex].stepNumRule
-    this.realStepNum = this.stepNum - this.stepNumRule + 1
+    let border = tool.createRectOutline(ori, this.f1.stepLength - this.girOffset, this.f2.stepLength - this.girOffset)
+    this.l1.rebuildByParent({vIndex:1, 
+                            vTreadIndex:this.f1.stepNum + this.startStepNum,
+                            vBorder:border,
+                            vLastStepWidth:this.f1.stepWidth,
+                            vNextStepWidth:this.f2.stepWidth})
+    this.l1.updateCorBigCol()
   }
 
   /** 根据楼梯段、休息平台计算楼梯尺寸（不包含起步踏）*/
@@ -146,67 +127,6 @@ export class LTypeStair extends Stair {
       } else {
         this.position.y = topEdge.p1.y
       }
-    }
-  }
-
-  /** 更新休息平台*/
-  updateLandings() {
-    let f1 = this.flights[0]
-    let f2 = this.flights[1]
-    let ori = new Types.Vector3({x:this.girOffset, y:this.girOffset})
-    let nextIndex = 1
-    if (this.floadSide === Types.Side.si_left) {
-      ori.x = f2.length + this.hangOffset
-      nextIndex = 3
-    }
-    let border = tool.createRectOutline(ori, f1.stepLength - this.girOffset, f2.stepLength - this.girOffset)
-    let paras = {vParent:this, 
-                vTreadIndex:f1.stepNum + this.startStepNum, 
-                vBorder:border, 
-                vLastEdgeIndex:2, 
-                vNextEdgeIndex:nextIndex, 
-                vLastStepWidth:f1.stepWidth, 
-                vNextStepWidth:f2.stepWidth,
-                vStartHeight:f1.getEndHeight(),
-                vIndex: 1}
-    if (this.landings[0]) {
-      this.landings[0].rebuildByParent(paras)
-    } else {
-      this.landings[0] = new Landing(paras)
-    }
-    this.landings[0].updateCorBigCol()
-  }
-
-  updateSegments() {
-    this.segments[0] = this.flights[0]
-    this.segments[1] = this.landings[0]
-    this.segments[2] = this.flights[1]
-  }
-
-  updateItem(vValue, vKey1, vKey2) {
-    if (vKey2 && ['model', 'material'].includes(vKey2)) {
-      console.log(1)
-    } else if (vKey1 === 'stepNum') {
-      this.stepNum = vValue
-      let rst = this.computeFlightStepNum(vValue, this.flights[0].length, this.flights[1].length)
-      this.flights[0].updateItem(rst.firstNum, vKey1, vKey2)
-      this.flights[1].updateItem(rst.secondNum, vKey1, vKey2)
-    } else if (vKey1 === 'stepNumRule') {
-      this.stepNumRule = vValue
-      this.flights[1].updateItem(vValue, vKey1, vKey2)
-    } else {
-      super.updateItem(vValue, vKey1, vKey2)
-    }
-  }
-
-  computeFlightStepNum(vStepNum, vLength1, vLength2) {
-    let step_num = vStepNum + 1 - this.stepNumRule
-    let fStepNum = step_num - this.landings[0].stepNum - this.startStepNum
-    let firstNum = Math.ceil(vLength1 / (vLength1+vLength2) * fStepNum)
-    let secondNum = fStepNum - firstNum + this.stepNumRule - 1
-    return {
-      firstNum: firstNum,
-      secondNum: secondNum
     }
   }
   

@@ -1,4 +1,4 @@
-import { Flight } from './flights/flight'
+import { RectFlight } from './flights/rect_flight'
 import { Types } from '../types/stair_v2'
 import { Default } from './config'
 import { Stair } from './stair'
@@ -13,56 +13,37 @@ export class StraightStair extends Stair  {
     } else {
       this.floadSide = Types.Side.si_right
     }
+    /**@type {Array<RectFlight>} */
+    this.segments = []
     this.rebuild()
-  }    
+  }
   
-  initFlights () {
+  initSegments() {
+    this.stepNum = Math.floor(this.parent.hole.floorHeight / Default.STEP_HEIGHT)
     this.stepHeight = this.parent.hole.floorHeight / this.stepNum
     this.stepHeight = Number(this.stepHeight.toFixed(2))
-    let width = Default.STEP_LENGTH
-    let pos, lVec
-    if (this.floadSide === Types.Side.si_right) {
-      pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
-      lVec = new Types.Vector3({x:1})
-    } else {
-      pos = new Types.Vector3({x:width - this.girOffset, y:this.hangOffset})
-      lVec = new Types.Vector3({x:-1})
-    }
-    let paras = {vParent:this, 
-                vStepNum: this.stepNum, 
-                vStepNumRule: this.stepNumRule, 
-                vIndex:0, 
-                vTreadIndex:this.startFlight?.stepNum || 0, 
-                isLast:true, 
-                vPos:pos, 
-                vLVec:lVec, 
-                vWVec:new Types.Vector3({y:1}), 
-                vLength:this.realStepNum * Default.STEP_WIDTH,
-                vStartHeight:0,
-                vClock: this.againstWallType !== Types.AgainstWallType.aw_right}
-    this.flights[0] = new Flight(paras)
-  }
-
-  updateFlights() {
-    let pos, lVec
-    let width = this.flights[0].stepLength
-    if (this.floadSide === Types.Side.si_right) {
-      pos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
-      lVec = new Types.Vector3({x:1})
-    } else {
-      pos = new Types.Vector3({x:width - this.girOffset, y:this.hangOffset})
-      lVec = new Types.Vector3({x:-1})
-    }
-    let paras = {vTreadIndex:this.startFlight?.stepNum || 0, 
-                vPos:pos, 
-                vLVec:lVec, 
-                vWVec:new Types.Vector3({y:1}), 
-                vStartHeight:this.startFlight?.getEndHeight() || 0,}
-    this.flights[0].rebuildByParent(paras)
+    let vParent = this
+    let vStepNum = this.stepNum
+    let vStepNumRule = this.stepNumRule
+    let vLength = this.realStepNum * Default.STEP_WIDTH
+    let vClock = this.againstWallType !== Types.AgainstWallType.aw_right
+    let flight = new RectFlight({vParent, vStepNum, vStepNumRule, vLength,vClock})
+    this.flights.push(flight)
+    this.segments.push(flight)
   }
 
   updateSegments() {
-    this.segments[0] = this.flights[0]
+    let width = Default.STEP_LENGTH
+    let vPos, vLVec
+    if (this.floadSide === Types.Side.si_right) {
+      vPos = new Types.Vector3({x:this.girOffset, y:this.hangOffset})
+      vLVec = new Types.Vector3({x:1})
+    } else {
+      vPos = new Types.Vector3({x:width - this.girOffset, y:this.hangOffset})
+      vLVec = new Types.Vector3({x:-1})
+    }
+    let vWVec = new Types.Vector3({y:1})
+    this.segments[0].rebuildByParent({vIndex:0, vTreadIndex:this.startStepNum, vIsLast:true, vPos, vLVec, vWVec})
   }
 
   computeStepNum () {
@@ -89,17 +70,6 @@ export class StraightStair extends Stair  {
       this.position.x = rightEdge.p1.x - this.width
     } else if (this.againstWallType === Types.AgainstWallType.aw_left) {
       this.position.x = topEdge.p1.x
-    }
-  }
-
-  updateItem(vValue, vKey1, vKey2) {
-    if (vKey2 && ['model', 'material'].includes(vKey2)) {
-      console.log(1)
-    } else if (['stepNum','stepNumRule'].includes(vKey1)) {
-
-      this.flights[0].updateItem(vValue, vKey1, vKey2)
-    } else {
-      super.updateItem(vValue, vKey1, vKey2)
     }
   }
 

@@ -37,15 +37,19 @@ export class Structure {
   initStair({type = Types.StairType.sstright,againstWall,floadSide = Types.Side.si_right}) {
     if (type === Types.StairType.sstright) {
       this.stair = new StraightStair(this, againstWall)
+      this.stair.addStartFlight()
     }
     if (type === Types.StairType.sl_type) {
       this.stair = new LTypeStair(this, againstWall, floadSide)
+      this.stair.addStartFlight()
     }
     if (type === Types.StairType.s_small_u_type) {
       this.stair = new SmallUTypeStair(this, againstWall, floadSide)
+      this.stair.addStartFlight()
     }
     if (type === Types.StairType.s_big_u_type) {
       this.stair = new BigUTypeStair(this, againstWall, floadSide)
+      this.stair.addStartFlight()
     }
     if (type === Types.StairType.s_arc_type) {
       this.stair = new ArcStair(this, againstWall, floadSide)
