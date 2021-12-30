@@ -10,6 +10,7 @@ import tool from "./tool"
 export class LTypeStair extends Stair {
   constructor(vParent, vAgainstWall, vFloadSide) {
     super(vParent, vAgainstWall)
+    this.type = Types.StairType.sl_type
     if (this.againstWallType === Types.AgainstWallType.aw_left) {
       this.floadSide = Types.Side.si_right
     } else if (this.againstWallType === Types.AgainstWallType.aw_right) {

@@ -14,6 +14,7 @@ import { COMP_TYPES } from '../../common/common_config'
 import { StructConfig } from '../../structure/config'
 import Victor from 'victor'
 import tool from '../../structure/tool'
+import { Edge } from '../../utils/edge'
 
 export class Stair extends BaseWidget {
   /**
@@ -23,8 +24,6 @@ export class Stair extends BaseWidget {
   constructor(vPB) {
     super(vPB.uuid)
     this.init(vPB)
-    
-    
   }
   
   /**
@@ -32,6 +31,7 @@ export class Stair extends BaseWidget {
    * @param {Types.Stair} vPB 
    */
   init(vPB) {
+    this.type = vPB.type
     this.sprite = new PIXI.Container()
     D2Config.CUR_STAIR = this
     this.flights = []
@@ -72,7 +72,9 @@ export class Stair extends BaseWidget {
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
-    //this.addDimension()
+    if (this.type !== Types.StairType.s_arc_type) {
+      this.addDimension()
+    }
   }
 
   destroy() {
@@ -174,9 +176,37 @@ export class Stair extends BaseWidget {
     })
   }
 
+  getRotation(vP1, vP2) {
+    // 旋转计算
+    let newTextRotation = ''
+    const textRotation = new Victor(vP1.x - vP2.x, vP1.y - vP2.y)
+    const textAngle = textRotation.angle()
+    if (this.isClock) {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.angle()
+      }
+    } else {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      }
+    }
+    return newTextRotation
+  }
+
   addDimension() {
     let stairInfo = StructConfig.INFOS.get(this.uuid)
     const flightContainer = new PIXI.Container()
+    let stepNumRule = stairInfo.stepNumRule // 是否n+1
+    let girderType = stairInfo.girderParameters.type
+    let girderDepth = stairInfo.girderParameters.depth
     let depth = stairInfo.depth ? stairInfo.depth : stairInfo.depth1
     let width = stairInfo.width
     let landingWidth = new Victor(width,width)
@@ -196,9 +226,8 @@ export class Stair extends BaseWidget {
     let stairP = null
     let stepLength = stairInfo.width
     for (let i = 0; i < stairInfo.flights.length; i++) {
-      let tread = stairInfo.flights[0].treads
       let e = stairInfo.flights[0].treads[0].border.stepOutline
-      let isClock = e.isClock
+      this.isClock = e.isClock
       let stairtE = stairInfo.flights[stairInfo.flights.length - 1].treads[0].border.stepOutline
       let type = stairInfo.flights[0].treads[0].type
       let stairtType = stairInfo.flights[stairInfo.flights.length - 1].treads[0].type
@@ -225,10 +254,8 @@ export class Stair extends BaseWidget {
       let newP2T
       let newP2B
       let flightPosition
-
       
-      
-      if (isClock) {
+      if (this.isClock) {
         let normal = new Types.Vector3({ x: -1, y: -0 })
         for(let value of D2Config.WIDGETS.values()) {
           if (value.getWidgetType() === COMP_TYPES.WALL) {
@@ -240,7 +267,6 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
-
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
         newP1 = new Victor(wallOutP1.x * 10, p.y)
         newP2 = new Victor(wallOutP1.x * 10, nextP.y)
@@ -297,36 +323,13 @@ export class Stair extends BaseWidget {
       const flightTextLength =
       Math.round(Math.hypot(p.x - nextP.x, p.y - nextP.y) )
 
-      // 旋转计算
-      let newTextRotation = ''
-      const textRotation = new Victor(p.x - nextP.x, p.y - nextP.y)
-      const textAngle = textRotation.angle()
-      if (isClock) {
-        if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
-          newTextRotation = 0
-        } else if (0 < textAngle < Math.PI) {
-          newTextRotation = textRotation.invert().angle()
-        } else if (0 > textAngle > -Math.PI) {
-          newTextRotation = textRotation.angle()
-        }
-      } else {
-        if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
-          newTextRotation = 0
-        } else if (0 < textAngle < Math.PI) {
-          newTextRotation = textRotation.angle()
-        } else if (0 > textAngle > -Math.PI) {
-          newTextRotation = textRotation.invert().angle()
-        }
-      }
-      
-
       const flightLine = new PIXI.Graphics()
       const flightText = new PIXI.Text(flightTextLength, textStyle)
 
       flightText.scale.set(0.25)
       flightText.position.set(flightPosition.x, flightPosition.y)
       flightText.anchor.set(0.5, 0.5)
-      flightText.rotation = newTextRotation
+      flightText.rotation = this.getRotation(p, nextP)
 
       flightLine
       .lineStyle(1,0x000000, 1, 0.5, true)
@@ -347,9 +350,8 @@ export class Stair extends BaseWidget {
     }
 
     for (let i = 0; i < stairInfo.landings.length; i++) {
-      let lTread = stairInfo.landings[0].treads
       let e = stairInfo.landings[0].treads[0].border.stepOutline
-      let isClock = e.isClock
+      this.isClock = e.isClock
       let fLangdingLength = new Victor((e.edges[0].p2.x + e.edges[0].p1.x) / 2, 0)
       let lP = new Victor((e.edges[0].p1.x + e.edges[0].p2.x) / 2, e.edges[0].p1.y).subtractX(fLangdingLength)
       let lNextP = lP.clone().addX(landingWidth)
@@ -362,7 +364,7 @@ export class Stair extends BaseWidget {
       let newLP2B
       let landingPosition
 
-      if (isClock) {
+      if (this.isClock) {
         let normal = new Types.Vector3({ x: 0, y: -1 })
         for(let value of D2Config.WIDGETS.values()) {
           if (value.getWidgetType() === COMP_TYPES.WALL) {
@@ -376,17 +378,22 @@ export class Stair extends BaseWidget {
         }
 
         let wallOutP1 = new Victor(wall.outP1.x - stairP.x,wall.outP1.y - stairP.y)
-
+        
         // 左侧
         newLP1 = new Victor(lP.x, wallOutP1.y * 10)
         newLP2 = new Victor(lNextP.x, wallOutP1.y * 10)
-
+        
         newLP1 = newLP1.subtractY(offSet)
         newLP2 = newLP2.subtractY(offSet)
         newLP1T = newLP1.clone().subtractY(arrow)
         newLP1B = newLP1.clone().addY(arrow)
         newLP2T = newLP2.clone().subtractY(arrow)
         newLP2B = newLP2.clone().addY(arrow)
+        // 中心位置计算
+        landingPosition = {
+          x: (newLP1T.x + newLP2T.x) / 2 / 10,
+          y: (newLP1T.y + newLP2T.y) / 2 / 10
+        }
       }else {
         let normal = new Types.Vector3({ x: -0, y: 1 })
         for(let value of D2Config.WIDGETS.values()) {
@@ -399,6 +406,12 @@ export class Stair extends BaseWidget {
             stairP = value.position
           }
         }
+
+        // 中心位置计算
+        landingPosition = {
+          x: (newLP1T.x + newLP2T.x) / 2 / 10,
+          y: (newLP1T.y + newLP2T.y) / 2 / 10
+        }
       }
       var wallEndExtend = wall.endExtend
       if (wallEndExtend === 240) {
@@ -410,49 +423,12 @@ export class Stair extends BaseWidget {
       const landingTextLength =
       Math.round(Math.hypot(lP.x - lNextP.x, lP.y - lNextP.y) )
 
-      // 旋转计算
-      let newTextRotation = ''
-      const textRotation = new Victor(lP.x - lNextP.x, lP.y - lNextP.y)
-      const textAngle = textRotation.angle()
-      if (isClock) {
-        if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
-          newTextRotation = 0
-        } else if (0 < textAngle < Math.PI) {
-          newTextRotation = textRotation.invert().angle()
-        } else if (0 > textAngle > -Math.PI) {
-          newTextRotation = textRotation.angle()
-        }
-        // 中心位置计算
-        landingPosition = {
-          x: (newLP1T.x + newLP2T.x) / 2 / 10,
-          y: (newLP1T.y + newLP2T.y) / 2 / 10
-        }
-
-      } else {
-        if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
-          newTextRotation = 0
-        } else if (0 < textAngle < Math.PI) {
-          newTextRotation = textRotation.angle()
-        } else if (0 > textAngle > -Math.PI) {
-          newTextRotation = textRotation.invert().angle()
-        }
-
-        // 中心位置计算
-        landingPosition = {
-          x: (newLP1T.x + newLP2T.x) / 2 / 10,
-          y: (newLP1T.y + newLP2T.y) / 2 / 10
-        }
-      }
-
       const landingLine = new PIXI.Graphics()
-      const flightText = new PIXI.Text(landingTextLength, {
-        fontSize: 36,
-        fill: 0x000000
-      })
+      const flightText = new PIXI.Text(landingTextLength, textStyle)
       flightText.scale.set(0.25)
       flightText.position.set(landingPosition.x, landingPosition.y)
       flightText.anchor.set(0.5, 0.5)
-      flightText.rotation = newTextRotation
+      flightText.rotation = this.getRotation(lP, lNextP)
       landingLine
       .lineStyle(1,0x000000, 1, 0.5, true)
       .moveTo(newLP1.x / 10, newLP1.y / 10)
@@ -475,6 +451,52 @@ export class Stair extends BaseWidget {
     // 1.获取第一级台阶
     // 2.获取最后一级台阶
     // 3.获取这两级台阶之间的距离
+    let isTrue
+    if (this.againstWallType === Types.AgainstWallType.aw_no || this.againstWallType === Types.AgainstWallType.aw_left) {
+      isTrue = true
+    } else {
+      isTrue = false
+    }
+    let firstF = this.flights[0]
+    let firstTread = firstF.tread[firstF.tread.length - 1]
+    let lastF = this.flights[this.flights.length - 1]
+    let lastTread
+    if (stepNumRule === Types.StepNumRule.snr_n_add_1) {
+      lastTread = lastF.tread[lastF.tread.length - 2]
+    }else if (stepNumRule === Types.StepNumRule.snr_n) {
+      lastTread = lastF.tread[lastF.tread.length - 1]
+    }
+    let firstEdge = d2_tool.translateEdges(firstTread.border.stepOutline.edges[1])
+    let lastEdge = d2_tool.translateEdges(lastTread.border.stepOutline.edges[1])
+    if (girderType === Types.GirderType.gslab) {
+      firstEdge = d2_tool.translateEdges(new Edge(firstTread.border.stepOutline.edges[1]).offset(girderDepth, isTrue))
+      lastEdge = d2_tool.translateEdges(new Edge(lastTread.border.stepOutline.edges[1]).offset(girderDepth, isTrue))
+    }
+
+    // 中心位置计算
+    let firstToEndPosition = {
+      x: (firstEdge.p2.x + lastEdge.p1.x) / 2,
+      y: (firstEdge.p2.y + firstEdge.p2.y) / 2
+    }
+    // 标注长度计算
+    let firstToEndTextLength =
+    Math.round(Math.hypot(firstEdge.p2.x - lastEdge.p1.x) * 10 )
+    if (firstToEndTextLength === 0) {
+      firstToEndTextLength = ''
+    }
+
+    const firstToEndLine = new PIXI.Graphics()
+    firstToEndLine.lineStyle(1, 0x000000, 1, 0.5, true)
+    firstToEndLine.moveTo(firstEdge.p2.x, firstEdge.p2.y)
+    firstToEndLine.lineTo(lastEdge.p1.x, firstEdge.p2.y)
+
+    const firstToEndText = new PIXI.Text(firstToEndTextLength, textStyle)
+    firstToEndText.scale.set(0.25)
+    firstToEndText.position.set(firstToEndPosition.x,firstToEndPosition.y - arrow.x / 10)
+    firstToEndText.anchor.set(0.5, 0.5)
+    firstToEndText.rotation = this.getRotation(firstTread.border.stepOutline.edges[0].p1, firstTread.border.stepOutline.edges[0].p2)
+
+    flightContainer.addChild(firstToEndLine, firstToEndText)
     
 
     this.sprite.addChild(flightContainer)

@@ -1017,8 +1017,6 @@ export class Tread extends ChildWidget {
       const landingLineTextL = new PIXI.Text(landingTextLengthL,textStyle)
       this.creatText(landingLineTextL, sideEdgeLT)
       
-      console.log(landingTextLengthL)
-      console.log(landingTextLengthN)
       const landingLineTextN = new PIXI.Text(landingTextLengthN,textStyle)
       this.creatText(landingLineTextN, sideEdgeNT)
       for (let i = 0; i < this.stairInfo.parent.parent.landings.length; i++ ) {

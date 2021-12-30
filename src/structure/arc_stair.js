@@ -10,6 +10,7 @@ import { RectFlight } from "./flights/rect_flight";
 export class ArcStair extends Stair {
   constructor(vParent, vAgainstWall, vFloadSide) {
     super(vParent, vAgainstWall)
+    this.type = Types.StairType.s_arc_type
     if (this.againstWallType === Types.AgainstWallType.aw_left) {
       this.floadSide = Types.Side.si_right
     } else if (this.againstWallType === Types.AgainstWallType.aw_right) {

@@ -7,6 +7,7 @@ export class BaseWidget {
     this.uuid = uuid || uuidv4()
     this.sprite = null
     this.isSelected = false
+    this.isChange = false
     D2Config.WIDGETS.set(this.uuid, this)
   }
 
@@ -39,6 +40,7 @@ export class BaseWidget {
     D2Config.WIDGETS.set(this.uuid, this)
     this.init(vPB)
     this.addToStage()
+    
   }
 
   setuuid(uuid) {
