@@ -1,7 +1,4 @@
 import { v4 as uuidv4 } from 'uuid'
-import { COMP_TYPES } from '../common/common_config'
-import { StructConfig } from '../structure/config'
-import { Types } from '../types/stair_v2'
 import { D2Config } from './config'
 import { Movie } from './movie'
 export class BaseWidget {
