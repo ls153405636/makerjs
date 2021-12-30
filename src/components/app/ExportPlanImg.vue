@@ -195,7 +195,7 @@ export default {
     async downloadImg(){
       let canvas = await html2canvas(document.querySelector(".main-export"),{
           dpi: window.devicePixelRatio,
-          scale: 1, 
+          scale: 3, 
           allowTaint: true, 
           useCORS: true, 
       });
@@ -415,6 +415,8 @@ export default {
 }
 .main-export .right-content .right-text .text-message .input-content .description-text {
   width: 50%;
+  text-align: center;
+  line-height: 26px;
   border-top: 1px solid #000;
   border-right: 1px solid #000;
 }
