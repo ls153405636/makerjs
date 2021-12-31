@@ -54,15 +54,17 @@ export class Component extends Info {
   }
   
   updateItem(vValue, vKey, vSecondKey) {
-    if (vValue === undefined) {
-      if (this.wallEndExtend === 240) {
-        this.disToEnd = new Edge(this.parent.edge).getLength() - 240 - this.disToStart - this.width
-      }else {
-        this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
-      }
-    }else{
-      this.disToEnd = vValue
-    }
+    console.log(this[vKey])
+    // console.log(vValue, vKey, vSecondKey)
+    // if (vKey === undefined) {
+    //   if (this.wallEndExtend === 240) {
+    //     this.disToEnd = new Edge(this.parent.edge).getLength() - 240 - this.disToStart - this.width
+    //   }else {
+    //     this.disToEnd = new Edge(this.parent.edge).getLength() - this.disToStart - this.width
+    //   }
+    // }else{
+    //   this.disToEnd = vValue
+    // }
     if (vKey === 'disToEnd') {
       if (this.wallEndExtend === 240) {
         this.disToStart = new Edge(this.parent.edge).getLength()  - this.disToEnd - this.width - 240

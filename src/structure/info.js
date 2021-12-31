@@ -53,7 +53,13 @@ export class Info {
    * @param {String} vSecondKey 
    */
   updateItem (vValue, vKey, vSecondKey) {
+    // console.log(vValue, vKey, vSecondKey)
     if (this[vKey] == undefined) {
+      // console.log(this)
+      // if (this.parent.endExtend === 240) {
+
+      // }
+      this.disToStart = 0
       return
     }
     if (vSecondKey) {
