@@ -13,6 +13,12 @@ export class SmallColumn extends ChildModel {
 
   createObj(vGltf) {
     //this.obj = new THREE.Group()
+    vGltf.traverse(c => {
+      if (c.geometry) {
+        c.geometry.center()
+      }
+      c.position.set(0, 0, 0)
+    })
     let box = new THREE.Box3().expandByObject(vGltf)
     let gltfSize = box.getSize(new THREE.Vector3())
     let scale = new THREE.Vector3(this.size.x/gltfSize.x, this.size.y/gltfSize.y, this.size.z/gltfSize.z)

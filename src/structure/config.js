@@ -57,9 +57,11 @@ export const Default = {
   START_TREAD_PRO_ID: 1,
   U_TYPE_GAP: 80,
   EXIT_TYPE: Types.StairExitType.se_riser,
-  SMALL_COL_SRC: new Types.ObjData({modelPath:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/meta/8f852df7-3f29-402e-b2f8-c4c3784c1e1f/alpha.gltf',
+  SMALL_COL_SRC: new Types.ObjData({/*modelPath:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/meta/8f852df7-3f29-402e-b2f8-c4c3784c1e1f/alpha.gltf',*/
+                                    modelPath:'models/small_col.gltf',
                                    imgPath:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/meta/8f852df7-3f29-402e-b2f8-c4c3784c1e1f/front.png'}),
-  BIG_COL_SRC: new Types.ObjData({modelPath:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/alpha.gltf',
+  BIG_COL_SRC: new Types.ObjData({/*modelPath:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/alpha.gltf',*/
+                                  modelPath:'models/big_col.gltf',
                                   imgPath:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/front.png'}),
   MATERIAL: new Types.Material({path:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/hxbs.jpg'}),
   TREAD_MATERIAL: new Types.Material({path:'http://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/dls.jpg'})

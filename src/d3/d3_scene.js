@@ -58,6 +58,7 @@ export class D3Scene {
   initLight() {
     let pointColor = 0xffffff
     let lightStrength = [0.72, 0.60, 0.48, 0.36]
+    //let lightStrength = [0.36, 0.30, 0.24, 0.18]
     let topColor = 0xffffff
 
     let lights = new THREE.Group()
