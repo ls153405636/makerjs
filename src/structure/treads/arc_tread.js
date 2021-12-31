@@ -31,14 +31,16 @@ export class ArcTread extends Tread {
     this.startLVec = new UtilVec2(this.endLVec).round(angle).normalize().writePB()
     this.startAngle = new UtilVec2(this.startLVec).negate().getAngle()
     this.endAngle = new UtilVec2(this.endLVec).negate().getAngle()
+    this.stepWidth = (this.inRadius + this.outRadius) / 2
     this.createArcBorder()
   }
 
   createArcBorder() {
     let stepOutline = this.createArcOutline(this.endLVec, this.endLVec, this.endAngle, this.endAngle)
 
-    let treadInEndVec = this.getTreadEndVec(this.outRadius)
-    let treadOutEndVec = this.getTreadEndVec(this.inRadius)
+    let backOffset = this.parent.parent.getTreadBackOffset()
+    let treadInEndVec = this.getVecByOffset(this.outRadius, backOffset, this.endLVec)
+    let treadOutEndVec = this.getVecByOffset(this.inRadius, backOffset, this.endLVec)
     let treadInEndAngle = new UtilVec2(treadInEndVec).negate().getAngle()
     let treadOutEndAngle = new UtilVec2(treadOutEndVec).negate().getAngle()
     let treadOutline = this.createArcOutline(treadOutEndVec, treadInEndVec, treadOutEndAngle, treadInEndAngle)
@@ -53,14 +55,13 @@ export class ArcTread extends Tread {
     })
   }
 
-  getTreadEndVec (vRaius) {
-    let backOffset = this.parent.parent.getTreadBackOffset()
-    let angleOffset = Math.sinh(backOffset/vRaius)
+  getVecByOffset (vRaius, vOffset, vStartVec) {
+    let angleOffset = Math.sinh(vOffset/vRaius)
     if (!this.clock) {
       angleOffset = -angleOffset
     }
-    let startVec = new UtilVec2(this.endLVec).round(angleOffset).writePB()
-    return startVec
+    let vec = new UtilVec2(vStartVec).round(angleOffset).writePB()
+    return vec
   }
 
   createArcOutline (vOutEndLVec, vInEndLVec, vOutEndAngle, vInEndAngle) {
@@ -107,5 +108,26 @@ export class ArcTread extends Tread {
 
   getStartPos() {
     return this.border.stepOutline.edges[2].p2
+  }
+
+  getGirUtilE({vSide, vArgs}) {
+    if (vArgs.type === Types.GirderType.gslab || this.index === this.parent.parent.realStepNum) {
+      return super.getGirUtilE({vSide, vArgs})
+    }
+    let startPos = this.border.treadOutline.edges[2].p2
+    let gCenter = new Edge().setByVec(startPos, this.startLVec, this.outRadius)
+    let gRadius = vSide === 'out' ? this.inRadius : this.outRadius
+    let gP1 = new Edge().setByVec(gCenter, this.startLVec, -gRadius)
+    let gP2 = new Edge().setByVec(gCenter, this.endLVec, -gRadius)
+    let edge = new Types.Edge({p1:gP1, p2:gP2, position:gCenter, 
+                               startAngle:this.startAngle, 
+                               endAngle:this.endAngle,
+                               isClockwise:this.clock,
+                               type:Types.EdgeType.earc})
+    return new Edge(edge)
+  }
+
+  createSideSawBorder ({utilE, vIsFirst, vArgs, vLast}) {
+
   }
 }

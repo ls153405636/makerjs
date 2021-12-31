@@ -53,13 +53,13 @@ function computeGeoUV(vGeo, vImgWidth, vImgHeight) {
       if (Math.abs(nor.y) > Math.abs(nor.x)) {
         uvArr.push(pos.x / vImgWidth, pos.z / vImgHeight)
       } else {
-        uvArr.push(pos.y / vImgWidth, pos.z / vImgHeight)
+        uvArr.push(pos.z / vImgWidth, pos.y / vImgHeight)
       }
     } else {
       if (Math.abs(nor.z) < Math.abs(nor.x)) {
-        uvArr.push(pos.y / vImgWidth, pos.z / vImgHeight)
+        uvArr.push(pos.z / vImgWidth, pos.y / vImgHeight)
       } else {
-        uvArr.push(pos.y / vImgWidth, pos.x / vImgHeight)
+        uvArr.push(pos.x / vImgWidth, pos.y / vImgHeight)
       }
     }
     i = i + 3

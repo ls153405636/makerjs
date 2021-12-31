@@ -484,7 +484,7 @@ export class Stair extends Info {
     let unit = vDiff / absDiff
     let modifiable = true
     let stepWidthMin = 250
-    let stepWidthMax = 400
+    let stepWidthMax = 350
     while (absDiff > 0) {
       for (let i = 0; i < this.flights.length; i++) {
         let f = this.flights[i]
