@@ -95,6 +95,7 @@ export class Stair extends Info {
       }),
       material: Default.MATERIAL
     })
+    this.initStair = true
     this.inSide = new StairSide('in')
     this.outSide = new StairSide('out')
   }
@@ -120,7 +121,7 @@ export class Stair extends Info {
     this.updateStartHeight()
     this.updateStairPositon()
     this.updateSegments()
-    if (!this.startFlight) {
+    if (!this.startFlight && this.initStair) {
       this.addStartFlight()
     }
     this.updateStartFlight()
@@ -130,6 +131,7 @@ export class Stair extends Info {
     this.updateSmallColumns()
     this.updateBigColumns()
     this.updateCanvas('Stair')
+    this.initStair = false
   }
 
   /**初始化楼梯段结构 */
