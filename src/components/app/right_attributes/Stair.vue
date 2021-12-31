@@ -67,7 +67,8 @@ export default {
 .el-button {
   display: block;
   margin: 0;
-  width: 114px;
+  width: 100%;
+  /* width: 114px; */
   margin-bottom: 20px;
 }
 </style>

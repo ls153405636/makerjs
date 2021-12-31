@@ -16,7 +16,9 @@
 
 <script>
 import { Command } from '../../../common/command'
+import { COMP_TYPES } from '../../../common/common_config'
 import { Core } from '../../../common/core'
+import { D2Config } from '../../../d2/config'
 import rightArgs from './Args.vue'
 export default {
   name: 'rightInlay',
@@ -36,6 +38,12 @@ export default {
           type: null,
         })
       )
+
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === COMP_TYPES.INLAY) {
+          value.destroy()
+        }
+      }
     },
   },
   props: {
