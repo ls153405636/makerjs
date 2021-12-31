@@ -72,9 +72,9 @@ export class Stair extends BaseWidget {
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
-    if (this.type !== Types.StairType.s_arc_type) {
-      this.addDimension()
-    }
+    // if (this.type !== Types.StairType.s_arc_type) {
+    //   this.addDimension()
+    // }
   }
 
   destroy() {

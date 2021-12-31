@@ -143,6 +143,11 @@ export class Stair extends Info {
     this.realStepNum = this.stepNum - this.stepNumRule + 1
   }
 
+  /**
+   *每次楼梯整体更新前，先更新每段楼梯的起始高度
+   *
+   * @memberof Stair
+   */
   updateStartHeight() {
     let startHeight = this.startFlight?.getEndHeight() || 0
     for (const f of this.segments) {
@@ -214,13 +219,12 @@ export class Stair extends Info {
   }
 
   /**
-   * 将起步楼梯段添加到本套楼梯中
-   * @param {StartFlight} vStartFlight 
+   * 添加起步楼梯段
    */
   addStartFlight() {
     let firstF = this.segments[0]
     let vParent = this
-    let vStepWidth = firstF.stepWidth || Default.STEP_WIDTH
+    let vStepWidth = firstF.stepWidth || 260
     let vStepHeight = this.stepHeight
     let vClock = firstF.clock
     this.startFlight = new StartFlight({vParent, vStepWidth, vStepHeight, vClock})

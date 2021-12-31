@@ -28,7 +28,6 @@ export class ArcFlight extends Flight{
     this.stepLength = this.parent.stepLength
     this.center = new Edge().setByVec(this.pos, this.endLVec, this.radius).p2
     this.stepAngle = 2* Math.sinh(this.arcWidth/2/this.radius)
-    this.computeEndHeight()
     this.updateTreads()
   }
 
@@ -100,20 +99,6 @@ export class ArcFlight extends Flight{
     }
   }
 
-  computeEndHeight() {
-    this.endHeight = this.startHeight
-    for (const t of this.treads) {
-      if (t.inheritH) {
-        this.endHeight += this.stepHeight
-      } else {
-        this.endHeight = this.endHeight + t.stepHeight
-      }
-    }
-    if (this.endHeight === this.startHeight) {
-      this.endHeight += this.stepNum * this.stepHeight
-    }
-  }
-
   updateItem(vValue, vKey, vSecondKey) {
     if (['stepNum', 'stepNumRule'].includes(vKey)) {
       super.updateItem(vValue, vKey, vSecondKey)
@@ -162,9 +147,5 @@ export class ArcFlight extends Flight{
       pos = new Edge().setByVec(this.center, lVec, -this.radius).p2
     }
     return {lVec, wVec, pos}
-  }
-
-  getEndHeight () {
-    return this.endHeight
   }
 }

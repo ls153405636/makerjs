@@ -125,8 +125,8 @@ export class ArcStair extends Stair {
   }
 
   computeSize() {
-    this.width = 0
-    this.depth = 0
+    this.width = this.parent.hole.length
+    this.depth = this.parent.hole.width
     this.height = this.parent.hole.floorHeight
   }
 
