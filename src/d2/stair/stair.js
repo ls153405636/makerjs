@@ -72,9 +72,9 @@ export class Stair extends BaseWidget {
 
     this.position = d2_tool.translateCoord(vPB.position)
     this.draw()
-    // if (this.type !== Types.StairType.s_arc_type) {
-    //   this.addDimension()
-    // }
+    if (this.type !== Types.StairType.s_arc_type) {
+      this.addDimension()
+    }
   }
 
   destroy() {
@@ -459,7 +459,13 @@ export class Stair extends BaseWidget {
     }
     let firstF = this.flights[0]
     let firstTread = firstF.tread[firstF.tread.length - 1]
-    let lastF = this.flights[this.flights.length - 1]
+    let lastF
+    if (this.flights[this.flights.length - 1].treads[0].type === Types.TreadType.tStart) {
+      lastF = this.flights[this.flights.length - 2]
+    }else {
+      lastF = this.flights[this.flights.length - 1]
+    }
+
     let lastTread
     if (stepNumRule === Types.StepNumRule.snr_n_add_1) {
       lastTread = lastF.tread[lastF.tread.length - 2]
