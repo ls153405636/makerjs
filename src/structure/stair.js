@@ -112,6 +112,7 @@ export class Stair extends Info {
     this.computeSideOffset()
     if (!this.segments.length) {
       this.initSegments()
+      this.addStartFlight()
     }
     this.computeSize()
     this.computePosition()
@@ -231,7 +232,7 @@ export class Stair extends Info {
     if(firstF.type === Types.FlightType.frect && firstF.realStepNum > 1) {
       let firstT = firstF.treads[0]
       firstF.updateItem(firstF.stepNum - 1, 'stepNum')
-      firstF.updateItem(firstF.length - firstT.stepWidth, 'length')
+      firstF.updateItem(firstF.length - (firstT?.stepWidth || firstF.stepWidth), 'length')
     }
     this.flights.push(this.startFlight)
     this.rebuild()
