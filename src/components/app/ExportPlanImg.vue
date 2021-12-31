@@ -13,15 +13,15 @@
     <div class="left-content">
       <!-- 内容-左侧-顶部 -->
       <div class="top-text">
-        <p class="dear-user">尊敬的客户您好:</p>
+        <!-- <p class="dear-user">尊敬的客户您好:</p> -->
         <div class="description-word">
+          尊敬的客户您好:
           <p>(1)请您仔细审核楼梯的款式,形状,尺寸,步高,步宽与经销商协商认可。</p>
           <p>(2)请经销商认真审核图纸尺寸,如因图纸尺寸与房子实际尺寸不相符,由经销商承担责任,有特殊要求的请以文字说明,并填写好标题栏内的每一个项目,签字及预付款到账后厂家方可生产,交货期为30天。双梁弧形交货期为60天。</p>
-          <p>(3)如厂方生产的产品与图纸不相符由厂家重做。</p>
+          <!-- <p>(3)如厂方生产的产品与图纸不相符由厂家重做。</p> -->
         </div>
         <span class="dimension">
           <p>单位：毫米（mm）</p>
-          <span>图纸编号:<input type="text"></span>
         </span>
       </div>
       <!-- 平面图展示区域 -->
@@ -43,17 +43,16 @@
     <div class="right-content">
       <div class="right-text">
         <!-- logo -->
-        <span><img src="" alt="">三维工场</span>
-        <div v-for="(item,index) in tableData" class="input-content">
-          <span :key="index" class="description-text">{{item.name}}</span>
-          <input type="input" :placeholder="item.data" class="input-text">
+        <span class="logo-img">
+          <p class="logo">logo</p>
+          <p class="vendor-name">经销商名称</p>
+        </span>
+        <div class="text-message">
+          <div v-for="(item,index) in tableData" class="input-content">
+            <span :key="index" class="description-text">{{item.name}}</span>
+            <input type="input" :placeholder="item.data" class="input-text">
+          </div>
         </div>
-        <span class="user-confirm">客户确认</span>
-        <input type="text" class="user-text">
-        <span class="description-text">制图</span>
-        <input type="text" class="input-text">
-        <span class="description-text">出图日期</span>
-        <input type="text" class="input-text">
       </div>
     </div>
   </div>
@@ -68,24 +67,24 @@ export default {
       name: '编号',
       tableData: [
         {
-          date: '2016-05-03',
-          name: '订单号',
+          date: '',
+          name: '经销商订单号',
         },
         {
-          date: '2016-05-02',
-          name: '销售地址',
+          date: '',
+          name: '楼梯款式',
         },
         {
-          date: '2016-05-04',
-          name: '品名',
-        },
-        {
-          date: '2016-05-01',
+          date: '',
           name: '层高',
         },
         {
           date: '2016-05-01',
           name: '出口梁厚',
+        },
+        {
+          date: '2016-05-01',
+          name: '入口梁厚',
         },
         {
           date: '2016-05-01',
@@ -109,7 +108,11 @@ export default {
         },
         {
           date: '2016-05-01',
-          name: '扶手材质',
+          name: '梯板材质',
+        },
+        {
+          date: '2016-05-01',
+          name: '顶方材质',
         },
         {
           date: '2016-05-01',
@@ -117,7 +120,7 @@ export default {
         },
         {
           date: '2016-05-01',
-          name: '扶手颜色',
+          name: '顶方颜色',
         },
         {
           date: '2016-05-01',
@@ -125,23 +128,55 @@ export default {
         },
         {
           date: '2016-05-01',
-          name: '有·无立板',
+          name: '指接/直拼',
         },
         {
           date: '2016-05-01',
-          name: '顶方形状',
+          name: '有/无立板',
         },
         {
           date: '2016-05-01',
-          name: '大小柱形状',
+          name: '顶方规格',
         },
         {
           date: '2016-05-01',
-          name: '结构件',
+          name: '起步大柱型号规格',
+        },
+        {
+          date: '2016-05-01',
+          name: '大柱型号规格',
+        },
+        {
+          date: '2016-05-01',
+          name: '小柱型号规格',
+        },
+        {
+          date: '2016-05-01',
+          name: '踢脚线',
+        },
+        {
+          date: '2016-05-01',
+          name: '出图日期',
         },
         {
           date: '2016-05-01',
           name: '交货日期',
+        },
+        {
+          date: '2016-05-01',
+          name: '制图',
+        },
+        {
+          date: '2016-05-01',
+          name: '审图',
+        },
+        {
+          date: '2016-05-01',
+          name: '客户签字',
+        },
+        {
+          date: '2016-05-01',
+          name: '经销商签字',
         },
       ],
     }
@@ -160,7 +195,7 @@ export default {
     async downloadImg(){
       let canvas = await html2canvas(document.querySelector(".main-export"),{
           dpi: window.devicePixelRatio,
-          scale: 1, 
+          scale: 3, 
           allowTaint: true, 
           useCORS: true, 
       });
@@ -218,7 +253,7 @@ export default {
 /* 中心-左侧 */
 .main-export .left-content {
   position: relative;
-  width: 85%;
+  width: 80%;
   height: 100%;
 }
 /* 中心-左侧-顶部 */
@@ -232,28 +267,28 @@ export default {
   box-sizing: border-box;
 }
 .main-export .left-content .top-text .dear-user {
-  width: 20%;
-  height: 80px;
+  display: block;
+  width: 100%;
   margin-top: 0;
-  font-size: 24px;
+  font-size: 14px;
 }
 .main-export .left-content .top-text .description-word {
-  display: block;
-  width: 80%;
+  /* display: block;
+  width: 100%;
   height: 80px;
-  margin: 0;
+  margin: 0; */
   font-size: 14px;
 }
 .main-export .left-content .top-text .description-word p{
-  display: block;
-  width: 100%;
+  /* display: block;
+  width: 100%; */
   margin: 0;
   font-size: 14px;
 }
 .main-export .left-content .top-text .dimension{
   position: absolute;
-  right: 31px;
-  bottom: 0;
+  right: 50px;
+  bottom: 20px;
   display: block;
   width: 18%;
   font-size: 14px;
@@ -261,17 +296,17 @@ export default {
 .main-export .left-content .top-text .dimension p{
   display: block;
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 .main-export .left-content .top-text .dimension span{
   display: block;
   margin-top: 5px;
   width: 240px;
-  font-size: 16px;
+  font-size: 14px;
 }
 .main-export .left-content .top-text .dimension span input{
   width: 120px;
-  font-size: 16px;
+  font-size: 14px;
   border: 0;
   border-bottom: 1px solid #000;
 }
@@ -295,15 +330,15 @@ export default {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 31px;
+  height: 26.39px;
   /* background-color: #e76262; */
 }
 .main-export .left-content .buttom-text span {
   float: left;
   display: block;
   width: 80px;
-  height: 31px;
-  line-height: 31px;
+  height: 26px;
+  line-height: 26.39px;
   font-size: 14px;
   text-align: center;
   box-sizing: border-box;
@@ -325,114 +360,74 @@ export default {
   background-color: #ffffff;
 }
 .main-export .left-content .buttom-text input.user-address {
-  width:541px;
+  width: 481px;
   border-right: none;
 }
 /* 中心-右侧 */
 .main-export .right-content {
-  width: 15%;
+  width: 20%;
   height: 100%;
 }
 .main-export .right-content .right-text {
-  width: 100%;
-  height: 100%;
-  border-left: 1px solid #000;
-}
-.main-export .right-content .right-text .input-content {
   display: flex;
+  flex-flow: column;
   justify-content: space-between;
   width: 100%;
-  height: 31px;
-}
-.main-export .right-content .right-text .input-content .description-text {
-  display: block;
-  width: 35%;
-  height: 31px;
-  line-height: 31px;
-  font-size: 14px;
-  text-align: center;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 1px solid #000;
-  background-color: #ffffff;
-}
-.main-export .right-content .right-text .input-content .input-text {
-  display: inline-block;
   height: 100%;
-  outline:none;  
-  margin: 0;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 1px solid #000;
   border-left: 1px solid #000;
-  border-right: 1px solid #000;
-  background-color: #ffffff;
 }
-.main-export .right-content .right-text .description-text {
-  display: block;
-  float: left;
-  width: 35%;
-  height: 31px;
-  line-height: 31px;
-  font-size: 14px;
-  text-align: center;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 1px solid #000;
-  background-color: #ffffff;
-}
-.main-export .right-content .right-text .input-text {
-  display: block;
-  float: left;
-  width: 65%;
-  height: 31px;
-  outline:none;  
-  margin: 0;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 1px solid #000;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-  background-color: #ffffff;
-}
-.main-export .right-content .right-text .user-confirm {
-  display: block;
-  float: left;
-  width: 10%;
-  height: 100px;
-  line-height: 20px;
-  font-size: 14px;
-  text-align: center;
-  box-sizing: border-box;
-  border: 0;
-  padding-top: 5px;
-  border-bottom: 1px solid #000;
-  background-color: #ffffff;
-}
-.main-export .right-content .right-text .user-text {
-  display: block;
-  float: left;
-  width: 90%;
-  height: 100px;
-  outline:none;  
-  margin: 0;
-  box-sizing: border-box;
-  border: 0;
-  border-bottom: 1px solid #000;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-  background-color: #ffffff;
-}
-.main-export .right-content .right-text span {
+.main-export .right-content .right-text .logo-img {
   display: block;
   width: 100%;
-  height: 101px;
-  font-size: 36px;
-  line-height: 101px;
-  text-align: center;
+  height: 15%;
   border-bottom: 1px solid #000;
   border-right: 1px solid #000;
   box-sizing: border-box;
-  /* background-color: #e76262; */
+  /* background-color: #c09393; */
 }
+.main-export .right-content .right-text .logo-img .logo{
+  display: block;
+  height: 60%;
+  margin: 0;
+  font-size: 36px;
+  padding-top: 10px;
+  text-align: center;
+  /* background-color: aquamarine; */
+}
+.main-export .right-content .right-text .logo-img .vendor-name {
+  height: 25%;
+  margin: 0;
+  text-align: center;
+}
+.main-export .right-content .right-text .text-message {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
+}
+.main-export .right-content .right-text .text-message .input-content {
+  display: flex;
+  justify-content: stretch;
+  flex: 1;
+  width: 100%;
+  font-size: 14px;
+}
+.main-export .right-content .right-text .text-message .input-content .description-text {
+  width: 50%;
+  text-align: center;
+  line-height: 26px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+}
+.main-export .right-content .right-text .text-message .input-content .input-text {
+  outline: none;
+  border: none;
+  width: 50%;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+  box-sizing: border-box;
+}
+
+
 </style>
