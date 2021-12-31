@@ -20,7 +20,11 @@ export class Edge {
         this.controlPos = new THREE.Vector2(vPB.controlPos.x, vPB.controlPos.y)
       }
       this.type = vPB.type
-      this.position = vPB.position
+      if (vPB.position) {
+        this.position = new THREE.Vector2(vPB.position.x, vPB.position.y)
+      } else {
+        this.position = new THREE.Vector2()
+      }
       this.radius = vPB.radius
       this.startAngle = vPB.startAngle
       this.endAngle = vPB.endAngle
@@ -121,6 +125,22 @@ export class Edge {
   }
 
   /**
+   *只针对弧形边，获取p1指向圆心的单位向量
+   *
+   * @memberof Edge
+   */
+  getP1Vec() {
+    let vec = new THREE.Vector2().subVectors(this.position, this.p1)
+    return vec
+  }
+
+  /**同上 */
+  getP2Vec() {
+    let vec = new THREE.Vector2().subVectors(this.position, this.p2)
+    return vec
+  }
+
+  /**
    * 获取长度
    * @returns
    */
@@ -168,6 +188,15 @@ export class Edge {
    * @returns {Types.Edge}
    */
   offset(vDis, vPlus = true) {
+    if (this.type === Types.EdgeType.earc) {
+      this.offsetArc(vDis, vPlus)
+    } else {
+      this.offsetStraight(vDis, vPlus)
+    }
+    return this.writePB()
+  }
+
+  offsetStraight(vDis, vPlus) {
     let nor = this.getNormal()
     if (!vPlus) {
       nor.negate()
@@ -182,20 +211,43 @@ export class Edge {
     )
     this.p1 = newP1
     this.p2 = newP2
-    return this.writePB()
+  }
+
+  offsetArc(vDis, vPlus) {
+    if (this.isClockwise) {
+      this.radius = vPlus ? this.radius + vDis : this.radius - vDis
+    } else {
+      this.radius = vPlus ? this.radius - vDis : this.radius + vDis
+    }
+    let p1Vec = new THREE.Vector2().subVectors(this.p1, pos)
+    let p2Vec = new THREE.Vector2().subVectors(this.p2, pos)
+    this.p1 = this.position.clone().addScaledVector(p1Vec, this.radius)
+    this.p2 = this.position.clone().addScaledVector(p2Vec, this.radius)
   }
 
   /**
    * 从p1方向将边延长
+   * 弧线延长目前只应用于弧形踏板，原理为从p1点处，将半径延切线方向平移，得到与圆的交点，即为新的p1
    * @param {Number} vDis 
    * @returns {Types.Edge}
    */
   extendP1(vDis) {
-    let vec = this.getVec()
-    vec.negate()
-    let length = this.getLength()
-    this.p1 = this.p2.clone().addScaledVector(vec, length + vDis)
-    this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
+    if (this.type === Types.EdgeType.earc) {
+      let angleOffset = Math.sinh(vDis/this.radius)
+      if (this.isClockwise) {
+        this.startAngle -= angleOffset
+      } else {
+        this.startAngle += angleOffset
+      }
+      let vec = new THREE.Vector2(1, 0).rotateAround(Edge.center, this.startAngle).normalize()
+      this.p1 = this.position.clone().addScaledVector(vec, this.radius)
+    } else {
+      let vec = this.getVec()
+      vec.negate()
+      let length = this.getLength()
+      this.p1 = this.p2.clone().addScaledVector(vec, length + vDis)
+      this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
+    }
     return this.writePB()
   }
 
@@ -205,10 +257,21 @@ export class Edge {
    * @returns {Types.Edge}
    */
   extendP2(vDis) {
-    let vec = this.getVec()
-    let length = this.getLength()
-    this.p2 = this.p1.clone().addScaledVector(vec, length + vDis)
-    this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
+    if (this.type === Types.EdgeType.earc) {
+      let angleOffset = Math.sinh(vDis/this.radius)
+      if (this.isClockwise) {
+        this.endAngle += angleOffset
+      } else {
+        this.endAngle -= angleOffset
+      }
+      let vec = new THREE.Vector2(1, 0).rotateAround(Edge.center, this.endAngle).normalize()
+      this.p2 = this.position.clone().addScaledVector(vec, this.radius)
+    } else {
+      let vec = this.getVec()
+      let length = this.getLength()
+      this.p2 = this.p1.clone().addScaledVector(vec, length + vDis)
+      this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
+    }
     return this.writePB()
   }
 
