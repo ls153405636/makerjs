@@ -82,7 +82,7 @@ export class Wall extends BaseModel {
     };
     
     let geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings )
-    this.mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color:D3Default.WALL_COLOR, side:THREE.DoubleSide,  transparent: true, opacity: 0}))
+    this.mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color:D3Default.WALL_COLOR, side:THREE.DoubleSide}))
     this.obj.add(this.mesh, this.lineFrame)
     this.obj.position.copy(this.position)
     this.obj.rotateY(-this.angle)
