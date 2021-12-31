@@ -38,11 +38,7 @@ export class RectFlight extends StraightFlight {
   }
 
   updateItem(vValue, vKey, vSecondKey) {
-    if (['stepNum', 'stepNumRule'].includes(vKey)) {
-      this.treads = []
-      super.updateItem(vValue, vKey, vSecondKey)
-      this.realStepNum = this.stepNum - this.stepNumRule + 1
-    } else if (vKey === 'stepLength' && this.parent.type === Types.StairType.s_arc_type) {
+    if (vKey === 'stepLength' && this.parent.type === Types.StairType.s_arc_type) {
       this.parent.updateItem(vValue, vKey, vSecondKey)
     } else {
       super.updateItem(vValue, vKey, vSecondKey)

@@ -112,7 +112,6 @@ export class Stair extends Info {
     this.computeSideOffset()
     if (!this.segments.length) {
       this.initSegments()
-      this.addStartFlight()
     }
     this.computeSize()
     this.computePosition()
@@ -121,6 +120,9 @@ export class Stair extends Info {
     this.updateStartHeight()
     this.updateStairPositon()
     this.updateSegments()
+    if (!this.startFlight) {
+      this.addStartFlight()
+    }
     this.updateStartFlight()
     this.updatehangingBoard()
     this.updateGirders()
