@@ -34,12 +34,22 @@ export class Tread extends ChildWidget {
     this.depth = Default.WALL_DEPTH
     this.stairInfo = StructConfig.INFOS.get(this.uuid)
     this.draw()
-    this.addDimension()
-    if (this.type === Types.StairType.s_arc_type) {
-      this.ArcStairDemension()
+    let stairId
+    for(let value of D2Config.WIDGETS.values()) {
+      if (value.getWidgetType() === COMP_TYPES.STAIR) {
+        stairId = value.uuid
+      }
     }
+    let stairInfo = StructConfig.INFOS.get(stairId)
+    this.stepNum = stairInfo.stepNum
+    if (stairInfo.type !== Types.StairType.s_arc_type) {
+      this.addDimension()
+    }
+    // if (this.type === Types.StairType.s_arc_type) {
+    //   this.ArcStairDemension()
+    // }
     this.addEvent()
-    // console.log(vPB)
+    // console.log(this.parent)
   }
 
   creatText(vName, vPos) {
@@ -1743,8 +1753,7 @@ export class Tread extends ChildWidget {
     const inArcText = new PIXI.Text(inArcEdgeLength, textStyle)
     outArcText.visible = false
     inArcText.visible = false
-    
-    if (this.index === 7) {
+    if (this.index == parseInt(this.stepNum / 2)) {
       outArcText.visible = true
       inArcText.visible = true
       outArcLine.moveTo(newOutArcEdge.p1.x, newOutArcEdge.p1.y)
