@@ -39,11 +39,11 @@ export default {
         })
       )
 
-      for(let value of D2Config.WIDGETS.values()) {
-        if (value.getWidgetType() === COMP_TYPES.INLAY) {
-          value.destroy()
-        }
-      }
+      // for(let value of D2Config.WIDGETS.values()) {
+      //   if (value.getWidgetType() === COMP_TYPES.INLAY) {
+      //     value.destroy()
+      //   }
+      // }
     },
   },
   props: {

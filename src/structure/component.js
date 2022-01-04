@@ -1,3 +1,5 @@
+import { COMP_TYPES } from '../common/common_config'
+import { D2Config } from '../d2/config'
 import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
 import { Default, StructConfig } from './config'
@@ -22,10 +24,25 @@ export class Component extends Info {
   }
 
   addInfo() {
+    // console.log(this)
     StructConfig.INFOS.set(this.uuid, this)
     this.parent.addComponent(this)
   }
   delInfo() {
+    console.log(this)
+    let compId = []
+    let comp = []
+    for(let value of D2Config.WIDGETS.values()) {
+      if (value.getWidgetType() === COMP_TYPES.CEMENT_COMP) {
+        compId.push(value.uuid)
+        comp.push(value)
+      }
+    }
+    for (let i = 0; i < compId.length; i++) {
+      if(this.uuid === compId[i]) {
+        comp[i].destroy()
+      }
+    }
     StructConfig.INFOS.delete(this.uuid)
     this.parent.delComponent(this)
   }

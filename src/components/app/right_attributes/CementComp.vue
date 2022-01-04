@@ -39,11 +39,11 @@ export default {
         })
       )
 
-      for(let value of D2Config.WIDGETS.values()) {
-        if (value.getWidgetType() === COMP_TYPES.CEMENT_COMP) {
-          value.destroy()
-        }
-      }
+      // for(let value of D2Config.WIDGETS.values()) {
+      //   if (value.getWidgetType() === COMP_TYPES.CEMENT_COMP) {
+      //     value.destroy()
+      //   }
+      // }
     },
   },
   props: {

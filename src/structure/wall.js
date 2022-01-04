@@ -20,7 +20,6 @@ export class Wall extends Info {
    */
   constructor(vParent, vEdge) {
     super(vParent)
-    // console.log(vParent.floorHeight)
     this.holeHeight = vParent.floorHeight
     this.holeEdge = vEdge
     this.type = Types.WallType.wboth
@@ -33,7 +32,6 @@ export class Wall extends Info {
   }
   
   rebuild() {
-    // console.log(this.parent.floorHeight)
     this.holeH = this.parent.floorHeight
     
     if (this.holeH === 0 || this.holeH === '') {
@@ -99,6 +97,7 @@ export class Wall extends Info {
   }
 
   delComponent(vInfo) {
+    console.log(this.components)
     this.components.delete(vInfo.uuid, vInfo)
     this.updateCanvas()
   }

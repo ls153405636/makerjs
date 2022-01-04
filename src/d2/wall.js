@@ -58,7 +58,8 @@ export class Wall extends BaseWidget {
   /**重写父类销毁函数 */
   destroy() {
     // this.components.forEach((c) => {
-    //   c.destroy()
+    //   console.log(c)
+    //   // c.destroy()
     // })
     this.lineSprite.destroy()
     this.textSprite.destroy()
