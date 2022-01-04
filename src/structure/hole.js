@@ -1,5 +1,6 @@
+import { COMP_TYPES } from '../common/common_config'
 import { Types } from '../types/stair_v2'
-import { Default } from './config'
+import { Default, StructConfig } from './config'
 import { Info } from './info'
 import tool from './tool'
 import { Wall } from './wall'
@@ -26,6 +27,11 @@ export class RectHole extends Hole {
       y: center.y - this.width / 2,
     })
     this.outline = tool.createRectOutline(this.ori, this.length, this.width)
+    for (const value of StructConfig.INFOS.values()) {
+      if (value.getCompType() === COMP_TYPES.WALL) {
+        StructConfig.INFOS.delete(value.uuid)
+      }
+    }
     this.walls = []
     this.updateCanvas('RectHole')
     this.createWalls()

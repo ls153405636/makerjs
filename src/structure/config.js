@@ -64,3 +64,5 @@ export const Default = {
   MATERIAL: new Types.Material({path:'https://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/hxbs.jpg'}),
   TREAD_MATERIAL: new Types.Material({path:'http://stair-dev-next-1305224273.cos.ap-shanghai.myqcloud.com/default/dls.jpg'})
 }
+
+window.INFOS = StructConfig.INFOS

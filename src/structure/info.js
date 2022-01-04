@@ -145,4 +145,8 @@ export class Info {
   setSelected() {}
 
   writePB() {}
+
+  getCompType() {
+    return 0
+  }
 }

@@ -13,6 +13,7 @@ import { Core } from '../common/core'
 import { Command } from '../common/command'
 import { COMP_TYPES } from '../common/common_config'
 import { Edge } from '../utils/edge'
+import { StructConfig } from '../structure/config'
 
 export class Wall extends BaseWidget {
   /**
@@ -57,10 +58,9 @@ export class Wall extends BaseWidget {
 
   /**重写父类销毁函数 */
   destroy() {
-    // this.components.forEach((c) => {
-    //   console.log(c)
-    //   // c.destroy()
-    // })
+    this.components.forEach((c) => {
+      c.destroy()
+    })
     this.lineSprite.destroy()
     this.textSprite.destroy()
     this.holeLineSprite.destroy()
@@ -231,6 +231,9 @@ export class Wall extends BaseWidget {
    */
   addToStage() {
     super.addToStage()
+    // if (this.components.length > 0) {
+    //   this.components[this.components.length - 1].addToStage()
+    // }
     this.components.forEach((c) => {
       c.addToStage()
     })

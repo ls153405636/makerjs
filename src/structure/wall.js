@@ -1,4 +1,6 @@
+import { Command } from '../common/command'
 import { COMP_TYPES } from '../common/common_config'
+import { Core } from '../common/core'
 import { D2Config } from '../d2/config'
 import { Types } from '../types/stair_v2'
 import { Edge } from '../utils/edge'
@@ -28,12 +30,12 @@ export class Wall extends Info {
     this.wallOffset = 0
     this.depth = Default.WALL_DEPTH
     this.height = this.parent.floorHeight
+    this.components = new Map()
     this.rebuild()
   }
   
   rebuild() {
     this.holeH = this.parent.floorHeight
-    
     if (this.holeH === 0 || this.holeH === '') {
       this.isTrue = true
     }else {
@@ -47,7 +49,6 @@ export class Wall extends Info {
     let nor = utilEdge.getNormal()
     this.normal = new Types.Vector3({ x: nor.x, y: nor.y })
     this.outEdge = new Edge(this.edge).offset(this.depth)
-    this.components = new Map()
     this.updateCanvas('Wall')
     let stairId
     let inlayId
@@ -89,15 +90,20 @@ export class Wall extends Info {
       }
       compInfo.rebuild()
     }
+
+    
+  }
+
+  getCompType () {
+    return COMP_TYPES.WALL
   }
 
   addComponent(vInfo) {
     this.components.set(vInfo.uuid, vInfo)
     this.updateCanvas()
   }
-
+  
   delComponent(vInfo) {
-    console.log(this.components)
     this.components.delete(vInfo.uuid, vInfo)
     this.updateCanvas()
   }

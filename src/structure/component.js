@@ -24,25 +24,15 @@ export class Component extends Info {
   }
 
   addInfo() {
-    // console.log(this)
     StructConfig.INFOS.set(this.uuid, this)
     this.parent.addComponent(this)
   }
   delInfo() {
-    console.log(this)
-    let compId = []
-    let comp = []
-    for(let value of D2Config.WIDGETS.values()) {
-      if (value.getWidgetType() === COMP_TYPES.CEMENT_COMP) {
-        compId.push(value.uuid)
-        comp.push(value)
-      }
-    }
-    for (let i = 0; i < compId.length; i++) {
-      if(this.uuid === compId[i]) {
-        comp[i].destroy()
-      }
-    }
+    // for(let value of D2Config.WIDGETS.values()) {
+    //   if (value.uuid === this.uuid) {
+    //     value.destroy()
+    //   }
+    // }
     StructConfig.INFOS.delete(this.uuid)
     this.parent.delComponent(this)
   }
