@@ -78,7 +78,7 @@ export class Wall extends Info {
     let compInfo = StructConfig.INFOS.get(compId)
     if (compInfo !== undefined && compInfo.parent.uuid === this.uuid) {
       if (compInfo.type === Types.ComponentType.cbeam) {
-        if (this.parent.endExtend === 240) {
+        if (this.endExtend === 240) {
           compInfo.width = this.length - 240
         }else {
           compInfo.width = this.length
