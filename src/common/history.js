@@ -14,7 +14,7 @@ export class History {
    * @param {import('./command').Command} cmd
    */
   execute(cmd) {
-    if (cmd.addHistory) {
+    if (cmd.d2cmd?.addHistory || cmd.d3cmd?.addHistory || cmd.strucCmd?.addHistory) {
       this.undos.push(cmd)
       this.redos = []
     }

@@ -6,23 +6,6 @@ package Types;
  均以2d坐标中，正x到正y的方向为顺时针
 */
 
-//边的类型
-enum EdgeType {
-  eph       = 0;
-  estraight = 1;
-  earc      = 2;
-  ebeszer = 3;
-}
-
-//墙体类型
-enum WallType {
-  wph     = 0;  //占位
-  wfirst  = 1;  //一层有二层无
-  wsecond = 2;  //二层有一层无
-  wboth   = 3;  //一二层皆有
-  wnone   = 4;  //一二层皆无
-}
-
 //靠墙类型
 enum AgainstWallType {
   aw_ph    = 0;
@@ -31,44 +14,27 @@ enum AgainstWallType {
   aw_right = 3;
 }
 
-//楼梯类型
-enum StairType {
-  sph      = 0;
-  sstright = 1;  //直梯
-  sl_type = 2; //L型梯
-  s_small_u_type = 3; //小U型梯
-  s_big_u_type = 4; //大U型梯
-  s_arc_type = 5; //弧形梯（只要有一段楼梯段是圆弧）
+//小柱排列规则
+enum ArrangeRule {
+  arph     = 0;  //占位
+  arrFour  = 1;  //两级四根
+  arrThree = 2;  //两级三根
+  arrTwo   = 3;  //一级一根
 }
 
-enum Side {
-  si_ph  = 0;
-  si_left = 1;
-  si_right = 2;
+//大柱位置的类型
+enum BigColumnPosType {
+  bcp_ph     = 0;
+  bcp_floor  = 1;  //地板
+  bcp_first  = 2;  //第一级踏步
+  bcp_second = 3;  //第二级踏步
 }
 
-enum LandingCutType {
-  lct_ph = 0;
-  lct_first = 1;
-  lct_second = 2;
-  lct_third = 3;
-  lct_fourth = 4;
-  lct_fifth = 5;
-}
-
-//步数规则
-enum StepNumRule {
-  snr_ph      = 0;
-  snr_n       = 1;
-  snr_n_add_1 = 2;
-} 
-
-//加边类型
-enum NossingType {
-  nph     = 0;
-  nno     = 1;
-  ncommon = 2;
-  nluxury = 3;
+enum BigColumnType {
+  bc_ph      = 0;
+  bc_common  = 1;  //普通端柱
+  bc_support = 2;  //支撑柱
+  bc_start   = 3;  //起步大柱
 }
 
 //附属组件类型
@@ -81,27 +47,21 @@ enum ComponentType {
   cpillar    = 5;  //柱
 }
 
-//大柱位置的类型
-enum BigColumnPosType {
-  bcp_ph     = 0;
-  bcp_floor  = 1;  //地板
-  bcp_first  = 2;  //第一级踏步
-  bcp_second = 3;  //第二级踏步
+//边的类型
+enum EdgeType {
+  eph       = 0;
+  estraight = 1;
+  earc      = 2;
+  ebeszer   = 3;
 }
 
-enum BigColumnType {
-  bc_ph = 0;
-  bc_common = 1; //普通端柱
-  bc_support = 2; //支撑柱
-  bc_start = 3; //起步大柱
-}
-
-//小柱排列规则
-enum ArrangeRule {
-  arph     = 0;  //占位
-  arrFour  = 1;  //两级四根
-  arrThree = 2;  //两级三根
-  arrTwo   = 3;  //一级一根
+//楼梯段类型
+enum FlightType {
+  fph      = 0;
+  frect    = 1;  //矩形楼梯段
+  flanding = 2;  //休息平台
+  fStart   = 3;  //起步踏楼梯段
+  farc     = 4;  //弧形楼梯段
 }
 
 //大梁类型
@@ -111,38 +71,88 @@ enum GirderType {
   gsaw  = 2;  //锯齿型
 }
 
-//踏板类型
-enum TreadType {
-  tph  = 0;
-  trect = 1; //普通矩形踏
-  tStart = 2; //起步踏
-  tSpec = 3; //针对休息平台的异性踏
-  tCor = 4; //有两条侧边的转角踏
-  tArc = 5; //弧形踏板
+//休息平台切割类型
+enum LandingCutType {
+  lct_ph     = 0;
+  lct_first  = 1;
+  lct_second = 2;
+  lct_third  = 3;
+  lct_fourth = 4;
+  lct_fifth  = 5;
 }
 
-//起步踏板类型
-enum StartTreadType {
-  stph = 0;
-  st_el = 1;  // 单层椭圆
-  st_el_2 = 2;  // 双层椭圆
-  st_rr = 3;    // 单层圆角矩形
-  st_rr_2= 4;  // 双层圆角矩形
+//加边类型
+enum NossingType {
+  nph     = 0;
+  nno     = 1;
+  ncommon = 2;
+  nluxury = 3;
+}
+
+enum Side {
+  si_ph    = 0;
+  si_left  = 1;
+  si_right = 2;
+}
+
+enum StairExitType {
+  seph            = 0;
+  se_riser        = 1;  //出口立板
+  se_hangingBoard = 2;  //挂板
+  se_none         = 3;  //无
+}
+
+//楼梯类型
+enum StairType {
+  sph            = 0;
+  sstright       = 1;  //直梯
+  sl_type        = 2;  //L型梯
+  s_small_u_type = 3;  //小U型梯
+  s_big_u_type   = 4;  //大U型梯
+  s_arc_type     = 5;  //弧形梯（只要有一段楼梯段是圆弧）
 }
 
 //起步踏板造型类型
 enum StartTreadShapeType {
-  stsph = 0;
-  sts_no = 1; // 保留两边造型
-  sts_left = 2;  // 去掉左边造型
+  stsph     = 0;
+  sts_no    = 1;  // 保留两边造型
+  sts_left  = 2;  // 去掉左边造型
   sts_right = 3;  // 去掉右边造型
 }
 
-enum StairExitType {
-  seph  = 0;
-  se_riser = 1; //出口立板
-  se_hangingBoard = 2; //挂板
-  se_none = 3; //无
+//起步踏板类型
+enum StartTreadType {
+  stph    = 0;
+  st_el   = 1;  // 单层椭圆
+  st_el_2 = 2;  // 双层椭圆
+  st_rr   = 3;  // 单层圆角矩形
+  st_rr_2 = 4;  // 双层圆角矩形
+}
+
+//步数规则
+enum StepNumRule {
+  snr_ph      = 0;
+  snr_n       = 1;
+  snr_n_add_1 = 2;
+} 
+
+//踏板类型
+enum TreadType {
+  tph    = 0;
+  trect  = 1;  //普通矩形踏
+  tStart = 2;  //起步踏
+  tSpec  = 3;  //针对休息平台的异性踏
+  tCor   = 4;  //有两条侧边的转角踏
+  tArc   = 5;  //弧形踏板
+}
+
+//墙体类型
+enum WallType {
+  wph     = 0;  //占位
+  wfirst  = 1;  //一层有二层无
+  wsecond = 2;  //二层有一层无
+  wboth   = 3;  //一二层皆有
+  wnone   = 4;  //一二层皆无
 }
 
 //三维向量
@@ -154,11 +164,11 @@ message Vector3{
 
 //构成轮廓的边
 message Edge {
-  Vector3  p1           = 1;  //起点
-  Vector3  p2           = 2;  //终点
-  EdgeType type         = 3;  //类型
-  float    radius       = 4;  // 半径， 针对弧线
-  Vector3  position     = 5;  // 圆心位置， 针对弧线
+  Vector3  p1          = 1;  //起点
+  Vector3  p2          = 2;  //终点
+  EdgeType type        = 3;  //类型
+  float    radius      = 4;  // 半径， 针对弧线
+  Vector3  position    = 5;  // 圆心位置， 针对弧线
   float    startAngle  = 6;  // 起始角度
   float    endAngle    = 7;  // 终止角度
   bool     isClockwise = 8;  // 是否为顺时针
@@ -170,21 +180,6 @@ message Outline {
   repeated Edge edges = 1;
   bool     isClose    = 2;
   bool     isClock    = 3;
-}
-
-//外围边缘分组
-message Border {
-  repeated SideEdges out = 1;
-  repeated SideEdges in = 2;
-  repeated SideEdges front = 3;
-  repeated SideEdges back = 4;
-}
-
-//处于同一条直线上的一侧边集
-message SideEdges {
-  repeated Edge edges = 1;
-  Edge totalEdge = 2;
-  repeated Girder girders = 3;
 }
 
 //一个项目
@@ -232,7 +227,7 @@ message Component {
 }
 
 message Material {
-  string   path = 1;
+  string path = 1;
 }
 
 //一套楼梯
@@ -265,56 +260,56 @@ message Stair {
 }
 
 message StairSide {
-  string sideName = 1;
-  bool handrailExit = 2;
-  bool startBigColExit = 3;
+  string sideName        = 1;
+  bool   handrailExit    = 2;
+  bool   startBigColExit = 3;
 }
 
 //挂板
 message HangingBoard {
-  string uuid   = 1;
-  float  depth  = 2;  //厚度
-  float  width  = 3;
-  float  height = 4;
-  Vector3 position = 5; //起始顶点位置
-  Vector3 widthVec = 6; //宽度方向
-  Vector3 depthVec = 7; //深度方向
+  string  uuid     = 1;
+  float   depth    = 2;  //厚度
+  float   width    = 3;
+  float   height   = 4;
+  Vector3 position = 5;  //起始顶点位置
+  Vector3 widthVec = 6;  //宽度方向
+  Vector3 depthVec = 7;  //深度方向
 }
 
 //一段楼梯
 message Flight {
   string         uuid           = 1;
-  float          stepHeight     = 4;  //步高
-  StepParameters stepParameters = 5;  //踏步参数
-  float          length         = 6; //总长
-  repeated       Tread treads   = 7;  //踏板集合
-  repeated       Riser risers   = 8;  //立板集合
-  StairSide      inSide         = 9;  //内侧
+  float          stepHeight     = 4;   //步高
+  StepParameters stepParameters = 5;   //踏步参数
+  float          length         = 6;   //总长
+  repeated       Tread treads   = 7;   //踏板集合
+  repeated       Riser risers   = 8;   //立板集合
+  StairSide      inSide         = 9;   //内侧
   StairSide      outSide        = 10;  //外侧
 }
 
 //踏板
 message Tread {
-  string  uuid        = 1;
-  TreadBorder border  = 2;
-  float   index       = 3;  //索引
-  bool    isLast      = 4;  //是否为n+1步中作为楼面的最后一级
-  float   stepLength  = 5;  //步长
-  float   stepWidth   = 6;  //步宽
-  float   stepHeight  = 7;  //步高
-  bool    inheritL    = 8;  //是否继承上级步长
-  bool    inheritH    = 9;  //是否继承上级步高
-  bool    inheritW    = 10; //是否继承上级步宽
-  TreadType type      = 11; //踏板的类型
+  string      uuid       = 1;
+  TreadBorder border     = 2;
+  float       index      = 3;   //索引
+  bool        isLast     = 4;   //是否为n+1步中作为楼面的最后一级
+  float       stepLength = 5;   //步长
+  float       stepWidth  = 6;   //步宽
+  float       stepHeight = 7;   //步高
+  bool        inheritL   = 8;   //是否继承上级步长
+  bool        inheritH   = 9;   //是否继承上级步高
+  bool        inheritW   = 10;  //是否继承上级步宽
+  TreadType   type       = 11;  //踏板的类型
 }
 
 message TreadBorder {
-  Outline stepOutline = 1;  //踏板边缘轮廓
-  Outline treadOutline = 2; //分解图及3d中的实际踏板轮廓
-  repeated float inIndex = 3;
-  repeated float outIndex = 4;
+  Outline  stepOutline      = 1;  //踏板边缘轮廓
+  Outline  treadOutline     = 2;  //分解图及3d中的实际踏板轮廓
+  repeated float inIndex    = 3;
+  repeated float outIndex   = 4;
   repeated float frontIndex = 5;
-  repeated float backIndex = 6;
+  repeated float backIndex  = 6;
 }
 
 //踏步参数
@@ -337,12 +332,12 @@ message TreadParameters {
 
 //休息平台
 message Landing {
-  string uuid = 1;
-  LandingCutType type = 2;
-  repeated Tread treads = 3;
-  repeated Riser risers = 4;
-  BigColumn  oppoBigCol = 5; //对角大柱
-  BigColumn  corBigCol = 6; //转角大柱
+  string         uuid         = 1;
+  LandingCutType type         = 2;
+  repeated       Tread treads = 3;
+  repeated       Riser risers = 4;
+  BigColumn      oppoBigCol   = 5;  //对角大柱
+  BigColumn      corBigCol    = 6;  //转角大柱
 }
 
 //立板
@@ -376,7 +371,7 @@ message SmallColumn {
 //小柱参数
 message SmallColParameters {
   ObjData     source        = 1;  //模型源信息
-  ArrangeRule arrangeRule  = 2;  //排列规则
+  ArrangeRule arrangeRule   = 2;  //排列规则
   Material    material      = 3;
   string      specification = 4;  // 规格
 }
@@ -388,7 +383,7 @@ message BigColumn {
   Vector3          size     = 3;
   Vector3          rotation = 4;
   BigColParameters paras    = 5;
-  BigColumnType    type     = 6; 
+  BigColumnType    type     = 6;
 }
 
 //大柱参数
@@ -420,28 +415,28 @@ message HandrailParameters {
 
 //大梁
 message Girder {
-  string  uuid        = 1;
-  float   length      = 2;  //长度 
+  string   uuid                   = 1;
+  float    length                 = 2;  //长度 
   repeated TreadGirBorder borders = 3;
 }
 
 message TreadGirBorder {
-  repeated Edge inEdges = 1;
-  repeated Edge outEdges = 2;
-  repeated Edge inTopEdges = 3;
+  repeated Edge inEdges     = 1;
+  repeated Edge outEdges    = 2;
+  repeated Edge inTopEdges  = 3;
   repeated Edge outTopEdges = 4;
-  Vector3 dir = 5;
+  Vector3  dir              = 5;
 }
 
 //大梁参数
 message GirderParameters {
-  float      height   = 1;  //高度
-  float      depth    = 2;  //厚度
-  GirderType type     = 3;  //类型
-  Material   material = 4;
-  float      fOffsetStep = 5; //前方偏移出踏板的距离
-  float      bSuppotHeight = 6; //下方支撑高度
-  float      aboveHeight   = 7; //上方加高
+  float      height        = 1;  //高度
+  float      depth         = 2;  //厚度
+  GirderType type          = 3;  //类型
+  Material   material      = 4;
+  float      fOffsetStep   = 5;  //前方偏移出踏板的距离
+  float      bSuppotHeight = 6;  //下方支撑高度
+  float      aboveHeight   = 7;  //上方加高
 }
 
 

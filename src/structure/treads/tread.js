@@ -155,7 +155,7 @@ export class Tread extends ChildInfo {
       edge.p2.z = nextT.position.z + vArgs.height
     } else {
       edge.p1.z = this.position.z + vArgs.height
-      edge.p2.z = nextT.position.z + vArgs.height
+      edge.p2.z = (this.getNextTread()?.position.z || this.position.z + this.stepHeight) + vArgs.height
     }
     return edge
   }
@@ -276,7 +276,11 @@ export class Tread extends ChildInfo {
   adaptGirLastPois(topPois, botPois, vLast) {
     if (vLast?.poi && (!tool.isVec3Equal(vLast.poi, botPois[0]))) {
       //botPois.splice(0, 0, vLast.poi)
-      botPois[0] = vLast.poi
+      if (vLast.poi.z === 0) {
+        botPois.splice(0,0,vLast.poi)
+      } else {
+        botPois[0] = vLast.poi
+      }
     } 
     if (vLast?.topPoi && (!tool.isVec3Equal(vLast.topPoi, topPois[0]))) {
       //topPois.splice(0, 0, vLast.topPoi)

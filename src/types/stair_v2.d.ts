@@ -2,23 +2,6 @@ import * as $protobuf from "protobufjs";
 /** Namespace Types. */
 export namespace Types {
 
-    /** EdgeType enum. */
-    enum EdgeType {
-        eph = 0,
-        estraight = 1,
-        earc = 2,
-        ebeszer = 3
-    }
-
-    /** WallType enum. */
-    enum WallType {
-        wph = 0,
-        wfirst = 1,
-        wsecond = 2,
-        wboth = 3,
-        wnone = 4
-    }
-
     /** AgainstWallType enum. */
     enum AgainstWallType {
         aw_ph = 0,
@@ -27,56 +10,12 @@ export namespace Types {
         aw_right = 3
     }
 
-    /** StairType enum. */
-    enum StairType {
-        sph = 0,
-        sstright = 1,
-        sl_type = 2,
-        s_small_u_type = 3,
-        s_big_u_type = 4,
-        s_arc_type = 5
-    }
-
-    /** Side enum. */
-    enum Side {
-        si_ph = 0,
-        si_left = 1,
-        si_right = 2
-    }
-
-    /** LandingCutType enum. */
-    enum LandingCutType {
-        lct_ph = 0,
-        lct_first = 1,
-        lct_second = 2,
-        lct_third = 3,
-        lct_fourth = 4,
-        lct_fifth = 5
-    }
-
-    /** StepNumRule enum. */
-    enum StepNumRule {
-        snr_ph = 0,
-        snr_n = 1,
-        snr_n_add_1 = 2
-    }
-
-    /** NossingType enum. */
-    enum NossingType {
-        nph = 0,
-        nno = 1,
-        ncommon = 2,
-        nluxury = 3
-    }
-
-    /** ComponentType enum. */
-    enum ComponentType {
-        cph = 0,
-        cdoor = 1,
-        cwindow = 2,
-        cdoor_hole = 3,
-        cbeam = 4,
-        cpillar = 5
+    /** ArrangeRule enum. */
+    enum ArrangeRule {
+        arph = 0,
+        arrFour = 1,
+        arrThree = 2,
+        arrTwo = 3
     }
 
     /** BigColumnPosType enum. */
@@ -95,12 +34,31 @@ export namespace Types {
         bc_start = 3
     }
 
-    /** ArrangeRule enum. */
-    enum ArrangeRule {
-        arph = 0,
-        arrFour = 1,
-        arrThree = 2,
-        arrTwo = 3
+    /** ComponentType enum. */
+    enum ComponentType {
+        cph = 0,
+        cdoor = 1,
+        cwindow = 2,
+        cdoor_hole = 3,
+        cbeam = 4,
+        cpillar = 5
+    }
+
+    /** EdgeType enum. */
+    enum EdgeType {
+        eph = 0,
+        estraight = 1,
+        earc = 2,
+        ebeszer = 3
+    }
+
+    /** FlightType enum. */
+    enum FlightType {
+        fph = 0,
+        frect = 1,
+        flanding = 2,
+        fStart = 3,
+        farc = 4
     }
 
     /** GirderType enum. */
@@ -108,6 +66,73 @@ export namespace Types {
         gph = 0,
         gslab = 1,
         gsaw = 2
+    }
+
+    /** LandingCutType enum. */
+    enum LandingCutType {
+        lct_ph = 0,
+        lct_first = 1,
+        lct_second = 2,
+        lct_third = 3,
+        lct_fourth = 4,
+        lct_fifth = 5
+    }
+
+    /** NossingType enum. */
+    enum NossingType {
+        nph = 0,
+        nno = 1,
+        ncommon = 2,
+        nluxury = 3
+    }
+
+    /** Side enum. */
+    enum Side {
+        si_ph = 0,
+        si_left = 1,
+        si_right = 2
+    }
+
+    /** StairExitType enum. */
+    enum StairExitType {
+        seph = 0,
+        se_riser = 1,
+        se_hangingBoard = 2,
+        se_none = 3
+    }
+
+    /** StairType enum. */
+    enum StairType {
+        sph = 0,
+        sstright = 1,
+        sl_type = 2,
+        s_small_u_type = 3,
+        s_big_u_type = 4,
+        s_arc_type = 5
+    }
+
+    /** StartTreadShapeType enum. */
+    enum StartTreadShapeType {
+        stsph = 0,
+        sts_no = 1,
+        sts_left = 2,
+        sts_right = 3
+    }
+
+    /** StartTreadType enum. */
+    enum StartTreadType {
+        stph = 0,
+        st_el = 1,
+        st_el_2 = 2,
+        st_rr = 3,
+        st_rr_2 = 4
+    }
+
+    /** StepNumRule enum. */
+    enum StepNumRule {
+        snr_ph = 0,
+        snr_n = 1,
+        snr_n_add_1 = 2
     }
 
     /** TreadType enum. */
@@ -120,29 +145,13 @@ export namespace Types {
         tArc = 5
     }
 
-    /** StartTreadType enum. */
-    enum StartTreadType {
-        stph = 0,
-        st_el = 1,
-        st_el_2 = 2,
-        st_rr = 3,
-        st_rr_2 = 4
-    }
-
-    /** StartTreadShapeType enum. */
-    enum StartTreadShapeType {
-        stsph = 0,
-        sts_no = 1,
-        sts_left = 2,
-        sts_right = 3
-    }
-
-    /** StairExitType enum. */
-    enum StairExitType {
-        seph = 0,
-        se_riser = 1,
-        se_hangingBoard = 2,
-        se_none = 3
+    /** WallType enum. */
+    enum WallType {
+        wph = 0,
+        wfirst = 1,
+        wsecond = 2,
+        wboth = 3,
+        wnone = 4
     }
 
     /** Properties of a Vector3. */
@@ -482,216 +491,6 @@ export namespace Types {
 
         /**
          * Converts this Outline to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-    }
-
-    /** Properties of a Border. */
-    interface IBorder {
-
-        /** Border out */
-        out?: (Types.ISideEdges[]|null);
-
-        /** Border in */
-        "in"?: (Types.ISideEdges[]|null);
-
-        /** Border front */
-        front?: (Types.ISideEdges[]|null);
-
-        /** Border back */
-        back?: (Types.ISideEdges[]|null);
-    }
-
-    /** Represents a Border. */
-    class Border implements IBorder {
-
-        /**
-         * Constructs a new Border.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: Types.IBorder);
-
-        /** Border out. */
-        public out: Types.ISideEdges[];
-
-        /** Border in. */
-        public in: Types.ISideEdges[];
-
-        /** Border front. */
-        public front: Types.ISideEdges[];
-
-        /** Border back. */
-        public back: Types.ISideEdges[];
-
-        /**
-         * Creates a new Border instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns Border instance
-         */
-        public static create(properties?: Types.IBorder): Types.Border;
-
-        /**
-         * Encodes the specified Border message. Does not implicitly {@link Types.Border.verify|verify} messages.
-         * @param message Border message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: Types.IBorder, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified Border message, length delimited. Does not implicitly {@link Types.Border.verify|verify} messages.
-         * @param message Border message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: Types.IBorder, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a Border message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns Border
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.Border;
-
-        /**
-         * Decodes a Border message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns Border
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.Border;
-
-        /**
-         * Verifies a Border message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a Border message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns Border
-         */
-        public static fromObject(object: { [k: string]: any }): Types.Border;
-
-        /**
-         * Creates a plain object from a Border message. Also converts values to other types if specified.
-         * @param message Border
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: Types.Border, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this Border to JSON.
-         * @returns JSON object
-         */
-        public toJSON(): { [k: string]: any };
-    }
-
-    /** Properties of a SideEdges. */
-    interface ISideEdges {
-
-        /** SideEdges edges */
-        edges?: (Types.IEdge[]|null);
-
-        /** SideEdges totalEdge */
-        totalEdge?: (Types.IEdge|null);
-
-        /** SideEdges girders */
-        girders?: (Types.IGirder[]|null);
-    }
-
-    /** Represents a SideEdges. */
-    class SideEdges implements ISideEdges {
-
-        /**
-         * Constructs a new SideEdges.
-         * @param [properties] Properties to set
-         */
-        constructor(properties?: Types.ISideEdges);
-
-        /** SideEdges edges. */
-        public edges: Types.IEdge[];
-
-        /** SideEdges totalEdge. */
-        public totalEdge?: (Types.IEdge|null);
-
-        /** SideEdges girders. */
-        public girders: Types.IGirder[];
-
-        /**
-         * Creates a new SideEdges instance using the specified properties.
-         * @param [properties] Properties to set
-         * @returns SideEdges instance
-         */
-        public static create(properties?: Types.ISideEdges): Types.SideEdges;
-
-        /**
-         * Encodes the specified SideEdges message. Does not implicitly {@link Types.SideEdges.verify|verify} messages.
-         * @param message SideEdges message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encode(message: Types.ISideEdges, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Encodes the specified SideEdges message, length delimited. Does not implicitly {@link Types.SideEdges.verify|verify} messages.
-         * @param message SideEdges message or plain object to encode
-         * @param [writer] Writer to encode to
-         * @returns Writer
-         */
-        public static encodeDelimited(message: Types.ISideEdges, writer?: $protobuf.Writer): $protobuf.Writer;
-
-        /**
-         * Decodes a SideEdges message from the specified reader or buffer.
-         * @param reader Reader or buffer to decode from
-         * @param [length] Message length if known beforehand
-         * @returns SideEdges
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): Types.SideEdges;
-
-        /**
-         * Decodes a SideEdges message from the specified reader or buffer, length delimited.
-         * @param reader Reader or buffer to decode from
-         * @returns SideEdges
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): Types.SideEdges;
-
-        /**
-         * Verifies a SideEdges message.
-         * @param message Plain object to verify
-         * @returns `null` if valid, otherwise the reason why it is not
-         */
-        public static verify(message: { [k: string]: any }): (string|null);
-
-        /**
-         * Creates a SideEdges message from a plain object. Also converts values to their respective internal types.
-         * @param object Plain object
-         * @returns SideEdges
-         */
-        public static fromObject(object: { [k: string]: any }): Types.SideEdges;
-
-        /**
-         * Creates a plain object from a SideEdges message. Also converts values to other types if specified.
-         * @param message SideEdges
-         * @param [options] Conversion options
-         * @returns Plain object
-         */
-        public static toObject(message: Types.SideEdges, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-        /**
-         * Converts this SideEdges to JSON.
          * @returns JSON object
          */
         public toJSON(): { [k: string]: any };

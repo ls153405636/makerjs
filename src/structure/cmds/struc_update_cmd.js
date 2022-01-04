@@ -27,11 +27,7 @@ export class StrucUpdateCmd extends Command {
   redo() {}
 
   setSelecte() {
-    if (
-      StructConfig.SELECTED &&
-      this.info &&
-      StructConfig.SELECTED.uuid === this.info.uuid
-    ) {
+    if (StructConfig.SELECTED && this.info && StructConfig.SELECTED.uuid === this.info.uuid) {
       let core = new Core()
       core.execute(
         new Command(core.cmds.SelecteCmd, {

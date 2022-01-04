@@ -22,7 +22,7 @@ export class UtilVec2 {
   }
 
   /**
-   *threejs中xy轴旋转，默认方向为逆时针，但xy到xz平面发生翻转，因此此旋转默认的方向为xz平面的逆时针
+   *threejs中xy轴旋转，默认方向为逆时针，但xy到xz平面发生翻转，因此此旋转默认正的方向为xz平面的顺时针
    *
    * @param {*} vAngle
    * @returns

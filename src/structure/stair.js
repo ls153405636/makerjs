@@ -1,7 +1,6 @@
 import { Info } from './info'
 import { Default, StructConfig } from './config'
 import { Types } from '../types/stair_v2'
-import { Flight } from './flights/flight'
 import tool from './tool'
 import { Girder } from './girder'
 import { Landing } from './flights/landing'
@@ -14,6 +13,7 @@ import { StairSide } from './toolComp/stair_side'
 import { D2Config } from '../d2/config'
 import { D3Config } from '../d3/d3_config'
 import { HangingBoard } from './hanging_board'
+import { Flight } from './flights/flight'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -32,10 +32,8 @@ export class Stair extends Info {
     this.againstWallType = vAgainstWall
     this.startBeamDepth = 0
     this.exitBeamDepth = 0
-    this.startMoveT = 0
-    this.startMoveR = 0
-    this.startMoveB = 0
-    this.startMoveL = 0
+    this.stairMoveT = 0
+    this.stairMoveR = 0
     this.stepNum = Default.STEP_NUM
     this.stepNumRule = Default.STEP_NUM_RULE
     this.realStepNum = this.stepNum - this.stepNumRule + 1
@@ -97,6 +95,7 @@ export class Stair extends Info {
       }),
       material: Default.MATERIAL
     })
+    this.initStair = true
     this.inSide = new StairSide('in')
     this.outSide = new StairSide('out')
   }
@@ -112,32 +111,31 @@ export class Stair extends Info {
     this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
     this.startStepNum = this.startFlight?.stepNum || 0
     this.computeSideOffset()
-    if (this.flights.length) {
-      this.computeStepNum()
-      this.computeStepHeight()
-      this.updateFlights()
-    } else {
-      this.initFlights()
+    if (!this.segments.length) {
+      this.initSegments()
     }
-    this.updateStartFlight()
-    this.updateLandings()
-    this.updateSegments()
     this.computeSize()
     this.computePosition()
+    this.computeStepNum()
+    this.computeStepHeight()
+    this.updateStartHeight()
     this.updateStairPositon()
+    this.updateSegments()
+    if (!this.startFlight && this.initStair) {
+      this.addStartFlight()
+    }
+    this.updateStartFlight()
     this.updatehangingBoard()
     this.updateGirders()
     this.updateHandrails()
     this.updateSmallColumns()
     this.updateBigColumns()
     this.updateCanvas('Stair')
+    this.initStair = false
   }
-  
-  /**初始化楼梯段 */
-  initFlights() {}
 
-  /** 更新楼梯段*/
-  updateFlights() {}
+  /**初始化楼梯段结构 */
+  initSegments() {}
 
   /** 根据楼梯段、起步踏、休息平台等计算总步数*/
   computeStepNum() {
@@ -150,16 +148,26 @@ export class Stair extends Info {
     this.realStepNum = this.stepNum - this.stepNumRule + 1
   }
 
+  /**
+   *每次楼梯整体更新前，先更新每段楼梯的起始高度
+   *
+   * @memberof Stair
+   */
+  updateStartHeight() {
+    let startHeight = this.startFlight?.getEndHeight() || 0
+    for (const f of this.segments) {
+      f.setStartHeight(startHeight)
+      startHeight = f.getEndHeight()
+    }
+  }
+
   /** 根据楼梯段、休息平台计算楼梯尺寸（不包含起步踏）*/
   computeSize() {}
 
   /** 根据楼梯尺寸及楼梯类型计算楼梯位置*/
   computePosition() {}
 
-  /** 更新休息平台*/
-  updateLandings() {}
-
-  /**更新楼梯分段 */
+  /**更新楼梯段结构 */
   updateSegments() {}
 
   delInfo() {
@@ -172,10 +180,8 @@ export class Stair extends Info {
 
   /**移动整个楼梯 */
   updateStairPositon() {
-    this.position.y -= this.startMoveT
-    this.position.x += this.startMoveR
-    // this.position.y += this.startMoveB
-    // this.position.x -= this.startMoveL
+    this.position.y -= this.stairMoveT
+    this.position.x += this.stairMoveR
   }
   /**计算步高 */
   computeStepHeight() {
@@ -218,38 +224,21 @@ export class Stair extends Info {
   }
 
   /**
-   * 创建一个起步楼梯段
-   * @returns StartFlight
+   * 添加起步楼梯段
    */
-  createStartFlight() {
-    let f1 = this.flights[0]
-    let firstTread = f1.treads[0]
-    let pos = firstTread.position
-    let gArgs = this.girderParameters
-    if (gArgs.type === Types.GirderType.gslab) {
-      pos = new Edge().setByVec(pos, f1.lVec, -gArgs.depth).p2
+  addStartFlight() {
+    let firstF = this.segments[0]
+    let vParent = this
+    let vStepWidth = firstF.stepWidth || 260
+    let vStepHeight = this.stepHeight
+    let vClock = firstF.clock
+    this.startFlight = new StartFlight({vParent, vStepWidth, vStepHeight, vClock})
+    if(firstF.type === Types.FlightType.frect && firstF.realStepNum > 1) {
+      let firstT = firstF.treads[0]
+      firstF.updateItem(firstF.stepNum - 1, 'stepNum')
+      firstF.updateItem(firstF.length - (firstT?.stepWidth || firstF.stepWidth), 'length')
     }
-    return new StartFlight({vParent:this,
-                            vLVec:firstTread.lVec,
-                            vWVec:firstTread.wVec,
-                            vPos:new Types.Vector3(pos),
-                            vStepLength:firstTread.stepLength,
-                            vStepWidth:firstTread.stepWidth,
-                            vStepHeight:firstTread.stepHeight,
-                            vClock:f1.clock})
-  }
-
-  /**
-   * 将起步楼梯段添加到本套楼梯中
-   * @param {StartFlight} vStartFlight 
-   */
-  addStartFlight(vStartFlight) {
-    let f1 = this.flights[0]
-    let firstTread = f1.treads[0]
-    f1.updateItem(f1.stepNum - 1, 'stepNum')
-    f1.updateItem(f1.length - firstTread.stepWidth, 'length')
-    this.flights.push(vStartFlight)
-    this.startFlight = vStartFlight
+    this.flights.push(this.startFlight)
     this.rebuild()
   }
 
@@ -257,9 +246,9 @@ export class Stair extends Info {
    * 移除起步楼梯段
    */
   removeStartFlight() {
-    let f1 = this.flights[0]
-    f1.updateItem(f1.stepNum + 1, 'stepNum')
-    f1.updateItem(f1.length + this.startFlight.stepWidth, 'length')
+    let firstF = this.segments[0]
+    firstF.updateItem(firstF.stepNum + 1, 'stepNum')
+    firstF.updateItem(firstF.length + this.startFlight.stepWidth, 'length')
     this.startFlight = null
     this.flights.pop()
     this.rebuild()
@@ -268,14 +257,11 @@ export class Stair extends Info {
   /**更新起步踏 */
   updateStartFlight() {
     if (this.startFlight) {
-      let f1 = this.flights[0]
-      let pos = new Edge().setByVec(f1.pos, f1.wVec, f1.length).p2
-      pos = new Edge().setByVec(pos, f1.lVec, -this.girOffset).p2
-      this.startFlight.rebuildByParent({vPos:pos, 
-                                        vLVec:f1.lVec,
-                                        vWVec:f1.wVec,
-                                        vStepLength: f1.stepLength,
-                                        vClock:f1.clock})
+      let firstF = this.flights[0]
+      let {pos:vPos, lVec:vLVec, wVec:vWVec} = firstF.getStartPosVec()
+      vPos = new Edge().setByVec(vPos, vLVec, -this.girOffset).p2
+      let vStepLength = firstF.stepLength
+      this.startFlight.rebuildByParent({vPos, vLVec, vWVec, vStepLength})
       if (this.startFlight.treads.length === 1) {
         this.bigColParameters.posType = Types.BigColumnPosType.bcp_first
       } else {
@@ -346,26 +332,16 @@ export class Stair extends Info {
   getArgs() {
     let f = tool.getItemFromOptions
     let args = {
-      startMoveT: {
+      stairMoveT: {
         name: '上移',
-        value: this.startMoveT,
+        value: this.stairMoveT,
         type: 'input',
       },
-      startMoveR: {
+      stairMoveR: {
         name: '右移',
-        value: this.startMoveR,
+        value: this.stairMoveR,
         type: 'input',
       },
-      // startMoveB: {
-      //   name: '下移',
-      //   value: this.startMoveB,
-      //   type: 'input',
-      // },
-      // startMoveL: {
-      //   name: '左移',
-      //   value: this.startMoveL,
-      //   type: 'input',
-      // },
       startBeamDepth: {
         name: '起步梁厚',
         value: this.startBeamDepth,
@@ -377,16 +353,16 @@ export class Stair extends Info {
         type: 'input',
       },
       stepHeightD: {name:'步高', value:this.stepHeight, type:'input', disabled:true},
+      exitType: {name:'出口类型', 
+                value:f(this.exitType, Stair.EXIT_TYPE_OPTIONS), 
+                type:'select', 
+                options:[...Stair.EXIT_TYPE_OPTIONS]},
       stepNumRule: {
         name: '步数规则',
         value: f(this.stepNumRule, Flight.NUM_RULE_OPTIONS),
         type: 'select',
         options: Flight.NUM_RULE_OPTIONS,
       },
-      exitType: {name:'出口类型', 
-                value:f(this.exitType, Stair.EXIT_TYPE_OPTIONS), 
-                type:'select', 
-                options:[...Stair.EXIT_TYPE_OPTIONS]},
       stepNum: { name: '步数', value: this.stepNum, type: 'input' },
       inSide:{name:'内侧参数', type:'group', value:this.inSide.getArgs()},
       outSide:{name:'外侧参数', type:'group', value:this.outSide.getArgs()},
@@ -496,8 +472,51 @@ export class Stair extends Info {
         lastF.updateItem(lastF.length + Default.HANG_BOARD_DEPTH, 'length')
       }
       this.exitType = vValue
+    } else if (vSecondKey && ['model', 'material'].includes(vSecondKey)) {
+      console.log(1)
+    } else if (vKey === 'stepNum') {
+      let diff = this.stepNum - vValue
+      this.updateFlightStepNum(diff)
+    } else if (vKey === 'stepNumRule') {
+      this.segments[this.segments.length - 1].updateItem(vValue, vKey, vSecondKey)
     } else {
       super.updateItem(vValue, vKey, vSecondKey)
+    }
+  }
+
+  updateFlightStepNum (vDiff) {
+    let absDiff = Math.abs(vDiff)
+    let unit = vDiff / absDiff
+    let modifiable = true
+    let stepWidthMin = 250
+    let stepWidthMax = 350
+    while (absDiff > 0) {
+      for (let i = 0; i < this.flights.length; i++) {
+        let f = this.flights[i]
+        if (f.type !== Types.FlightType.fStart && absDiff > 0) {
+          if (f.stepNum > 1) {
+            let stepWidth = f.length / (f.realStepNum - unit)
+            if (unit > 0 && stepWidth > stepWidthMax) {
+              modifiable = false
+            } else if (unit < 0 && stepWidth < stepWidthMin) {
+              modifiable = false
+            } else {
+              f.updateItem(f.stepNum - unit, 'stepNum')
+              absDiff--
+              modifiable = true
+            }
+          } else {
+            modifiable = false
+          }
+        }
+      }
+      if ((!modifiable) && absDiff > 0) {
+        stepWidthMax += 50
+        stepWidthMin -= 50
+        if (stepWidthMin < 50 || stepWidthMax > 600) {
+          break
+        }
+      }
     }
   }
 
@@ -523,6 +542,20 @@ export class Stair extends Info {
     return {offset, zCoord}
   }
 
+  /**
+   *清空楼梯踏板，在步数发生改变时调用
+   *
+   * @memberof Stair
+   */
+  clearTreads() {
+    if (this.startFlight) {
+      this.startFlight.clearTreads()
+    }
+    for (const f of this.segments) {
+      f.clearTreads()
+    }
+  }
+
   updateGirders () {
     this.girders = []
     this.updateSideGirder(this.inSide)
@@ -535,7 +568,7 @@ export class Stair extends Info {
    */
   updateSideGirder (vSide) {
     for (let i = 0; i < this.flights.length; i++) {
-      if (this.flights[i].type === 'start') {
+      if (this.flights[i].type === Types.FlightType.fStart) {
         continue
       }
       let lastL = this.landings[i - 1]
