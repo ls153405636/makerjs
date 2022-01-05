@@ -32,10 +32,11 @@
     </el-card>
   </div>
 </template>
-o
 <script>
 import { Command } from '../../../common/command'
 import { Core } from '../../../common/core'
+import { D2Config } from '../../../d2/config'
+import { StructConfig } from '../../../structure/config'
 import rightArgs from './Args.vue'
 export default {
   name: 'rightWall',
@@ -47,8 +48,19 @@ export default {
   },
   methods: {
     addComponent(vType) {
-      let core = new Core()
-      core.execute(new Command(core.cmds.EleAddCmd, { type: vType }))
+      let holeId
+      for(let value of D2Config.WIDGETS.values()) {
+        if (value.getWidgetType() === undefined) {
+          holeId = value.uuid
+        }
+      }
+      let holeInfo = StructConfig.INFOS.get(holeId)
+      if (holeInfo.floorHeight === 0 || holeInfo.floorHeight === '') {
+        this.$message.warning('请完善洞口数据！')
+      }else {
+        let core = new Core()
+        core.execute(new Command(core.cmds.EleAddCmd, { type: vType }))
+      }
       document.getElementById('door').blur()
       document.getElementById('window').blur()
       document.getElementById('door-hole').blur()

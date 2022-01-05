@@ -465,7 +465,6 @@ export class Stair extends BaseWidget {
     }else {
       lastF = this.flights[this.flights.length - 1]
     }
-
     let lastTread
     if (stepNumRule === Types.StepNumRule.snr_n_add_1) {
       lastTread = lastF.tread[lastF.tread.length - 2]

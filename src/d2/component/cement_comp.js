@@ -9,6 +9,7 @@ import Victor from 'victor'
 import wBeam from '../../assets/wbeam.png'
 import wPillar from '../../assets/wpillar.png'
 import { StructConfig } from '../../structure/config'
+import { Edge } from '../../utils/edge'
 
 /**
  * 梁、柱，房间中的水泥结构部件
@@ -35,7 +36,6 @@ export class CementComp extends BaseWidget {
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.rotationY = vPB.rotation.y
-    this.wallDepth = vPB.wallDepth
     this.wallLength = vPB.wallLength
     let compData = StructConfig.INFOS.get(this.uuid)
     this.wallEndExtend = compData.parent.endExtend
@@ -49,6 +49,7 @@ export class CementComp extends BaseWidget {
     this.addDimension()
     this.addEvent()
   }
+
 
   /**
    * 建议方法，根据宽深属性绘制矩形，然后设置位置和角度
@@ -175,22 +176,23 @@ export class CementComp extends BaseWidget {
     // 标注线绘制
     let comp = StructConfig.INFOS.get(this.uuid)
     const wallEndExtend = comp.parent.endExtend
-    let wallWidth = comp.width
+    let wallWidth = new Edge(comp.parent.holeEdge).getLength()
+    let wallDepth = comp.parent.depth
     // 标注线点计算
     const { positionX, positionY, rotationY, disToStart, disToEnd } = this
     const offSet = new Victor(8, 8) // 偏移距离
     const arrow = new Victor(2, 2)
-    const p1 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
-    const p2 = new Victor(this.width / 2, -this.depth / 2 -this.wallDepth / D2Config.SCREEN_RATE)
+    const p1 = new Victor(-this.width / 2, -this.depth / 2 - wallDepth / D2Config.SCREEN_RATE)
+    const p2 = new Victor(this.width / 2, -this.depth / 2 -wallDepth / D2Config.SCREEN_RATE)
     const p3 = new Victor(this.width / 2, -this.depth / 2)
     const p4 = new Victor(this.width / 2, this.depth / 2)
 
-    const p5 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
-    const p6 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE).subtractX(
+    const p5 = new Victor(-this.width / 2, -this.depth / 2 - wallDepth / D2Config.SCREEN_RATE)
+    const p6 = new Victor(-this.width / 2, -this.depth / 2 - wallDepth / D2Config.SCREEN_RATE).subtractX(
       new Victor(disToStart / D2Config.SCREEN_RATE, 0)
     )
-    const p7 = new Victor(this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE)
-    const p8 = new Victor(-this.width / 2, -this.depth / 2 - this.wallDepth / D2Config.SCREEN_RATE).addX(
+    const p7 = new Victor(this.width / 2, -this.depth / 2 - wallDepth / D2Config.SCREEN_RATE)
+    const p8 = new Victor(-this.width / 2, -this.depth / 2 - wallDepth / D2Config.SCREEN_RATE).addX(
       new Victor((this.wallLength - disToStart) / D2Config.SCREEN_RATE, 0)
     )
 
@@ -257,7 +259,6 @@ export class CementComp extends BaseWidget {
       fontSize: 32,
       fill: 0x000000,
     })
-    
     compLineText1.scale.set(0.25)
     compLineText1.anchor.set(0.5, 0.5)
     compLineText1.position.set(0, newP1.y - 4)
@@ -265,10 +266,17 @@ export class CementComp extends BaseWidget {
     // 标注线
     let compLine = new PIXI.Graphics()
     compLine.lineStyle(1, 0x000000, 1, 0.5, true)
-
-    if (this.wallLength - wallEndExtend === wallWidth) {
-      compLineText1.visible = false
-      // return
+    if (this.wallLength - wallEndExtend === wallWidth || wallEndExtend === 0) {
+      if (this.type === 4) {
+        compLineText1.visible = false
+      }else {
+        compLine.moveTo(newP1.x, newP1.y)
+        compLine.lineTo(newP2.x, newP2.y)
+        compLine.moveTo(newP1T.x, newP1T.y)
+        compLine.lineTo(newP1B.x, newP1B.y)
+        compLine.moveTo(newP2T.x, newP2T.y)
+        compLine.lineTo(newP2B.x, newP2B.y)
+      }
     } else {
       // 宽度标注线
       compLine.moveTo(newP1.x, newP1.y)
@@ -339,13 +347,12 @@ export class CementComp extends BaseWidget {
       fontSize: 32,
       fill: 0x000000,
     })
-    console.log(this)
     if (disToStart === 0) {
       compLineText3.visible = false
     } else {
       compLineText3.visible = true
     }
-    if (disToEnd === 0) {
+    if (disToEnd === 0 || this.type === 4) {
       compLineText4.visible = false
     } else {
       compLineText4.visible = true

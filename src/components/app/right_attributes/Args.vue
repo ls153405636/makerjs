@@ -28,6 +28,7 @@
           v-model="arg.value.value"
           :label="arg.value.label"
           @change="updateArgs($event, arg.value.value, index, arg.type)"
+          :disabled="arg.disabled"
         >
           <el-option
             v-for="item in arg.options"
