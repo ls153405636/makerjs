@@ -426,6 +426,10 @@ export class StartFlight extends StraightFlight{
     }
   }
 
+  createGirderRoute() {
+    return []
+  }
+
   createHandEdges ({vSide, vArgs}) {
     let {inEdges, outEdges} = this.createHandRouteEdges(vArgs)
     if (vSide === 'in') {

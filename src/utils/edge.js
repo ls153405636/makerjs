@@ -37,7 +37,7 @@ export class Edge {
     this.normal = null
   }
 
-  getPois() {
+  getPois(vDiv = 12) {
     let pois = []
     if (this.type === Types.EdgeType.estraight) {
       return [this.getP1PB(), this.getP2PB()]
@@ -50,19 +50,10 @@ export class Edge {
         path.moveTo(0, 0)
         path.arc(this.position.x, this.position.y, this.radius, this.startAngle, this.endAngle, !this.isClockwise)
       }
-      let points_2d = path.getPoints()
-      let gap = 1
-      let i = 0
-      for (; i < points_2d.length; i = i + gap) {
-        let p = points_2d[i]
+      let points_2d = path.getPoints(vDiv)
+      for(const p of points_2d) {
         pois.push(new Types.Vector3({x:p.x, y:p.y, z: this.zCoord}))
       }
-      if ( i < points_2d.length - 1 + gap) {
-        pois.push(new Types.Vector3({x:points_2d[points_2d.length - 1].x, y:points_2d[points_2d.length - 1].y, z: this.zCoord}))
-      }
-      // for(const p of points_2d) {
-      //   pois.push(new Types.Vector3({x:p.x, y:p.y, z: this.zCoord}))
-      // }
     }
     return pois
   }
@@ -130,13 +121,13 @@ export class Edge {
    * @memberof Edge
    */
   getP1Vec() {
-    let vec = new THREE.Vector2().subVectors(this.position, this.p1)
+    let vec = new THREE.Vector2().subVectors(this.position, this.p1).normalize()
     return vec
   }
 
   /**同上 */
   getP2Vec() {
-    let vec = new THREE.Vector2().subVectors(this.position, this.p2)
+    let vec = new THREE.Vector2().subVectors(this.position, this.p2).normalize()
     return vec
   }
 
@@ -182,6 +173,31 @@ export class Edge {
   }
 
   /**
+   *只针对弧形边，获取p1出的切线方向
+   *切线方向为弧线反方向
+   * @memberof Edge
+   */
+  getP1Normal() {
+    let p1Vec = this.getP1Vec()
+    //弧线为顺时针时，此法线需顺时针旋转，映射到threejs的xy平面，即变为逆时针旋转
+    let angle = this.isClockwise ? Math.PI / 2 : -Math.PI / 2
+    let p1Nor = p1Vec.rotateAround(Edge.center, angle).normalize()
+    return p1Nor
+  }
+
+  /**
+   *同上
+   *切线方向为弧线正方向
+   * @memberof Edge
+   */
+  getP2Normal() {
+    let p2Vec = this.getP2Vec()
+    let angle = this.isClockwise ? -Math.PI / 2 : Math.PI / 2
+    let p2Nor = p2Vec.rotateAround(Edge.center, angle).normalize()
+    return p2Nor
+  }
+
+  /**
    * 通过偏移获得新Edge
    * @param {Number} vDis 偏移的距离
    * @param {boolean} vPlus 是否为法线方向偏移，true为法线方向，false为法线反方向
@@ -219,35 +235,23 @@ export class Edge {
     } else {
       this.radius = vPlus ? this.radius - vDis : this.radius + vDis
     }
-    let p1Vec = new THREE.Vector2().subVectors(this.p1, pos)
-    let p2Vec = new THREE.Vector2().subVectors(this.p2, pos)
+    let p1Vec = new THREE.Vector2().subVectors(this.p1, this.position).normalize()
+    let p2Vec = new THREE.Vector2().subVectors(this.p2, this.position).normalize()
     this.p1 = this.position.clone().addScaledVector(p1Vec, this.radius)
     this.p2 = this.position.clone().addScaledVector(p2Vec, this.radius)
   }
 
   /**
    * 从p1方向将边延长
-   * 弧线延长目前只应用于弧形踏板，原理为从p1点处，将半径延切线方向平移，得到与圆的交点，即为新的p1
    * @param {Number} vDis 
    * @returns {Types.Edge}
    */
   extendP1(vDis) {
-    if (this.type === Types.EdgeType.earc) {
-      let angleOffset = Math.sinh(vDis/this.radius)
-      if (this.isClockwise) {
-        this.startAngle -= angleOffset
-      } else {
-        this.startAngle += angleOffset
-      }
-      let vec = new THREE.Vector2(1, 0).rotateAround(Edge.center, this.startAngle).normalize()
-      this.p1 = this.position.clone().addScaledVector(vec, this.radius)
-    } else {
-      let vec = this.getVec()
-      vec.negate()
-      let length = this.getLength()
-      this.p1 = this.p2.clone().addScaledVector(vec, length + vDis)
-      this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
-    }
+    let vec = this.getVec()
+    vec.negate()
+    let length = this.getLength()
+    this.p1 = this.p2.clone().addScaledVector(vec, length + vDis)
+    this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
     return this.writePB()
   }
 
@@ -257,21 +261,32 @@ export class Edge {
    * @returns {Types.Edge}
    */
   extendP2(vDis) {
-    if (this.type === Types.EdgeType.earc) {
-      let angleOffset = Math.sinh(vDis/this.radius)
-      if (this.isClockwise) {
-        this.endAngle += angleOffset
-      } else {
-        this.endAngle -= angleOffset
-      }
-      let vec = new THREE.Vector2(1, 0).rotateAround(Edge.center, this.endAngle).normalize()
-      this.p2 = this.position.clone().addScaledVector(vec, this.radius)
-    } else {
-      let vec = this.getVec()
-      let length = this.getLength()
-      this.p2 = this.p1.clone().addScaledVector(vec, length + vDis)
-      this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
-    }
+    let vec = this.getVec()
+    let length = this.getLength()
+    this.p2 = this.p1.clone().addScaledVector(vec, length + vDis)
+    this.length = new THREE.Vector2().subVectors(this.p2, this.p1).length()
+    return this.writePB()
+  }
+
+  /**
+   *针对弧线边，从p1方向转过角度
+   *
+   * @param {*} vAngle
+   * @memberof Edge
+   */
+  rotateP1(vAngle) {
+    let angle = this.isClockwise ? -vAngle : vAngle
+    this.startAngle += angle
+    let p1Vec = new THREE.Vector2(1, 0).rotateAround(Edge.center, this.startAngle)
+    this.p1 = new Edge().setByVec(this.position, p1Vec, this.radius).p2
+    return this.writePB()
+  }
+
+  rotateP2(vAngle) {
+    let angle = this.isClockwise ? vAngle : -vAngle
+    this.endAngle += angle
+    let p2Vec = new THREE.Vector2(1, 0).rotateAround(Edge.center, this.endAngle)
+    this.p2 = new Edge().setByVec(this.position, p2Vec, this.radius).p2
     return this.writePB()
   }
 
@@ -366,6 +381,14 @@ export class Edge {
     return new Types.Vector3({
       x:this.fixed(this.p2.x),
       y:this.fixed(this.p2.y),
+      z:this.fixed(this.zCoord)
+    })
+  }
+
+  getPositionPB() {
+    return new Types.Vector3({
+      x:this.fixed(this.position.x),
+      y:this.fixed(this.position.y),
       z:this.fixed(this.zCoord)
     })
   }

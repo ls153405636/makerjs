@@ -31,11 +31,11 @@ export function clear() {
  * @param {Types.Project} vPB 
  */
 export function importProject(vPB) {
-  vPB.hole && new Hole(vPB.hole).addToScene()
+  // vPB.hole && new Hole(vPB.hole).addToScene()
 
-  for (const w of vPB.walls) {
-    new Wall(w).addToScene()
-  }
+  // for (const w of vPB.walls) {
+  //   new Wall(w).addToScene()
+  // }
 
   vPB.stair && new Stair(vPB.stair).addToScene()
 }

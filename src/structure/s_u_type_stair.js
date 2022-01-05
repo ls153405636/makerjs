@@ -148,7 +148,7 @@ export class SmallUTypeStair extends UTypeStair {
     this.l2.rebuildByParent({vIndex:2, vLastStepWidth, vNextStepWidth,
                             vTreadIndex:this.startStepNum + this.f1.stepNum + this.l1.stepNum, 
                             vBorder:border2,})
-    this.l1.updateCorBigCol()
+    //this.l1.updateCorBigCol()
   }
   
   /**

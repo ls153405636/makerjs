@@ -19,6 +19,7 @@ export class Tread extends ChildInfo {
     this.inheritL = false
     this.position = new Types.Vector3()
     this.clock = true
+    this.wVec = new Types.Vector3()
     /**@type {Types.TreadBorder} */
     this.border = null
   }

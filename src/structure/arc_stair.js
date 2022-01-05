@@ -5,6 +5,7 @@ import { ArcFlight } from "./flights/arc_flight";
 import { Stair } from "./stair";
 import {UtilVec2} from '../utils/util_vec_2'
 import { RectFlight } from "./flights/rect_flight";
+import { Girder } from "./girder";
 
 
 export class ArcStair extends Stair {
@@ -52,7 +53,7 @@ export class ArcStair extends Stair {
     this.updateSegments()
     this.updateStartFlight()
     // this.updatehangingBoard()
-    // this.updateGirders()
+    this.updateGirders()
     // this.updateHandrails()
     // this.updateSmallColumns()
     // this.updateBigColumns()
@@ -184,5 +185,29 @@ export class ArcStair extends Stair {
     this.arcFlight && this.flights.push(this.arcFlight)
     this.exitFlight && this.flights.push(this.exitFlight)
     this.startFlight && this.flights.push(this.startFlight)
+  }
+
+  updateSideGirder (vSide) {
+    let borders = [], inLast = null, outLast = null
+    for (let i = 0; i < this.segments.length; i++) {
+      let f = this.segments[i]
+      let rst = f.createGirderRoute({vSide:vSide.sideName, 
+                                    vArgs:this.girderParameters, 
+                                    vInLast:inLast,
+                                    vOutLast:outLast})
+      let border = rst[rst.length - 1]
+      inLast = border ? {poi:border.inEdges[border.inEdges.length - 1].p2,
+                        topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2} : null
+      outLast = border ? {poi:border.outEdges[border.outEdges.length - 1].p2,
+                          topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2} : null
+      borders = borders.concat(rst)
+      // if (vSide.girders[i]) {
+      //   vSide.girders[i].rebuildByParent(borders)
+      // } else {
+      //   vSide.girders[i] = new Girder(this, borders)
+      // }
+      let girder = new Girder(this, borders)
+      this.girders.push(girder)
+    }
   }
 }

@@ -151,34 +151,6 @@ export class RectFlight extends StraightFlight {
   }
 
   /**
-   * 根据某一侧创建出大梁的踏板单位轮廓集合
-   * @param {string} vSide 
-   * @param {Types.GirderParameters} vArgs 
-   */
-  createGirderRoute({vSide, vArgs, vInLast, vOutLast}) {
-    let borders = []
-    let inLast = vInLast, outLast = vOutLast
-    for (let i = 0; i < this.treads.length; i++) {
-      if (this.treads[i].isLast) {
-        continue
-      }
-      let border = this.treads[i].getGirBorder(vSide, vArgs, i === 0 && (!inLast), inLast, outLast)
-      if (border) {
-        inLast = {
-          poi:border.inEdges[border.inEdges.length - 1].p2,
-          topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2
-        }
-        outLast = {
-          poi:border.outEdges[border.outEdges.length - 1].p2,
-          topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2
-        }
-        borders.push(border)
-      }
-    } 
-    return borders
-  }
-
-  /**
    *
    *创建某一侧的扶手路径边集
    * @param {Object} arguments[0]

@@ -25,8 +25,8 @@ export class Edge3 extends Edge {
     return vec
   }
 
-  getPois() {
-    let pois = super.getPois()
+  getPois(vDiv = 12) {
+    let pois = super.getPois(vDiv)
     let zStep = (this.zCoord2 - this.zCoord1) / (pois.length-1)
     for (let i = 0; i < pois.length; i++) {
       pois[i].z = this.zCoord1 + zStep * i

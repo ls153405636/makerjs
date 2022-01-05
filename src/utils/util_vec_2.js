@@ -8,8 +8,18 @@ export class UtilVec2 {
    * @memberof Vector2
    */
   constructor(vVector3) {
-    this.vec = new THREE.Vector2(vVector3.x, vVector3.y)
-    this.zCoord = vVector3.z || 0
+    if (vVector3) {
+      this.vec = new THREE.Vector2(vVector3.x, vVector3.y)
+    } else {
+      this.vec = new THREE.Vector2()
+    }
+    this.zCoord = vVector3?.z || 0
+  }
+
+  setByAngle(vAngle) {
+    this.vec = new THREE.Vector2(1, 0).rotateAround(UtilVec2.center, vAngle).normalize()
+    this.zCoord = 0
+    return this
   }
 
   getDir() {

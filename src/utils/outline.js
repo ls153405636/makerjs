@@ -42,6 +42,7 @@ export class Outline {
           path.arc(e.position.x, e.position.y, e.radius, e.startAngle, e.endAngle, !e.isClockwise)
         }
         let points_2d = path.getPoints()
+        //console.log(points_2d.length)
         for(const p of points_2d) {
           pois.push(new Types.Vector3({x:p.x, y:p.y, z: this.zCoord}))
         }

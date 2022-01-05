@@ -16,7 +16,6 @@ export class Flight extends ChildInfo{
     this.treads = []
     this.startHeight = 0
     this.endHeight = 0
-    this.endHeight = 0
     this.stepWidth = 0
     this.stepLength = 0
     this.stepHeight = 0
@@ -77,13 +76,40 @@ export class Flight extends ChildInfo{
   }
 
   getEndHeight() {
-    if (!this.endHeight) {
-      this.computeEndHeight()
-    }
+    // if (!this.endHeight) {
+    //   this.computeEndHeight()
+    // }
+    this.computeEndHeight()
     return this.endHeight
   }
 
-  createGirderRoute() {}
+  /**
+   * 根据某一侧创建出大梁的踏板单位轮廓集合
+   * @param {string} vSide 
+   * @param {Types.GirderParameters} vArgs 
+   */
+   createGirderRoute({vSide, vArgs, vInLast, vOutLast}) {
+    let borders = []
+    let inLast = vInLast, outLast = vOutLast
+    for (let i = 0; i < this.treads.length; i++) {
+      if (this.treads[i].isLast) {
+        continue
+      }
+      let border = this.treads[i].getGirBorder(vSide, vArgs, i === 0 && (!inLast), inLast, outLast)
+      if (border) {
+        inLast = {
+          poi:border.inEdges[border.inEdges.length - 1].p2,
+          topPoi:border.inTopEdges[border.inTopEdges.length - 1].p2
+        }
+        outLast = {
+          poi:border.outEdges[border.outEdges.length - 1].p2,
+          topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2
+        }
+        borders.push(border)
+      }
+    } 
+    return borders
+  }
 
   updateTreads() {}
 
