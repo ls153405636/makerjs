@@ -238,7 +238,7 @@ export class Edge {
     let p1Vec = new THREE.Vector2().subVectors(this.p1, this.position).normalize()
     let p2Vec = new THREE.Vector2().subVectors(this.p2, this.position).normalize()
     this.p1 = this.position.clone().addScaledVector(p1Vec, this.radius)
-    this.p2 = this.position.clone().addScaledVector(p2Vec, this.radius)
+    this.p2 = this.position.clone().addScaledVector(p2Vec, this.radius) 
   }
 
   /**
