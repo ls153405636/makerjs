@@ -41,37 +41,69 @@ export class Tread extends ChildWidget {
       }
     }
     let stairInfo = StructConfig.INFOS.get(stairId)
+    this.stepNumRule = stairInfo.stepNumRule
+    this.girderDepth = this.stairInfo.parent.parent.girderParameters.depth
+    this.girderType = this.stairInfo.parent.parent.girderParameters.type
     this.stepNum = stairInfo.stepNum
     if (stairInfo.type !== Types.StairType.s_arc_type) {
       this.addDimension()
     }
-    // if (this.type === Types.StairType.s_arc_type) {
-    //   this.ArcStairDemension()
-    // }
+    if (stairInfo.type === Types.StairType.s_arc_type) {
+      this.ArcStairDemension()
+    }
     this.addEvent()
-    // console.log(this.parent)
   }
 
-  creatText(vName, vPos) {
-    vName.scale.set(0.25)
-    vName.position.set((vPos.p1.x + vPos.p2.x) / 2, (vPos.p1.y + vPos.p2.y) / 2)
-    vName.anchor.set(0.5, 0.5)
+  creatTextRotaitionP(vName, vEdge) {
     let newTextRotation = ''
-    let textRotation = new Victor(vPos.p1.x - vPos.p2.x, vPos.p1.y - vPos.p2.y)
-    if (this.isClock === true && this.type === 5 && vPos.p1.y < vPos.p2.y) {
-      textRotation = new Victor(vPos.p2.x - vPos.p1.x, vPos.p2.y - vPos.p1.y)
-    }else if (this.isClock === false && this.type === 5 && vPos.p1.y > vPos.p2.y) {
-      textRotation = new Victor(vPos.p2.x - vPos.p1.x, vPos.p2.y - vPos.p1.y)
-    }
-    let textAngle = textRotation.angle()
-    if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
-      newTextRotation = 0
-    } else if (0 < textAngle < Math.PI) {
-      newTextRotation = textRotation.invert().angle()
-    } else if (0 > textAngle > -Math.PI) {
-      newTextRotation = textRotation.angle()
+    let textRotation = new Victor(vEdge.p1.x - vEdge.p2.x, vEdge.p1.y - vEdge.p2.y)
+    const textAngle = textRotation.angle()
+    if (this.isClock === true) {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.angle()
+      }
+    } else {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      }
     }
     vName.rotation = newTextRotation
+  }
+  creatTextRotaitionR(vName,vEdge) {
+    let newTextRotation = ''
+    let textRotation = new Victor(vEdge.p2.x - vEdge.p1.x, vEdge.p2.y - vEdge.p1.y)
+    const textAngle = textRotation.angle()
+    if (this.isClock === true) {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.angle()
+      }
+    } else {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      }
+    }
+    vName.rotation = newTextRotation
+  }
+  creatText(vName, vEdge) {
+    vName.scale.set(0.25)
+    vName.position.set((vEdge.p1.x + vEdge.p2.x) / 2, (vEdge.p1.y + vEdge.p2.y) / 2)
+    vName.anchor.set(0.5, 0.5)
   }
 
   draw() {
@@ -106,7 +138,7 @@ export class Tread extends ChildWidget {
     } else{
 
       changeTread.visible = true
-      changeTread.lineStyle(1, 0x4478f4)
+      changeTread.lineStyle(1, 0x4478f4, 1, 0.5, true)
       changeTread.beginFill(0xe9efff)
   
       for (let i = 0; i < this.edges.length; i++) {
@@ -274,8 +306,8 @@ export class Tread extends ChildWidget {
     const againstWallType = this.stairInfo.parent.parent.againstWallType
     const lastEdgeIndex = this.stairInfo.lastEdgeIndex
     const nextEdgeIndex = this.stairInfo.nextEdgeIndex
-    const girderType = this.stairInfo.parent.parent.girderParameters.type
-    const girderDepth = this.stairInfo.parent.parent.girderParameters.depth
+    
+    
     // 踏板标注线绘制
     const treadLineContainer = new PIXI.Container()
     const treadLine = new PIXI.Graphics()
@@ -358,7 +390,7 @@ export class Tread extends ChildWidget {
     
     // 休息平台
     if (this.type === Types.TreadType.tCor) {
-      if (girderType === Types.GirderType.gsaw) {
+      if (this.girderType === Types.GirderType.gsaw) {
         for (let i = 0; i < this.inIndex.length; i++) {
           p1 = new Victor(this.edges[this.inIndex[i]].p1.x, this.edges[this.inIndex[i]].p1.y)
           p2 = new Victor(this.edges[this.inIndex[i]].p2.x, this.edges[this.inIndex[i]].p2.y)
@@ -647,11 +679,11 @@ export class Tread extends ChildWidget {
         }
       }
       else {
-        lastEdge = new Edge(this.edges[lastEdgeIndex]).offset(girderDepth,true)
-        nextEdge = new Edge(this.edges[nextEdgeIndex]).offset(girderDepth,true)
+        lastEdge = new Edge(this.edges[lastEdgeIndex]).offset(this.girderDepth,true)
+        nextEdge = new Edge(this.edges[nextEdgeIndex]).offset(this.girderDepth,true)
         if (againstWallType === Types.AgainstWallType.aw_no || againstWallType === Types.AgainstWallType.aw_left) {
-          lastEdge = new Edge(lastEdge).extendP2(girderDepth)
-          nextEdge = new Edge(nextEdge).extendP1(girderDepth)
+          lastEdge = new Edge(lastEdge).extendP2(this.girderDepth)
+          nextEdge = new Edge(nextEdge).extendP1(this.girderDepth)
 
           if (lastEdge.p1.x === lastEdge.p2.x && lastEdge.p1.y > lastEdge.p2.y) {
             normal = new Types.Vector3({ x: -1, y: 0 })
@@ -767,8 +799,8 @@ export class Tread extends ChildWidget {
           
         }
         else if (againstWallType === 3) {
-          lastEdge = new Edge(lastEdge).extendP1(girderDepth)
-          nextEdge = new Edge(nextEdge).extendP2(girderDepth)
+          lastEdge = new Edge(lastEdge).extendP1(this.girderDepth)
+          nextEdge = new Edge(nextEdge).extendP2(this.girderDepth)
 
           if (lastEdge.p1.x === lastEdge.p2.x && lastEdge.p1.y < lastEdge.p2.y) {
             normal = new Types.Vector3({ x: 1, y: 0 })
@@ -944,15 +976,15 @@ export class Tread extends ChildWidget {
       lNormal = new Edge(sideEdgeL).getNormal()
       nNormal = new Edge(sideEdgeN).getNormal()
       let wallOutP1
-      if (girderType === Types.GirderType.gsaw) {
+      if (this.girderType === Types.GirderType.gsaw) {
         // 
       }else {
         if (againstWallType === Types.AgainstWallType.aw_no || againstWallType === Types.AgainstWallType.aw_left) {
-          sideEdgeL = new Edge(sideEdgeL).extendP2(girderDepth)
-          sideEdgeN = new Edge(sideEdgeN).extendP1(girderDepth)
+          sideEdgeL = new Edge(sideEdgeL).extendP2(this.girderDepth)
+          sideEdgeN = new Edge(sideEdgeN).extendP1(this.girderDepth)
         }else{
-          sideEdgeL = new Edge(sideEdgeL).extendP1(girderDepth)
-          sideEdgeN = new Edge(sideEdgeN).extendP2(girderDepth)
+          sideEdgeL = new Edge(sideEdgeL).extendP1(this.girderDepth)
+          sideEdgeN = new Edge(sideEdgeN).extendP2(this.girderDepth)
         }
       }
 
@@ -1711,38 +1743,84 @@ export class Tread extends ChildWidget {
     this.sprite.addChild(treadLineContainer)
   }
 
+  // 创建直线边
+  getStraightEdge(vEdges) {
+    let newEdges = new Types.Edge({
+      p1: new Types.Vector3({ x: vEdges.p1.x / D2Config.SCREEN_RATE, y: vEdges.p1.y / D2Config.SCREEN_RATE, z: vEdges.p1.z / D2Config.SCREEN_RATE}),
+      p2: new Types.Vector3({ x: vEdges.p2.x / D2Config.SCREEN_RATE, y: vEdges.p2.y / D2Config.SCREEN_RATE, z: vEdges.p2.z / D2Config.SCREEN_RATE }),
+      type: Types.EdgeType.estraight,
+    })
+    return newEdges
+  }
+
+  // 两点创建一条边
+  creatStraightEdge(vEdge1, vEdge2) {
+    let newEdges = new Types.Edge({
+      p1: new Types.Vector3({ x: (vEdge1.p1.x + vEdge1.p2.x) / 2, y: (vEdge1.p1.y + vEdge1.p2.y) / 2, z: (vEdge1.p1.z + vEdge1.p2.z) / 2}),
+      p2: new Types.Vector3({ x: (vEdge2.p1.x + vEdge2.p2.x) / 2, y: (vEdge2.p1.y + vEdge2.p2.y) / 2, z: (vEdge2.p1.z + vEdge2.p2.z) / 2}),
+      type: Types.EdgeType.estraight,
+    })
+    return newEdges
+  }
 
   ArcStairDemension() {
+    this.arcContainer = new PIXI.Container()
     // 文字样式
-    const textStyle =  {
+    this.textStyle =  {
       fontSize: 32,
       fill: 0x000000,
     }
-    let arcOffset = 150 // 弧宽标注偏移距离
-    let arcArrow = 40  // 端头长度
+    this.arcOffset = 15 // 弧宽标注偏移距离
+    this.arcArrow = 4  // 端头长度
+    this.treadOffset = 54
+    this.startTreadOffset = 15
     // 判断edge是否顺时针
-    let isTrue
-    if (this.isClock === true) {
-      isTrue = true
+    this.isTrue = true
+    if (this.isClock) {
+      this.isTrue = true
     }else {
-      isTrue = false
+      this.isTrue = false
     }
+    
+    // 弧宽标注
+    this.creatArcWide()
+    // 普通踏板标注
+    this.creatNormalTread()
+    // 起步踏板标注 
+    this.creatStartTread()
+    // 内外弧线半径
+    this.creatRadius()
+    this.creatFlight()
 
+    this.sprite.addChild(this.arcContainer)
+    console.log(this.stairInfo.parent)
+  }
 
-    // 获取外弧边
+  creatArcWide() {
+    const arcContainer = this.arcContainer
+    // 文字样式
+    let textStyle = this.textStyle
+    let arcOffset = this.arcOffset // 弧宽标注偏移距离
+    let arcArrow = this.arcArrow  // 端头长度
+    let treadOffset = this.treadOffset
+    // 判断edge是否顺时针
+    let isTrue = this.isTrue
+    // 内外弧宽标注
     let outArcEdge = this.edges[this.inIndex]
-    let newOutArcEdge = d2_tool.translateEdges(new Edge(outArcEdge).offset(arcOffset,isTrue))
-    let outArcEdgeT = d2_tool.translateEdges(new Edge(outArcEdge).offset(arcOffset + arcArrow, isTrue))
-    let outArcEdgeB = d2_tool.translateEdges(new Edge(outArcEdge).offset(arcOffset - arcArrow, isTrue))
+    let newOutArcEdge = this.getStraightEdge(outArcEdge)
+    newOutArcEdge = new Edge(newOutArcEdge).offset(arcOffset,isTrue)
+    let outArcEdgeT = new Edge(newOutArcEdge).offset(arcArrow, isTrue)
+    let outArcEdgeB = new Edge(newOutArcEdge).offset(-arcArrow, isTrue)
     let outArcEdgeLength = Math.round(new Edge(outArcEdge).getLength())
     
     let inArcEdge = this.edges[this.outIndex]
-    let newInArcEdge = d2_tool.translateEdges(new Edge(inArcEdge).offset(arcOffset,isTrue))
-    let inArcEdgeT = d2_tool.translateEdges(new Edge(inArcEdge).offset(arcOffset + arcArrow, isTrue))
-    let inArcEdgeB = d2_tool.translateEdges(new Edge(inArcEdge).offset(arcOffset - arcArrow, isTrue))
+    let newInArcEdge = this.getStraightEdge(inArcEdge)
+    newInArcEdge = new Edge(newInArcEdge).offset(arcOffset,isTrue)
+    
+    let inArcEdgeT = new Edge(newInArcEdge).offset(arcArrow, isTrue)
+    let inArcEdgeB = new Edge(newInArcEdge).offset(-arcArrow, isTrue)
     let inArcEdgeLength = Math.round(new Edge(inArcEdge).getLength())
 
-    const outArcContainer = new PIXI.Container()
     const outArcLine = new PIXI.Graphics()
     outArcLine.lineStyle(1, 0x000000, 1, 0.5, true)
     
@@ -1753,7 +1831,7 @@ export class Tread extends ChildWidget {
     const inArcText = new PIXI.Text(inArcEdgeLength, textStyle)
     outArcText.visible = false
     inArcText.visible = false
-    if (this.index == parseInt(this.stepNum / 2)) {
+    if (this.index == Math.floor(this.stepNum / 2) && this.type === Types.TreadType.tArc) {
       outArcText.visible = true
       inArcText.visible = true
       outArcLine.moveTo(newOutArcEdge.p1.x, newOutArcEdge.p1.y)
@@ -1769,12 +1847,197 @@ export class Tread extends ChildWidget {
       inArcLine.lineTo(inArcEdgeB.p1.x, inArcEdgeB.p1.y)
       inArcLine.moveTo(inArcEdgeT.p2.x, inArcEdgeT.p2.y)
       inArcLine.lineTo(inArcEdgeB.p2.x, inArcEdgeB.p2.y)
-
     }
+    if (inArcEdgeLength === 0) {
+      inArcText.visible = false
+    }
+
     this.creatText(outArcText, outArcEdgeT)
     this.creatText(inArcText, inArcEdgeB)
+    this.creatTextRotaitionP(outArcText, outArcEdgeT)
+    this.creatTextRotaitionR(inArcText, inArcEdgeB)
 
-    outArcContainer.addChild(outArcLine,inArcLine, inArcText, outArcText)
-    this.sprite.addChild(outArcContainer)
+    arcContainer.addChild(
+      outArcLine,inArcLine, inArcText, outArcText,
+      )
+  }
+  creatNormalTread() {
+    const arcContainer = this.arcContainer
+    // 文字样式
+    let textStyle = this.textStyle
+    let arcOffset = this.arcOffset // 弧宽标注偏移距离
+    let arcArrow = this.arcArrow  // 端头长度
+    let treadOffset = this.treadOffset
+    // 判断edge是否顺时针
+    let isTrue = this.isTrue
+
+    if (this.type !== Types.TreadType.tStart) { 
+      // 入口、出口单级踏板标注
+      let inEdge = d2_tool.translateEdges(this.edges[this.inIndex])
+      let newInEdge = new Edge(inEdge).offset(treadOffset, isTrue)
+      let newInEdgeT = new Edge(newInEdge).offset(arcArrow, isTrue)
+      let newInEdgeB = new Edge(newInEdge).offset(-arcArrow, isTrue)
+      
+      let treadTextLength = Math.round(new Edge(inEdge).getLength())
+      const treadText = new PIXI.Text(treadTextLength * D2Config.SCREEN_RATE, textStyle)
+      treadText.visible = false
+      this.creatText(treadText, newInEdgeT)
+      this.creatTextRotaitionP(treadText, newInEdgeT)
+      const inTreadLine = new PIXI.Graphics()
+      if (this.type !== 2) {
+        treadText.visible = true
+        inTreadLine.lineStyle(1, 0x000000, 1, 0.5, true)
+        inTreadLine.moveTo(newInEdge.p1.x, newInEdge.p1.y)
+        inTreadLine.lineTo(newInEdge.p2.x, newInEdge.p2.y)
+        inTreadLine.moveTo(newInEdgeT.p1.x, newInEdgeT.p1.y)
+        inTreadLine.lineTo(newInEdgeB.p1.x, newInEdgeB.p1.y)
+        inTreadLine.moveTo(newInEdgeT.p2.x, newInEdgeT.p2.y)
+        inTreadLine.lineTo(newInEdgeB.p2.x, newInEdgeB.p2.y)
+      }
+
+      // 第一级踏板标注
+      let firstEdge = new Edge(d2_tool.translateEdges(this.edges[this.frontIndex])).offset(treadOffset, isTrue)
+      let newFirstEdge
+      // 最后一级踏板标注
+      let lastEdge
+      lastEdge = new Edge(d2_tool.translateEdges(this.edges[this.backIndex])).offset(treadOffset, isTrue)
+      let newLastEdge
+      if (this.girderType === Types.GirderType.gslab) {
+        newFirstEdge = new Edge(firstEdge).extendP1(this.girderDepth / D2Config.SCREEN_RATE)
+        newFirstEdge = new Edge(newFirstEdge).extendP2(this.girderDepth / D2Config.SCREEN_RATE)
+        newLastEdge = new Edge(lastEdge).extendP1(this.girderDepth / D2Config.SCREEN_RATE)
+        newLastEdge = new Edge(newLastEdge).extendP2(this.girderDepth / D2Config.SCREEN_RATE)
+      }else {
+        newFirstEdge = firstEdge
+        newLastEdge = lastEdge
+      }
+      let newFirstEdgeT = new Edge(newFirstEdge).offset(arcArrow, isTrue)
+      let newFirstEdgeB = new Edge(newFirstEdge).offset(-arcArrow, isTrue)
+      let newLastEdgeT = new Edge(newLastEdge).offset(arcArrow, isTrue)
+      let newLastEdgeB = new Edge(newLastEdge).offset(-arcArrow, isTrue)
+
+      const firstTextLength = Math.round(new Edge(firstEdge).getLength()) * D2Config.SCREEN_RATE
+      const lastTextLength = Math.round(new Edge(lastEdge).getLength()) * D2Config.SCREEN_RATE
+      const firstTreadText = new PIXI.Text(firstTextLength, textStyle)
+      const lastTreadText = new PIXI.Text(lastTextLength, textStyle)
+      firstTreadText.visible = false
+      lastTreadText.visible = false
+      this.creatText(firstTreadText, newFirstEdgeT)
+      this.creatTextRotaitionR(firstTreadText, newFirstEdgeT)
+      this.creatText(lastTreadText, newLastEdgeT)
+      this.creatTextRotaitionR(lastTreadText, newLastEdgeT)
+      
+      const firstTreadLine = new PIXI.Graphics()
+      firstTreadLine.lineStyle(1, 0x000000, 1, 0.5, true)
+      if (this.index === 1) {
+        firstTreadText.visible = true
+        firstTreadLine.moveTo(newFirstEdge.p1.x, newFirstEdge.p1.y)
+        firstTreadLine.lineTo(newFirstEdge.p2.x, newFirstEdge.p2.y)
+        firstTreadLine.moveTo(newFirstEdgeT.p1.x, newFirstEdgeT.p1.y)
+        firstTreadLine.lineTo(newFirstEdgeB.p1.x, newFirstEdgeB.p1.y)
+        firstTreadLine.moveTo(newFirstEdgeT.p2.x, newFirstEdgeT.p2.y)
+        firstTreadLine.lineTo(newFirstEdgeB.p2.x, newFirstEdgeB.p2.y)
+      }
+      const lastTreadLine = new PIXI.Graphics()
+      lastTreadLine.lineStyle(1, 0x000000, 1, 0.5, true)
+
+      if ((this.index === this.stepNum - 1 && this.stepNumRule === Types.StepNumRule.snr_n_add_1) || (this.isLast === false && this.index === this.stepNum && this.stepNumRule === Types.StepNumRule.snr_n)) {
+        lastTreadText.visible = true
+        lastTreadLine.moveTo(newLastEdge.p1.x, newLastEdge.p1.y)
+        lastTreadLine.lineTo(newLastEdge.p2.x, newLastEdge.p2.y)
+        lastTreadLine.moveTo(newLastEdgeT.p1.x, newLastEdgeT.p1.y)
+        lastTreadLine.lineTo(newLastEdgeB.p1.x, newLastEdgeB.p1.y)
+        lastTreadLine.moveTo(newLastEdgeT.p2.x, newLastEdgeT.p2.y)
+        lastTreadLine.lineTo(newLastEdgeB.p2.x, newLastEdgeB.p2.y)
+      }
+      arcContainer.addChild(
+      treadText, inTreadLine,
+      firstTreadLine, firstTreadText,
+      lastTreadLine, lastTreadText,
+      )
+    }
+  }
+  creatStartTread() {
+    const arcContainer = this.arcContainer
+    // 文字样式
+    let textStyle = this.textStyle
+    let arcOffset = this.arcOffset // 弧宽标注偏移距离
+    let arcArrow = this.arcArrow  // 端头长度
+    let treadOffset = this.treadOffset
+    let startTreadOffset = this.startTreadOffset
+    // 判断edge是否顺时针
+    let isTrue = this.isTrue
+
+    if (this.type === Types.TreadType.tStart) {
+      // 基准边
+      let markEdge = d2_tool.translateEdges(this.edges[this.backIndex])
+      let frontStartEdge
+      let newFrontStartEdge
+      let sideStartEdge
+      let newSideStartEdge
+      if (this.stairInfo.parent.modelType === Types.StartTreadType.st_el) {
+        frontStartEdge = new Edge(markEdge).offset((this.stepWidth + this.stairInfo.parent.offset2) / D2Config.SCREEN_RATE, !isTrue)
+      }else if (this.stairInfo.parent.modelType === Types.StartTreadType.st_el_2) {
+        frontStartEdge = new Edge(markEdge).offset((this.stepWidth + this.stairInfo.parent.offset2 * 2) / D2Config.SCREEN_RATE, !isTrue)
+      }else if (this.stairInfo.parent.modelType === Types.StartTreadType.st_rr) {
+        frontStartEdge = new Edge(markEdge).offset(this.stepWidth / D2Config.SCREEN_RATE, !isTrue)
+        sideStartEdge = d2_tool.translateEdges(this.edges[this.outIndex])
+      }else if (this.stairInfo.parent.modelType === Types.StartTreadType.st_rr_2) {
+        frontStartEdge = new Edge(markEdge).offset(this.stepWidth / D2Config.SCREEN_RATE, !isTrue)
+        sideStartEdge = d2_tool.translateEdges(this.edges[this.outIndex])
+      }
+      newFrontStartEdge = new Edge(frontStartEdge).offset(startTreadOffset, !isTrue)
+      
+      sideStartEdge = new Edge(this.creatStraightEdge(markEdge, frontStartEdge)).offset(this.stepLength / 2 / D2Config.SCREEN_RATE, !isTrue)
+      newSideStartEdge = new Edge(sideStartEdge).offset(treadOffset, !isTrue)
+
+      let newFrontStartEdgeT = new Edge(newFrontStartEdge).offset(arcArrow, !isTrue)
+      let newFrontStartEdgeB = new Edge(newFrontStartEdge).offset(arcArrow, isTrue)
+      let newSideStartEdgeT = new Edge(newSideStartEdge).offset(arcArrow, !isTrue)
+      let newSideStartEdgeB = new Edge(newSideStartEdge).offset(arcArrow, isTrue)
+
+      const frontStartText = new PIXI.Text(this.stepLength, textStyle)
+      frontStartText.visible = false
+      this.creatText(frontStartText, newFrontStartEdgeT)
+      this.creatTextRotaitionP(frontStartText,newFrontStartEdge)
+
+      const sideStartText = new PIXI.Text(this.stepWidth, textStyle)
+      sideStartText.visible = false
+      this.creatText(sideStartText, newSideStartEdgeT)
+      this.creatTextRotaitionR(sideStartText,newSideStartEdge)
+      
+      const frontStartLine = new PIXI.Graphics()
+      frontStartLine.lineStyle(1, 0x000000, 1, 0.5, true)
+      if (this.index === 1) {
+        frontStartText.visible = true
+        frontStartLine.moveTo(newFrontStartEdge.p1.x, newFrontStartEdge.p1.y)
+        frontStartLine.lineTo(newFrontStartEdge.p2.x, newFrontStartEdge.p2.y)
+        frontStartLine.moveTo(newFrontStartEdgeT.p1.x, newFrontStartEdgeT.p1.y)
+        frontStartLine.lineTo(newFrontStartEdgeB.p1.x, newFrontStartEdgeB.p1.y)
+        frontStartLine.moveTo(newFrontStartEdgeT.p2.x, newFrontStartEdgeT.p2.y)
+        frontStartLine.lineTo(newFrontStartEdgeB.p2.x, newFrontStartEdgeB.p2.y)
+      }
+      const sideStartLine = new PIXI.Graphics()
+      sideStartLine.lineStyle(1, 0x000000, 1, 0.5, true)
+      if (this.index === 1) {
+        sideStartText.visible = true
+        sideStartLine.moveTo(newSideStartEdge.p1.x, newSideStartEdge.p1.y)
+        sideStartLine.lineTo(newSideStartEdge.p2.x, newSideStartEdge.p2.y)
+        sideStartLine.moveTo(newSideStartEdgeT.p1.x, newSideStartEdgeT.p1.y)
+        sideStartLine.lineTo(newSideStartEdgeB.p1.x, newSideStartEdgeB.p1.y)
+        sideStartLine.moveTo(newSideStartEdgeT.p2.x, newSideStartEdgeT.p2.y)
+        sideStartLine.lineTo(newSideStartEdgeB.p2.x, newSideStartEdgeB.p2.y)
+      }
+      arcContainer.addChild(
+        frontStartLine, frontStartText,
+        sideStartLine, sideStartText,
+        )
+    }
+  }
+  creatRadius() {
+
+  }
+  creatFlight(){
+
   }
 }

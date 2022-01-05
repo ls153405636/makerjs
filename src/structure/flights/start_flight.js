@@ -1,3 +1,4 @@
+import Victor from "victor";
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { Outline } from "../../utils/outline";
@@ -273,17 +274,21 @@ export class StartFlight extends StraightFlight{
     let dE = rectOutline.edges[2]//底边
     let outE = rectOutline.edges[1]//右边
     let inE = rectOutline.edges[3]//左边
+    let inEAngleP = new Victor(inE.p2.x - inE.p1.x, inE.p2.y - inE.p1.y).angle()
+    let inEAngleR = new Victor(inE.p1.x - inE.p2.x, inE.p1.y - inE.p2.y).angle()
+    let outEAngleP = new Victor(outE.p2.x - outE.p1.x, outE.p2.y - outE.p1.y).angle()
+    let outEAngleR = new Victor(outE.p1.x - outE.p2.x, outE.p1.y - outE.p2.y).angle()
     let outArc, inArc , outL,inL// 右圆弧、 左圆弧
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outL = outE
     } else {
-      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.clock)
+      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, inEAngleP, inEAngleR, this.clock)
     }
 
     if (this.shapeType === Types.StartTreadShapeType.sts_left) {
       inL = inE
     } else {
-      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.clock)
+      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, outEAngleP, outEAngleR, this.clock)
     }
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outline.edges.push(bE,outL, dE,inArc)
@@ -308,20 +313,26 @@ export class StartFlight extends StraightFlight{
     let new_rE = new Edge(rectOutline.edges[1]).extendP2(stepWidth)
     let new_lE = new Edge(rectOutline.edges[3]).extendP1(stepWidth)
     let new_dE = new Edge(dE).offset(stepWidth, this.clock)
+
+    let new_lEAngleP = new Victor(new_lE.p2.x - new_lE.p1.x, new_lE.p2.y - new_lE.p1.y).angle()
+    let new_lEAngleR = new Victor(new_lE.p1.x - new_lE.p2.x, new_lE.p1.y - new_lE.p2.y).angle()
+    let new_rEAngleP = new Victor(new_rE.p2.x - new_rE.p1.x, new_rE.p2.y - new_rE.p1.y).angle()
+    let new_rEAngleR = new Victor(new_rE.p1.x - new_rE.p2.x, new_rE.p1.y - new_rE.p2.y).angle()
+
     let outArc, inArc , outL,inL// 右圆弧、 左圆弧
     let outArc_d, inArc_d // 第二层右圆弧， 第层左圆弧
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outL = new_rE
     } else {
-      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, -Math.PI / 2, Math.PI / 2, this.clock)
-      outArc_d = this.createArcEdge(bE.p2, this.wVec, stepWidth, -Math.PI / 2, Math.PI / 2, this.clock)
+      outArc = this.createArcEdge(bE.p2,this.wVec, stepWidth / 2, new_lEAngleP, new_lEAngleR, this.clock)
+      outArc_d = this.createArcEdge(bE.p2, this.wVec, stepWidth, new_lEAngleP, new_lEAngleR, this.clock)
     }
 
     if (this.shapeType === Types.StartTreadShapeType.sts_left) {
       inL = new_lE
     } else {
-      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, Math.PI / 2, -Math.PI / 2, this.clock)
-      inArc_d = this.createArcEdge(new_dE.p2,this.wVec,  -stepWidth, Math.PI / 2, -Math.PI / 2, this.clock)
+      inArc = this.createArcEdge(dE.p2,this.wVec, -stepWidth / 2, new_rEAngleP, new_rEAngleR, this.clock)
+      inArc_d = this.createArcEdge(new_dE.p2,this.wVec,  -stepWidth, new_rEAngleP, new_rEAngleR, this.clock)
     }
     if (this.shapeType === Types.StartTreadShapeType.sts_right) {
       outline.edges.push(bE,rE,dE,inArc)

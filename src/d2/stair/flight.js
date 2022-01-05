@@ -1,4 +1,8 @@
+import Victor from 'victor'
+import { COMP_TYPES } from '../../common/common_config'
+import { StructConfig } from '../../structure/config'
 import { Types } from '../../types/stair_v2'
+import { Edge } from '../../utils/edge'
 import { BaseWidget } from '../base_widget'
 import { D2Config } from '../config'
 import d2_tool from '../d2_tool'
@@ -11,20 +15,16 @@ export class Flight extends BaseWidget {
    */
   constructor(vPB,vParent) {
     super(vPB.uuid)
+    this.sprite = new PIXI.Container()
     this.treads = []
     for (const t of vPB.treads) {
       this.treads.push(new Tread(t, this))
     }
     this.tread = vPB.treads
     this.draw()
-
-    
   }
 
   draw() {
-    this.sprite = new PIXI.Graphics()
-    this.sprite.sortableChildren = true
-
     for (const t of this.treads) {
       let treadSprite = t.getSprite()
       if (treadSprite) {

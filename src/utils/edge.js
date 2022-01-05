@@ -219,10 +219,10 @@ export class Edge {
     } else {
       this.radius = vPlus ? this.radius - vDis : this.radius + vDis
     }
-    let p1Vec = new THREE.Vector2().subVectors(this.p1, pos)
-    let p2Vec = new THREE.Vector2().subVectors(this.p2, pos)
+    let p1Vec = new THREE.Vector2().subVectors(this.p1, this.position)
+    let p2Vec = new THREE.Vector2().subVectors(this.p2, this.position)
     this.p1 = this.position.clone().addScaledVector(p1Vec, this.radius)
-    this.p2 = this.position.clone().addScaledVector(p2Vec, this.radius)
+    this.p2 = this.position.clone().addScaledVector(p2Vec, this.radius) 
   }
 
   /**
