@@ -207,7 +207,7 @@ export class ArcTread extends Tread {
       }
       if (e1.p1.z === 0 && e1.p2.z > 0 && (this.stepHeight - e1.p2.z) > 1) {
         let rate = e1.p2.z / this.stepHeight
-        let angle = Math.abs(utilE.endAngle - utilE.startAngle) * rate
+        let angle = this.stepAngle * rate
         let utilE1 = utilE.clone()
         let breakPoi = utilE1.rotateP2(-angle).p2
         breakPoi.z = e1.p1.z
@@ -263,7 +263,7 @@ export class ArcTread extends Tread {
       e1.p2.z = e1.p2.z - (this.parent.index === 0 ? vArgs.bSuppotHeight : 0) > 0 ? e1.p2.z : 0
       if (e1.p1.z === 0 && e1.p2.z > 0) {
         let rate = (e1.p2.z - vArgs.bSuppotHeight)  / this.stepHeight
-        let angle = Math.abs(utilE.endAngle - utilE.startAngle) * rate
+        let angle = this.stepAngle * rate
         let utilE1 = utilE.clone()
         let breakPoi = utilE1.rotateP2(-angle).p2
         breakPoi.z = e1.p1.z
@@ -271,13 +271,13 @@ export class ArcTread extends Tread {
         upBreakPoi.z = vArgs.bSuppotHeight
         e3 = new Types.Edge({p1:upBreakPoi, 
                             p2:e1.p2, 
-                            startAngle:utilE1.startAngle, 
+                            startAngle:utilE1.endAngle, 
                             endAngle:e1.endAngle, 
                             position:e1.position, 
                             radius:e1.radius, 
                             isClockwise:e1.isClockwise,
                             type:Types.EdgeType.earc})
-        e1.endAngle = utilE1.startAngle
+        e1.endAngle = utilE1.endAngle
         e1.p2 = breakPoi
         if (vArgs.bSuppotHeight) {
           e2 = new Types.Edge({p1:breakPoi, p2:upBreakPoi, type:Types.EdgeType.estraight})
@@ -285,7 +285,7 @@ export class ArcTread extends Tread {
       }
       if (this.index === 1 && vArgs.fOffsetStep) {
         let rate = vArgs.fOffsetStep / this.stepWidth
-        let angle = Math.abs(utilE.endAngle - utilE.startAngle) * rate
+        let angle = this.stepAngle * rate
         let tP = utilE.clone().rotateP1(angle).p1
         tP.z += (upVerHeight - vArgs.fOffsetStep * Math.tan(angle))
         tE1.p1 = tP
