@@ -18,8 +18,23 @@ export class SmallColumn extends ChildWidget {
     this.sizeY = d2_tool.translateValue(vPB.size.x)
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
+    this.rotation = vPB.rotation.z
     this.draw()
     this.addEvent()
+  }
+
+
+  creatSmallColum(vName) {
+    vName.drawRoundedRect(-this.sizeX/2, -this.sizeY/2, this.sizeX, this.sizeY, 0.5)
+    vName.drawPolygon(-this.sizeX/2, -this.sizeY/2, this.sizeX/2, this.sizeY/2)
+    vName.drawPolygon(this.sizeX/2, -this.sizeY/2, -this.sizeX/2, this.sizeY/2)
+    vName.position.set(
+      this.positionX,
+      this.positionY
+    )
+    vName.rotation = this.rotation
+     
+    vName.endFill()
   }
 
   draw() {
@@ -30,40 +45,20 @@ export class SmallColumn extends ChildWidget {
     changeSmallColumn.visible = false
     changeSmallColumn.lineStyle(0.5, 0xffffff)
     changeSmallColumn.beginFill(0x4478f4)
-    changeSmallColumn.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
-    changeSmallColumn.drawPolygon(0, 0, this.sizeX, this.sizeY)
-    changeSmallColumn.drawPolygon(this.sizeX, 0, 0, this.sizeY)
-    changeSmallColumn.position.set(
-      this.positionX - changeSmallColumn.width / 2 + 0.25,
-      this.positionY - changeSmallColumn.height / 2
-    )
-    changeSmallColumn.endFill()
-
+    this.creatSmallColum(changeSmallColumn)
+     
     const SmallColumnBg = new PIXI.Graphics()
     SmallColumnBg.visible = false
     SmallColumnBg.lineStyle(2, 0x4478f4)
     SmallColumnBg.beginFill(0x4478f4)
-    SmallColumnBg.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
-    SmallColumnBg.drawPolygon(0, 0, this.sizeX, this.sizeY)
-    SmallColumnBg.drawPolygon(this.sizeX, 0, 0, this.sizeY)
-    SmallColumnBg.position.set(
-      this.positionX - SmallColumnBg.width / 2 + 1,
-      this.positionY - SmallColumnBg.height / 2 + 1
-    )
-    SmallColumnBg.endFill()
+    this.creatSmallColum(SmallColumnBg)
 
     // 小柱
     const smallColumn = new PIXI.Graphics()
     smallColumn.lineStyle(0.5, 0x2d3037)
     smallColumn.beginFill(0xc8d3f2)
-    smallColumn.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
-    smallColumn.drawPolygon(0, 0, this.sizeX, this.sizeY)
-    smallColumn.drawPolygon(this.sizeX, 0, 0, this.sizeY)
-    smallColumn.position.set(
-      this.positionX - smallColumn.width / 2 + 0.25,
-      this.positionY - smallColumn.height / 2
-    )
-    smallColumn.endFill()
+    this.creatSmallColum(smallColumn)
+    
 
     smallColumnContainer.addChild(SmallColumnBg, changeSmallColumn, smallColumn)
     smallColumnContainer.zIndex = Z_INDEX.SMALL_COLUMN_ZINDEX

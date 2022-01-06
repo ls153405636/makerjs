@@ -18,8 +18,14 @@ export class BigColumn extends ChildWidget {
     this.sizeY = d2_tool.translateValue(vPB.size.x)
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
+    this.rotation = vPB.rotation.z
+    console.log(vPB)
     this.draw()
     this.addEvent()
+  }
+
+  creatBigcolumn() {
+
   }
 
   draw() {
@@ -30,43 +36,48 @@ export class BigColumn extends ChildWidget {
     changeBigColumnOut.visible = false
     changeBigColumnOut.lineStyle(1, 0x4478f4)
     changeBigColumnOut.beginFill(0xc8d3f2)
-    changeBigColumnOut.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
+    changeBigColumnOut.drawRoundedRect(-this.sizeX / 2, -this.sizeY / 2, this.sizeX, this.sizeY, 0.5)
     changeBigColumnOut.position.set(
-      this.positionX - changeBigColumnOut.width / 2 + 0.5,
-      this.positionY - changeBigColumnOut.height / 2
+      this.positionX,
+      this.positionY
     )
+    changeBigColumnOut.rotation = this.rotation
     changeBigColumnOut.endFill()
 
     const bigColumnOut = new PIXI.Graphics()
     bigColumnOut.lineStyle(1, 0x2d3037)
     bigColumnOut.beginFill(0xc8d3f2)
-    bigColumnOut.drawRoundedRect(0, 0, this.sizeX, this.sizeY, 0.5)
+    bigColumnOut.drawRoundedRect(-this.sizeX / 2, -this.sizeY / 2, this.sizeX, this.sizeY, 0.5)
     bigColumnOut.position.set(
-      this.positionX - bigColumnOut.width / 2 + 0.5,
-      this.positionY - bigColumnOut.height / 2
+      this.positionX,
+      this.positionY
     )
+    bigColumnOut.rotation = this.rotation
     bigColumnOut.endFill()
 
     const changeBigColumnIn = new PIXI.Graphics()
     changeBigColumnIn.visible = false
     changeBigColumnIn.lineStyle(1, 0x4478f4)
     changeBigColumnIn.beginFill(0xffffff)
-    changeBigColumnIn.drawRoundedRect(0, 0, this.sizeX / 2, this.sizeY / 2, 0.5)
+    changeBigColumnIn.drawRoundedRect(-this.sizeX / 4, -this.sizeY / 4, this.sizeX / 2, this.sizeY / 2, 0.5)
     changeBigColumnIn.position.set(
-      this.positionX - changeBigColumnIn.width / 2 + 0.5,
-      this.positionY - changeBigColumnIn.height / 2
+      this.positionX,
+      this.positionY
     )
+    changeBigColumnIn.rotation = this.rotation
     changeBigColumnIn.endFill()
 
     const bigColumnIn = new PIXI.Graphics()
 
     bigColumnIn.lineStyle(1, 0x2d3037)
     bigColumnIn.beginFill(0x4478f4)
-    bigColumnIn.drawRoundedRect(0, 0, this.sizeX / 2, this.sizeY / 2, 0.5)
+    bigColumnIn.drawRoundedRect(-this.sizeX / 4, -this.sizeY / 4, this.sizeX / 2, this.sizeY / 2, 0.5)
     bigColumnIn.position.set(
-      this.positionX - bigColumnIn.width / 2 + 0.5,
-      this.positionY - bigColumnIn.height / 2
+      this.positionX,
+      this.positionY
     )
+    // bigColumnIn.pivot.set(0, 0.5)
+    bigColumnIn.rotation = this.rotation
     bigColumnIn.endFill()
 
     bigColContainer.addChild(
