@@ -75,6 +75,9 @@ export class Stair extends BaseWidget {
     if (this.type !== Types.StairType.s_arc_type) {
       this.addDimension()
     }
+    if (this.type === Types.StairType.s_arc_type) {
+      this.addArcFlight()
+    }
   }
 
   destroy() {
@@ -108,8 +111,6 @@ export class Stair extends BaseWidget {
   }
 
   draw() {
-    
-
     // sortableChildren = true 子级根据zIndex排序
     // 跟元素添加顺序有冲突
     this.sprite.sortableChildren = true
@@ -151,8 +152,6 @@ export class Stair extends BaseWidget {
     }
   }
 
-
-
   cancelSmallColSelected() {
     this.smallColumns.forEach((col) => {
       col.cancelSelected()
@@ -170,6 +169,7 @@ export class Stair extends BaseWidget {
       col.setHover()
     })
   }
+
   cancelSmallColHover() {
     this.smallColumns.forEach((col) => {
       col.cancelHover()
@@ -234,7 +234,7 @@ export class Stair extends BaseWidget {
       let p
       let nextP
 
-      if (type === 1) {
+      if (type === Types.TreadType.trect) {
         p = new Victor((e.edges[2].p1.x + e.edges[2].p2.x) / 2, (e.edges[2].p1.y + e.edges[2].p2.y) / 2)
         nextP = p.clone().subtractY(firstDepth)
       }
@@ -505,5 +505,9 @@ export class Stair extends BaseWidget {
     
 
     this.sprite.addChild(flightContainer)
+  }
+
+  addArcFlight() {
+    console.log(this)
   }
 }

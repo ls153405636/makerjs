@@ -1786,7 +1786,6 @@ export class Tread extends ChildWidget {
     this.creatStartTread()
     // 内外弧线半径
     this.creatRadius()
-    this.creatFlight()
     
     this.sprite.addChild(this.arcContainer)
   }
@@ -1879,7 +1878,9 @@ export class Tread extends ChildWidget {
       this.creatText(treadText, newInEdgeT)
       this.creatTextRotaitionP(treadText, newInEdgeT)
       const inTreadLine = new PIXI.Graphics()
-      if (this.type !== Types.TreadType.tArc) {
+      if (this.type !== Types.TreadType.tArc && !this.isLast) {
+        console.log(this.index)
+        console.log(this.isLast)
         treadText.visible = true
         inTreadLine.lineStyle(1, 0x000000, 1, 0.5, true)
         inTreadLine.moveTo(newInEdge.p1.x, newInEdge.p1.y)
@@ -2030,9 +2031,6 @@ export class Tread extends ChildWidget {
     }
   }
   creatRadius() {
-
-  }
-  creatFlight(){
 
   }
 }
