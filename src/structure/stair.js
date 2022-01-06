@@ -719,7 +719,7 @@ export class Stair extends Info {
       if (utilE.type === Types.EdgeType.earc) {
         rotation.z = new UtilVec2(utilE.getP1Vec()).getAngle()
       } else {
-        rotation.z = new UtilVec2(utilE.getNormal).getAngle() 
+        rotation.z = new UtilVec2(utilE.getNormal()).getAngle() 
       }
     } else {
       /**有起步踏时，由起步踏计算出大柱位置 */
