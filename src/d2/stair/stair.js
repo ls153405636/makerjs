@@ -43,6 +43,7 @@ export class Stair extends BaseWidget {
     this.landings = []
     this.position = vPB.position
     this.againstWallType = vPB.againstWallType
+    this.stairInfo = StructConfig.INFOS.get(this.uuid)
     for (const f of vPB.flights) {
       this.flights.push(new Flight(f, this))
     }
@@ -74,6 +75,9 @@ export class Stair extends BaseWidget {
     this.draw()
     if (this.type !== Types.StairType.s_arc_type) {
       this.addDimension()
+    }
+    if (this.type === Types.StairType.s_arc_type) {
+      this.addArcFlight()
     }
   }
 
@@ -108,8 +112,6 @@ export class Stair extends BaseWidget {
   }
 
   draw() {
-    
-
     // sortableChildren = true 子级根据zIndex排序
     // 跟元素添加顺序有冲突
     this.sprite.sortableChildren = true
@@ -151,8 +153,6 @@ export class Stair extends BaseWidget {
     }
   }
 
-
-
   cancelSmallColSelected() {
     this.smallColumns.forEach((col) => {
       col.cancelSelected()
@@ -170,6 +170,7 @@ export class Stair extends BaseWidget {
       col.setHover()
     })
   }
+
   cancelSmallColHover() {
     this.smallColumns.forEach((col) => {
       col.cancelHover()
@@ -202,13 +203,13 @@ export class Stair extends BaseWidget {
   }
 
   addDimension() {
-    let stairInfo = StructConfig.INFOS.get(this.uuid)
+    
     const flightContainer = new PIXI.Container()
-    let stepNumRule = stairInfo.stepNumRule // 是否n+1
-    let girderType = stairInfo.girderParameters.type
-    let girderDepth = stairInfo.girderParameters.depth
-    let depth = stairInfo.depth ? stairInfo.depth : stairInfo.depth1
-    let width = stairInfo.width
+    let stepNumRule = this.stairInfo.stepNumRule // 是否n+1
+    let girderType = this.stairInfo.girderParameters.type
+    let girderDepth = this.stairInfo.girderParameters.depth
+    let depth = this.stairInfo.depth ? this.stairInfo.depth : this.stairInfo.depth1
+    let width = this.stairInfo.width
     let landingWidth = new Victor(width,width)
     let firstDepth = new Victor(depth,depth)
     const offSet = new Victor(580,580)
@@ -224,17 +225,17 @@ export class Stair extends BaseWidget {
     let wallLength
     let wall = null
     let stairP = null
-    let stepLength = stairInfo.width
-    for (let i = 0; i < stairInfo.flights.length; i++) {
-      let e = stairInfo.flights[0].treads[0].border.stepOutline
+    let stepLength = this.stairInfo.width
+    for (let i = 0; i < this.stairInfo.flights.length; i++) {
+      let e = this.stairInfo.flights[0].treads[0].border.stepOutline
       this.isClock = e.isClock
-      let stairtE = stairInfo.flights[stairInfo.flights.length - 1].treads[0].border.stepOutline
-      let type = stairInfo.flights[0].treads[0].type
-      let stairtType = stairInfo.flights[stairInfo.flights.length - 1].treads[0].type
+      let stairtE = this.stairInfo.flights[this.stairInfo.flights.length - 1].treads[0].border.stepOutline
+      let type = this.stairInfo.flights[0].treads[0].type
+      let stairtType = this.stairInfo.flights[this.stairInfo.flights.length - 1].treads[0].type
       let p
       let nextP
 
-      if (type === 1) {
+      if (type === Types.TreadType.trect) {
         p = new Victor((e.edges[2].p1.x + e.edges[2].p2.x) / 2, (e.edges[2].p1.y + e.edges[2].p2.y) / 2)
         nextP = p.clone().subtractY(firstDepth)
       }
@@ -349,8 +350,8 @@ export class Stair extends BaseWidget {
       flightContainer.zIndex = 100
     }
 
-    for (let i = 0; i < stairInfo.landings.length; i++) {
-      let e = stairInfo.landings[0].treads[0].border.stepOutline
+    for (let i = 0; i < this.stairInfo.landings.length; i++) {
+      let e = this.stairInfo.landings[0].treads[0].border.stepOutline
       this.isClock = e.isClock
       let fLangdingLength = new Victor((e.edges[0].p2.x + e.edges[0].p1.x) / 2, 0)
       let lP = new Victor((e.edges[0].p1.x + e.edges[0].p2.x) / 2, e.edges[0].p1.y).subtractX(fLangdingLength)
@@ -503,6 +504,228 @@ export class Stair extends BaseWidget {
 
     flightContainer.addChild(firstToEndLine, firstToEndText)
     
+
+    this.sprite.addChild(flightContainer)
+  }
+
+
+  // 两条边创建一条垂直那两条边且居中的边
+  creatStraightEdge(vEdge1, vEdge2) {
+    let newEdges = new Types.Edge({
+      p1: new Types.Vector3({ x: (vEdge1.p1.x + vEdge1.p2.x) / 2, y: (vEdge1.p1.y + vEdge1.p2.y) / 2, z: (vEdge1.p1.z + vEdge1.p2.z) / 2}),
+      p2: new Types.Vector3({ x: (vEdge2.p1.x + vEdge2.p2.x) / 2, y: (vEdge2.p1.y + vEdge2.p2.y) / 2, z: (vEdge2.p1.z + vEdge2.p2.z) / 2}),
+      type: Types.EdgeType.estraight,
+    })
+    return newEdges
+  }
+  // 两点创建一条边
+  creatNewEdge(vP1, vP2) {
+    let newEdges = new Types.Edge({
+      p1: new Types.Vector3({ x: vP1.x, y: vP1.y, z: vP1.z}),
+      p2: new Types.Vector3({ x: vP2.x, y: vP2.y, z: vP2.z}),
+      type: Types.EdgeType.estraight,
+    })
+    return newEdges
+  }
+
+  creatTextRotaitionP(vName, vEdge) {
+    let newTextRotation = ''
+    let textRotation = new Victor(vEdge.p1.x - vEdge.p2.x, vEdge.p1.y - vEdge.p2.y)
+    const textAngle = textRotation.angle()
+    if (this.isClock === true) {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.angle()
+      }
+    } else {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      }
+    }
+    vName.rotation = newTextRotation
+  }
+  creatTextRotaitionR(vName,vEdge) {
+    let newTextRotation = ''
+    let textRotation = new Victor(vEdge.p2.x - vEdge.p1.x, vEdge.p2.y - vEdge.p1.y)
+    const textAngle = textRotation.angle()
+    if (this.isClock === true) {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.angle()
+      }
+    } else {
+      if (textAngle == Math.PI || textAngle == 0 || textAngle == -Math.PI) {
+        newTextRotation = 0
+      } else if (0 < textAngle < Math.PI) {
+        newTextRotation = textRotation.angle()
+      } else if (0 > textAngle > -Math.PI) {
+        newTextRotation = textRotation.invert().angle()
+      }
+    }
+    vName.rotation = newTextRotation
+  }
+
+  // 创建文字
+  creatText(vName, vEdge) {
+    vName.scale.set(0.25)
+    vName.position.set((vEdge.p1.x + vEdge.p2.x) / 2, (vEdge.p1.y + vEdge.p2.y) / 2)
+    vName.anchor.set(0.5, 0.5)
+  }
+
+  addArcFlight() {
+    this.textStyle =  {
+      fontSize: 32,
+      fill: 0x000000,
+    }
+    const flightContainer = new PIXI.Container()
+    let flightOffset = 82
+    let flightArrow = 5
+    let stepWidth= this.stairInfo.flights.stepWidth
+    let stepNum = this.stairInfo.stepNum
+    let stepNumRule = this.stairInfo.stepNumRule
+    let flights = this.stairInfo.flights
+    let inIndex
+    let frontIndex
+    let backIndex
+    let firstFlightfirstTread
+    let firstFlightlastTread
+    let lastFlightfirstTread
+    let lastFlightlastTread
+    let isTrue
+    let modelType
+    let offset2
+    let stepLength = this.stairInfo.stepLength
+    let startStepWidth
+    if (this.stairInfo.startFlight) {
+      modelType = this.stairInfo.startFlight.modelType
+      offset2 = this.stairInfo.startFlight.offset2
+      startStepWidth = this.stairInfo.startFlight.stepWidth
+    }
+    for (let i = 0; i < flights.length; i++) {
+      let e = flights[i]
+      let isClock = e.treads[0].border.stepOutline.isClock
+      if (isClock) {
+        isTrue = true
+      } else {
+        isTrue = false
+      }
+      inIndex = e.treads[0].border.inIndex
+      frontIndex = e.treads[0].border.frontIndex
+      backIndex = e.treads[0].border.backIndex
+      // 获取第一级踏板
+      if (e.treads[0].index === 1) {
+        if (e.treads[0].type === Types.TreadType.trect || (modelType === Types.StartTreadType.st_rr || modelType === Types.StartTreadType.st_rr_2)) {
+          firstFlightfirstTread = this.creatStraightEdge(e.treads[0].border.stepOutline.edges[frontIndex], e.treads[0].border.stepOutline.edges[backIndex])
+          firstFlightfirstTread = new Edge(d2_tool.translateEdges(firstFlightfirstTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, isTrue)
+        }
+        else if (modelType === Types.StartTreadType.st_el) {
+          let referenceEdge1 = e.treads[0].border.stepOutline.edges[backIndex]
+          let referenceEdge2 = new Edge(referenceEdge1).offset((startStepWidth + offset2), !isTrue)
+          firstFlightfirstTread = this.creatStraightEdge(referenceEdge1, referenceEdge2)
+          firstFlightfirstTread = new Edge(d2_tool.translateEdges(firstFlightfirstTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, !isTrue)
+        }
+        else if (modelType === Types.StartTreadType.st_el_2) {
+          let referenceEdge1 = e.treads[0].border.stepOutline.edges[backIndex]
+          let referenceEdge2 = new Edge(referenceEdge1).offset((startStepWidth + offset2) * 2, !isTrue)
+          firstFlightfirstTread = this.creatStraightEdge(referenceEdge1, referenceEdge2)
+          firstFlightfirstTread = new Edge(d2_tool.translateEdges(firstFlightfirstTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, !isTrue)
+        }
+      }
+      // 获取入口楼梯段最后一级踏板
+      if (e.treads[e.treads.length - 1].type === Types.TreadType.trect && e.treads[e.treads.length - 1].index !== stepNum) {
+        firstFlightlastTread = this.creatStraightEdge(e.treads[e.treads.length - 1].border.stepOutline.edges[frontIndex], e.treads[e.treads.length - 1].border.stepOutline.edges[backIndex])
+        firstFlightlastTread = new Edge(d2_tool.translateEdges(firstFlightlastTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, isTrue)
+      }
+      // 获取出口楼梯段第一级踏板
+      // 获取出口楼梯段最后一级踏板（除n+1步）
+      if (e.treads[0].type === Types.TreadType.trect && e.treads[e.treads.length - 1].index === stepNum ) {
+        lastFlightfirstTread = this.creatStraightEdge(e.treads[0].border.stepOutline.edges[frontIndex], e.treads[0].border.stepOutline.edges[backIndex])
+        if (stepNumRule === Types.StepNumRule.snr_n_add_1) {
+          lastFlightlastTread = this.creatStraightEdge(e.treads[e.treads.length - 2].border.stepOutline.edges[frontIndex], e.treads[e.treads.length - 2].border.stepOutline.edges[backIndex])
+        } else {
+          lastFlightlastTread = this.creatStraightEdge(e.treads[e.treads.length - 1].border.stepOutline.edges[frontIndex], e.treads[e.treads.length - 1].border.stepOutline.edges[backIndex])
+        }
+        lastFlightfirstTread = new Edge(d2_tool.translateEdges(lastFlightfirstTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, isTrue)
+        lastFlightlastTread = new Edge(d2_tool.translateEdges(lastFlightlastTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, isTrue)
+      }
+    }
+
+    const lastFlightLine = new PIXI.Graphics()
+    lastFlightLine.lineStyle(1, 0xff88ff)
+    if (lastFlightfirstTread !== undefined || lastFlightlastTread !== undefined) {
+      let lastFlightfirstTreadT = new Edge(lastFlightfirstTread).offset(5, isTrue)
+      let lastFlightfirstTreadB = new Edge(lastFlightfirstTread).offset(5, !isTrue)
+      let lastFlightlastTreadT = new Edge(lastFlightlastTread).offset(5, isTrue)
+      let lastFlightlastTreadB = new Edge(lastFlightlastTread).offset(5, !isTrue)
+
+      let lastFlightEdge = this.creatNewEdge(lastFlightfirstTreadT.p1, lastFlightlastTreadT.p2)
+      let lastFlightLength = Math.round(new Edge(lastFlightEdge).getLength() * D2Config.SCREEN_RATE)
+      const lastFlightText = new PIXI.Text(lastFlightLength, this.textStyle)
+  
+      this.creatText(lastFlightText, lastFlightEdge)
+      if (isTrue) {
+        this.creatTextRotaitionR(lastFlightText, lastFlightEdge)
+      }else {
+        this.creatTextRotaitionP(lastFlightText, lastFlightEdge)
+      }
+
+      lastFlightLine.moveTo(lastFlightfirstTread.p1.x, lastFlightfirstTread.p1.y)
+      lastFlightLine.lineTo(lastFlightlastTread.p2.x, lastFlightlastTread.p2.y)
+
+      lastFlightLine.moveTo(lastFlightfirstTreadT.p1.x, lastFlightfirstTreadT.p1.y)
+      lastFlightLine.lineTo(lastFlightfirstTreadB.p1.x, lastFlightfirstTreadB.p1.y)
+      lastFlightLine.moveTo(lastFlightlastTreadT.p2.x, lastFlightlastTreadT.p2.y)
+      lastFlightLine.lineTo(lastFlightlastTreadB.p2.x, lastFlightlastTreadB.p2.y)
+      flightContainer.addChild(lastFlightLine, lastFlightText)
+    }
+
+    const firstFlightLine = new PIXI.Graphics()
+    firstFlightLine.lineStyle(1, 0xff88ff)
+    if (firstFlightfirstTread !== undefined && firstFlightlastTread !== undefined) {
+      let firstFlightfirstTreadT = new Edge(firstFlightfirstTread).offset(5, isTrue)
+      let firstFlightfirstTreadB = new Edge(firstFlightfirstTread).offset(5, !isTrue)
+      let firstFlightlastTreadT = new Edge(firstFlightlastTread).offset(5, isTrue)
+      let firstFlightlastTreadB = new Edge(firstFlightlastTread).offset(5, !isTrue)
+      let firstFlightEdge
+      if (modelType === Types.StartTreadType.st_el || modelType === Types.StartTreadType.st_el_2) {
+        firstFlightEdge = this.creatNewEdge(firstFlightfirstTreadB.p2, firstFlightlastTreadT.p2)
+        firstFlightLine.moveTo(firstFlightfirstTread.p2.x, firstFlightfirstTread.p2.y)
+        firstFlightLine.lineTo(firstFlightlastTread.p2.x, firstFlightlastTread.p2.y)
+        firstFlightLine.moveTo(firstFlightfirstTreadT.p2.x, firstFlightfirstTreadT.p2.y)
+        firstFlightLine.lineTo(firstFlightfirstTreadB.p2.x, firstFlightfirstTreadB.p2.y)
+      }else {
+        firstFlightEdge = this.creatNewEdge(firstFlightfirstTreadT.p1, firstFlightlastTreadT.p2)
+        firstFlightLine.moveTo(firstFlightfirstTread.p1.x, firstFlightfirstTread.p1.y)
+        firstFlightLine.lineTo(firstFlightlastTread.p2.x, firstFlightlastTread.p2.y)
+        firstFlightLine.moveTo(firstFlightfirstTreadT.p1.x, firstFlightfirstTreadT.p1.y)
+        firstFlightLine.lineTo(firstFlightfirstTreadB.p1.x, firstFlightfirstTreadB.p1.y)
+      }
+      let firstFlightLength = Math.round(new Edge(firstFlightEdge).getLength() * D2Config.SCREEN_RATE)
+      const firstFlightText = new PIXI.Text(firstFlightLength, this.textStyle)
+  
+      this.creatText(firstFlightText, firstFlightEdge)
+      if (isTrue) {
+        this.creatTextRotaitionR(firstFlightText, firstFlightEdge)
+      }else {
+        this.creatTextRotaitionP(firstFlightText, firstFlightEdge)
+      }
+
+      firstFlightLine.moveTo(firstFlightlastTreadT.p2.x, firstFlightlastTreadT.p2.y)
+      firstFlightLine.lineTo(firstFlightlastTreadB.p2.x, firstFlightlastTreadB.p2.y)
+      flightContainer.addChild(firstFlightLine, firstFlightText)
+    }
+    
+
 
     this.sprite.addChild(flightContainer)
   }
