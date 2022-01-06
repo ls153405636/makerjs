@@ -1791,11 +1791,10 @@ export class Tread extends ChildWidget {
     // 内外弧线半径
     this.creatRadius()
     this.creatFlight()
-
+    
     this.sprite.addChild(this.arcContainer)
-    console.log(this.stairInfo.parent)
   }
-
+  
   creatArcWide() {
     const arcContainer = this.arcContainer
     // 文字样式
@@ -1884,7 +1883,7 @@ export class Tread extends ChildWidget {
       this.creatText(treadText, newInEdgeT)
       this.creatTextRotaitionP(treadText, newInEdgeT)
       const inTreadLine = new PIXI.Graphics()
-      if (this.type !== 2) {
+      if (this.type !== Types.TreadType.tArc) {
         treadText.visible = true
         inTreadLine.lineStyle(1, 0x000000, 1, 0.5, true)
         inTreadLine.moveTo(newInEdge.p1.x, newInEdge.p1.y)
