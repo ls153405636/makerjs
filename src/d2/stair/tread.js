@@ -1058,20 +1058,16 @@ export class Tread extends ChildWidget {
       
       const landingLineTextL = new PIXI.Text(landingTextLengthL,textStyle)
       this.creatText(landingLineTextL, sideEdgeLT)
+      this.creatTextRotaitionP(landingLineTextL, sideEdgeLT)
       
       const landingLineTextN = new PIXI.Text(landingTextLengthN,textStyle)
       this.creatText(landingLineTextN, sideEdgeNT)
-      for (let i = 0; i < this.stairInfo.parent.parent.landings.length; i++ ) {
-        let landingType = this.stairInfo.parent.parent.landings[i].type
-        if (landingType === 1) {
-          continue
-        }else {
-          treadLineContainer.addChild(langdingLine, landingLineTextL, landingLineTextN)
-        }
+      this.creatTextRotaitionP(landingLineTextN, sideEdgeNT)
+      if (this.stairInfo.parent.cutType === Types.LandingCutType.lct_first) {
+        // continue
+      }else {
+        treadLineContainer.addChild(langdingLine, landingLineTextL, landingLineTextN)
       }
-
-
-
     }
 
     // 普通踏板标注
