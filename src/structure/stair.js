@@ -279,8 +279,8 @@ export class Stair extends Info {
                                         lastF.treads[lastF.treads.length - 2] 
                                         : lastF.treads[lastF.treads.length - 1]
       let lastT1 = lastF.treads[lastF.treads.length - 1]
-      let lVec = lastT1.type === Types.TreadType.tArc ? lastT1.endLVec : lastF.lVec
-      let wVec = lastT1.type === Types.TreadType.tArc ? lastT1.getEndWVec() : lastF.wVec
+      let lVec = lastT2.type === Types.TreadType.tArc ? lastT2.endLVec : lastF.lVec
+      let wVec = lastT2.type === Types.TreadType.tArc ? lastT2.getEndWVec() : lastF.wVec
       let vWidth = lastT2.stepLength
       let vHeight = lastT2.getGirVerHeight(this.girderParameters) + lastT1.stepHeight + 50
       let vPosition = new Edge().setByVec(lastF.pos, wVec, -this.hangOffset).p2
