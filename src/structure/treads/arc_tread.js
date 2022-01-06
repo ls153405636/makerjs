@@ -242,11 +242,6 @@ export class ArcTread extends Tread {
    * @param {*} vLast 
    */
   createSideSlabBorder ({utilE, vIsFirst, vArgs, vLast}) {
-    let botPois = [], topPois = []
-    // topPois[0] = utilE.getP1PB()
-    // topPois[1] = utilE.getP2PB()
-    // botPois[0] = utilE.getP1PB()
-    // botPois[1] = utilE.getP2PB()
     let e1 = utilE.writePB(), tE1 = utilE.writePB(), e2 = null, e3 = null
     let verHeight = this.getGirVerHeight(vArgs)
     let stepHeight = this.getNextTread()?.stepHeight || this.stepHeight

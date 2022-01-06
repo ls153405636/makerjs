@@ -20,6 +20,9 @@ enum ArrangeRule {
   arrFour  = 1;  //两级四根
   arrThree = 2;  //两级三根
   arrTwo   = 3;  //一级一根
+  arrHalf  = 4;  //两级一根
+  arrSix   = 5;  //两级六根
+  arrEight = 6;  //两级八根
 }
 
 //大柱位置的类型

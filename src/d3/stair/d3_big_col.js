@@ -7,6 +7,7 @@ export class BigColumn extends ChildModel {
     this.paras = vParas
     this.size = d3_tool.translateCoord(vPB.size)
     this.position = d3_tool.translateCoord(vPB.position)
+    this.rotation = vPB.rotation
     this.createObj(vGltf)
   }
 
@@ -23,6 +24,7 @@ export class BigColumn extends ChildModel {
     vGltf.scale.copy(scale)
     this.obj = vGltf
     this.obj.position.set(this.position.x, this.position.y + this.size.y / 2, this.position.z)
+    this.obj.rotateY(-this.rotation.z)
     this.parent.addColumnObj(this.obj)
   }
 }

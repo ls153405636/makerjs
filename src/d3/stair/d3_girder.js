@@ -44,8 +44,10 @@ export class Girder extends ChildModel {
       let lastTE = inTEdges[inTEdges.length - 1]
       let div = 0
       if (lastTE.type === Types.EdgeType.earc) {
-        div = Math.ceil(Math.abs(lastTE.endAngle - lastTE.startAngle) / Math.PI * 12)
-        div = Math.max(div, 5)
+        let angleDiff = Math.abs(lastTE.endAngle - lastTE.startAngle)
+        angleDiff = angleDiff > Math.PI ? Math.PI * 2 - angleDiff : angleDiff
+        div = angleDiff / Math.PI * 12
+        div = Math.max(Number(div.toFixed(0)), 2)
       }
 
       //添加起始面和终止面
@@ -126,7 +128,7 @@ export class Girder extends ChildModel {
    * @param {Array<Types.Edge>} vTopEdges 
    * @param {Types.Vector3} vDir
    */
-  createVerFace(vBotEdges, vTopEdges, vDir) {
+  createVerFace(vBotEdges, vTopEdges) {
     let pois = []
     let edges = [...vBotEdges]
     for (let i = vTopEdges.length - 1; i > -1; i--) {
@@ -150,12 +152,6 @@ export class Girder extends ChildModel {
       let utilP = new THREE.Vector2(p.x, p.y)
       let x = new THREE.Vector2().subVectors(utilP, utilO).length()
       cutFacePois.push(x, p.z)
-      // if (Math.abs(vDir.y) < 0.1 ) {
-      //   cutFacePois.push(p.x, p.z)
-      // } else if (Math.abs(vDir.x) < 0.1) {
-      //   cutFacePois.push(p.y, p.z)
-      // }
-      //cutFacePois.push(p.x, p.y, p.z)
     })
     let poiIndexs = earCut(cutFacePois)
     let positionSet = []

@@ -14,6 +14,7 @@ import { D2Config } from '../d2/config'
 import { D3Config } from '../d3/d3_config'
 import { HangingBoard } from './hanging_board'
 import { Flight } from './flights/flight'
+import { UtilVec2 } from '../utils/util_vec_2'
 
 export class Stair extends Info {
   static NOSS_TYPE_OPTIONS = [
@@ -278,19 +279,21 @@ export class Stair extends Info {
                                         lastF.treads[lastF.treads.length - 2] 
                                         : lastF.treads[lastF.treads.length - 1]
       let lastT1 = lastF.treads[lastF.treads.length - 1]
+      let lVec = lastT1.type === Types.TreadType.tArc ? lastT1.endLVec : lastF.lVec
+      let wVec = lastT1.type === Types.TreadType.tArc ? lastT1.getEndWVec() : lastF.wVec
       let vWidth = lastT2.stepLength
       let vHeight = lastT2.getGirVerHeight(this.girderParameters) + lastT1.stepHeight + 50
-      let vPosition = new Edge().setByVec(lastF.pos, lastF.wVec, -this.hangOffset).p2
+      let vPosition = new Edge().setByVec(lastF.pos, wVec, -this.hangOffset).p2
       if (this.girderParameters.type === Types.GirderType.gslab) {
         vHeight = lastT1.getGirVerHeight(this.girderParameters) + 50
-        vPosition = new Edge().setByVec(vPosition, lastF.lVec, -this.girderParameters.depth).p2
+        vPosition = new Edge().setByVec(vPosition, lVec, -this.girderParameters.depth).p2
       }
       vPosition.z = lastF.getEndHeight()
       if (this.hangingBoard) {
         this.hangingBoard.rebuildByParent({vWidth, vPosition})
       } else {
-        let vWidthVec = new Types.Vector3(lastF.lVec)
-        let vDepthVec = new Types.Vector3(lastF.wVec)
+        let vWidthVec = new Types.Vector3(lVec)
+        let vDepthVec = new Types.Vector3(wVec)
         this.hangingBoard = new HangingBoard({vParent:this, vWidth, vPosition, vHeight, vWidthVec, vDepthVec})
       }
     }
@@ -521,28 +524,6 @@ export class Stair extends Info {
   }
 
   /**
-   * 无起步踏板的情况下，根据大柱的位置类型计算出其在楼梯深度方向上的偏移
-   * @returns 
-   */
-  computeBigColPosAttr () {
-    let bArgs = this.bigColParameters
-    let bigColSize = tool.parseSpecification(bArgs.specification)
-    let offset = Default.BIG_COL_GAP
-    let zCoord = 0
-    let step1 = this.flights[0].treads[0]
-    let step2 = this.flights[0].treads[1]
-    if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
-      offset = - step1.stepWidth / 2 - bigColSize.y / 2
-      zCoord = step1.position.z
-    }
-    if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
-      offset = -step1.stepWidth - step2.stepWidth / 2 - bigColSize.y / 2
-      zCoord = step2.position.z
-    }
-    return {offset, zCoord}
-  }
-
-  /**
    *清空楼梯踏板，在步数发生改变时调用
    *
    * @memberof Stair
@@ -622,7 +603,7 @@ export class Stair extends Info {
     }
     for (const f of this.segments) {
       let fEdges = f.createHandEdges({vSide: vSide.sideName, vArgs:this.handrailParameters})
-      if (vSide.sideName === 'in' || f.index === 0) {
+      if (vSide.sideName === 'in' || f.index === 0 || this.type === Types.StairType.s_arc_type) {
         edges = tool.concatEdges(edges, fEdges)
       } else if (fEdges.length) {
         let p1 = edges[edges.length - 1].p2
@@ -704,21 +685,46 @@ export class Stair extends Info {
   updateSideBigCol (vSide) {
     let args = this.bigColParameters
     let position = new Types.Vector3()
+    let rotation = new Types.Vector3()
+    //let rotation = new Types.Vector3()
     /**无起步踏时，根据大柱位置类型计算大柱位置 */
     if (!this.startFlight) {
       let size = tool.parseSpecification(args.specification)
-      let {offset, zCoord} = this.computeBigColPosAttr()
-      offset = offset + size.x / 2
-      let firstF = this.segments[0]
-      position = new Edge().setByVec(firstF.pos, firstF.wVec, firstF.length+offset).p2
-      position = new Edge().setByVec(position, firstF.lVec, this.getSideOffset()).p2
-      if (vSide.sideName === 'out') {
-        position = new Edge().setByVec(position, firstF.lVec, firstF.stepLength-this.sideOffset*2).p2
+      let firstT = this.segments[0].treads[0]
+      let secondT = this.segments[0].treads[1] || this.segments[1].treads[0]
+      let utilE = firstT.getSideUtilE(vSide.sideName)
+      if (this.bigColParameters.posType === Types.BigColumnPosType.bcp_floor) {
+        let offset = Default.BIG_COL_GAP + size.x / 2
+        utilE.setZCoord(0)
+        if (utilE.type === Types.EdgeType.earc) {
+          utilE.rotateP1(firstT.stepAngle * (offset / firstT.stepWidth))
+        } else {
+          utilE.extendP1(offset)
+        }
+      } else if (this.bigColParameters.posType === Types.BigColumnPosType.bcp_first) {
+        if (utilE.type === Types.EdgeType.earc) {
+          utilE.rotateP1(-firstT.stepAngle / 2)
+        } else {
+          utilE.extendP1(-firstT.stepWidth / 2)
+        }
+      } else if (this.bigColParameters.posType === Types.BigColumnPosType.bcp_second) {
+        utilE = secondT.getSideUtilE(vSide.sideName)
+        if (utilE.type === Types.EdgeType.earc) {
+          utilE.rotateP1(-secondT.stepAngle / 2)
+        } else {
+          utilE.extendP1(-secondT.stepWidth / 2)
+        }
       }
-      position.z = zCoord
+      position = utilE.getP1PB()
+      if (utilE.type === Types.EdgeType.earc) {
+        rotation.z = new UtilVec2(utilE.getP1Vec()).getAngle()
+      } else {
+        rotation.z = new UtilVec2(utilE.getNormal).getAngle() 
+      }
     } else {
       /**有起步踏时，由起步踏计算出大柱位置 */
-      let {inPos, outPos} = this.startFlight.computeBigColPos()
+      let {inPos, outPos, rot} = this.startFlight.computeBigColPos()
+      rotation = rot
       if (vSide.sideName === 'in') {
         position = inPos
       } else if (vSide.sideName === 'out') {
@@ -727,9 +733,9 @@ export class Stair extends Info {
     }
     let height = this.handrailParameters.height + this.stepHeight + Default.BIG_COL_UP_HEIGHT
     if (vSide.startBigCol) {
-      vSide.startBigCol.rebuildByParent(position, height)
+      vSide.startBigCol.rebuildByParent(position, height, rotation)
     } else {
-      vSide.startBigCol = new BigColumn({vParent:this, vPosition:position, vType:Types.BigColumnType.bc_start, vHeight:height})
+      vSide.startBigCol = new BigColumn({vParent:this, vPosition:position, vType:Types.BigColumnType.bc_start, vHeight:height, vRotation:rotation})
     }
     this.bigColumns.push(vSide.startBigCol)
   }

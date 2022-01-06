@@ -20,7 +20,7 @@ export class ArcStair extends Stair {
       this.floadSide = vFloadSide || Types.Side.si_right
     }
     this.type = Types.StairType.s_arc_type
-    this.stepLength = Default.STEP_LENGTH
+    this.stepLength = 1000
     /**@type {RectFlight} */
     this.enterFlight = null
     /**@type {RectFlight} */
@@ -28,36 +28,6 @@ export class ArcStair extends Stair {
     /**@type {ArcFlight} */
     this.arcFlight = null
     this.rebuild()
-  }
-
-  rebuild() {
-    if (this.exitType === Types.StairExitType.se_hangingBoard) {
-      this.hangOffset = this.hangingBoard?.depth || Default.HANG_BOARD_DEPTH
-    } else {
-      this.hangingBoard = null
-      this.hangOffset = 0
-    }
-    let gArgs = this.girderParameters
-    this.girOffset = gArgs.type === Types.GirderType.gslab? gArgs.depth : 0
-    this.startStepNum = this.startFlight?.stepNum || 0
-    this.computeSideOffset()
-    if (!this.segments.length) {
-      this.initSegments()
-    }
-    this.computeSize()
-    this.computePosition()
-    this.computeStepNum()
-    this.computeStepHeight()
-    this.updateStartHeight()
-    this.updateStairPositon()
-    this.updateSegments()
-    this.updateStartFlight()
-    // this.updatehangingBoard()
-    this.updateGirders()
-    // this.updateHandrails()
-    // this.updateSmallColumns()
-    // this.updateBigColumns()
-    this.updateCanvas('Stair')
   }
 
   getArgs() {
@@ -70,7 +40,15 @@ export class ArcStair extends Stair {
       name: this.exitFlight ?'移除出口楼梯段' : '添加出口楼梯段',
       state: this.exitFlight? 'delete' : 'add'
     }
-    return args
+    if ( (!this.enterFlight) && (!this.exitFlight)) {
+      if (args.smallColParameters?.value?.arrangeRule?.type) {
+        args.smallColParameters.value.arrangeRule.type = ''
+      } 
+    }
+    if (args.girderParameters?.value?.type?.type) {
+      args.girderParameters.value.type.type = ''
+    } 
+    return args 
   }
 
   initSegments() {
@@ -201,13 +179,12 @@ export class ArcStair extends Stair {
       outLast = border ? {poi:border.outEdges[border.outEdges.length - 1].p2,
                           topPoi:border.outTopEdges[border.outTopEdges.length - 1].p2} : null
       borders = borders.concat(rst)
-      // if (vSide.girders[i]) {
-      //   vSide.girders[i].rebuildByParent(borders)
-      // } else {
-      //   vSide.girders[i] = new Girder(this, borders)
-      // }
-      let girder = new Girder(this, borders)
-      this.girders.push(girder)
     }
+    if (vSide.girders[0]) {
+      vSide.girders[0].rebuildByParent(borders)
+    } else {
+      vSide.girders[0] = new Girder(this, borders)
+    }
+    this.girders.push(vSide.girders[0])
   }
 }

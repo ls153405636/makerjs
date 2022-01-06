@@ -15,7 +15,10 @@ export namespace Types {
         arph = 0,
         arrFour = 1,
         arrThree = 2,
-        arrTwo = 3
+        arrTwo = 3,
+        arrHalf = 4,
+        arrSix = 5,
+        arrEight = 6
     }
 
     /** BigColumnPosType enum. */

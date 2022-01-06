@@ -17,17 +17,17 @@ export class VerFace {
 
   createObj() {
     let pois = this.botRoute.getPois()
-    let topPois = []
-    for (const p of pois) {
-      topPois.push(new THREE.Vector3(p.x, p.y + this.height, p.z))
-    }
+    // let topPois = []
+    // for (const p of pois) {
+    //   topPois.push(new THREE.Vector3(p.x, p.y + this.height, p.z))
+    // }
     let positionSet = []
     this.lineFrame = new THREE.Group()
     let i = 0;
     for ( ;i < pois.length - 1; i++) {
       let p1 = pois[i], p2 = pois[i+1]
       positionSet = positionSet.concat(this.createFaceSet(p1, p2))
-      this.lineFrame.add(d3_tool.createFrameByPois([p1, topPois[i]]))
+      //this.lineFrame.add(d3_tool.createFrameByPois([p1, topPois[i]]))
     }
     if (this.botRoute.isClose) {
       positionSet = positionSet.concat(this.createFaceSet(pois[i], pois[0]))
@@ -35,7 +35,18 @@ export class VerFace {
     let positionAttr = new THREE.Float32BufferAttribute(positionSet, 3)
     let geo = new THREE.BufferGeometry()
     geo.setAttribute('position', positionAttr)
-    this.lineFrame.add(d3_tool.createFrameByPois([pois[i], topPois[i]]))
+    //this.lineFrame.add(d3_tool.createFrameByPois([pois[i], topPois[i]]))
+
+    for (let k = 0; k < this.botRoute.edges.length; k++) {
+      let p = d3_tool.translateCoord(this.botRoute.edges[k].getP1PB())
+      let topP = new THREE.Vector3(p.x, p.y + this.height, p.z)
+      this.lineFrame.add(d3_tool.createFrameByPois([p, topP]))
+      if (k === this.botRoute.edges.length - 1 && (!this.botRoute.isClose) ) {
+        let p2 = d3_tool.translateCoord(this.botRoute.edges[k].getP2PB())
+        let topP2 = new THREE.Vector3(p2.x, p2.y + this.height, p2.z)
+        this.lineFrame.add(d3_tool.createFrameByPois([p2, topP2]))
+      }
+    }
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:D3Default.PANEL_COLOR, side:THREE.DoubleSide}))
     this.mesh.userData.d3Type = 'face'
     this.obj.add(this.mesh, this.lineFrame)

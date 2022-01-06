@@ -18,7 +18,7 @@ export class BigColumn extends ChildInfo {
     { value: '140*140', label: '140*140' },
     { value: '150*150', label: '150*150' },
   ]
-  constructor({vParent, vPosition, vType, vPosName='', vHeight}) {
+  constructor({vParent, vPosition, vType, vPosName='', vHeight, vRotation}) {
     super(vParent)
     this.type = vType
     if (this.type !== Types.BigColumnType.bc_start) {
@@ -29,7 +29,7 @@ export class BigColumn extends ChildInfo {
       this.paras = this.parent.bigColParameters
     }
     this.posName = vPosName
-    this.rebuildByParent(vPosition, vHeight)
+    this.rebuildByParent(vPosition, vHeight, vRotation)
   }
 
   addInfo () {
@@ -40,10 +40,11 @@ export class BigColumn extends ChildInfo {
     this.parent.addBigCol(null, this.posName)
   }
 
-  rebuildByParent (vPosition, vHeight = 1200) {
+  rebuildByParent (vPosition, vHeight = 1200, vRotation) {
     this.position = vPosition
     this.size = tool.parseSpecification(this.paras.specification)
     this.size.z = vHeight
+    this.rotation = vRotation || new Types.Vector3()
   }
 
   rebuild () {
@@ -101,7 +102,7 @@ export class BigColumn extends ChildInfo {
       uuid: this.uuid,
       position: this.position,
       size: this.size,
-
+      rotation: this.rotation
     })
   }
 }

@@ -1,5 +1,6 @@
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
+import { UtilVec2 } from "../../utils/util_vec_2";
 import { ChildInfo } from "../child_info";
 import { Default } from "../config";
 import { SmallColumn } from "../small_column";
@@ -139,19 +140,34 @@ export class Tread extends ChildInfo {
       if (bArgs.posType === Types.BigColumnPosType.bcp_second) {
         return null
       } else if (bArgs.posType === Types.BigColumnPosType.bcp_first) {
-        edge = utilE.extendP1(-this.stepWidth/2)
+        if (edge.type === Types.EdgeType.earc) {
+          let angle = this.stepAngle / 2
+          edge = utilE.rotateP1(-angle)
+        } else {
+          edge = utilE.extendP1(-this.stepWidth/2)
+        }
         edge.p1.z = this.position.z + vArgs.height + nextT.stepHeight/2
         edge.p2.z = nextT.position.z + vArgs.height
       } else {
         let bigColSize = tool.parseSpecification(bArgs.specification)
         let offset = Default.BIG_COL_GAP + bigColSize.y / 2 
-        edge = utilE.extendP1(offset)
+        if (edge.type === Types.EdgeType.earc) {
+          let angle = this.stepAngle * (offset/this.stepWidth)
+          edge = utilE.rotateP1(angle)
+        } else {
+          edge = utilE.extendP1(offset)
+        }
         let offset_h = nextT.stepHeight * offset / this.stepWidth
         edge.p1.z = this.position.z + vArgs.height - offset_h
         edge.p2.z = nextT.position.z + vArgs.height
       }
     } else if (this.index === 2 && bArgs.posType === Types.BigColumnPosType.bcp_second) {
-      edge = utilE.extendP1(-this.stepWidth/2)
+      if (edge.type === Types.EdgeType.earc) {
+        let angle = this.stepAngle / 2
+        edge = utilE.rotateP1(-angle)
+      } else {
+        edge = utilE.extendP1(-this.stepWidth/2)
+      }
       edge.p1.z = this.position.z + vArgs.height + nextT.stepHeight/2
       edge.p2.z = nextT.position.z + vArgs.height
     } else {
@@ -182,7 +198,15 @@ export class Tread extends ChildInfo {
     /**@type {Types.GirderParameters} */
     let gArgs = this.parent.parent.getGirderParas(vSide)
     for (const rate of rateArr) {
-      let pos = new Edge().setByVec(utilE.getP1PB(), dir, length * rate).p2
+      let pos, rot = new Types.Vector3()
+      if (utilE.type === Types.EdgeType.earc) {
+        let angle = this.stepAngle * rate
+        pos = utilE.clone().rotateP1(-angle).p1
+        rot.z = new UtilVec2(utilE.getP1Vec()).getAngle()
+      } else {
+        pos = new Edge().setByVec(utilE.getP1PB(), dir, length * rate).p2
+        rot.z = this.lVec ? new UtilVec2(this.lVec).getAngle() : 0 
+      }
       let size = tool.parseSpecification(vArgs.specification)
       if (gArgs.type === Types.GirderType.gslab) {
         size.z = hArgs.height - this.getUpGirVerHeight(gArgs)
@@ -191,7 +215,7 @@ export class Tread extends ChildInfo {
         size.z = stepHeight * rate + hArgs.height
         pos.z = this.position.z
       }
-      let smallCol = new SmallColumn(this.parent.parent, pos, size)
+      let smallCol = new SmallColumn(this.parent.parent, pos, size, rot)
       sCols.push(smallCol) 
     }
     return sCols
@@ -219,17 +243,40 @@ export class Tread extends ChildInfo {
     if (vArgs.arrangeRule === Types.ArrangeRule.arrFour) {
       return 2
     }
-    if (vIsFirst) {
-      if (this.parent.index === 0 && this.parent.parent.startFlight) {
-        return 2
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrSix) {
+      return 3
+    }
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrEight) {
+      return 4
+    }
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
+      if (vIsFirst) {
+        if (this.parent.index === 0 && this.parent.parent.startFlight) {
+          return 2
+        } else {
+          return 1
+        }
       } else {
-        return 1
+        if (vLastNum >= 2) {
+          return 1
+        } else {
+          return 2
+        }
       }
-    } else {
-      if (vLastNum === 2) {
-        return 1
+    }
+    if (vArgs.arrangeRule === Types.ArrangeRule.arrHalf) {
+      if (vIsFirst) {
+        if (this.parent.index === 0 && this.parent.parent.startFlight) {
+          return 1
+        } else {
+          return 0
+        }
       } else {
-        return 2
+        if (vLastNum >= 1) {
+          return 0
+        } else {
+          return 1
+        }
       }
     }
   }
@@ -242,16 +289,23 @@ export class Tread extends ChildInfo {
   getSmallColRateArr (vNum, vArgs) {
     if (vNum === 1) {
       return [1/2]
-    } 
+    }
     if (vArgs.arrangeRule === Types.ArrangeRule.arrThree) {
       let size = tool.parseSpecification(vArgs.specification)
-      if (size.x / this.stepWidth > 1/12) {
+      if ( (size.x / 2) < (this.stepWidth / 6) ) {
         return [1/6, 5/6]
       } else {
         return [size.x/2/this.stepWidth, 1 - size.x/2/this.stepWidth]
       }
     } else {
-      return [1/4, 3/4]
+      let unit = 1/(vNum * 2)
+      let rateArr = []
+      let rate = unit
+      for (let i = 0; i < vNum; i++) {
+        rateArr.push(rate)
+        rate += (unit * 2)
+      }
+      return rateArr
     }
   }
 

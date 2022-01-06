@@ -116,4 +116,18 @@ export class Flight extends ChildInfo{
   createHandEdges() {}
 
   createSmallCols() {}
+
+  createSmallCols({vSide, vArgs, vLastNum}) {
+    let sCols = []
+    let lastNum = vLastNum
+    for (let i = 0; i < this.treads.length; i++) {
+      if (this.treads[i].isLast) {
+        continue
+      }
+      let tSCols = this.treads[i].getSmallCols(vSide, vArgs, i === 0 && lastNum === 0, lastNum)
+      lastNum = tSCols.length
+      sCols = sCols.concat(tSCols)
+    }
+    return {sCols, lastNum}
+  }
 }

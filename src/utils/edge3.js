@@ -34,8 +34,8 @@ export class Edge3 extends Edge {
     return pois
   }
 
-  split() {
-    let pois = this.getPois()
+  split(vDiv = 12) {
+    let pois = this.getPois(vDiv)
     for (let i = 0; i < pois.length - 1; i++) {
       let p1 = pois[i]
       let p2 = pois[i+1] 

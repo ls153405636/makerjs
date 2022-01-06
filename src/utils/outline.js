@@ -34,14 +34,19 @@ export class Outline {
         }
       } else {
         let path = new THREE.Path()
+        let div
         if (e.type === Types.EdgeType.ebeszer) {
           path.moveTo(e.p1.x, e.p1.y)
           path.quadraticCurveTo(e.controlPos.x, e.controlPos.y, e.p2.x, e.p2.y)
         } else if (e.type === Types.EdgeType.earc){
           path.moveTo(0, 0)
           path.arc(e.position.x, e.position.y, e.radius, e.startAngle, e.endAngle, !e.isClockwise)
+          let angleDiff = Math.abs(e.endAngle - e.startAngle)
+          angleDiff = angleDiff > Math.PI ? Math.PI * 2 - angleDiff : angleDiff
+          div = angleDiff / Math.PI * 12
+          div = Math.max(Number(div.toFixed(0)), 2)
         }
-        let points_2d = path.getPoints()
+        let points_2d = path.getPoints(div)
         //console.log(points_2d.length)
         for(const p of points_2d) {
           pois.push(new Types.Vector3({x:p.x, y:p.y, z: this.zCoord}))

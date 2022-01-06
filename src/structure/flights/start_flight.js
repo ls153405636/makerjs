@@ -2,6 +2,7 @@ import Victor from "victor";
 import { Types } from "../../types/stair_v2";
 import { Edge } from "../../utils/edge";
 import { Outline } from "../../utils/outline";
+import { UtilVec2 } from "../../utils/util_vec_2";
 import { Default } from "../config";
 import tool from "../tool";
 import { StartTread } from "../treads/start_tread";
@@ -431,9 +432,12 @@ export class StartFlight extends StraightFlight{
 
     inPos.z = this.treads[this.treads.length - 1].position.z
     outPos.z = this.treads[this.treads.length - 1].position.z
+    let rot = new Types.Vector3()
+    rot.z = new UtilVec2(this.lVec).getAngle()
     return {
       inPos,
-      outPos
+      outPos,
+      rot
     }
   }
 

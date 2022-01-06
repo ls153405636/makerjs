@@ -33,7 +33,15 @@ export class Loft {
     //let pois = []
     for (let i = 0; i < vRoute.edges.length; i++) { 
       let utilE = new Edge3(vRoute.edges[i])
-      utilE.split()
+      if (utilE.type === Types.EdgeType.earc) {
+        let angleDiff = Math.abs(utilE.endAngle - utilE.startAngle)
+        angleDiff = angleDiff > Math.PI ? Math.PI * 2 - angleDiff : angleDiff
+        let div = angleDiff / Math.PI * 12
+        div = Math.max(Number(div.toFixed(0)), 2)
+        utilE.split(div)
+      } else {
+        utilE.split()
+      }
       this.wholeUtilEs.push(utilE)
     }
   }
@@ -54,7 +62,7 @@ export class Loft {
         if (lUtilE && lUtilE.type !== Types.EdgeType.estraight) {
           vIsYFixed = true
         }
-        if (i === 0) {
+        if (i === 0 && k === 0) {
           let axis0 = this.createAxis(e, null)
           let sCutFacePois = this.createFacePois(e.p1d3, axis0)
           this.cutFacePoisSet.push(sCutFacePois)

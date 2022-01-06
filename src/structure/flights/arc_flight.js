@@ -5,6 +5,7 @@ import { ArcTread } from '../treads/arc_tread'
 import { UtilVec2 } from '../../utils/util_vec_2'
 import tool from '../tool'
 import { Flight } from './flight'
+import { SmallColumn } from '../small_column'
 
 export class ArcFlight extends Flight{
   constructor({vParent, vStepNum, vStepNumRule, vRadius, vClock, vEndLVec}) {
@@ -18,7 +19,13 @@ export class ArcFlight extends Flight{
     /**@type {Array<ArcTread>} */
     this.treads = []
     this.arcWidth = Default.ARC_WIDTH
-    //this.rebuildByParent({vPos, vIndex, vTreadIndex, isLast})
+    this.inSColArrRule = Types.ArrangeRule.arrFour
+    let inArc = this.arcWidth * (this.radius - this.parent.stepLength) / this.radius
+    if (inArc > 100) {
+      this.outSColArrRule = Types.ArrangeRule.arrTwo
+    } else {
+      this.outSColArrRule = Types.ArrangeRule.arrHalf
+    }
   }
 
   rebuildByParent({vPos, vIndex, vTreadIndex, vIsLast}) {
@@ -48,6 +55,14 @@ export class ArcFlight extends Flight{
     }
     args.stepNum = { name: '步数', value: this.stepNum, type: 'input' }
     args.name = '楼梯段参数'
+    args.inSColArrRule = {name:'外弧小柱规则', 
+                          value:f(this.inSColArrRule, SmallColumn.IN_ARRANGR_RULE_OPTIONS),
+                          type:'select',
+                          options:SmallColumn.IN_ARRANGR_RULE_OPTIONS}
+    args.outSColArrRule = {name:'内弧小柱规则',
+                            value:f(this.outSColArrRule, SmallColumn.OUT_ARRANGR_RULE_OPTIONS),
+                            type:'select',
+                            options:SmallColumn.OUT_ARRANGR_RULE_OPTIONS}
     return args
   }
 
@@ -147,5 +162,36 @@ export class ArcFlight extends Flight{
       pos = new Edge().setByVec(this.center, lVec, -this.radius).p2
     }
     return {lVec, wVec, pos}
+  }
+
+  /**
+   *
+   *创建某一侧的扶手路径边集
+   * @param {Object} arguments[0]
+   * @returns
+   * @memberof Flight
+   */
+   createHandEdges({vSide, vArgs}) {
+    let edges = []
+    // let lastUtilE = null
+    for (let i = 0; i < this.treads.length; i++) {
+      if (this.treads[i].isLast) {
+        continue
+      }
+      let edge = this.treads[i].getHandEdge(vSide, vArgs)
+      if (!edge) {
+        continue
+      }
+      edges.push(edge)
+    }
+    return edges
+  }
+
+  createSmallCols ({vSide, vArgs, vLastNum}) {
+    vArgs = {
+      ...vArgs,
+      arrangeRule:this[vSide+'SColArrRule']
+    } 
+    return super.createSmallCols({vSide, vArgs, vLastNum})
   }
 }

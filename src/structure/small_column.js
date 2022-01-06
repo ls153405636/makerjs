@@ -8,38 +8,31 @@ export class SmallColumn extends ChildInfo {
     { value: Types.ArrangeRule.arrFour, label: '两级四根' },
     { value: Types.ArrangeRule.arrTwo, label: '一级一根'}
   ]
+  //弧形梯内侧外弧规则
+  static IN_ARRANGR_RULE_OPTIONS = [
+    { value: Types.ArrangeRule.arrFour, label: '一级两根' },
+    { value: Types.ArrangeRule.arrSix, label: '一级三根' },
+    { value: Types.ArrangeRule.arrEight, label: '一级四根' },
+  ]
+  //弧形梯外侧内弧规则
+  static OUT_ARRANGR_RULE_OPTIONS = [
+    { value: Types.ArrangeRule.arrHalf, label: '两级一根' },
+    { value: Types.ArrangeRule.arrTwo, label: '一级一根'}
+  ]
   static SPEC_OPTIONS = [
     { value: '48*48', label: '48*48' },
     { value: '58*58', label: '58*58' },
     { value: '68*68', label: '68*68' },
   ]
-  constructor(vParent, vPosition, vSize) {
+  constructor(vParent, vPosition, vSize, vRotation) {
     super(vParent)
     this.position = vPosition
     this.size = vSize
+    this.rotation = vRotation || new Types.Vector3()
   }
 
   getArgs() {
     let sargs = this.parent.smallColParameters
-    // let hargs = this.parent.handrailParameters
-    // let specOptions = []
-    // let height = 0
-    // for (const item of SmallColumn.SPEC_OPTIONS) {
-    //   let size = tool.parseSpecification(item.value, 'xyz')
-    //   if (size.z > hargs.height) {
-    //     if (height) {
-    //       if (height === size.z) {
-    //         specOptions.push(item)
-    //       } else if (size.z < height) {
-    //         height = size.z
-    //         specOptions = [item]
-    //       }
-    //     } else if (!height) {
-    //       height = size.z
-    //       specOptions = [item]
-    //     }
-    //   }
-    // }
     let f = tool.getItemFromOptions
     return {
       arrangeRule: {
@@ -69,6 +62,7 @@ export class SmallColumn extends ChildInfo {
       uuid: this.uuid,
       position: this.position,
       size: this.size,
+      rotation: this.rotation
     })
   }
 }

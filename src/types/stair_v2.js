@@ -42,6 +42,9 @@ export const Types = $root.Types = (() => {
      * @property {number} arrFour=1 arrFour value
      * @property {number} arrThree=2 arrThree value
      * @property {number} arrTwo=3 arrTwo value
+     * @property {number} arrHalf=4 arrHalf value
+     * @property {number} arrSix=5 arrSix value
+     * @property {number} arrEight=6 arrEight value
      */
     Types.ArrangeRule = (function() {
         const valuesById = {}, values = Object.create(valuesById);
@@ -49,6 +52,9 @@ export const Types = $root.Types = (() => {
         values[valuesById[1] = "arrFour"] = 1;
         values[valuesById[2] = "arrThree"] = 2;
         values[valuesById[3] = "arrTwo"] = 3;
+        values[valuesById[4] = "arrHalf"] = 4;
+        values[valuesById[5] = "arrSix"] = 5;
+        values[valuesById[6] = "arrEight"] = 6;
         return values;
     })();
 
@@ -7814,6 +7820,9 @@ export const Types = $root.Types = (() => {
                 case 1:
                 case 2:
                 case 3:
+                case 4:
+                case 5:
+                case 6:
                     break;
                 }
             if (message.material != null && message.hasOwnProperty("material")) {
@@ -7860,6 +7869,18 @@ export const Types = $root.Types = (() => {
             case "arrTwo":
             case 3:
                 message.arrangeRule = 3;
+                break;
+            case "arrHalf":
+            case 4:
+                message.arrangeRule = 4;
+                break;
+            case "arrSix":
+            case 5:
+                message.arrangeRule = 5;
+                break;
+            case "arrEight":
+            case 6:
+                message.arrangeRule = 6;
                 break;
             }
             if (object.material != null) {
