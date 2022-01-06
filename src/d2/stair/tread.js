@@ -26,13 +26,13 @@ export class Tread extends ChildWidget {
     this.backIndex = vPB.border.backIndex
     this.index = vPB.index
     this.type = vPB.type
+    this.stairInfo = StructConfig.INFOS.get(this.uuid)
     this.stepWidth = vPB.stepWidth
     this.stepLength = vPB.stepLength
     this.sprite = new PIXI.Container()
     this.isLast = vPB.isLast
     this.parent = vParent
     this.depth = Default.WALL_DEPTH
-    this.stairInfo = StructConfig.INFOS.get(this.uuid)
     this.draw()
     let stairId
     for(let value of D2Config.WIDGETS.values()) {
@@ -1739,7 +1739,7 @@ export class Tread extends ChildWidget {
     this.sprite.addChild(treadLineContainer)
   }
 
-  // 创建直线边
+  // 弧线两点创建直线边
   getStraightEdge(vEdges) {
     let newEdges = new Types.Edge({
       p1: new Types.Vector3({ x: vEdges.p1.x / D2Config.SCREEN_RATE, y: vEdges.p1.y / D2Config.SCREEN_RATE, z: vEdges.p1.z / D2Config.SCREEN_RATE}),
@@ -1749,7 +1749,7 @@ export class Tread extends ChildWidget {
     return newEdges
   }
 
-  // 两点创建一条边
+  // 两条边创建一条垂直那两条边且居中的边
   creatStraightEdge(vEdge1, vEdge2) {
     let newEdges = new Types.Edge({
       p1: new Types.Vector3({ x: (vEdge1.p1.x + vEdge1.p2.x) / 2, y: (vEdge1.p1.y + vEdge1.p2.y) / 2, z: (vEdge1.p1.z + vEdge1.p2.z) / 2}),
@@ -1867,20 +1867,18 @@ export class Tread extends ChildWidget {
 
     if (this.type !== Types.TreadType.tStart) { 
       // 入口、出口单级踏板标注
-      let inEdge = d2_tool.translateEdges(this.edges[this.inIndex])
+      let inEdge = d2_tool.translateEdges(new Edge(this.creatStraightEdge(this.edges[this.frontIndex], this.edges[this.backIndex])).offset(this.stepLength / 2, isTrue))
       let newInEdge = new Edge(inEdge).offset(treadOffset, isTrue)
       let newInEdgeT = new Edge(newInEdge).offset(arcArrow, isTrue)
       let newInEdgeB = new Edge(newInEdge).offset(-arcArrow, isTrue)
       
-      let treadTextLength = Math.round(new Edge(inEdge).getLength())
-      const treadText = new PIXI.Text(treadTextLength * D2Config.SCREEN_RATE, textStyle)
+      let treadTextLength = Math.round(new Edge(inEdge).getLength() * D2Config.SCREEN_RATE)
+      const treadText = new PIXI.Text(treadTextLength, textStyle)
       treadText.visible = false
       this.creatText(treadText, newInEdgeT)
       this.creatTextRotaitionP(treadText, newInEdgeT)
       const inTreadLine = new PIXI.Graphics()
       if (this.type !== Types.TreadType.tArc && !this.isLast) {
-        console.log(this.index)
-        console.log(this.isLast)
         treadText.visible = true
         inTreadLine.lineStyle(1, 0x000000, 1, 0.5, true)
         inTreadLine.moveTo(newInEdge.p1.x, newInEdge.p1.y)
@@ -1912,8 +1910,8 @@ export class Tread extends ChildWidget {
       let newLastEdgeT = new Edge(newLastEdge).offset(arcArrow, isTrue)
       let newLastEdgeB = new Edge(newLastEdge).offset(-arcArrow, isTrue)
 
-      const firstTextLength = Math.round(new Edge(firstEdge).getLength()) * D2Config.SCREEN_RATE
-      const lastTextLength = Math.round(new Edge(lastEdge).getLength()) * D2Config.SCREEN_RATE
+      const firstTextLength = Math.round(new Edge(firstEdge).getLength()* D2Config.SCREEN_RATE) 
+      const lastTextLength = Math.round(new Edge(lastEdge).getLength()* D2Config.SCREEN_RATE) 
       const firstTreadText = new PIXI.Text(firstTextLength, textStyle)
       const lastTreadText = new PIXI.Text(lastTextLength, textStyle)
       firstTreadText.visible = false
@@ -1996,8 +1994,12 @@ export class Tread extends ChildWidget {
       frontStartText.visible = false
       this.creatText(frontStartText, newFrontStartEdgeT)
       this.creatTextRotaitionP(frontStartText,newFrontStartEdge)
-
-      const sideStartText = new PIXI.Text(this.stepWidth, textStyle)
+      let sideStartText
+      if (this.stairInfo.parent.modelType === Types.StartTreadType.st_el || this.stairInfo.parent.modelType === Types.StartTreadType.st_el_2) {
+        sideStartText = new PIXI.Text(this.stepWidth + Math.round(this.stairInfo.parent.offset2), textStyle)
+      }else {
+        sideStartText = new PIXI.Text(this.stepWidth, textStyle)
+      }
       sideStartText.visible = false
       this.creatText(sideStartText, newSideStartEdgeT)
       this.creatTextRotaitionR(sideStartText,newSideStartEdge)
@@ -2031,6 +2033,5 @@ export class Tread extends ChildWidget {
     }
   }
   creatRadius() {
-
   }
 }
