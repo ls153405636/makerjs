@@ -661,7 +661,7 @@ export class Stair extends BaseWidget {
     }
 
     const lastFlightLine = new PIXI.Graphics()
-    lastFlightLine.lineStyle(1, 0xff88ff)
+    lastFlightLine.lineStyle(1,0x000000, 1, 0.5, true)
     if (lastFlightfirstTread !== undefined || lastFlightlastTread !== undefined) {
       let lastFlightfirstTreadT = new Edge(lastFlightfirstTread).offset(5, isTrue)
       let lastFlightfirstTreadB = new Edge(lastFlightfirstTread).offset(5, !isTrue)
@@ -690,7 +690,7 @@ export class Stair extends BaseWidget {
     }
 
     const firstFlightLine = new PIXI.Graphics()
-    firstFlightLine.lineStyle(1, 0xff88ff)
+    firstFlightLine.lineStyle(1,0x000000, 1, 0.5, true)
     if (firstFlightfirstTread !== undefined && firstFlightlastTread !== undefined) {
       let firstFlightfirstTreadT = new Edge(firstFlightfirstTread).offset(5, isTrue)
       let firstFlightfirstTreadB = new Edge(firstFlightfirstTread).offset(5, !isTrue)
