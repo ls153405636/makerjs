@@ -181,6 +181,7 @@ export class Girder extends ChildModel {
     for (let i = 0; i < vBotEdges.length; i++) {
       if (vBotEdges[i].type !== Types.EdgeType.earc) {
         vBotEdges.splice(i,1)
+        i--
       }
     }
     let e1 = vBotEdges[0], e2 = vBotEdges[1]
@@ -188,9 +189,11 @@ export class Girder extends ChildModel {
       let angle1 = e1.startAngle, angle2 = e1.endAngle, angle3 = e2.endAngle
       let height = tE.p2.z - tE.p1.z
       let tE1 = new Edge(tE).rotateP2(-Math.abs(angle3 - angle2))
+      tE1.p1.z = tE.p1.z
       tE1.p2.z = tE.p1.z + height * Math.abs((angle2-angle1)/(angle3-angle1))
       let tE2 = new Edge(tE).rotateP1(-Math.abs(angle2 - angle1))
       tE2.p1.z = tE1.p2.z
+      tE2.p2.z = tE.p2.z
       let div1 = vDiv * Math.abs((angle2-angle1)/(angle3-angle1))
       div1 = Math.max(Number(div1.toFixed(0)), 2) 
       let div2 = vDiv - div1

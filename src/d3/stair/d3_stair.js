@@ -84,13 +84,13 @@ export class Stair extends BaseModel {
         scope.smallColumns.push(new SmallColumn({vParent:scope, vPB:sCol, vParas:vPB.smallColParameters, vGltf:vGltf.clone()}))
       }
     }
-    let bigColInit = function(vGltf) {
-      for (const bCol of vPB.bigColumns) {
-        scope.bigColumns.push(new BigColumn({vParent:scope, vPB:bCol, vParas:vPB.smallColParameters, vGltf:vGltf.clone()}))
-      }
-    }
+    // let bigColInit = function(vGltf) {
+    //   for (const bCol of vPB.bigColumns) {
+    //     scope.bigColumns.push(new BigColumn({vParent:scope, vPB:bCol, vParas:vPB.smallColParameters, vGltf:vGltf.clone()}))
+    //   }
+    // }
     d3_tool.loadGltf(vPB.smallColParameters.source.modelPath, smallColInit)
-    d3_tool.loadGltf(vPB.bigColParameters.source.modelPath, bigColInit)
+    //d3_tool.loadGltf(vPB.bigColParameters.source.modelPath, bigColInit)
     this.createObj()
   }
 

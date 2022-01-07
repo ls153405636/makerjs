@@ -45,9 +45,9 @@ export class ArcStair extends Stair {
         args.smallColParameters.value.arrangeRule.type = ''
       } 
     }
-    if (args.girderParameters?.value?.type?.type) {
-      args.girderParameters.value.type.type = ''
-    } 
+    // if (args.girderParameters?.value?.type?.type) {
+    //   args.girderParameters.value.type.type = ''
+    // } 
     return args 
   }
 
@@ -71,9 +71,9 @@ export class ArcStair extends Stair {
   }
 
   updateSegments() {
-    let vArcPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset / 2, y:this.parent.hole.width - this.hangOffset})
+    let vArcPos = new Types.Vector3({x:this.parent.hole.length - this.girOffset, y:this.parent.hole.width - this.hangOffset})
     if (this.floadSide === Types.Side.si_left) {
-      vArcPos.x = 0
+      vArcPos.x = this.girOffset
     }
     if (this.exitFlight) {
       let angle = this.arcFlight.clock ? Math.PI/2 : -Math.PI/2

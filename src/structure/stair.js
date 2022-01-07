@@ -498,15 +498,21 @@ export class Stair extends Info {
         let f = this.flights[i]
         if (f.type !== Types.FlightType.fStart && absDiff > 0) {
           if (f.stepNum > 1) {
-            let stepWidth = f.length / (f.realStepNum - unit)
-            if (unit > 0 && stepWidth > stepWidthMax) {
-              modifiable = false
-            } else if (unit < 0 && stepWidth < stepWidthMin) {
-              modifiable = false
-            } else {
+            if (f.type === Types.FlightType.farc) {
               f.updateItem(f.stepNum - unit, 'stepNum')
               absDiff--
               modifiable = true
+            } else {
+              let stepWidth = f.length / (f.realStepNum - unit)
+              if (unit > 0 && stepWidth > stepWidthMax) {
+                modifiable = false
+              } else if (unit < 0 && stepWidth < stepWidthMin) {
+                modifiable = false
+              } else {
+                f.updateItem(f.stepNum - unit, 'stepNum')
+                absDiff--
+                modifiable = true
+              }
             }
           } else {
             modifiable = false

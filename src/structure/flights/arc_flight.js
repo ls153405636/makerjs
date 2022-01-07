@@ -33,7 +33,7 @@ export class ArcFlight extends Flight{
     this.pos = vPos
     this.stepHeight = this.parent.stepHeight
     this.stepLength = this.parent.stepLength
-    this.center = new Edge().setByVec(this.pos, this.endLVec, this.radius).p2
+    this.center = new Edge().setByVec(this.pos, this.endLVec, this.radius - this.parent.girOffset).p2
     this.stepAngle = 2* Math.sinh(this.arcWidth/2/this.radius)
     this.updateTreads()
   }

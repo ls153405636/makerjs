@@ -85,10 +85,12 @@ export class ArcTread extends Tread {
   }
 
   createArcOutline (vOutEndLVec, vInEndLVec, vOutEndAngle, vInEndAngle) {
-    let p1 = new Edge().setByVec(this.center, vInEndLVec, -this.outRadius).p2
-    let p2 = new Edge().setByVec(this.center, vOutEndLVec, -this.inRadius).p2
-    let p3 = new Edge().setByVec(this.center, this.startLVec, -this.inRadius).p2
-    let p4 = new Edge().setByVec(this.center, this.startLVec, -this.outRadius).p2
+    let outRadius = this.outRadius - this.parent.parent.girOffset
+    let inRadius = this.inRadius + this.parent.parent.girOffset
+    let p1 = new Edge().setByVec(this.center, vInEndLVec, -outRadius).p2
+    let p2 = new Edge().setByVec(this.center, vOutEndLVec, -inRadius).p2
+    let p3 = new Edge().setByVec(this.center, this.startLVec, -inRadius).p2
+    let p4 = new Edge().setByVec(this.center, this.startLVec, -outRadius).p2
     let edge1 = new Types.Edge({p1:p1, p2:p2, type:Types.EdgeType.estraight})
     let edge2 = new Types.Edge({p1:p2, 
                                 p2:p3, 
@@ -96,7 +98,7 @@ export class ArcTread extends Tread {
                                 position:this.center, 
                                 startAngle:vOutEndAngle,
                                 endAngle:this.startAngle,
-                                radius:this.inRadius,
+                                radius:inRadius,
                                 isClockwise:!this.clock})
     //let edge2 = new Types.Edge({p1:p2, p2:p3, type:Types.EdgeType.estraight})
     let edge3 = new Types.Edge({p1:p3, p2:p4, type:Types.EdgeType.estraight})
@@ -107,7 +109,7 @@ export class ArcTread extends Tread {
                                 position:this.center,
                                 startAngle:this.startAngle,
                                 endAngle:vInEndAngle,
-                                radius:this.outRadius,
+                                radius:outRadius,
                                 isClockwise:this.clock})
     let outline = new Types.Outline({edges:[edge1, edge2, edge3, edge4], isClose:true, isClock:this.clock})
     outline = new Outline(outline).setZCoord(this.position.z)
@@ -281,12 +283,14 @@ export class ArcTread extends Tread {
       if (this.index === 1 && vArgs.fOffsetStep) {
         let rate = vArgs.fOffsetStep / this.stepWidth
         let angle = this.stepAngle * rate
-        let tP = utilE.clone().rotateP1(angle).p1
-        tP.z += (upVerHeight - vArgs.fOffsetStep * Math.tan(angle))
-        tE1.p1 = tP
-        let bP = utilE.clone().extendP1(angle).p1
-        bP.z = e1.p1.z
-        e1.p1 = bP
+        let newTE = utilE.clone().rotateP1(angle)
+        newTE.p1.z += (upVerHeight - vArgs.fOffsetStep * Math.tan(angle))
+        newTE.p2.z = tE1.p2.z
+        let newE = utilE.clone().rotateP1(angle)
+        newE.p1.z = e1.p1.z
+        newE.p2.z = e1.p2.z
+        tE1 = newTE
+        e1 = newE
       }
     }
     let edges = [e1], topEdges = [tE1]
