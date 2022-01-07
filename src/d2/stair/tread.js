@@ -1797,11 +1797,18 @@ export class Tread extends ChildWidget {
     this.creatStartTread()
     // 内外弧线半径
     this.creatRadius()
+    // // 距离墙体距离
+    // if (this.stairInfo.type === Types.TreadType.tArc) {
+    //   if((this.stepNumRule === Types.StepNumRule.snr_n_add_1 && this.stairInfo.parent.stepAngle * (this.stairInfo.parent.realStepNum - 1) > Math.PI / 2) ||  (this.stepNumRule === Types.StepNumRule.snr_n && this.stairInfo.parent.stepAngle * this.stairInfo.parent.realStepNum > Math.PI / 2)) {
+    //     this.creatDistance()
+    //   }
+    // }
     
     this.sprite.addChild(this.arcContainer)
   }
   
   creatArcWide() {
+    console.log(this.stairInfo)
     const arcContainer = this.arcContainer
     // 文字样式
     let textStyle = this.textStyle
@@ -2069,8 +2076,6 @@ export class Tread extends ChildWidget {
     let outRadiusEdge = this.creatNewEdge(radiusEdge.p1, newRadiusEdge.p1)
     let inRadiusEdge = this.creatNewEdge(radiusEdge.p2, newRadiusEdge.p2)
 
-
-
     const outRadiusText = new PIXI.Text('R' + outRadius, {
       fill: 0x000000,
       fontSize: 24
@@ -2078,9 +2083,7 @@ export class Tread extends ChildWidget {
     outRadiusText.visible = false
     outRadiusText.scale.set(0.25)
     outRadiusText.position.set(outRadiusEdge.p2.x, outRadiusEdge.p2.y)
-    // outRadiusText.anchor.set(0.5, 0.5)
     this.creatTextRotaitionP(outRadiusText, outRadiusEdge)
-    outRadiusText.anchor.set(0, 0.5)
     
     const inRadiusText = new PIXI.Text('R' + inRadius, {
       fill: 0x000000,
@@ -2090,7 +2093,13 @@ export class Tread extends ChildWidget {
     inRadiusText.scale.set(0.25)
     inRadiusText.position.set(inRadiusEdge.p2.x, inRadiusEdge.p2.y)
     this.creatTextRotaitionR(inRadiusText, inRadiusEdge)
-    inRadiusText.anchor.set(1, 0.5)
+    if (this.isClock) {
+      outRadiusText.anchor.set(0, 0.5)
+      inRadiusText.anchor.set(1, 0.5)
+    }else {
+      outRadiusText.anchor.set(1, 0.5)
+      inRadiusText.anchor.set(0, 0.5)
+    }
     
     const outRadiusLine = new PIXI.Graphics()
     outRadiusLine.lineStyle(1, 0x000000, 1, 0.5, true)

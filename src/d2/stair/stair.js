@@ -79,6 +79,14 @@ export class Stair extends BaseWidget {
     if (this.type === Types.StairType.s_arc_type) {
       this.addArcFlight()
     }
+    // 距墙体距离（圆弧楼梯旋转角度大于90°标注）
+    if (this.stairInfo.arcFlight) {
+      this.arcRealStepNum = this.stairInfo.arcFlight.realStepNum
+      this.arcRealStepAngle = this.stairInfo.arcFlight.stepAngle
+      if (this.arcRealStepNum * this.arcRealStepAngle > Math.PI / 2) {
+        this.creatDistance()
+      }
+    }
   }
 
   destroy() {
@@ -734,5 +742,86 @@ export class Stair extends BaseWidget {
 
 
     this.sprite.addChild(flightContainer)
+  }
+
+
+  getCenterPoint(vP1, vP2) {
+    let p = new THREE.Vector2(
+      (vP1.x + vP2.x) / 2,
+      (vP1.y + vP2.y) / 2,
+    )
+    return p
+  }
+
+  creatDistance() {
+    const distanceContainer = new PIXI.Container()
+    let center = this.stairInfo.arcFlight.center
+    let radius = this.stairInfo.arcFlight.radius
+    // 最后一级踏板
+    let disLastTread
+    let n
+    if (this.stairInfo.stepNumRule === Types.StepNumRule.snr_n_add_1) {
+      n = 2
+    }else {
+      n = 1
+    }
+    // 如果有出口楼梯段
+    if (this.stairInfo.exitFlight) {
+      disLastTread = this.stairInfo.exitFlight.treads[this.stairInfo.exitFlight.treads.length - n]
+    }
+    // 如果没有出口楼梯段
+    else {
+      disLastTread = this.stairInfo.arcFlight.treads[this.stairInfo.arcFlight.treads.length - n]
+    }
+    let normalIndex
+    if(this.stairInfo.againstWallType === Types.AgainstWallType.aw_left || this.stairInfo.againstWallType === Types.AgainstWallType.aw_no) {
+      normalIndex = disLastTread.border.frontIndex
+    }else {
+      normalIndex = disLastTread.border.backIndex
+    }
+    let vecEdge = disLastTread.border.stepOutline.edges[normalIndex]
+    let vecEdgeVec = new Edge(vecEdge).getNormal()
+    let wall
+    for(let value of D2Config.WIDGETS.values()) {
+      if (value.getWidgetType() === COMP_TYPES.WALL) {
+        if (tool.isVec2Equal(value.normal, vecEdgeVec)) {
+          wall = value
+        }
+      }
+    }
+    let wallCenterPoint = this.getCenterPoint(wall.holeP1, wall.holeP2)
+    let stairPosition = this.stairInfo.position
+    if (Math.abs(wall.normal.x) === 0) {
+      wallCenterPoint = new THREE.Vector2(
+        center.x,
+        wallCenterPoint.y * D2Config.SCREEN_RATE - stairPosition.y,
+      )
+    }else {
+      wallCenterPoint = new THREE.Vector2(
+        wallCenterPoint.x * D2Config.SCREEN_RATE - stairPosition.x,
+        center.x,
+      )
+    }
+    let disEdge = this.creatNewEdge(center, wallCenterPoint)
+    disEdge = d2_tool.translateEdges(new Edge(disEdge).extendP1(-radius))
+
+    const distanceTextLength = new Edge(disEdge).getLength() * D2Config.SCREEN_RATE
+
+    const distanceText = new PIXI.Text(distanceTextLength, this.textStyle)
+    distanceText.visible = false
+    this.creatText(distanceText, disEdge)
+    distanceText.anchor.set(0.5, 1)
+    this.creatTextRotaitionP(distanceText, disEdge)
+    
+    const distanceLine = new PIXI.Graphics()
+    distanceLine.lineStyle(1, 0x000000, 1, 0.5, true)
+    if (distanceTextLength !== 0 && (disEdge.p1.x - disEdge.p2.x >= 0 && disEdge.p1.y - disEdge.p2.y >= 0)) {
+      distanceText.visible = true
+      distanceLine.moveTo(disEdge.p1.x, disEdge.p1.y)
+      distanceLine.lineTo(disEdge.p2.x, disEdge.p2.y)
+    }
+
+    distanceContainer.addChild(distanceLine, distanceText)
+    this.sprite.addChild(distanceContainer)
   }
 }
