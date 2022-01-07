@@ -1808,7 +1808,6 @@ export class Tread extends ChildWidget {
   }
   
   creatArcWide() {
-    console.log(this.stairInfo)
     const arcContainer = this.arcContainer
     // 文字样式
     let textStyle = this.textStyle
