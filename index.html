@@ -8,11 +8,24 @@
     <script src="/js/pixi/pixi.js"></script>
     <script src="/js/three/three.js"></script>
     <script src="//at.alicdn.com/t/font_2856371_78crwemjfrh.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/makerjs@0/target/js/browser.maker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bezier-js@2/bezier.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/opentype.js@0/dist/opentype.js"></script>
+
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2856371_bkv2lxx9fpb.css">
     <link rel="stylesheet" href="./src/assets/css/mask.css">
+    <style>
+      #render-text {
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/pages/index/main.js"></script>
+    <div id="render-text"></div>
   </body>
 </html>
