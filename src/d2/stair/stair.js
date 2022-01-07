@@ -650,12 +650,18 @@ export class Stair extends BaseWidget {
       // 获取出口楼梯段最后一级踏板（除n+1步）
       if (e.treads[0].type === Types.TreadType.trect && e.treads[e.treads.length - 1].index === stepNum ) {
         lastFlightfirstTread = this.creatStraightEdge(e.treads[0].border.stepOutline.edges[frontIndex], e.treads[0].border.stepOutline.edges[backIndex])
+        lastFlightfirstTread = new Edge(d2_tool.translateEdges(lastFlightfirstTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, isTrue)
         if (stepNumRule === Types.StepNumRule.snr_n_add_1) {
           lastFlightlastTread = this.creatStraightEdge(e.treads[e.treads.length - 2].border.stepOutline.edges[frontIndex], e.treads[e.treads.length - 2].border.stepOutline.edges[backIndex])
+          if (this.stairInfo.hangingBoard !== null) {
+            lastFlightlastTread = new Edge(lastFlightlastTread).extendP2(this.stairInfo.hangingBoard.depth)
+          }
         } else {
           lastFlightlastTread = this.creatStraightEdge(e.treads[e.treads.length - 1].border.stepOutline.edges[frontIndex], e.treads[e.treads.length - 1].border.stepOutline.edges[backIndex])
+          if (this.stairInfo.hangingBoard !== null) {
+            lastFlightlastTread = new Edge(lastFlightlastTread).extendP2(this.stairInfo.hangingBoard.depth)
+          }
         }
-        lastFlightfirstTread = new Edge(d2_tool.translateEdges(lastFlightfirstTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, isTrue)
         lastFlightlastTread = new Edge(d2_tool.translateEdges(lastFlightlastTread)).offset(flightOffset + stepLength / 2 / D2Config.SCREEN_RATE, isTrue)
       }
     }

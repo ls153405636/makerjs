@@ -19,7 +19,6 @@ export class BigColumn extends ChildWidget {
     this.positionX = d2_tool.translateValue(vPB.position.x)
     this.positionY = d2_tool.translateValue(vPB.position.y)
     this.rotation = vPB.rotation.z
-    console.log(vPB)
     this.draw()
     this.addEvent()
   }

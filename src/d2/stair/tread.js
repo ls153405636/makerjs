@@ -1759,6 +1759,16 @@ export class Tread extends ChildWidget {
     return newEdges
   }
 
+  // 两点创建一条边
+  creatNewEdge(vP1, vP2) {
+    let newEdges = new Types.Edge({
+      p1: new Types.Vector3({ x: vP1.x, y: vP1.y, z: vP1.z}),
+      p2: new Types.Vector3({ x: vP2.x, y: vP2.y, z: vP2.z}),
+      type: Types.EdgeType.estraight,
+    })
+    return newEdges
+  }
+
   ArcStairDemension() {
     this.arcContainer = new PIXI.Container()
     // 文字样式
@@ -1769,6 +1779,7 @@ export class Tread extends ChildWidget {
     this.arcOffset = 15 // 弧宽标注偏移距离
     this.arcArrow = 4  // 端头长度
     this.treadOffset = 54
+    this.radiusOffset = 20
     this.startTreadOffset = 15
     // 判断edge是否顺时针
     this.isTrue = true
@@ -2033,5 +2044,75 @@ export class Tread extends ChildWidget {
     }
   }
   creatRadius() {
+    const arcContainer = this.arcContainer
+    // 文字样式
+    let textStyle = this.textStyle
+    let arcOffset = this.arcOffset // 弧宽标注偏移距离
+    let arcArrow = this.arcArrow  // 端头长度
+    let treadOffset = this.treadOffset
+    let radiusOffset = this.radiusOffset
+    let startTreadOffset = this.startTreadOffset
+    // 判断edge是否顺时针
+    let isTrue = this.isTrue
+    let outRadius = this.stairInfo.outRadius
+    let inRadius = this.stairInfo.inRadius
+
+    let outArcEdge = this.edges[this.inIndex]
+    let newOutArcEdge = this.getStraightEdge(outArcEdge)
+    
+    let inArcEdge = this.edges[this.outIndex]
+    let newInArcEdge = this.getStraightEdge(inArcEdge)
+    let radiusEdge = this.creatStraightEdge(newOutArcEdge, newInArcEdge)
+    let newRadiusEdge = new Edge(radiusEdge).extendP1(-radiusOffset)
+    newRadiusEdge = new Edge(newRadiusEdge).extendP2(-radiusOffset)
+
+    let outRadiusEdge = this.creatNewEdge(radiusEdge.p1, newRadiusEdge.p1)
+    let inRadiusEdge = this.creatNewEdge(radiusEdge.p2, newRadiusEdge.p2)
+
+
+
+    const outRadiusText = new PIXI.Text('R' + outRadius, {
+      fill: 0x000000,
+      fontSize: 24
+    })
+    outRadiusText.visible = false
+    outRadiusText.scale.set(0.25)
+    outRadiusText.position.set(outRadiusEdge.p2.x, outRadiusEdge.p2.y)
+    // outRadiusText.anchor.set(0.5, 0.5)
+    this.creatTextRotaitionP(outRadiusText, outRadiusEdge)
+    outRadiusText.anchor.set(0, 0.5)
+    
+    const inRadiusText = new PIXI.Text('R' + inRadius, {
+      fill: 0x000000,
+      fontSize: 24
+    })
+    inRadiusText.visible = false
+    inRadiusText.scale.set(0.25)
+    inRadiusText.position.set(inRadiusEdge.p2.x, inRadiusEdge.p2.y)
+    this.creatTextRotaitionR(inRadiusText, inRadiusEdge)
+    inRadiusText.anchor.set(1, 0.5)
+    
+    const outRadiusLine = new PIXI.Graphics()
+    outRadiusLine.lineStyle(1, 0x000000, 1, 0.5, true)
+    if(this.index == Math.floor(this.stepNum / 2) && this.type === Types.TreadType.tArc) {
+      outRadiusText.visible = true
+      outRadiusLine.moveTo(outRadiusEdge.p1.x, outRadiusEdge.p1.y)
+      outRadiusLine.lineTo(outRadiusEdge.p2.x, outRadiusEdge.p2.y)
+    }
+    const inRadiusLine = new PIXI.Graphics()
+    inRadiusLine.lineStyle(1, 0x000000, 1, 0.5, true)
+    if(this.index == Math.floor(this.stepNum / 2) && this.type === Types.TreadType.tArc) {
+      inRadiusText.visible = true
+      inRadiusLine.moveTo(inRadiusEdge.p1.x, inRadiusEdge.p1.y)
+      inRadiusLine.lineTo(inRadiusEdge.p2.x, inRadiusEdge.p2.y)
+    }
+    if (inRadius === 0) {
+      arcContainer.addChild(outRadiusLine,  outRadiusText)
+    }else {
+      arcContainer.addChild(outRadiusLine, inRadiusLine, outRadiusText, inRadiusText)
+    }
+
+    this.sprite.addChild(arcContainer)
+
   }
 }
