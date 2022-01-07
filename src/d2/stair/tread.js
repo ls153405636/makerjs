@@ -1797,12 +1797,6 @@ export class Tread extends ChildWidget {
     this.creatStartTread()
     // 内外弧线半径
     this.creatRadius()
-    // // 距离墙体距离
-    // if (this.stairInfo.type === Types.TreadType.tArc) {
-    //   if((this.stepNumRule === Types.StepNumRule.snr_n_add_1 && this.stairInfo.parent.stepAngle * (this.stairInfo.parent.realStepNum - 1) > Math.PI / 2) ||  (this.stepNumRule === Types.StepNumRule.snr_n && this.stairInfo.parent.stepAngle * this.stairInfo.parent.realStepNum > Math.PI / 2)) {
-    //     this.creatDistance()
-    //   }
-    // }
     
     this.sprite.addChild(this.arcContainer)
   }
@@ -1817,14 +1811,21 @@ export class Tread extends ChildWidget {
     // 判断edge是否顺时针
     let isTrue = this.isTrue
     // 内外弧宽标注
-    let outArcEdge = this.edges[this.inIndex]
+    let outArcEdge
+    let inArcEdge
+    if (this.girderType === Types.GirderType.gsaw) {
+      outArcEdge = this.edges[this.inIndex]
+      inArcEdge = this.edges[this.outIndex]
+    }else {
+      outArcEdge = new Edge(this.edges[this.inIndex]).offset(this.girderDepth, isTrue)
+      inArcEdge = new Edge(this.edges[this.outIndex]).offset(this.girderDepth, isTrue)
+    }
     let newOutArcEdge = this.getStraightEdge(outArcEdge)
     newOutArcEdge = new Edge(newOutArcEdge).offset(arcOffset,isTrue)
     let outArcEdgeT = new Edge(newOutArcEdge).offset(arcArrow, isTrue)
     let outArcEdgeB = new Edge(newOutArcEdge).offset(-arcArrow, isTrue)
     let outArcEdgeLength = Math.round(new Edge(outArcEdge).getLength())
     
-    let inArcEdge = this.edges[this.outIndex]
     let newInArcEdge = this.getStraightEdge(inArcEdge)
     newInArcEdge = new Edge(newInArcEdge).offset(arcOffset,isTrue)
     
@@ -1928,7 +1929,7 @@ export class Tread extends ChildWidget {
       let newLastEdgeB = new Edge(newLastEdge).offset(-arcArrow, isTrue)
 
       const firstTextLength = Math.round(new Edge(firstEdge).getLength()* D2Config.SCREEN_RATE) 
-      const lastTextLength = Math.round(new Edge(lastEdge).getLength()* D2Config.SCREEN_RATE) 
+      const lastTextLength = this.stepLength
       const firstTreadText = new PIXI.Text(firstTextLength, textStyle)
       const lastTreadText = new PIXI.Text(lastTextLength, textStyle)
       firstTreadText.visible = false
